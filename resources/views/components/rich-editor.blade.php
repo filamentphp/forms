@@ -1,4 +1,4 @@
-@pushonce('filament-styles:rich-editor-field')
+@pushonce('filament-styles:rich-editor-component')
     <link rel="stylesheet" href="https://unpkg.com/trix@1.3.1/dist/trix.css">
 
     <style>
@@ -8,7 +8,7 @@
     </style>
 @endpushonce
 
-@pushonce('filament-scripts:rich-editor-field')
+@pushonce('filament-scripts:rich-editor-component')
     <script src="https://unpkg.com/trix@1.3.1/dist/trix.js"></script>
 
     <script>
@@ -31,10 +31,10 @@
 <x-forms::field-group
     :column-span="$formComponent->columnSpan"
     :error-key="$formComponent->name"
-    :for="$formComponent->id"
-    :help-message="__($formComponent->helpMessage)"
-    :hint="__($formComponent->hint)"
-    :label="__($formComponent->label)"
+    :for="$formComponent->getId()"
+    :help-message="$formComponent->helpMessage"
+    :hint="$formComponent->hint"
+    :label="$formComponent->label"
     :required="$formComponent->required"
 >
     <div
@@ -83,9 +83,9 @@
         wire:ignore
     >
         @unless ($formComponent->disabled)
-            <input id="trix-value-{{ $formComponent->id }}" type="hidden" />
+            <input id="trix-value-{{ $formComponent->getId() }}" type="hidden" />
 
-            <trix-toolbar id="trix-toolbar-{{ $formComponent->id }}">
+            <trix-toolbar id="trix-toolbar-{{ $formComponent->getId() }}">
                 <div class="trix-button-row">
                     @if ($formComponent->hasToolbarButton(['bold', 'italic', 'strike', 'link']))
                         <span class="trix-button-group trix-button-group--text-tools"
@@ -215,10 +215,10 @@
 
             <trix-editor
                 {{ $formComponent->autofocus ? 'autofocus' : null }}
-                id="{{ $formComponent->id }}"
-                input="trix-value-{{ $formComponent->id }}"
+                id="{{ $formComponent->getId() }}"
+                input="trix-value-{{ $formComponent->getId() }}"
                 placeholder="{{ __($formComponent->placeholder) }}"
-                toolbar="trix-toolbar-{{ $formComponent->id }}"
+                toolbar="trix-toolbar-{{ $formComponent->getId() }}"
                 x-ref="trix"
                 class="block w-full prose placeholder-gray-400 placeholder-opacity-100 bg-white border-gray-300 rounded shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 max-w-none"
                 {!! Filament\format_attributes($formComponent->extraAttributes) !!}

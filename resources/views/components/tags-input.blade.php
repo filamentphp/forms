@@ -62,10 +62,10 @@
 <x-forms::field-group
     :column-span="$formComponent->columnSpan"
     :error-key="$formComponent->name"
-    :for="$formComponent->id"
-    :help-message="__($formComponent->helpMessage)"
-    :hint="__($formComponent->hint)"
-    :label="__($formComponent->label)"
+    :for="$formComponent->getId()"
+    :help-message="$formComponent->helpMessage"
+    :hint="$formComponent->hint"
+    :label="$formComponent->label"
     :required="$formComponent->required"
 >
     <div
@@ -76,7 +76,7 @@
             @endif
         })"
         x-init="init()"
-        {!! $formComponent->id ? "id=\"{$formComponent->id}\"" : null !!}
+        {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
         {!! Filament\format_attributes($formComponent->extraAttributes) !!}
     >
         @unless (Str::of($formComponent->nameAttribute)->startsWith(['wire:model', 'x-model']))
@@ -92,7 +92,7 @@
                 <input
                     autocomplete="off"
                     {!! $formComponent->autofocus ? 'autofocus' : null !!}
-                    {!! $formComponent->placeholder ? 'placeholder="'.__($formComponent->placeholder).'"' : null !!}
+                    {!! $formComponent->placeholder ? 'placeholder="' . __($formComponent->placeholder) . '"' : null !!}
                     type="text"
                     x-on:keydown.enter.stop.prevent="createTag()"
                     x-model="newTag"

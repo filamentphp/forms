@@ -1,10 +1,10 @@
 <x-forms::field-group
     :column-span="$formComponent->columnSpan"
     :error-key="$formComponent->name"
-    :for="$formComponent->id"
-    :help-message="__($formComponent->helpMessage)"
-    :hint="__($formComponent->hint)"
-    :label="__($formComponent->label)"
+    :for="$formComponent->getId()"
+    :help-message="$formComponent->helpMessage"
+    :hint="$formComponent->hint"
+    :label="$formComponent->label"
     :required="$formComponent->required"
 >
     <textarea
@@ -12,7 +12,7 @@
         {!! $formComponent->autofocus ? 'autofocus' : null !!}
         {!! $formComponent->cols ? "cols=\"{$formComponent->cols}\"" : null !!}
         {!! $formComponent->disabled ? 'disabled' : null !!}
-        {!! $formComponent->id ? "id=\"{$formComponent->id}\"" : null !!}
+        {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
         {!! $formComponent->maxLength ? "maxlength=\"{$formComponent->maxLength}\"" : null !!}
         {!! $formComponent->minLength ? "minlength=\"{$formComponent->minLength}\"" : null !!}
         {!! $formComponent->name ? "{$formComponent->nameAttribute}=\"{$formComponent->name}\"" : null !!}

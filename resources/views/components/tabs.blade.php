@@ -20,11 +20,11 @@
     x-data="{ tab: '{{ count($formComponent->getTabsConfig()) ? array_key_first($formComponent->getTabsConfig()) : null }}', tabs: {{ json_encode($formComponent->getTabsConfig()) }} }"
     x-on:switch-tab.window="if ($event.detail in tabs) tab = $event.detail"
     x-cloak
-    {!! $formComponent->id ? "id=\"{$formComponent->id}\"" : null !!}
+    {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
     class="{{ $columnSpanClass }} bg-white border border-gray-200 rounded p-4 md:p-6"
 >
     <div class="-m-4 md:-m-6">
-        <div {!! __($formComponent->label) ? 'aria-label="'.__($formComponent->label).'"' : null !!} role="tablist"
+        <div {!! __($formComponent->label) ? 'aria-label="' . __($formComponent->label) . '"' : null !!} role="tablist"
              class="flex overflow-hidden bg-gray-100 rounded-t">
             @foreach ($formComponent->getTabsConfig() as $tabId => $tabLabel)
                 <button type="button"

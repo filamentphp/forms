@@ -185,10 +185,10 @@
 <x-forms::field-group
     :column-span="$formComponent->columnSpan"
     :error-key="$formComponent->name"
-    :for="$formComponent->id"
-    :help-message="__($formComponent->helpMessage)"
-    :hint="__($formComponent->hint)"
-    :label="__($formComponent->label)"
+    :for="$formComponent->getId()"
+    :help-message="$formComponent->helpMessage"
+    :hint="$formComponent->hint"
+    :label="$formComponent->label"
     :required="$formComponent->required"
 >
     <div
@@ -206,7 +206,7 @@
         x-init="init()"
         x-on:click.away="closeListbox()"
         x-on:keydown.escape.stop="closeListbox()"
-        {!! $formComponent->id ? "id=\"{$formComponent->id}\"" : null !!}
+        {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
         class="relative"
         {!! Filament\format_attributes($formComponent->extraAttributes) !!}
     >
