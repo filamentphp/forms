@@ -6,20 +6,25 @@ use Illuminate\Support\Str;
 
 class Tabs extends Component
 {
-    public static function make($label = null)
-    {
-        $tabs = (new static())->label($label);
-
-        if ($label) $tabs = $tabs->id(Str::slug($label));
-
-        return $tabs;
-    }
-
     public function getTabsConfig()
     {
-        return collect($this->schema)
-            ->mapWithKeys(fn ($tab) => [$this->getId() . '.' . $tab->getId() => $tab->label])
+        return collect($this->getSchema())
+            ->mapWithKeys(fn ($tab) => [$this->getId() . '.' . $tab->getId() => $tab->getLabel()])
             ->toArray();
+    }
+
+    public function id($id)
+    {
+        if ($this->id === null && $this->getLabel()) {
+            return Str::slug($this->getLabel());
+        }
+
+        return parent::id($id);
+    }
+
+    public static function make($label = null)
+    {
+        return (new static())->label($label);
     }
 
     public function tabs($tabs)

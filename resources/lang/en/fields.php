@@ -31,6 +31,16 @@ return [
 
     ],
 
+    'keyValue' => [
+        'addButtonLabel' => 'Add Row',
+        'deleteButtonLabel' => 'Delete Row',
+        'keyLabel' => 'Key',
+        'keyPlaceholder' => 'Enter a key...',
+        'sortButtonLabel' => 'Hold to Sort',
+        'valueLabel' => 'Value',
+        'valuePlaceholder' => 'Enter a placeholder...',
+    ],
+
     'multiSelect' => [
         'emptyOptionsMessage' => 'No options to choose from.',
         'noSearchResultsMessage' => 'No options match your search.',

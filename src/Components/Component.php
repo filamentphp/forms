@@ -11,162 +11,169 @@ class Component
 {
     use Tappable;
 
-    public $context;
+    protected $columnSpan = 1;
 
-    public $columnSpan = 1;
+    protected $configurationQueue = [];
 
-    public $hidden = false;
+    protected $form;
 
-    public $id;
+    protected $isHidden = false;
 
-    public $label;
+    protected $id;
 
-    public $model;
+    protected $label;
 
-    public $parent;
+    protected $parent;
 
-    public $schema = [];
+    protected $schema = [];
 
-    public $record;
-
-    public $view;
-
-    protected $pendingExcludedContextModifications = [];
-
-    protected $pendingIncludedContextModifications = [];
-
-    protected $pendingModelModifications = [];
-
-    protected $pendingRecordModifications = [];
+    protected $view;
 
     protected function setUp()
     {
         //
     }
 
-    public function context($context)
+    public function columnSpan($span)
     {
-        $this->context = $context;
-
-        if (array_key_exists($this->context, $this->pendingIncludedContextModifications)) {
-            foreach ($this->pendingIncludedContextModifications[$this->context] as $callback) {
-                $callback($this);
-            }
-        }
-
-        $this->pendingIncludedContextModifications = [];
-
-        collect($this->pendingExcludedContextModifications)
-            ->filter(fn ($callbacks, $context) => $context !== $this->context)
-            ->each(function ($callbacks) {
-                foreach ($callbacks as $callback) {
-                    $callback($this);
-                }
-            });
-
-        $this->pendingExcludedContextModifications = [];
-
-        $this->schema($this->getSubform()->context($this->context)->schema);
+        $this->configure(function () use ($span) {
+            $this->columnSpan = $span;
+        });
 
         return $this;
     }
 
-    public function columnSpan($span)
+    public function configure($callback = null)
     {
-        $this->columnSpan = $span;
+        if ($callback === null) {
+            foreach ($this->configurationQueue as $callback) {
+                $callback();
+
+                array_shift($this->configurationQueue);
+            }
+
+            return;
+        }
+
+        if ($this->getForm()) {
+            $callback();
+        } else {
+            $this->configurationQueue[] = $callback;
+        }
 
         return $this;
     }
 
     public function except($contexts, $callback = null)
     {
-        if (! is_array($contexts)) $contexts = [$contexts];
-
-        if (! $callback) {
-            $this->hidden();
-
-            $callback = fn ($component) => $component->visible();
-        }
-
-        if (! $this->context) {
-            foreach ($contexts as $context) {
-                if (! array_key_exists($context, $this->pendingExcludedContextModifications)) {
-                    $this->pendingExcludedContextModifications[$context] = [];
-                }
-
-                $this->pendingExcludedContextModifications[$context][] = $callback;
+        $this->configure(function () use ($contexts, $callback) {
+            if (! is_array($contexts)) {
+                $contexts = [$contexts];
             }
 
-            return $this;
+            if (! $callback) {
+                $this->hidden();
+
+                $callback = fn ($component) => $component->visible();
+            }
+
+            if (! $this->getContext() || in_array($this->getContext(), $contexts)) {
+                return $this;
+            }
+
+            $callback($this);
+        });
+
+        return $this;
+    }
+
+    public function form($form)
+    {
+        $this->form = $form;
+
+        $this->schema(
+            collect($this->getSchema())
+                ->map(fn ($component) => $component->form($this->getForm()))
+                ->toArray(),
+        );
+
+        $this->configure();
+
+        return $this;
+    }
+
+    public function getColumnSpan()
+    {
+        return $this->columnSpan;
+    }
+
+    public function getContext()
+    {
+        return $this->getForm()->getContext();
+    }
+
+    public function getDefaultValues()
+    {
+        $values = [];
+
+        if ($this instanceof Field) {
+            $values[$this->getName()] = $this->getDefaultValue();
         }
 
-        if (in_array($this->context, $contexts)) return $this;
+        $values = array_merge($values, $this->getSubform()->getDefaultValues());
 
-        $callback($this);
-
-        return $this;
+        return $values;
     }
 
-    public function hidden()
+    public function getForm()
     {
-        $this->hidden = true;
-
-        return $this;
-    }
-
-    public function schema($schema)
-    {
-        $this->schema = collect(value($schema))
-            ->map(fn ($component) => $component->parent($this))
-            ->toArray();
-
-        return $this;
-    }
-
-    public function getDefaults()
-    {
-        if ($this->hidden) return [];
-
-        $defaults = [];
-
-        if (property_exists($this, 'name') && property_exists($this, 'default')) {
-            $defaults[$this->name] = $this->default;
-        }
-
-        $defaults = array_merge($defaults, $this->getSubform()->getDefaults());
-
-        return $defaults;
+        return $this->form;
     }
 
     public function getId()
     {
-        return (string) Str::of($this->context)
-            ->replace('\\', '-')
-            ->lower()
-            ->append('-')
-            ->append($this->id);
+        return (string) Str::of($this->id)
+            ->prepend(
+                $this->getContext() ?
+                    (string) Str::of($this->getContext())
+                        ->replace('\\', '-')
+                        ->lower()
+                        ->append('-') :
+                    '',
+            );
     }
 
-    public function getSubform()
+    public function getLabel()
     {
-        $form = Form::make()->schema($this->schema);
-
-        if ($this->context) {
-            $form->context($this->context);
-        }
-
-        if ($this->record) {
-            $form->record($this->record);
-        }
-
-        return $form;
+        return $this->label;
     }
 
-    public function getRules()
+    public function getModel()
     {
-        if ($this->hidden) return [];
+        return $this->getForm()->getModel();
+    }
 
-        $rules = property_exists($this, 'rules') ? $this->rules : [];
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function getRecord()
+    {
+        return $this->getForm()->getRecord();
+    }
+
+    public function getRules($field = null)
+    {
+        if ($field !== null) {
+            return $this->rules[$field] ?? null;
+        }
+
+        if ($this->isHidden()) {
+            return [];
+        }
+
+        $rules = $this instanceof Field ? $this->rules : [];
 
         foreach ($rules as $field => $conditions) {
             $rules[$field] = $this->transformConditions($conditions);
@@ -179,22 +186,30 @@ class Component
         return $rules;
     }
 
+    public function getSchema()
+    {
+        return $this->schema;
+    }
+
+    public function getSubform()
+    {
+        return Form::make()
+            ->context($this->getContext())
+            ->model($this->getModel())
+            ->record($this->getRecord())
+            ->schema($this->getSchema());
+    }
+
     public function getValidationAttributes()
     {
-        if ($this->hidden) return [];
+        if ($this->isHidden()) {
+            return [];
+        }
 
         $attributes = [];
 
-        if (property_exists($this, 'name')) {
-            if (property_exists($this, 'label')) {
-                $label = Str::lower(__($this->label));
-
-                $attributes[$this->name] = $label;
-            }
-
-            if (property_exists($this, 'validationAttribute') && $this->validationAttribute !== null) {
-                $attributes[$this->name] = __($this->validationAttribute);
-            }
+        if ($this instanceof Field) {
+            $attributes[$this->getName()] = __($this->getValidationAttribute());
         }
 
         $attributes = array_merge($attributes, $this->getSubform()->getValidationAttributes());
@@ -202,60 +217,62 @@ class Component
         return $attributes;
     }
 
-    public function id($id)
+    public function getView()
     {
-        $this->id = $id;
+        return $this->view;
+    }
+
+    public function hidden()
+    {
+        $this->configure(function () {
+            $this->isHidden = true;
+        });
 
         return $this;
+    }
+
+    public function id($id)
+    {
+        $this->configure(function () use ($id) {
+            $this->id = $id;
+        });
+
+        return $this;
+    }
+
+    public function isHidden()
+    {
+        return $this->isHidden || ($this->getParent() !== null && $this->getParent()->isHidden());
     }
 
     public function label($label)
     {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    public function model($model)
-    {
-        $this->model = $model;
-
-        foreach ($this->pendingModelModifications as $callback) {
-            $callback($this);
-        }
-
-        $this->pendingModelModifications = [];
-
-        $this->schema($this->getSubform()->model($this->model)->schema);
+        $this->configure(function () use ($label) {
+            $this->label = $label;
+        });
 
         return $this;
     }
 
     public function only($contexts, $callback = null)
     {
-        if (! is_array($contexts)) $contexts = [$contexts];
-
-        if (! $callback) {
-            $this->hidden();
-
-            $callback = fn ($component) => $component->visible();
-        }
-
-        if (! $this->context) {
-            foreach ($contexts as $context) {
-                if (! array_key_exists($context, $this->pendingIncludedContextModifications)) {
-                    $this->pendingIncludedContextModifications[$context] = [];
-                }
-
-                $this->pendingIncludedContextModifications[$context][] = $callback;
+        $this->configure(function () use ($callback, $contexts) {
+            if (! is_array($contexts)) {
+                $contexts = [$contexts];
             }
 
-            return $this;
-        }
+            if (! $callback) {
+                $this->hidden();
 
-        if (! in_array($this->context, $contexts)) return $this;
+                $callback = fn ($component) => $component->visible();
+            }
 
-        $callback($this);
+            if (! in_array($this->getContext(), $contexts)) {
+                return $this;
+            }
+
+            $callback($this);
+        });
 
         return $this;
     }
@@ -267,90 +284,80 @@ class Component
         return $this;
     }
 
-    public function record($record)
+    public function render()
     {
-        $this->record = $record;
-
-        if ($this->record instanceof Model) {
-            $this->model(get_class($this->record));
+        if ($this->isHidden()) {
+            return;
         }
 
-        $this->schema($this->getSubform()->record($this->record)->schema);
+        $view = $this->getView() ?? 'forms::components.' . Str::of(class_basename(static::class))->kebab();
 
-        foreach ($this->pendingRecordModifications as [$condition, $callback]) {
-            try {
-                $shouldExecuteCallback = $condition($this->record);
-            } catch (\Exception $exception) {
-                $shouldExecuteCallback = false;
-            }
+        return view($view, ['formComponent' => $this]);
+    }
 
-            if ($shouldExecuteCallback) {
-                $callback($this, $this->record);
-            }
-        }
-
-        $this->pendingRecordModifications = [];
+    public function schema($schema)
+    {
+        $this->schema = collect(value($schema))
+            ->map(fn ($component) => $component->parent($this))
+            ->toArray();
 
         return $this;
     }
 
     public function view($view)
     {
-        $this->view = $view;
+        $this->configure(function () use ($view) {
+            $this->view = $view;
+        });
 
         return $this;
     }
 
     public function visible()
     {
-        $this->hidden = false;
+        $this->configure(function () {
+            $this->isHidden = false;
+        });
 
         return $this;
     }
 
     public function when($condition, $callback = null)
     {
-        if (! $callback) {
-            $this->hidden();
+        $this->configure(function () use ($callback, $condition) {
+            if (! $callback) {
+                $this->hidden();
 
-            $callback = fn ($component) => $component->visible();
-        }
+                $callback = fn ($component) => $component->visible();
+            }
 
-        if ($this->record === null) {
-            $this->pendingRecordModifications[] = [$condition, $callback];
+            if ($this->getRecord() === null) {
+                return $this;
+            }
 
-            return $this;
-        }
+            try {
+                $shouldExecuteCallback = $condition($this->getRecord());
+            } catch (\Exception $exception) {
+                $shouldExecuteCallback = false;
+            }
 
-        try {
-            $shouldExecuteCallback = $condition($this->record);
-        } catch (\Exception $exception) {
-            $shouldExecuteCallback = false;
-        }
-
-        if ($shouldExecuteCallback) {
-            $callback($this, $this->record);
-        }
+            if ($shouldExecuteCallback) {
+                $callback($this);
+            }
+        });
 
         return $this;
-    }
-
-    public function render()
-    {
-        if ($this->hidden) return;
-
-        $view = $this->view ?? 'forms::components.' . Str::of(class_basename(static::class))->kebab();
-
-        return view($view, ['formComponent' => $this]);
     }
 
     protected function transformConditions($conditions)
     {
         return collect($conditions)
             ->map(function ($condition) {
-                if (! is_string($condition)) return $condition;
+                if (! is_string($condition)) {
+                    return $condition;
+                }
 
-                return (string) Str::of($condition)->replace('{{record}}', $this->record instanceof Model ? $this->record->getKey() : '');
+                return (string) Str::of($condition)->replace('{{ record }}', $this->getRecord() instanceof Model ? $this->getRecord()->getKey() : '');
             })
             ->toArray();
     }
