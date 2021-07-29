@@ -472,7 +472,7 @@ class FileUpload extends Field
 
     public function getDiskName(): string
     {
-        return $this->evaluate($this->diskName) ?? config('forms.default_filesystem_disk');
+        return $this->evaluate($this->diskName) ?? config('forms2.default_filesystem_disk');
     }
 
     public function getImageCropAspectRatio(): ?string

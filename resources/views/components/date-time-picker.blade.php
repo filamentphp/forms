@@ -70,7 +70,7 @@
             />
 
             <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <x-heroicon-o-calendar class="w-5 h-5 text-gray-400" />
+                <x-dynamic-component :component="config('forms2.date_picker.icon')" class="w-5 h-5 text-gray-400" />
             </span>
         </button>
 

@@ -140,6 +140,6 @@ class DatePicker extends Field
 
     protected function getDefaultFirstDayOfWeek(): int
     {
-        return config('forms.first_day_of_week', 1);
+        return config('forms2.date_picker.first_day_of_week', 1);
     }
 }
