@@ -51,9 +51,7 @@ trait CanBeValidated
             }
 
             return "same:{$statePath}";
-        }, function () use ($statePath): bool {
-            return (bool) $this->evaluate($statePath);
-        });
+        }, fn (): bool => (bool) $this->evaluate($statePath));
 
         return $this;
     }
@@ -66,7 +64,7 @@ trait CanBeValidated
             $ignorable = $this->evaluate($ignorable);
 
             return Rule::unique($table, $columnName)->when($ignorable, fn (Unique $rule) => $rule->ignore($ignorable));
-        });
+        }, fn (): bool => (bool) $this->evaluate($table));
 
         return $this;
     }

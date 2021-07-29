@@ -5,6 +5,8 @@ namespace Filament\Forms2;
 use Filament\Forms2\Contracts\HasForms;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 use Illuminate\View\Component as ViewComponent;
 
 class ComponentContainer extends ViewComponent implements Htmlable
@@ -18,6 +20,8 @@ class ComponentContainer extends ViewComponent implements Htmlable
     use Concerns\HasState;
     use Concerns\ListensToEvents;
     use Concerns\SupportsFileUploadFields;
+    use Macroable;
+    use Tappable;
 
     public static function make(HasForms $livewire): static
     {

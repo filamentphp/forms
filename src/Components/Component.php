@@ -4,6 +4,8 @@ namespace Filament\Forms2\Components;
 
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 use Illuminate\View\Component as ViewComponent;
 
 class Component extends ViewComponent implements Htmlable
@@ -18,6 +20,8 @@ class Component extends ViewComponent implements Htmlable
     use Concerns\HasId;
     use Concerns\HasState;
     use Concerns\ListensToEvents;
+    use Macroable;
+    use Tappable;
 
     protected static string $view;
 

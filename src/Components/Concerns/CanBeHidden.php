@@ -15,9 +15,7 @@ trait CanBeHidden
 
     public function when(bool | callable $condition = true): static
     {
-        $this->isHidden = function () use ($condition): bool {
-            return ! $this->evaluate($condition);
-        };
+        $this->isHidden = fn (): bool => ! $this->evaluate($condition);
 
         return $this;
     }

@@ -12,15 +12,8 @@
             'w-32 mx-auto' => $isAvatar(),
         ])
         x-data="fileUploadFormComponent({
-            state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
-            statePath: '{{ $getStatePath() }}',
-            disk: '{{ $getDiskName() }}',
-            uploadedFileUrl: {{ ($url = $getUploadedFileUrl()) ? "'{$url}'" : 'null' }},
-            getUploadedFileUrlUsing: $wire.getUploadedFileUrl,
-            uploadUsing: $wire.upload,
-            removeTemporaryUploadedFileUsing: $wire.removeUpload,
-            removeUploadedFileUsing: $wire.removeUploadedFile,
             acceptedFileTypes: {{ json_encode($getAcceptedFileTypes()) }},
+            getUploadedFileUrlUsing: $wire.getUploadedFileUrl,
             imageCropAspectRatio: {{ ($aspectRatio = $getImageCropAspectRatio()) ? "'{$aspectRatio}'" : 'null' }},
             imagePreviewHeight: {{ ($height = $getImagePreviewHeight()) ? "'{$height}'" : 'null' }},
             imageResizeTargetHeight: {{ ($height = $getImageResizeTargetHeight()) ? "'{$height}'" : 'null' }},
@@ -31,9 +24,15 @@
             placeholder: {{ ($placeholder = $getPlaceholder()) ? "'{$placeholder}'" : 'null' }},
             maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
             minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
-            removeUploadPosition: '{{ $getRemoveUploadButtonPosition() }}',
+            removeTemporaryUploadedFileUsing: $wire.removeUpload,
+            removeUploadedFileUsing: $wire.removeUploadedFile,
+            removeUploadButtonPosition: '{{ $getRemoveUploadButtonPosition() }}',
+            state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
+            statePath: '{{ $getStatePath() }}',
             uploadButtonPosition: '{{ $getUploadButtonPosition() }}',
+            uploadedFileUrl: {{ ($url = $getUploadedFileUrl()) ? "'{$url}'" : 'null' }},
             uploadProgressIndicatorPosition: '{{ $getUploadProgressIndicatorPosition() }}',
+            uploadUsing: $wire.upload,
         })"
         wire:ignore
     >
