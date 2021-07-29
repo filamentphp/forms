@@ -1,22 +1,24 @@
 <?php
 
-namespace Filament\Forms\Components\Concerns;
+namespace Filament\Forms2\Components\Concerns;
 
 trait HasPlaceholder
 {
-    protected $placeholder;
+    protected $placeholder = null;
 
-    public function getPlaceholder()
+    public function placeholder(string | callable $placeholder): static
     {
-        return $this->placeholder;
-    }
-
-    public function placeholder($placeholder)
-    {
-        $this->configure(function () use ($placeholder) {
-            $this->placeholder = $placeholder;
-        });
+        $this->placeholder = $placeholder;
 
         return $this;
+    }
+
+    public function getPlaceholder(): ?string
+    {
+        if (! ($placeholder = $this->evaluate($this->placeholder))) {
+            return null;
+        }
+
+        return $placeholder;
     }
 }

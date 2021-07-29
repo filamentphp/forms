@@ -1,40 +1,60 @@
 <?php
 
-namespace Filament\Forms\Components;
+namespace Filament\Forms2\Components;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use Livewire\TemporaryUploadedFile;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use SplFileInfo;
 
 class FileUpload extends Field
 {
     use Concerns\HasPlaceholder;
 
+    protected static string $view = 'forms2::components.file-upload';
+
     protected $acceptedFileTypes = [];
 
-    protected $directory;
+    protected $deleteUploadedFileUsing = null;
 
-    protected $diskName;
+    protected $directory = null;
 
-    protected $imageCropAspectRatio;
+    protected $diskName = null;
 
-    protected $imagePreviewHeight;
+    protected $getUploadedFileUrlUsing = null;
 
-    protected $imageResizeTargetHeight;
+    protected $imageCropAspectRatio = null;
 
-    protected $imageResizeTargetWidth;
+    protected $imagePreviewHeight = null;
+
+    protected $imageResizeTargetHeight = null;
+
+    protected $imageResizeTargetWidth = null;
+
+    protected $isAvatar = false;
 
     protected $loadingIndicatorPosition = 'right';
 
-    protected $maxSize;
+    protected $maxSize = null;
 
-    protected $minSize;
+    protected $mediaLibraryCollection = null;
 
-    protected $panelAspectRatio;
+    protected $mediaLibraryModel = null;
 
-    protected $panelLayout;
+    protected $minSize = null;
+
+    protected $panelAspectRatio = null;
+
+    protected $panelLayout = null;
 
     protected $removeUploadButtonPosition = 'left';
+
+    protected $saveUploadedFileUsing = null;
+
+    protected $shouldUploadedFileBeDeletedOnRemoval = false;
 
     protected $uploadButtonPosition = 'right';
 
@@ -42,150 +62,166 @@ class FileUpload extends Field
 
     protected $visibility = 'public';
 
-    protected function setUp()
+    public function setUp(): void
     {
-        $this->addRules([$this->getTemporaryUploadedFilePropertyName() => ['nullable', 'file']]);
-    }
+        parent::setUp();
 
-    public function acceptedFileTypes($types)
-    {
-        $this->configure(function () use ($types) {
-            if (! is_array($types)) {
-                $types = explode(',', $types);
+        $this->beforeStateDehydrated(function ($setState, $state) {
+            if (! ($state instanceof TemporaryUploadedFile)) {
+                return;
             }
 
-            $this->acceptedFileTypes = $types;
+            $setState($this, $this->saveUploadedFile());
+        });
 
-            $types = implode(',', $types);
+        $this->dehydrated(function ($state) {
+            if (! ($state instanceof TemporaryUploadedFile)) {
+                return false;
+            }
 
-            $this->addRules([$this->getTemporaryUploadedFilePropertyName() => ["mimetypes:{$types}"]]);
+            if ($this->usesMediaLibrary()) {
+                return false;
+            }
+
+            return true;
+        });
+
+        $this->hydrateStateUsing(function () {
+            return $this->getUploadedFile();
+        });
+    }
+
+    public function acceptedFileTypes(array | callable $types): static
+    {
+        $this->acceptedFileTypes = $types;
+
+        $this->addValidationRule(function () {
+            $types = implode(',', $this->getAcceptedFileTypes());
+
+            return "mimetypes:{$types}";
+        }, function () {
+            return $this->hasFileObjectState() && count($this->getAcceptedFileTypes());
         });
 
         return $this;
     }
 
-    public function avatar()
+    public function avatar(): static
     {
-        $this->configure(function () {
-            $this->extraAttributes(['class' => 'w-28']);
-            $this->image();
-            $this->imageCropAspectRatio('1:1');
-            $this->imagePreviewHeight(110);
-            $this->imageResizeTargetHeight(500);
-            $this->imageResizeTargetWidth(500);
-            $this->loadingIndicatorPosition('center bottom');
-            $this->panelLayout('compact circle');
-            $this->removeUploadButtonPosition('center bottom');
-            $this->uploadButtonPosition('center bottom');
-            $this->uploadProgressIndicatorPosition('center bottom');
-        });
+        $this->isAvatar = true;
+
+        $this->image();
+        $this->imageCropAspectRatio('1:1');
+        $this->imageResizeTargetHeight(500);
+        $this->imageResizeTargetWidth(500);
+        $this->loadingIndicatorPosition('center bottom');
+        $this->panelLayout('compact circle');
+        $this->removeUploadButtonPosition('center bottom');
+        $this->uploadButtonPosition('center bottom');
+        $this->uploadProgressIndicatorPosition('center bottom');
 
         return $this;
     }
 
-    public function directory($directory)
+    public function deleteUploadedFile(): static
     {
-        $this->configure(function () use ($directory) {
-            $this->directory = $directory;
-        });
+        $file = $this->getState();
+
+        if ($callback = $this->deleteUploadedFileUsing) {
+            $this->evaluate($callback, [
+                'file' => $file,
+            ]);
+        } elseif ($this->usesMediaLibrary()) {
+            Media::findByUuid($file)?->delete();
+        } elseif ($this->shouldUploadedFileBeDeletedOnRemoval()) {
+            $this->getDisk()->delete($file);
+        }
 
         return $this;
     }
 
-    public function disk($name)
+    public function deleteUploadedFileUsing(callable $callback): static
     {
-        $this->configure(function () use ($name) {
-            $this->diskName = $name;
-        });
+        $this->deleteUploadedFileUsing = $callback;
 
         return $this;
     }
 
-    public function getAcceptedFileTypes()
+    public function directory(string | callable $directory): static
     {
-        return $this->acceptedFileTypes;
+        $this->directory = $directory;
+
+        return $this;
     }
 
-    public function getDirectory()
+    public function disk($name): static
     {
-        return $this->directory;
+        $this->diskName = $name;
+
+        return $this;
     }
 
-    public function getDisk()
+    public function getUploadedFile()
     {
-        return Storage::disk($this->getDiskName());
+        if (! ($state = $this->getState())) {
+            if ($this->usesMediaLibrary()) {
+                $state = $this->getUploadedFileFromMediaLibrary();
+            }
+        }
+
+        return $state;
     }
 
-    public function getDiskName()
+    public function getUploadedFileFromMediaLibrary(): ?string
     {
-        return $this->diskName ?? config('forms.default_filesystem_disk');
+        if (! ($model = $this->getMediaLibraryModel())) {
+            return null;
+        }
+
+        $media = $model
+            ->getMedia($this->getMediaLibraryCollection())
+            ->first();
+
+        if (! $media) {
+            return null;
+        }
+
+        return $media->uuid;
     }
 
-    public function getImageCropAspectRatio()
+    public function getUploadedFileUrl(): ?string
     {
-        return $this->imageCropAspectRatio;
+        if ($callback = $this->getUploadedFileUrlUsing) {
+            return $this->evaluate($callback);
+        }
+
+        if ($this->usesMediaLibrary()) {
+            return $this->getUploadedFileUrlFromMediaLibrary();
+        }
+
+        return $this->getUploadedFileUrlFromStorage();
     }
 
-    public function getImagePreviewHeight()
+    public function getUploadedFileUrlFromMediaLibrary(): ?string
     {
-        return $this->imagePreviewHeight;
+        if (! $this->getMediaLibraryModel()) {
+            return null;
+        }
+
+        if (! ($mediaUuid = $this->getState())) {
+            return null;
+        }
+
+        if ($mediaUuid instanceof SplFileInfo) {
+            return null;
+        }
+
+        return Media::findByUuid($mediaUuid)?->getUrl();
     }
 
-    public function getImageResizeTargetHeight()
+    public function getUploadedFileUrlFromStorage(): ?string
     {
-        return $this->imageResizeTargetHeight;
-    }
-
-    public function getImageResizeTargetWidth()
-    {
-        return $this->imageResizeTargetWidth;
-    }
-
-    public function getLoadingIndicatorPosition()
-    {
-        return $this->loadingIndicatorPosition;
-    }
-
-    public function getMaxSize()
-    {
-        return $this->maxSize;
-    }
-
-    public function getMinSize()
-    {
-        return $this->minSize;
-    }
-
-    public function getPanelAspectRatio()
-    {
-        return $this->panelAspectRatio;
-    }
-
-    public function getPanelLayout()
-    {
-        return $this->panelLayout;
-    }
-
-    public function getRemoveUploadButtonPosition()
-    {
-        return $this->removeUploadButtonPosition;
-    }
-
-    public function getTemporaryUploadedFilePropertyName()
-    {
-        return "temporaryUploadedFiles.{$this->getName()}";
-    }
-
-    public function getUploadButtonPosition()
-    {
-        return $this->uploadButtonPosition;
-    }
-
-    public function getUploadedFileUrl()
-    {
-        $path = $this->getValue();
-
-        if ($path === null) {
+        if (! ($path = $this->getState())) {
             return null;
         }
 
@@ -204,29 +240,14 @@ class FileUpload extends Field
         return $storage->url($path);
     }
 
-    public function getUploadProgressIndicatorPosition()
+    public function getUploadedFileUrlUsing(callable $callback): static
     {
-        return $this->uploadProgressIndicatorPosition;
+        $this->getUploadedFileUrlUsing = $callback;
+
+        return $this;
     }
 
-    public function getValidationAttributes()
-    {
-        $attributes = parent::getValidationAttributes();
-
-        $attributes = array_merge(
-            $attributes,
-            [$this->getTemporaryUploadedFilePropertyName() => Str::lower($this->getLabel())],
-        );
-
-        return $attributes;
-    }
-
-    public function getVisibility()
-    {
-        return $this->visibility;
-    }
-
-    public function image()
+    public function image(): static
     {
         $this->acceptedFileTypes([
             'image/*',
@@ -235,124 +256,317 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function imageCropAspectRatio($ratio)
+    public function imageCropAspectRatio(string | callable $ratio): static
     {
-        $this->configure(function () use ($ratio) {
-            $this->imageCropAspectRatio = $ratio;
+        $this->imageCropAspectRatio = $ratio;
+
+        return $this;
+    }
+
+    public function imagePreviewHeight(string | callable $height): static
+    {
+        $this->imagePreviewHeight = $height;
+
+        return $this;
+    }
+
+    public function imageResizeTargetHeight(string | callable $height): static
+    {
+        $this->imageResizeTargetHeight = $height;
+
+        return $this;
+    }
+
+    public function imageResizeTargetWidth(string | callable $width): static
+    {
+        $this->imageResizeTargetWidth = $width;
+
+        return $this;
+    }
+
+    public function loadingIndicatorPosition(string | callable $position): static
+    {
+        $this->loadingIndicatorPosition = $position;
+
+        return $this;
+    }
+
+    public function maxSize(int | callable $size): static
+    {
+        $this->maxSize = $size;
+
+        $this->addValidationRule(function (): string {
+            $size = $this->getMaxSize();
+
+            return "max:{$size}";
+        }, function () {
+            return $this->hasFileObjectState();
         });
 
         return $this;
     }
 
-    public function imagePreviewHeight($height)
+    public function mediaLibraryCollection(string | callable $collection): static
     {
-        $this->configure(function () use ($height) {
-            $this->imagePreviewHeight = $height;
+        $this->mediaLibraryCollection = $collection;
+
+        return $this;
+    }
+
+    public function mediaLibraryModel(HasMedia | callable $model): static
+    {
+        $this->mediaLibraryModel = $model;
+
+        return $this;
+    }
+
+    public function minSize(int | callable $size): static
+    {
+        $this->minSize = $size;
+
+        $this->addValidationRule(function (): string {
+            $size = $this->getMaxSize();
+
+            return "min:{$size}";
+        }, function () {
+            return $this->hasFileObjectState();
         });
 
         return $this;
     }
 
-    public function imageResizeTargetHeight($height)
+    public function panelAspectRatio(string | callable $ratio): static
     {
-        $this->configure(function () use ($height) {
-            $this->imageResizeTargetHeight = $height;
-        });
+        $this->panelAspectRatio = $ratio;
 
         return $this;
     }
 
-    public function imageResizeTargetWidth($width)
+    public function panelLayout(string | callable $layout): static
     {
-        $this->configure(function () use ($width) {
-            $this->imageResizeTargetWidth = $width;
-        });
+        $this->panelLayout = $layout;
 
         return $this;
     }
 
-    public function loadingIndicatorPosition($position)
+    public function removeUploadButtonPosition(string | callable $position): static
     {
-        $this->configure(function () use ($position) {
-            $this->loadingIndicatorPosition = $position;
-        });
+        $this->removeUploadButtonPosition = $position;
 
         return $this;
     }
 
-    public function maxSize($size)
+    public function removeUploadedFile(): static
     {
-        $this->configure(function () use ($size) {
-            $this->maxSize = $size;
+        if (! $this->getState()) {
+            return $this;
+        }
 
-            $this->addRules([$this->getTemporaryUploadedFilePropertyName() => ["max:{$this->getMaxSize()}"]]);
-        });
+        $this->deleteUploadedFile();
+
+        $livewire = $this->getLivewire();
+        data_set($livewire, $this->getStatePath(), null);
 
         return $this;
     }
 
-    public function minSize($size)
+    public function saveUploadedFile()
     {
-        $this->configure(function () use ($size) {
-            $this->minSize = $size;
+        $file = $this->getState();
 
-            $this->addRules([$this->getTemporaryUploadedFilePropertyName() => ["min:{$this->getMinSize()}"]]);
-        });
+        if ($callback = $this->saveUploadedFileUsing) {
+            return $this->evaluate($callback);
+        }
+
+        if ($this->usesMediaLibrary()) {
+            return $this->saveUploadedFileToMediaLibrary();
+        }
+
+        return $this->saveUploadedFileToStorage();
+    }
+
+    public function saveUploadedFileToMediaLibrary()
+    {
+        $file = $this->getState();
+
+        if (! ($model = $this->getMediaLibraryModel())) {
+            return $file;
+        }
+
+        $collection = $this->getMediaLibraryCollection();
+
+        $media = $model
+            ->addMediaFromString($file->get())
+            ->usingFileName($file->getFilename())
+            ->toMediaCollection($collection);
+
+        $livewire = $this->getLivewire();
+        data_set($livewire, $this->getStatePath(), $media->uuid);
+
+        return $media->uuid;
+    }
+
+    public function saveUploadedFileToStorage()
+    {
+        $file = $this->getState();
+
+        $storeMethod = $this->getVisibility() === 'public' ? 'storePublicly' : 'store';
+
+        $path = $file->{$storeMethod}($this->getDirectory(), $this->getDiskName());
+
+        $livewire = $this->getLivewire();
+        data_set($livewire, $this->getStatePath(), $path);
+
+        return $path;
+    }
+
+    public function saveUploadedFileUsing(callable $callback): static
+    {
+        $this->saveUploadedFileUsing = $callback;
 
         return $this;
     }
 
-    public function panelAspectRatio($ratio)
+    public function uploadButtonPosition(string | callable $position): static
     {
-        $this->configure(function () use ($ratio) {
-            $this->panelAspectRatio = $ratio;
-        });
+        $this->uploadButtonPosition = $position;
 
         return $this;
     }
 
-    public function panelLayout($layout)
+    public function uploadProgressIndicatorPosition(string | callable $position): static
     {
-        $this->configure(function () use ($layout) {
-            $this->panelLayout = $layout;
-        });
+        $this->uploadProgressIndicatorPosition = $position;
 
         return $this;
     }
 
-    public function removeUploadButtonPosition($position)
+    public function uploadedFileShouldBeDeletedOnRemoval(bool | callable $condition = true): static
     {
-        $this->configure(function () use ($position) {
-            $this->removeUploadButtonPosition = $position;
-        });
+        $this->shouldUploadedFileBeDeletedOnRemoval = $condition;
 
         return $this;
     }
 
-    public function uploadButtonPosition($position)
+    public function visibility(string | callable $visibility): static
     {
-        $this->configure(function () use ($position) {
-            $this->uploadButtonPosition = $position;
-        });
+        $this->visibility = $visibility;
 
         return $this;
     }
 
-    public function uploadProgressIndicatorPosition($position)
+    public function getAcceptedFileTypes(): array
     {
-        $this->configure(function () use ($position) {
-            $this->uploadProgressIndicatorPosition = $position;
-        });
-
-        return $this;
+        return $this->evaluate($this->acceptedFileTypes);
     }
 
-    public function visibility($visibility)
+    public function getDirectory(): ?string
     {
-        $this->configure(function () use ($visibility) {
-            $this->visibility = $visibility;
-        });
+        return $this->evaluate($this->directory);
+    }
 
-        return $this;
+    public function getDisk(): Filesystem
+    {
+        return Storage::disk($this->getDiskName());
+    }
+
+    public function getDiskName(): string
+    {
+        return $this->evaluate($this->diskName) ?? config('forms.default_filesystem_disk');
+    }
+
+    public function getImageCropAspectRatio(): ?string
+    {
+        return $this->evaluate($this->imageCropAspectRatio);
+    }
+
+    public function getImagePreviewHeight(): ?string
+    {
+        return $this->evaluate($this->imagePreviewHeight);
+    }
+
+    public function getImageResizeTargetHeight(): ?string
+    {
+        return $this->evaluate($this->imageResizeTargetHeight);
+    }
+
+    public function getImageResizeTargetWidth(): ?string
+    {
+        return $this->evaluate($this->imageResizeTargetWidth);
+    }
+
+    public function getLoadingIndicatorPosition(): string
+    {
+        return $this->evaluate($this->loadingIndicatorPosition);
+    }
+
+    public function getMaxSize(): ?int
+    {
+        return $this->evaluate($this->maxSize);
+    }
+
+    public function getMediaLibraryCollection(): ?string
+    {
+        return $this->evaluate($this->mediaLibraryCollection);
+    }
+
+    public function getMediaLibraryModel(): ?HasMedia
+    {
+        return $this->evaluate($this->mediaLibraryModel) ?? $this->getContainer()->getMediaLibraryModel();
+    }
+
+    public function getMinSize(): ?int
+    {
+        return $this->evaluate($this->minSize);
+    }
+
+    public function getPanelAspectRatio(): ?string
+    {
+        return $this->evaluate($this->panelAspectRatio);
+    }
+
+    public function getPanelLayout(): ?string
+    {
+        return $this->evaluate($this->panelLayout);
+    }
+
+    public function getRemoveUploadButtonPosition(): string
+    {
+        return $this->evaluate($this->removeUploadButtonPosition);
+    }
+
+    public function getUploadButtonPosition(): string
+    {
+        return $this->evaluate($this->uploadButtonPosition);
+    }
+
+    public function getUploadProgressIndicatorPosition(): string
+    {
+        return $this->evaluate($this->uploadProgressIndicatorPosition);
+    }
+
+    public function getVisibility(): string
+    {
+        return $this->evaluate($this->visibility);
+    }
+
+    public function isAvatar(): bool
+    {
+        return (bool) $this->evaluate($this->isAvatar);
+    }
+
+    public function shouldUploadedFileBeDeletedOnRemoval(): bool
+    {
+        return (bool) $this->evaluate($this->shouldUploadedFileBeDeletedOnRemoval);
+    }
+
+    public function usesMediaLibrary(): bool
+    {
+        return (bool) $this->getMediaLibraryCollection();
+    }
+
+    protected function hasFileObjectState(): bool
+    {
+        return $this->getState() instanceof SplFileInfo;
     }
 }
