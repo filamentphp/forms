@@ -17,7 +17,7 @@ it('belongs to Livewire component', function () {
 it('has components', function () {
     $components = [];
 
-    foreach (range(1, $count = 5) as $i) {
+    foreach (range(1, $count = rand(2, 10)) as $i) {
         $components[] = new Component();
     }
 

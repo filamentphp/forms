@@ -27,7 +27,7 @@ it('can access container\'s Livewire component', function () {
 it('has child components', function () {
     $components = [];
 
-    foreach (range(1, $count = 5) as $i) {
+    foreach (range(1, $count = rand(2, 10)) as $i) {
         $components[] = new Component();
     }
 
@@ -49,7 +49,7 @@ it('has child components', function () {
 it('has extra attributes', function () {
     $attributes = [];
 
-    foreach (range(1, 5) as $i) {
+    foreach (range(1, rand(2, 10)) as $i) {
         $attributes[Str::random()] = Str::random();
     }
 

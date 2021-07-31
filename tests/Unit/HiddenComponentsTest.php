@@ -19,11 +19,11 @@ test('components can be hidden', function () {
 test('hidden components are not returned from container', function () {
     $components = [];
 
-    foreach (range(1, $visibleCount = rand(1000, 9999)) as $i) {
+    foreach (range(1, $visibleCount = rand(2, 10)) as $i) {
         $components[] = new Component();
     }
 
-    foreach (range(1, rand(1000, 9999)) as $i) {
+    foreach (range(1, rand(2, 10)) as $i) {
         $components[] = (new Component())->hidden();
     }
 
