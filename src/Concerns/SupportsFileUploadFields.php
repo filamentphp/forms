@@ -67,6 +67,6 @@ trait SupportsFileUploadFields
 
     public function getMediaLibraryModel(): ?HasMedia
     {
-        return $this->mediaLibraryModel ?? $this->getParentComponent()?->getMediaLibraryModel();
+        return $this->mediaLibraryModel ?? $this->getParentComponent()?->getContainer()->getMediaLibraryModel();
     }
 }

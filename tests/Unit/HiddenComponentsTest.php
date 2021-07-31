@@ -7,18 +7,24 @@ use Tests\Unit\Fixtures\Livewire;
 
 uses(TestCase::class);
 
-it('belongs to Livewire component', function () {
-    $container = ComponentContainer::make($livewire = Livewire::make());
+test('components can be hidden', function () {
+    $component = (new Component())
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->hidden();
 
-    expect($container)
-        ->getLivewire()->toBe($livewire);
+    expect($component)
+        ->isHidden()->toBeTrue();
 });
 
-it('has components', function () {
+test('hidden components are not returned from container', function () {
     $components = [];
 
-    foreach (range(1, $count = 5) as $i) {
+    foreach (range(1, $visibleCount = rand(1000, 9999)) as $i) {
         $components[] = new Component();
+    }
+
+    foreach (range(1, rand(1000, 9999)) as $i) {
+        $components[] = (new Component())->hidden();
     }
 
     $componentsBoundToContainer = ($container = ComponentContainer::make(Livewire::make()))
@@ -26,18 +32,11 @@ it('has components', function () {
         ->getComponents();
 
     expect($componentsBoundToContainer)
-        ->toHaveCount($count)
+        ->toHaveCount($visibleCount)
         ->each(
             fn ($component) => $component
                 ->toBeInstanceOf(Component::class)
+                ->isHidden()->toBeFalse()
                 ->getContainer()->toBe($container),
         );
-});
-
-it('belongs to parent component', function () {
-    $container = ComponentContainer::make(Livewire::make())
-        ->parentComponent($component = new Component());
-
-    expect($container)
-        ->getParentComponent()->toBe($component);
 });

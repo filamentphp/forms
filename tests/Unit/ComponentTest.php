@@ -1,0 +1,71 @@
+<?php
+
+use Filament\Forms2\ComponentContainer;
+use Filament\Forms2\Components\Component;
+use Illuminate\Support\Str;
+use Tests\TestCase;
+use Tests\Unit\Fixtures\Livewire;
+
+uses(TestCase::class);
+
+it('belongs to container', function () {
+    $component = ((new Component()))
+        ->container($container = ComponentContainer::make(Livewire::make()));
+
+    expect($component)
+        ->getContainer()->toBe($container);
+});
+
+it('can access container\'s Livewire component', function () {
+    $component = (new Component())
+        ->container(ComponentContainer::make($livewire = Livewire::make()));
+
+    expect($component)
+        ->getLivewire()->toBe($livewire);
+});
+
+it('has child components', function () {
+    $components = [];
+
+    foreach (range(1, $count = 5) as $i) {
+        $components[] = new Component();
+    }
+
+    $componentsBoundToContainer = ($parentComponent = new Component())
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->childComponents($components)
+        ->getChildComponentContainer()
+        ->getComponents();
+
+    expect($componentsBoundToContainer)
+        ->toHaveCount($count)
+        ->each(
+            fn ($component) => $component
+                ->toBeInstanceOf(Component::class)
+                ->getContainer()->getParentComponent()->toBe($parentComponent),
+        );
+});
+
+it('has extra attributes', function () {
+    $attributes = [];
+
+    foreach (range(1, 5) as $i) {
+        $attributes[Str::random()] = Str::random();
+    }
+
+    $component = (new Component())
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->extraAttributes($attributes);
+
+    expect($component)
+        ->getExtraAttributes()->toBe($attributes);
+});
+
+it('has ID', function () {
+    $component = (new Component())
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->id($id = Str::random());
+
+    expect($component)
+        ->getId()->toBe($id);
+});

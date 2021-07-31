@@ -34,7 +34,7 @@
     },
     "scripts": {
         "test": [
-            "./vendor/bin/pest && vendor/bin/phpstan analyse src"
+            "./vendor/bin/pest && vendor/bin/phpstan"
         ]
     },
     "extra": {

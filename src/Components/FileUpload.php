@@ -112,8 +112,8 @@ class FileUpload extends Field
 
         $this->image();
         $this->imageCropAspectRatio('1:1');
-        $this->imageResizeTargetHeight(500);
-        $this->imageResizeTargetWidth(500);
+        $this->imageResizeTargetHeight('500');
+        $this->imageResizeTargetWidth('500');
         $this->loadingIndicatorPosition('center bottom');
         $this->panelLayout('compact circle');
         $this->removeUploadButtonPosition('center bottom');

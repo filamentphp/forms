@@ -9,4 +9,6 @@ interface HasForms
     public function getUploadedFileUrl(string $statePath): ?string;
 
     public function removeUploadedFile(string $statePath): void;
+
+    public function validate(?array $rules = null, array $messages = [], array $attributes = []);
 }
