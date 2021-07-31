@@ -116,3 +116,47 @@ test('custom logic can be executed after state is updated', function () {
     expect($livewire)
         ->getData()->toBe([$statePath => strval($state)]);
 });
+
+test('state can be dehydrated', function () {
+    $container = ComponentContainer::make(Livewire::make())
+        ->statePath('data')
+        ->components([
+            (new Component())
+                ->statePath($statePath = Str::random())
+                ->default($state = Str::random()),
+        ])
+        ->hydrateState();
+
+    expect($container)
+        ->dehydrateState()->toBe([$statePath => $state]);
+});
+
+test('state can be dehydrated using custom logic', function () {
+    $container = ComponentContainer::make(Livewire::make())
+        ->statePath('data')
+        ->components([
+            (new Component())
+                ->statePath($statePath = Str::random())
+                ->default($state = Str::random())
+                ->dehydrateStateUsing(fn ($state) => strrev($state)),
+        ])
+        ->hydrateState();
+
+    expect($container)
+        ->dehydrateState()->toBe([$statePath => strrev($state)]);
+});
+
+test('components can be excluded from state dehydration', function () {
+    $container = ComponentContainer::make(Livewire::make())
+        ->statePath('data')
+        ->components([
+            (new Component())
+                ->statePath(Str::random())
+                ->default(Str::random())
+                ->dehydrated(false),
+        ])
+        ->hydrateState();
+
+    expect($container)
+        ->dehydrateState()->toBe([]);
+});

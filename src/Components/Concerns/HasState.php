@@ -79,13 +79,9 @@ trait HasState
         return $this->getState();
     }
 
-    public function dehydrateStateUsing(?callable $callback = null): static
+    public function dehydrateStateUsing(callable $callback): static
     {
-        if ($callback) {
-            $this->dehydrateStateUsing = $callback;
-        } else {
-            $this->dehydrated(false);
-        }
+        $this->dehydrateStateUsing = $callback;
 
         return $this;
     }

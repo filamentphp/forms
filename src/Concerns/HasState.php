@@ -27,7 +27,7 @@ trait HasState
         return false;
     }
 
-    public function dehydrateState(array &$state): array
+    public function dehydrateState(array $state = []): array
     {
         foreach ($this->getComponents() as $component) {
             $componentStatePath = $component->getStatePath();
@@ -43,6 +43,10 @@ trait HasState
             foreach ($component->getChildComponentContainers() as $container) {
                 $container->dehydrateState($state);
             }
+        }
+
+        if ($statePath = $this->getStatePath()) {
+            $state = data_get($state, $statePath, []);
         }
 
         return $state;
@@ -120,12 +124,7 @@ trait HasState
     public function getValidState(): array
     {
         $state = $this->validate();
-        $this->dehydrateState($state);
 
-        if ($statePath = $this->getStatePath()) {
-            return data_get($state, $statePath, []);
-        } else {
-            return $state;
-        }
+        return $this->dehydrateState($state);
     }
 }
