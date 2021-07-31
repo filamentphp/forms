@@ -4,7 +4,7 @@ namespace Filament\Forms2\Concerns;
 
 trait ListensToEvents
 {
-    public function dispatchEvent(string $event, ...$parameters): void
+    public function dispatchEvent(string $event, ...$parameters): static
     {
         foreach ($this->getComponents() as $component) {
             $component->dispatchEvent($event, ...$parameters);
@@ -13,5 +13,7 @@ trait ListensToEvents
                 $container->dispatchEvent($event, ...$parameters);
             }
         }
+
+        return $this;
     }
 }
