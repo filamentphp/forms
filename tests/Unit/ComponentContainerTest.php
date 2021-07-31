@@ -10,7 +10,6 @@ uses(TestCase::class);
 
 it('belongs to Livewire component', function () {
     expect(ComponentContainer::make($livewire = Livewire::make()))
-        ->toBeInstanceOf(ComponentContainer::class)
         ->getLivewire()->toBe($livewire);
 });
 
