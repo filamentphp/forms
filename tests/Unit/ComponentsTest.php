@@ -45,27 +45,3 @@ it('has child components', function () {
                 ->getContainer()->getParentComponent()->toBe($parentComponent),
         );
 });
-
-it('has extra attributes', function () {
-    $attributes = [];
-
-    foreach (range(1, rand(2, 10)) as $i) {
-        $attributes[Str::random()] = Str::random();
-    }
-
-    $component = (new Component())
-        ->container(ComponentContainer::make(Livewire::make()))
-        ->extraAttributes($attributes);
-
-    expect($component)
-        ->getExtraAttributes()->toBe($attributes);
-});
-
-it('has ID', function () {
-    $component = (new Component())
-        ->container(ComponentContainer::make(Livewire::make()))
-        ->id($id = Str::random());
-
-    expect($component)
-        ->getId()->toBe($id);
-});

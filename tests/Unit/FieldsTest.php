@@ -1,0 +1,49 @@
+<?php
+
+use Filament\Forms2\ComponentContainer;
+use Filament\Forms2\Components\Field;
+use Illuminate\Support\Str;
+use Tests\TestCase;
+use Tests\Unit\Fixtures\Livewire;
+
+uses(TestCase::class);
+
+it('sets its state path from its name', function () {
+    $field = (new Field($name = Str::random()))
+        ->container(ComponentContainer::make(Livewire::make()));
+
+    expect($field)
+        ->getStatePath()->toBe($name);
+});
+
+it('sets its fallback label from its name', function () {
+    $field = (new Field($name = Str::random()))
+        ->container(ComponentContainer::make(Livewire::make()));
+
+    expect($field)
+        ->getLabel()->toBe(
+            (string) Str::of($name)
+                ->afterLast('.')
+                ->kebab()
+                ->replace(['-', '_'], ' ')
+                ->ucfirst(),
+        );
+});
+
+it('has a custom label', function () {
+    $field = (new Field(Str::random()))
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->label($label = Str::random());
+
+    expect($field)
+        ->getLabel()->toBe($label);
+});
+
+it('has state binding modifiers', function () {
+    $field = (new Field(Str::random()))
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->stateBindingModifiers($modifiers = [Str::random(), Str::random()]);
+
+    expect($field)
+        ->applyStateBindingModifiers($expression = Str::random())->toBe(implode('.', array_merge([$expression], $modifiers)));
+});
