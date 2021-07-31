@@ -23,20 +23,14 @@ class ComponentContainer extends ViewComponent implements Htmlable
     use Macroable;
     use Tappable;
 
-    public static function make(HasForms $livewire): static
+    final public function __construct(HasForms $livewire)
     {
-        $static = new static();
-        $static->livewire($livewire);
-
-        return $static;
+        $this->livewire($livewire);
     }
 
-    public function getClone(): static
+    public static function make(HasForms $livewire): static
     {
-        $clone = clone $this;
-        $clone->cloneComponents();
-
-        return $clone;
+        return new static($livewire);
     }
 
     public function toHtml(): string

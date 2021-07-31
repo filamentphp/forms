@@ -12,12 +12,14 @@ class Field extends Component implements Contracts\CanBeValidated
     use Concerns\HasName;
     use Concerns\HasStateBindingModifiers;
 
+    final public function __construct(string $name)
+    {
+        $this->name($name);
+    }
+
     public static function make(string $name): static
     {
-        $static = new static();
-        $static->name($name);
-
-        return $static;
+        return new static($name);
     }
 
     public function getId(): ?string

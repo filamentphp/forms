@@ -102,7 +102,7 @@ class TextInput extends Field
         $this->minLength = $length;
 
         $this->addValidationRule(function (): string {
-            $length = $this->getMaxLength();
+            $length = $this->getMinLength();
 
             return "min:{$length}";
         });
