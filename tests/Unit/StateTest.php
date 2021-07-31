@@ -108,13 +108,13 @@ test('custom logic can be executed after state is updated', function () {
         ->components([
             ($component = new Component())
                 ->statePath($statePath = Str::random())
-                ->afterStateUpdated(fn (callable $set, $state) => $set($component, strval($state))),
+                ->afterStateUpdated(fn (callable $setState, $state) => $setState($component, strrev($state))),
         ])
         ->hydrateState([$statePath => ($state = Str::random())])
-        ->callAfterStateUpdated($statePath);
+        ->callAfterStateUpdated("data.{$statePath}");
 
     expect($livewire)
-        ->getData()->toBe([$statePath => strval($state)]);
+        ->getData()->toBe([$statePath => strrev($state)]);
 });
 
 test('state can be dehydrated', function () {
@@ -139,6 +139,21 @@ test('state can be dehydrated using custom logic', function () {
                 ->statePath($statePath = Str::random())
                 ->default($state = Str::random())
                 ->dehydrateStateUsing(fn ($state) => strrev($state)),
+        ])
+        ->hydrateState();
+
+    expect($container)
+        ->dehydrateState()->toBe([$statePath => strrev($state)]);
+});
+
+test('custom logic can be executed before state is dehydrated', function () {
+    $container = ComponentContainer::make(Livewire::make())
+        ->statePath('data')
+        ->components([
+            ($component = new Component())
+                ->statePath($statePath = Str::random())
+                ->default($state = Str::random())
+                ->beforeStateDehydrated(fn (callable $setState, $state) => $setState($component, strrev($state))),
         ])
         ->hydrateState();
 
