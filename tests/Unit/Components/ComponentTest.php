@@ -3,8 +3,8 @@
 use Filament\Forms2\ComponentContainer;
 use Filament\Forms2\Components\Component;
 use Illuminate\Support\Str;
-use Tests\Unit\Fixtures\Livewire;
 use Tests\TestCase;
+use Tests\Unit\Fixtures\Livewire;
 
 uses(TestCase::class);
 
