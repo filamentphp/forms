@@ -6,6 +6,8 @@ interface HasForms
 {
     public function dispatchFormEvent(...$args): void;
 
+    public function getSelectSearchResults(string $statePath, string $query): array;
+
     public function getUploadedFileUrl(string $statePath): ?string;
 
     public function removeUploadedFile(string $statePath): void;

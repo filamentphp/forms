@@ -8,27 +8,29 @@ class DatePicker extends Field
 
     protected static string $view = 'forms2::components.date-time-picker';
 
-    protected $displayFormat;
+    protected $displayFormat = null;
 
-    protected $firstDayOfWeek;
+    protected $firstDayOfWeek = null;
 
-    protected $format;
+    protected $format = null;
 
     protected $hasSeconds = true;
 
     protected $hasTime = false;
 
-    protected $maxDate;
+    protected $maxDate = null;
 
-    protected $minDate;
+    protected $minDate = null;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->displayFormat('F j, Y');
-        $this->resetFirstDayOfWeek();
+
         $this->format('Y-m-d');
+
+        $this->resetFirstDayOfWeek();
     }
 
     public function displayFormat(string | callable $format): static

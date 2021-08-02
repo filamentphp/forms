@@ -27,6 +27,17 @@ trait InteractsWithForms
         }
     }
 
+    public function getSelectSearchResults(string $statePath, string $query): array
+    {
+        foreach ($this->getCachedForms() as $form) {
+            if ($results = $form->getSelectSearchResults($statePath, $query)) {
+                return $results;
+            }
+        }
+
+        return [];
+    }
+
     public function getUploadedFileUrl(string $statePath): ?string
     {
         foreach ($this->getCachedForms() as $form) {

@@ -33,16 +33,15 @@
             locale: '{{ Str::of(app()->getLocale())->lower()->kebab() }}',
             maxDate: '{{ $getMaxDate() }}',
             minDate: '{{ $getMinDate() }}',
-            placeholder: '{{ __($getPlaceholder()) }}',
+            placeholder: '{{ $getPlaceholder() }}',
             state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
         })"
-        x-init="init()"
         x-on:click.away="closePicker()"
         x-on:keydown.escape.stop="closePicker()"
         x-on:blur="closePicker()"
         {!! $getId() ? "id=\"{$getId()}\"" : null !!}
         class="relative"
-        {!! Filament\format_attributes($getExtraAttributes()) !!}
+        {{ $attributes->merge($getExtraAttributes()) }}
     >
         <button
             @unless($isDisabled())
@@ -57,14 +56,14 @@
                 x-on:keydown.clear.stop.prevent="clearValue()"
                 x-on:keydown.delete.stop.prevent="clearValue()"
                 x-bind:aria-expanded="open"
-                aria-label="{{ __($getPlaceholder()) }}"
+                aria-label="{{ $getPlaceholder() }}"
             @endunless
             type="button"
             class="bg-white relative w-full border pl-3 pr-10 py-2 text-left cursor-default rounded-lg shadow-sm focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-600 {{ $isDisabled() ? 'text-gray-500' : '' }} {{ $errors->has($getStatePath()) ? 'border-danger-600 motion-safe:animate-shake' : 'border-gray-300' }}"
         >
             <input
                 readonly
-                placeholder="{{ __($getPlaceholder()) }}"
+                placeholder="{{ $getPlaceholder() }}"
                 x-model="displayText"
                 class="w-full h-full p-0 placeholder-gray-400 border-0 focus:placeholder-gray-500 focus:ring-0 focus:outline-none"
             />

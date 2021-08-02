@@ -19,7 +19,14 @@ class Field extends Component implements Contracts\CanBeValidated
 
     public static function make(string $name): static
     {
-        return new static($name);
+        $static = new static($name);
+        $static->setUp();
+
+        return $static;
+    }
+
+    public function setUp(): void
+    {
     }
 
     public function getId(): ?string

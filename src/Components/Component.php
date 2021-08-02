@@ -25,10 +25,6 @@ class Component extends ViewComponent implements Htmlable
 
     protected static string $view;
 
-    public function setUp(): void
-    {
-    }
-
     public function toHtml(): string
     {
         return $this->render()->render();

@@ -12,7 +12,6 @@ trait HasComponents
     {
         $this->components = array_map(function (Component $component): Component {
             $component->container($this);
-            $component->setUp();
 
             return $component;
         }, $components);

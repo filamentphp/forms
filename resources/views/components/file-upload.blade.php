@@ -35,6 +35,7 @@
             uploadUsing: $wire.upload,
         })"
         wire:ignore
+        {{ $attributes->merge($getExtraAttributes()) }}
     >
         <input
             x-ref="input"
