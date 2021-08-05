@@ -32,11 +32,11 @@ class Select extends Field
             return $state;
         });
 
-        $this->noOptionsMessage(__('forms2::fields.select.noOptionsMessage'));
+        $this->noOptionsMessage(__('forms2::components.select.noOptionsMessage'));
 
-        $this->noSearchResultsMessage(__('forms2::fields.select.noSearchResultsMessage'));
+        $this->noSearchResultsMessage(__('forms2::components.select.noSearchResultsMessage'));
 
-        $this->placeholder(__('forms2::fields.select.placeholder'));
+        $this->placeholder(__('forms2::components.select.placeholder'));
     }
 
     public function getSearchResultsUsing(callable $callback): static

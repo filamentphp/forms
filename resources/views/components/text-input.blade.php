@@ -1,10 +1,4 @@
 @php
-    $iconClasses = 'w-7 h-7';
-    $iconContainerClasses = [
-        'absolute inset-y-0 left-0 flex items-center justify-center w-10 h-10 transition pointer-events-none group-focus-within:text-primary-500',
-        'text-gray-400' => ! $errors->has($getStatePath()),
-        'text-danger-400' => $errors->has($getStatePath()),
-    ];
     $sideLabelClasses = [
         'whitespace-nowrap transition group-focus-within:text-primary-500',
         'text-gray-400' => ! $errors->has($getStatePath()),
@@ -34,7 +28,9 @@
                 {!! $isDisabled() ? 'disabled' : null !!}
                 id="{{ $getId() }}"
                 {!! ($length = $getMaxLength()) ? "maxlength=\"{$length}\"" : null !!}
+                {!! ($value = $getMaxValue()) ? "max=\"{$value}\"" : null !!}
                 {!! ($length = $getMinLength()) ? "minlength=\"{$length}\"" : null !!}
+                {!! ($value = $getMinValue()) ? "min=\"{$value}\"" : null !!}
                 {!! ($placeholder = $getPlaceholder()) ? "placeholder=\"{$placeholder}\"" : null !!}
                 {!! $isRequired() ? 'required' : null !!}
                 type="{{ $getType() }}"

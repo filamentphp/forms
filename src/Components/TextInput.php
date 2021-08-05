@@ -4,11 +4,11 @@ namespace Filament\Forms2\Components;
 
 class TextInput extends Field
 {
+    use Concerns\CanBeAutocompleted;
+    use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
     protected static string $view = 'forms2::components.text-input';
-
-    protected $autocomplete = null;
 
     protected $isEmail = false;
 
@@ -20,9 +20,9 @@ class TextInput extends Field
 
     protected $isUrl = false;
 
-    protected $maxLength = null;
+    protected $maxValue = null;
 
-    protected $minLength = null;
+    protected $minValue = null;
 
     protected $postfixLabel = null;
 
@@ -30,25 +30,9 @@ class TextInput extends Field
 
     protected $type = null;
 
-    public function autocomplete(string | callable $autocomplete = 'on'): static
-    {
-        $this->autocomplete = $autocomplete;
-
-        return $this;
-    }
-
     public function currentPassword(bool | callable $condition = true): static
     {
         $this->addValidationRule('current_password', $condition);
-
-        return $this;
-    }
-
-    public function disableAutocomplete(bool | callable $condition = true): static
-    {
-        $this->autocomplete(function () use ($condition): ?string {
-            return $this->evaluate($condition) ? 'off' : null;
-        });
 
         return $this;
     }
@@ -64,8 +48,10 @@ class TextInput extends Field
 
     public function maxValue($value): static
     {
-        $this->addValidationRule(function () use ($value): string {
-            $value = $this->evaluate($value);
+        $this->maxValue = $value;
+
+        $this->addValidationRule(function (): string {
+            $value = $this->getMaxValue();
 
             return "max:{$value}";
         });
@@ -73,38 +59,14 @@ class TextInput extends Field
         return $this;
     }
 
-    public function maxLength(int | callable $length): static
-    {
-        $this->maxLength = $length;
-
-        $this->addValidationRule(function (): string {
-            $length = $this->getMaxLength();
-
-            return "max:{$length}";
-        });
-
-        return $this;
-    }
-
     public function minValue($value): static
     {
-        $this->addValidationRule(function () use ($value): string {
-            $value = $this->evaluate($value);
-
-            return "min:{$value}";
-        });
-
-        return $this;
-    }
-
-    public function minLength(int | callable $length): static
-    {
-        $this->minLength = $length;
+        $this->minValue = $value;
 
         $this->addValidationRule(function (): string {
-            $length = $this->getMinLength();
+            $value = $this->getMinValue();
 
-            return "min:{$length}";
+            return "min:{$value}";
         });
 
         return $this;
@@ -163,31 +125,14 @@ class TextInput extends Field
         return $this;
     }
 
-    public function getAutocomplete(): ?string
+    public function getMaxValue()
     {
-        if (! ($autocomplete = $this->evaluate($this->autocomplete))) {
-            return null;
-        }
-
-        return $autocomplete;
+        return $this->evaluate($this->maxValue);
     }
 
-    public function getMaxLength(): ?int
+    public function getMinValue()
     {
-        if (! ($length = $this->evaluate($this->maxLength))) {
-            return null;
-        }
-
-        return $length;
-    }
-
-    public function getMinLength(): ?int
-    {
-        if (! ($length = $this->evaluate($this->minLength))) {
-            return null;
-        }
-
-        return $length;
+        return $this->evaluate($this->minValue);
     }
 
     public function getPrefixLabel(): ?string
