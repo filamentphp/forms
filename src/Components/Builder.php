@@ -3,6 +3,7 @@
 namespace Filament\Forms2\Components;
 
 use Filament\Forms2\ComponentContainer;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Builder extends Field
@@ -23,7 +24,7 @@ class Builder extends Field
                     $livewire = $this->getLivewire();
 
                     $state = $this->getNormalisedState();
-                    $state[Str::orderedUuid()->toString()] = [
+                    $state[Str::uuid()->toString()] = [
                         'type' => $type,
                         'data' => [],
                     ];

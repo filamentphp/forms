@@ -37,7 +37,7 @@ trait HasState
             if ($component->isDehydrated()) {
                 data_set($state, $componentStatePath, $component->dehydrateState());
             } else {
-                Arr::forget($state, $componentStatePath);
+                data_forget($state, $componentStatePath);
             }
 
             foreach ($component->getChildComponentContainers() as $container) {

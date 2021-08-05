@@ -9,12 +9,11 @@ class Field extends Component implements Contracts\CanBeValidated
     use Concerns\HasHelperText;
     use Concerns\HasHint;
     use Concerns\HasLabel;
-    use Concerns\HasName;
     use Concerns\HasStateBindingModifiers;
 
     final public function __construct(string $name)
     {
-        $this->name($name);
+        $this->statePath($name);
     }
 
     public static function make(string $name): static
