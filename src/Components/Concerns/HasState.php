@@ -3,7 +3,6 @@
 namespace Filament\Forms2\Components\Concerns;
 
 use Filament\Forms2\Components\Component;
-use Illuminate\Support\Arr;
 
 trait HasState
 {

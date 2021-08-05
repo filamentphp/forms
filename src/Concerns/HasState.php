@@ -2,8 +2,6 @@
 
 namespace Filament\Forms2\Concerns;
 
-use Illuminate\Support\Arr;
-
 trait HasState
 {
     protected ?string $statePath = null;
