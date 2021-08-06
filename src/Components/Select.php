@@ -6,7 +6,7 @@ class Select extends Field
 {
     use Concerns\HasPlaceholder;
 
-    protected static string $view = 'forms2::components.select';
+    protected string $view = 'forms2::components.select';
 
     protected $getSearchResultsUsing = null;
 

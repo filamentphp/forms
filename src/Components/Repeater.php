@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class Repeater extends Field
 {
-    protected static string $view = 'forms2::components.repeater';
+    protected string $view = 'forms2::components.repeater';
 
     public function setUp(): void
     {

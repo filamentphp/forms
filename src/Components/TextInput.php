@@ -8,7 +8,7 @@ class TextInput extends Field
     use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
-    protected static string $view = 'forms2::components.text-input';
+    protected string $view = 'forms2::components.text-input';
 
     protected $isEmail = false;
 

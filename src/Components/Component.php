@@ -22,12 +22,11 @@ class Component extends ViewComponent implements Htmlable
     use Concerns\HasId;
     use Concerns\HasLabel;
     use Concerns\HasState;
+    use Concerns\HasView;
     use Concerns\ListensToEvents;
     use HasColumns;
     use Macroable;
     use Tappable;
-
-    protected static string $view;
 
     public function toHtml(): string
     {
@@ -36,7 +35,7 @@ class Component extends ViewComponent implements Htmlable
 
     public function render(): View
     {
-        return view(static::$view, array_merge($this->data(), [
+        return view($this->getView(), array_merge($this->data(), [
             'component' => $this,
         ]));
     }

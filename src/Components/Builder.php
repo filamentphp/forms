@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class Builder extends Field
 {
-    protected static string $view = 'forms2::components.builder';
+    protected string $view = 'forms2::components.builder';
 
     public function setUp(): void
     {

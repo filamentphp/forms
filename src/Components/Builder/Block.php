@@ -10,7 +10,7 @@ class Block extends Component
 {
     use Concerns\HasName;
 
-    protected static string $view = 'forms2::components.builder.block';
+    protected string $view = 'forms2::components.builder.block';
 
     protected $icon;
 

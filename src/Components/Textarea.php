@@ -8,7 +8,7 @@ class Textarea extends Field
     use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
-    protected static string $view = 'forms2::components.textarea';
+    protected string $view = 'forms2::components.textarea';
 
     protected $cols = null;
 

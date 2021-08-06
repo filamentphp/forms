@@ -7,7 +7,7 @@ class Toggle extends Field
     use Concerns\CanBeAccepted;
     use Concerns\CanBeInline;
 
-    protected static string $view = 'forms2::components.toggle';
+    protected string $view = 'forms2::components.toggle';
 
     protected $offIcon = null;
 

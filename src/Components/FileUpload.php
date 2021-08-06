@@ -14,7 +14,7 @@ class FileUpload extends Field
 {
     use Concerns\HasPlaceholder;
 
-    protected static string $view = 'forms2::components.file-upload';
+    protected string $view = 'forms2::components.file-upload';
 
     protected $acceptedFileTypes = [];
 

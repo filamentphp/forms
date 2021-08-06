@@ -6,7 +6,7 @@ class DatePicker extends Field
 {
     use Concerns\HasPlaceholder;
 
-    protected static string $view = 'forms2::components.date-time-picker';
+    protected string $view = 'forms2::components.date-time-picker';
 
     protected $displayFormat = null;
 
