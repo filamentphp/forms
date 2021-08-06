@@ -19,6 +19,7 @@
                     'bg-primary-600': state,
                     'bg-gray-200': ! state,
                 }"
+                x-cloak
                 {!! $isAutofocused() ? 'autofocus' : null !!}
                 {!! $isDisabled() ? 'disabled' : null !!}
                 id="{{ $getId() }}"
