@@ -2,8 +2,6 @@
 
 namespace Filament\Forms2\Components\Concerns;
 
-use Illuminate\Support\Str;
-
 trait HasName
 {
     protected string $name;
