@@ -2,6 +2,8 @@
 
 use Filament\Forms2\ComponentContainer;
 use Filament\Forms2\Components\Component;
+use Filament\Forms2\Components\Field;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Unit\Fixtures\Livewire;
 
@@ -43,4 +45,13 @@ it('has child components', function () {
                 ->toBeInstanceOf(Component::class)
                 ->getContainer()->getParentComponent()->toBe($parentComponent),
         );
+});
+
+it('has a label', function () {
+    $component = (new Component())
+        ->container(ComponentContainer::make(Livewire::make()))
+        ->label($label = Str::random());
+
+    expect($component)
+        ->getLabel()->toBe($label);
 });

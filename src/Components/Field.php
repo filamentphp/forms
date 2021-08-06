@@ -2,20 +2,21 @@
 
 namespace Filament\Forms2\Components;
 
+use Illuminate\Support\Str;
+
 class Field extends Component implements Contracts\CanBeValidated
 {
     use Concerns\CanBeAutofocused;
     use Concerns\CanBeValidated;
     use Concerns\HasHelperText;
     use Concerns\HasHint;
-    use Concerns\HasLabel;
+    use Concerns\HasName;
     use Concerns\HasStateBindingModifiers;
-
-    protected string $name;
 
     final public function __construct(string $name)
     {
         $this->name($name);
+        $this->statePath($name);
     }
 
     public static function make(string $name): static
@@ -30,22 +31,16 @@ class Field extends Component implements Contracts\CanBeValidated
     {
     }
 
-    public function name(string $name): static
-    {
-        $this->name = $name;
-
-        $this->statePath($this->getName());
-
-        return $this;
-    }
-
     public function getId(): string
     {
         return parent::getId() ?? $this->getStatePath();
     }
 
-    public function getName(): string
+    public function getLabel(): string
     {
-        return $this->name;
+        return parent::getLabel() ?? (string) Str::of($this->getName())
+            ->kebab()
+            ->replace(['-', '_'], ' ')
+            ->ucfirst();
     }
 }

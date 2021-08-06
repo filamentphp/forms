@@ -1,6 +1,7 @@
 <?php
 
 use Filament\Forms2\ComponentContainer;
+use Filament\Forms2\Components\Component;
 use Filament\Forms2\Components\Field;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -28,15 +29,6 @@ it('sets its fallback label from its name', function () {
                 ->replace(['-', '_'], ' ')
                 ->ucfirst(),
         );
-});
-
-it('has a custom label', function () {
-    $field = (new Field(Str::random()))
-        ->container(ComponentContainer::make(Livewire::make()))
-        ->label($label = Str::random());
-
-    expect($field)
-        ->getLabel()->toBe($label);
 });
 
 it('has state binding modifiers', function () {

@@ -2,8 +2,6 @@
 
 namespace Filament\Forms2\Components\Concerns;
 
-use Illuminate\Support\Str;
-
 trait HasLabel
 {
     protected $label = null;
@@ -15,11 +13,8 @@ trait HasLabel
         return $this;
     }
 
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
-        return $this->evaluate($this->label) ?? (string) Str::of($this->getName())
-            ->kebab()
-            ->replace(['-', '_'], ' ')
-            ->ucfirst();
+        return $this->evaluate($this->label);
     }
 }

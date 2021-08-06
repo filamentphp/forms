@@ -4,16 +4,15 @@ namespace Filament\Forms2\Components\Builder;
 
 use Filament\Forms2\Components\Component;
 use Filament\Forms2\Components\Concerns;
+use Illuminate\Support\Str;
 
 class Block extends Component
 {
-    use Concerns\HasLabel;
+    use Concerns\HasName;
 
     protected static string $view = 'forms2::components.builder.block';
 
     protected $icon;
-
-    protected string $name;
 
     final public function __construct(string $name)
     {
@@ -32,20 +31,16 @@ class Block extends Component
         return $this;
     }
 
-    public function name(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getIcon(): ?string
     {
         return $this->evaluate($this->icon);
     }
 
-    public function getName(): string
+    public function getLabel(): string
     {
-        return $this->name;
+        return parent::getLabel() ?? (string) Str::of($this->getName())
+                ->kebab()
+                ->replace(['-', '_'], ' ')
+                ->ucfirst();
     }
 }
