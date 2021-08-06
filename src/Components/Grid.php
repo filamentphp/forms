@@ -15,7 +15,7 @@ class Grid extends Component
     {
         $static = new static($columns);
         $static->setUp();
-        
+
         return $static;
     }
 
