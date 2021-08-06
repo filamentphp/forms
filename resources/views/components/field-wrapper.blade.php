@@ -1,6 +1,7 @@
 @props([
     'id',
     'label' => null,
+    'labelPrefix' => null,
     'labelSrOnly' => false,
     'helperText' => null,
     'hint' => null,
@@ -14,17 +15,21 @@
             @unless ($labelSrOnly)
                 <label
                     for="{{ $id }}"
-                    @class([
-                        'inline-block text-sm font-medium leading-4',
+                    class="inline-flex items-center space-x-3"
+                >
+                    {{ $labelPrefix }}
+
+                    <span @class([
+                        'text-sm font-medium leading-4',
                         'text-gray-700' => ! $errors->has($statePath),
                         'text-danger-700' => $errors->has($statePath),
-                    ])
-                >
-                    {{ $label }}
+                    ])>
+                        {{ $label }}
 
-                    @if ($required)
-                        <sup class="font-medium text-danger-700">*</sup>
-                    @endif
+                        @if ($required)
+                            <sup class="font-medium text-danger-700">*</sup>
+                        @endif
+                    </span>
                 </label>
             @else
                 <label for="{{ $id }}" class="sr-only">
