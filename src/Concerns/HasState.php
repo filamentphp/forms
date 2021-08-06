@@ -2,6 +2,8 @@
 
 namespace Filament\Forms2\Concerns;
 
+use Illuminate\Support\Arr;
+
 trait HasState
 {
     protected ?string $statePath = null;
@@ -35,7 +37,7 @@ trait HasState
             if ($component->isDehydrated()) {
                 data_set($state, $componentStatePath, $component->dehydrateState());
             } else {
-                data_forget($state, $componentStatePath);
+                Arr::forget($state, $componentStatePath);
             }
 
             foreach ($component->getChildComponentContainers() as $container) {

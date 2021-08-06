@@ -25,7 +25,7 @@ class Repeater extends Field
 
                     $uuid = Str::uuid();
 
-                    data_set($livewire, implode('.', [$statePath, $uuid]), []);
+                    data_set($livewire, "{$statePath}.{$uuid}", []);
                 },
             ],
             'repeater.deleteItem' => [

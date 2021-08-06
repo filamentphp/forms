@@ -164,7 +164,7 @@ trait HasState
             if ($statePath instanceof Component) {
                 $statePath = $statePath->getStatePath();
             } elseif ($containerStatePath = $this->getContainer()->getStatePath()) {
-                $statePath = implode('.', [$containerStatePath, $statePath]);
+                $statePath = "{$containerStatePath}.{$statePath}";
             }
 
             $livewire = $this->getLivewire();

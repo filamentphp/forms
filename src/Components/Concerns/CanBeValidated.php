@@ -2,6 +2,7 @@
 
 namespace Filament\Forms2\Components\Concerns;
 
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
 
@@ -47,7 +48,7 @@ trait CanBeValidated
             $statePath = $this->evaluate($statePath);
 
             if ($containerStatePath = $this->getContainer()->getStatePath()) {
-                $statePath = implode('.', [$containerStatePath, $statePath]);
+                $statePath = "{$containerStatePath}.{$statePath}";
             }
 
             return "same:{$statePath}";

@@ -1,7 +1,7 @@
 <div class="space-y-4">
     @if (count($containers = $getChildComponentContainers()))
         <ul class="space-y-4">
-            @foreach ($containers as $index => $item)
+            @foreach ($containers as $uuid => $item)
                 <li
                     wire:key="{{ $item->getStatePath() }}"
                     class="flex"
@@ -10,7 +10,7 @@
                         <div class="bg-white divide-y shadow-sm rounded-l-lg border-b border-l border-t border-gray-300 overflow-hidden">
                             @unless ($loop->first)
                                 <button
-                                    wire:click="dispatchFormEvent('repeater.moveItemUp', '{{ $getStatePath() }}', '{{ $index }}')"
+                                    wire:click="dispatchFormEvent('repeater.moveItemUp', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                     type="button"
                                     class="w-full flex items-center justify-center h-8 text-gray-800 transition hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset focus:ring-white focus:ring-primary-600 focus:text-primary-600 focus:bg-primary-50 focus:border-primary-600"
                                 >
@@ -20,7 +20,7 @@
 
                             @unless ($loop->last)
                                 <button
-                                    wire:click="dispatchFormEvent('repeater.moveItemDown', '{{ $getStatePath() }}', '{{ $index }}')"
+                                    wire:click="dispatchFormEvent('repeater.moveItemDown', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                     type="button"
                                     class="w-full flex items-center justify-center h-8 text-gray-800 transition hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset focus:ring-white focus:ring-primary-600 focus:text-primary-600 focus:bg-primary-50 focus:border-primary-600"
                                 >
@@ -29,7 +29,7 @@
                             @endunless
 
                             <button
-                                wire:click="dispatchFormEvent('repeater.deleteItem', '{{ $getStatePath() }}', '{{ $index }}')"
+                                wire:click="dispatchFormEvent('repeater.deleteItem', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                 type="button"
                                 class="w-full flex items-center justify-center h-8 text-danger-600 transition hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset focus:ring-white focus:ring-primary-600 focus:text-danger-600 focus:bg-primary-50 focus:border-primary-600"
                             >
