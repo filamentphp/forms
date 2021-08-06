@@ -95,9 +95,7 @@ trait HasState
                 ]);
             }
 
-            $livewire = $this->getLivewire();
-
-            data_set($livewire, $this->getStatePath(), $state);
+            $this->state($state);
         }
 
         return $this;
@@ -106,9 +104,7 @@ trait HasState
     public function hydrateState(): static
     {
         if ($callback = $this->hydrateStateUsing) {
-            $livewire = $this->getLivewire();
-
-            data_set($livewire, $this->getStatePath(), $this->evaluate($callback));
+            $this->state($callback);
         }
 
         return $this;
@@ -121,9 +117,13 @@ trait HasState
         return $this;
     }
 
-    public function isDehydrated(): bool
+    public function state($state): static
     {
-        return (bool) $this->evaluate($this->isDehydrated);
+        $livewire = $this->getLivewire();
+
+        data_set($livewire, $this->getStatePath(), $this->evaluate($state));
+
+        return $this;
     }
 
     public function statePath(string $path): static
@@ -156,6 +156,11 @@ trait HasState
         }
 
         return implode('.', $pathComponents);
+    }
+
+    public function isDehydrated(): bool
+    {
+        return (bool) $this->evaluate($this->isDehydrated);
     }
 
     protected function getSetStateCallback(): callable

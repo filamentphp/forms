@@ -364,10 +364,7 @@ class FileUpload extends Field
 
         $this->deleteUploadedFile();
 
-        $livewire = $this->getLivewire();
-        data_set($livewire, $this->getStatePath(), null);
-
-        return $this;
+        return $this->state(null);
     }
 
     public function saveUploadedFile()
@@ -400,8 +397,7 @@ class FileUpload extends Field
             ->usingFileName($file->getFilename())
             ->toMediaCollection($collection);
 
-        $livewire = $this->getLivewire();
-        data_set($livewire, $this->getStatePath(), $media->uuid);
+        $this->state($media->uuid);
 
         return $media->uuid;
     }
@@ -414,8 +410,7 @@ class FileUpload extends Field
 
         $path = $file->{$storeMethod}($this->getDirectory(), $this->getDiskName());
 
-        $livewire = $this->getLivewire();
-        data_set($livewire, $this->getStatePath(), $path);
+        $this->state($path);
 
         return $path;
     }
