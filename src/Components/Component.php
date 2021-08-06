@@ -12,6 +12,7 @@ use Illuminate\View\Component as ViewComponent;
 class Component extends ViewComponent implements Htmlable
 {
     use Concerns\BelongsToContainer;
+    use Concerns\CanBeConcealed;
     use Concerns\CanBeDisabled;
     use Concerns\CanBeHidden;
     use Concerns\CanSpanColumns;

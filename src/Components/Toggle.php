@@ -46,11 +46,11 @@ class Toggle extends Field
 
     public function hasOffIcon(): bool
     {
-        return $this->getOffIcon() !== null;
+        return (bool) $this->getOffIcon();
     }
 
     public function hasOnIcon(): bool
     {
-        return $this->getOnIcon() !== null;
+        return (bool) $this->getOnIcon();
     }
 }

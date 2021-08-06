@@ -6,6 +6,23 @@ use Filament\Forms2\Components;
 
 trait CanBeValidated
 {
+    public function getInvalidComponentToFocus($statePaths = []): ?Components\Component
+    {
+        foreach ($this->getComponents() as $component) {
+            if (in_array($component->getStatePath(), $statePaths)) {
+                return $component;
+            }
+
+            foreach ($component->getChildComponentContainers() as $container) {
+                if ($componentToFocus = $container->getInvalidComponentToFocus($statePaths)) {
+                    return $componentToFocus;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getValidationRules(): array
     {
         $rules = [];

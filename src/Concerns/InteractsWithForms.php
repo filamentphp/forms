@@ -3,6 +3,7 @@
 namespace Filament\Forms2\Concerns;
 
 use Filament\Forms2\ComponentContainer;
+use Illuminate\Validation\ValidationException;
 use Livewire\WithFileUploads;
 
 trait InteractsWithForms
@@ -53,6 +54,31 @@ trait InteractsWithForms
     {
         foreach ($this->getCachedForms() as $form) {
             $form->removeUploadedFile($statePath);
+        }
+    }
+
+    public function validate($rules = null, $messages = [], $attributes = [])
+    {
+        try {
+            return parent::validate($rules, $messages, $attributes);
+        } catch (ValidationException $exception) {
+            $invalidComponentStatePaths = array_keys($exception->validator->failed());
+
+            $componentToFocus = null;
+
+            foreach ($this->getCachedForms() as $form) {
+                if ($componentToFocus = $form->getInvalidComponentToFocus($invalidComponentStatePaths)) {
+                    break;
+                }
+            }
+
+            if ($concealingComponent = $componentToFocus?->getConcealingComponent()) {
+                $this->dispatchBrowserEvent('expand-concealing-component', [
+                    'id' => $concealingComponent->getId(),
+                ]);
+            }
+
+            throw $exception;
         }
     }
 

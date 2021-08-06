@@ -2,13 +2,15 @@
 
 namespace Filament\Forms2\Components;
 
-class Section extends Component
+use Illuminate\Support\Str;
+
+class Section extends Component implements Contracts\CanConcealComponents
 {
     protected string $view = 'forms2::components.section';
 
-    protected $collapsed = false;
+    protected $isCollapsed = false;
 
-    protected $collapsible = false;
+    protected $isCollapsible = false;
 
     protected $description = null;
 
@@ -61,14 +63,27 @@ class Section extends Component
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->evaluate($this->description);
+    }
+
     public function getHeading(): string
     {
         return $this->evaluate($this->heading);
     }
 
-    public function getDescription(): ?string
+    public function getId(): ?string
     {
-        return $this->evaluate($this->description);
+        if (! ($id = parent::getId())) {
+            $id = Str::slug($this->getHeading());
+
+            if ($statePath = $this->getStatePath()) {
+                $id = "{$statePath}.{$id}";
+            }
+        }
+
+        return $id;
     }
 
     public function isCollapsed(): bool

@@ -30,7 +30,7 @@ trait HasColumns
 
     public function getColumns($breakpoint = null): array | int | null
     {
-        if ($this instanceof ComponentContainer && ($this->getParentComponent() !== null)) {
+        if ($this instanceof ComponentContainer && $this->getParentComponent()) {
             $columns = $this->getParentComponent()->getColumns();
         } else {
             $columns = $this->columns;
