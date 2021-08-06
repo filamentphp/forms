@@ -2,7 +2,6 @@
 
 namespace Filament\Forms2\Components\Concerns;
 
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
 
