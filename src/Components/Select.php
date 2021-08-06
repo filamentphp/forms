@@ -20,7 +20,7 @@ class Select extends Field
 
     protected $options = [];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

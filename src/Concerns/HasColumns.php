@@ -10,7 +10,7 @@ trait HasColumns
         'default' => 1,
         'sm' => null,
         'md' => null,
-        'lg' => 2,
+        'lg' => null,
         'xl' => null,
         '2xl' => null,
     ];
@@ -31,7 +31,7 @@ trait HasColumns
     public function getColumns($breakpoint = null): array | int | null
     {
         if ($this instanceof ComponentContainer && ($this->getParentComponent() !== null)) {
-            $columns = $this->getParentComponent()->getColumns($breakpoint);
+            $columns = $this->getParentComponent()->getColumns();
         } else {
             $columns = $this->columns;
         }

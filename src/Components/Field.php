@@ -27,7 +27,7 @@ class Field extends Component implements Contracts\CanBeValidated
         return $static;
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
     }
 

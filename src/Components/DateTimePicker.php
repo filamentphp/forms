@@ -14,7 +14,7 @@ class DateTimePicker extends DatePicker
 
     protected $hasTime = true;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

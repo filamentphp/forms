@@ -11,7 +11,7 @@ class Builder extends Field
 {
     protected string $view = 'forms2::components.builder';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

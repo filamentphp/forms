@@ -10,7 +10,7 @@ class Repeater extends Field
 {
     protected string $view = 'forms2::components.repeater';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

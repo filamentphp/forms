@@ -13,7 +13,7 @@ class Toggle extends Field
 
     protected $onIcon = null;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->default(false);
 

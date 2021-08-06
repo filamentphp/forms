@@ -22,7 +22,7 @@ class DatePicker extends Field
 
     protected $minDate = null;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

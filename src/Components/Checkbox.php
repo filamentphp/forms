@@ -9,7 +9,7 @@ class Checkbox extends Field
 
     protected string $view = 'forms2::components.checkbox';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->default(false);
 

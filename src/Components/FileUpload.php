@@ -62,7 +62,7 @@ class FileUpload extends Field
 
     protected $visibility = 'public';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
