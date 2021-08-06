@@ -15,7 +15,7 @@ trait HasColumns
         '2xl' => null,
     ];
 
-    public function columns(array | int | null $columns): static
+    public function columns(array | int | null $columns = 2): static
     {
         if (! is_array($columns)) {
             $columns = [

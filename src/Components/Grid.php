@@ -11,7 +11,7 @@ class Grid extends Component
         $this->columns($columns);
     }
 
-    public static function make(array | int | null $columns = ['lg' => 2]): static
+    public static function make(array | int | null $columns = 2): static
     {
         $static = new static($columns);
         $static->setUp();
