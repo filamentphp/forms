@@ -4,24 +4,15 @@ namespace Filament\Forms2\Components;
 
 class Checkbox extends Field
 {
-    protected static string $view = 'forms2::components.checkbox';
+    use Concerns\CanBeAccepted;
+    use Concerns\CanBeInline;
 
-    protected $isInline = true;
+    protected static string $view = 'forms2::components.checkbox';
 
     public function setUp(): void
     {
         $this->default(false);
-    }
 
-    public function inline(bool | callable $condition = true)
-    {
-        $this->isInline = $condition;
-
-        return $this;
-    }
-
-    public function isInline()
-    {
-        return $this->evaluate($this->isInline);
+        $this->inline();
     }
 }
