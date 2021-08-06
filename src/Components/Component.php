@@ -2,6 +2,7 @@
 
 namespace Filament\Forms2\Components;
 
+use Filament\Forms2\Concerns\HasColumns;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Traits\Macroable;
@@ -13,6 +14,7 @@ class Component extends ViewComponent implements Htmlable
     use Concerns\BelongsToContainer;
     use Concerns\CanBeDisabled;
     use Concerns\CanBeHidden;
+    use Concerns\CanSpanColumns;
     use Concerns\Cloneable;
     use Concerns\EvaluatesCallbacks;
     use Concerns\HasChildComponents;
@@ -20,6 +22,7 @@ class Component extends ViewComponent implements Htmlable
     use Concerns\HasId;
     use Concerns\HasState;
     use Concerns\ListensToEvents;
+    use HasColumns;
     use Macroable;
     use Tappable;
 
