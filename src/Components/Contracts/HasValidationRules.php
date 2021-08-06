@@ -2,7 +2,7 @@
 
 namespace Filament\Forms2\Components\Contracts;
 
-interface CanBeValidated
+interface HasValidationRules
 {
     public function getStatePath(): string;
 

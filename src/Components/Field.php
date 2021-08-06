@@ -4,7 +4,7 @@ namespace Filament\Forms2\Components;
 
 use Illuminate\Support\Str;
 
-class Field extends Component implements Contracts\CanBeValidated
+class Field extends Component implements Contracts\HasValidationRules
 {
     use Concerns\CanBeAutofocused;
     use Concerns\CanBeValidated;

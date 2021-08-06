@@ -42,11 +42,11 @@ class Builder extends Field
                         }
 
                         data_set($livewire, $statePath, $newItems);
-
-                        return;
+                    } else {
+                        data_set($livewire, "{$statePath}.{$newUuid}", $newItem);
                     }
 
-                    data_set($livewire, "{$statePath}.{$newUuid}", $newItem);
+                    $this->hydrateDefaultItemState($newUuid);
                 },
             ],
             'builder.deleteItem' => [
@@ -163,5 +163,10 @@ class Builder extends Field
     public function hasBlock($name): bool
     {
         return (bool) $this->getBlock($name);
+    }
+
+    protected function hydrateDefaultItemState(string $uuid): void
+    {
+        $this->getChildComponentContainers()[$uuid]->hydrateDefaultState();
     }
 }

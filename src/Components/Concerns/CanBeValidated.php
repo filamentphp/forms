@@ -90,7 +90,7 @@ trait CanBeValidated
             }
         }
 
-        return array_map(function ($rule): string | object {
+        return array_map(function (string | object | callable $rule): string | object {
             if (is_callable($rule)) {
                 $rule = $this->evaluate($rule);
             }

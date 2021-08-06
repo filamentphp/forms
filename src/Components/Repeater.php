@@ -23,9 +23,11 @@ class Repeater extends Field
 
                     $livewire = $this->getLivewire();
 
-                    $uuid = Str::uuid();
+                    $newUuid = (string) Str::uuid();
 
-                    data_set($livewire, "{$statePath}.{$uuid}", []);
+                    data_set($livewire, "{$statePath}.{$newUuid}", []);
+
+                    $this->hydrateDefaultItemState($newUuid);
                 },
             ],
             'repeater.deleteItem' => [
@@ -114,5 +116,10 @@ class Repeater extends Field
         }
 
         return array_filter($state, fn ($item) => is_array($item));
+    }
+
+    protected function hydrateDefaultItemState(string $uuid): void
+    {
+        $this->getChildComponentContainers()[$uuid]->hydrateDefaultState();
     }
 }

@@ -35,13 +35,15 @@ trait HasState
             $component->callBeforeStateDehydrated();
 
             if ($component->isDehydrated()) {
-                data_set($state, $componentStatePath, $component->dehydrateState());
+                if ($component->getStatePath(absolute: false)) {
+                    data_set($state, $componentStatePath, $component->dehydrateState());
+                }
+
+                foreach ($component->getChildComponentContainers() as $container) {
+                    $container->dehydrateState($state);
+                }
             } else {
                 Arr::forget($state, $componentStatePath);
-            }
-
-            foreach ($component->getChildComponentContainers() as $container) {
-                $container->dehydrateState($state);
             }
         }
 
@@ -106,11 +108,11 @@ trait HasState
         return $this;
     }
 
-    public function getStatePath(): string
+    public function getStatePath(bool $absolute = true): string
     {
         $pathComponents = [];
 
-        if ($parentComponentStatePath = $this->getParentComponent()?->getStatePath()) {
+        if ($absolute && $parentComponentStatePath = $this->getParentComponent()?->getStatePath()) {
             $pathComponents[] = $parentComponentStatePath;
         }
 

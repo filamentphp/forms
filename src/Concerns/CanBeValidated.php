@@ -12,7 +12,7 @@ trait CanBeValidated
 
         foreach ($this->getComponents() as $component) {
             if (
-                $component instanceof Components\Contracts\CanBeValidated &&
+                $component instanceof Components\Contracts\HasValidationRules &&
                 count($componentRules = $component->getValidationRules())
             ) {
                 $rules[$component->getStatePath()] = $componentRules;
