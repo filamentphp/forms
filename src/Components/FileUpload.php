@@ -5,7 +5,6 @@ namespace Filament\Forms2\Components;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use Livewire\TemporaryUploadedFile;
 use SplFileInfo;
 
 class FileUpload extends Field
@@ -59,7 +58,9 @@ class FileUpload extends Field
         parent::setUp();
 
         $this->beforeStateDehydrated(function (FileUpload $component, callable $setState): void {
-            if (! $component->hasFileObjectState()) return;
+            if (! $component->hasFileObjectState()) {
+                return;
+            }
 
             $setState($component, $component->saveUploadedFile());
         });
@@ -406,7 +407,9 @@ class FileUpload extends Field
         return $file->{$storeMethod}($this->getDirectory(), $this->getDiskName());
     }
 
-    protected function handleUploadedFileDeletion($file): void {}
+    protected function handleUploadedFileDeletion($file): void
+    {
+    }
 
     protected function handleUploadedFileUrlRetrieval($file): ?string
     {

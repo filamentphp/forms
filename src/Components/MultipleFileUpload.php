@@ -67,5 +67,3 @@ class MultipleFileUpload extends Repeater
         return FileUpload::make('file');
     }
 }
-
-
