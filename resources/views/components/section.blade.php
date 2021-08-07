@@ -4,7 +4,7 @@
     id="{{ $getId() }}"
     class="p-6 space-y-6 rounded-xl shadow-sm border border-gray-300"
 >
-    <div class="flex">
+    <div class="flex space-x-3">
         <div class="flex-1 space-y-1">
             <h3 class="text-xl font-semibold tracking-tight">
                 {{ $getHeading() }}
