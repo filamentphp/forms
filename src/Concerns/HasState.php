@@ -27,12 +27,23 @@ trait HasState
         return false;
     }
 
-    public function dehydrateState(array $state = []): array
+    public function callBeforeStateDehydrated(): void
     {
         foreach ($this->getComponents() as $component) {
-            $componentStatePath = $component->getStatePath();
-
             $component->callBeforeStateDehydrated();
+
+            foreach ($component->getChildComponentContainers() as $container) {
+                $container->callBeforeStateDehydrated();
+            }
+        }
+    }
+
+    public function dehydrateState(array $state = []): array
+    {
+        $this->callBeforeStateDehydrated();
+
+        foreach ($this->getComponents() as $component) {
+            $componentStatePath = $component->getStatePath();
 
             if ($component->isDehydrated()) {
                 if ($component->getStatePath(absolute: false)) {
@@ -54,6 +65,27 @@ trait HasState
         return $state;
     }
 
+    public function fill(?array $state = null): static
+    {
+        if ($state !== null) {
+            $livewire = $this->getLivewire();
+
+            if ($statePath = $this->getStatePath()) {
+                data_set($livewire, $statePath, $state);
+            } else {
+                foreach ($state as $key => $value) {
+                    data_set($livewire, $key, $value);
+                }
+            }
+
+            $this->hydrateState();
+        } else {
+            $this->hydrateDefaultState();
+        }
+
+        return $this;
+    }
+
     public function hydrateDefaultState(): static
     {
         foreach ($this->getComponents() as $component) {
@@ -67,29 +99,8 @@ trait HasState
         return $this;
     }
 
-    public function hydrateState(?array $state = null): static
+    public function hydrateState(): static
     {
-        if ($state !== null) {
-            $this->hydrateStateFromArray($state);
-        } else {
-            $this->hydrateDefaultState();
-        }
-
-        return $this;
-    }
-
-    public function hydrateStateFromArray(array $state): static
-    {
-        $livewire = $this->getLivewire();
-
-        if ($statePath = $this->getStatePath()) {
-            data_set($livewire, $statePath, $state);
-        } else {
-            foreach ($state as $key => $value) {
-                data_set($livewire, $key, $value);
-            }
-        }
-
         foreach ($this->getComponents() as $component) {
             $component->hydrateState();
 

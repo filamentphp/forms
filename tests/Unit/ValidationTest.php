@@ -39,7 +39,7 @@ test('fields use custom validation rules', function () {
                     ->addValidationRule('email')
                     ->default(Str::random()),
             ])
-            ->hydrateState()
+            ->fill()
             ->validate();
     } catch (ValidationException $exception) {
         $rules = array_keys($exception->validator->failed()[$field->getStatePath()]);

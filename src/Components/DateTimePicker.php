@@ -19,6 +19,7 @@ class DateTimePicker extends DatePicker
         parent::setUp();
 
         $this->displayFormat($this->defaultDisplayFormat);
+
         $this->format($this->defaultFormat);
     }
 

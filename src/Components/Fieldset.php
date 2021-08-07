@@ -22,6 +22,7 @@ class Fieldset extends Component
     protected function setUp(): void
     {
         $this->columnSpan('full');
+
         $this->columns(2);
     }
 }

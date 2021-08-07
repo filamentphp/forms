@@ -24,7 +24,6 @@
             placeholder: {{ ($placeholder = $getPlaceholder()) ? "'{$placeholder}'" : 'null' }},
             maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
             minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
-            removeTemporaryUploadedFileUsing: $wire.removeUpload,
             removeUploadedFileUsing: $wire.removeUploadedFile,
             removeUploadButtonPosition: '{{ $getRemoveUploadButtonPosition() }}',
             state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},

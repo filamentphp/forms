@@ -55,10 +55,9 @@ class Builder extends Field
                         return;
                     }
 
-                    $livewire = $this->getLivewire();
-
                     $items = Arr::except($this->getNormalisedState(), $uuidToDelete);
 
+                    $livewire = $this->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],
@@ -68,24 +67,10 @@ class Builder extends Field
                         return;
                     }
 
+                    $items = Arr::moveElementAfter($this->getNormalisedState(), $uuidToMoveDown);
+
                     $livewire = $this->getLivewire();
-
-                    $items = $this->getNormalisedState();
-
-                    $uuids = array_keys($items);
-                    $indexToMoveDown = array_search($uuidToMoveDown, $uuids);
-                    $uuidToMoveUp = $uuids[$indexToMoveDown + 1];
-
-                    $uuids[$indexToMoveDown + 1] = $uuidToMoveDown;
-                    $uuids[$indexToMoveDown] = $uuidToMoveUp;
-
-                    $newItems = [];
-
-                    foreach ($uuids as $uuid) {
-                        $newItems[$uuid] = $items[$uuid];
-                    }
-
-                    data_set($livewire, $statePath, $newItems);
+                    data_set($livewire, $statePath, $items);
                 },
             ],
             'builder.moveItemUp' => [
@@ -94,24 +79,10 @@ class Builder extends Field
                         return;
                     }
 
+                    $items = Arr::moveElementBefore($this->getNormalisedState(), $uuidToMoveUp);
+
                     $livewire = $this->getLivewire();
-
-                    $items = $this->getNormalisedState();
-
-                    $uuids = array_keys($items);
-                    $indexToMoveUp = array_search($uuidToMoveUp, $uuids);
-                    $uuidToMoveDown = $uuids[$indexToMoveUp - 1];
-
-                    $uuids[$indexToMoveUp - 1] = $uuidToMoveUp;
-                    $uuids[$indexToMoveUp] = $uuidToMoveDown;
-
-                    $newItems = [];
-
-                    foreach ($uuids as $uuid) {
-                        $newItems[$uuid] = $items[$uuid];
-                    }
-
-                    data_set($livewire, $statePath, $newItems);
+                    data_set($livewire, $statePath, $items);
                 },
             ],
         ]);

@@ -24,8 +24,8 @@ class Select extends Field
     {
         parent::setUp();
 
-        $this->getSelectedOptionLabelUsing(function ($state): ?string {
-            if (array_key_exists($state, $options = $this->getOptions())) {
+        $this->getSelectedOptionLabelUsing(function (Select $component, $state): ?string {
+            if (array_key_exists($state, $options = $component->getOptions())) {
                 return $options[$state];
             }
 

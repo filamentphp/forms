@@ -48,28 +48,20 @@ class FileUpload extends Field
 
     protected $saveUploadedFileUsing = null;
 
-    protected $shouldUploadedFileBeDeletedOnRemoval = false;
-
     protected $uploadButtonPosition = 'right';
 
     protected $uploadProgressIndicatorPosition = 'right';
 
     protected $visibility = 'public';
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->beforeStateDehydrated(function ($setState, $state) {
-            if (! ($state instanceof TemporaryUploadedFile)) {
-                return;
-            }
+        $this->beforeStateDehydrated(function (FileUpload $component, callable $setState): void {
+            if (! $component->hasFileObjectState()) return;
 
-            $setState($this, $this->saveUploadedFile());
-        });
-
-        $this->hydrateStateUsing(function () {
-            return $this->getUploadedFile();
+            $setState($component, $component->saveUploadedFile());
         });
     }
 
@@ -105,16 +97,18 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function deleteUploadedFile(): static
+    public function deleteUploadedFile($file = null): static
     {
-        $file = $this->getState();
+        if (! $file) {
+            $file = $this->getState();
+        }
 
         if ($callback = $this->deleteUploadedFileUsing) {
             $this->evaluate($callback, [
                 'file' => $file,
             ]);
-        } elseif ($this->shouldUploadedFileBeDeletedOnRemoval()) {
-            $this->getDisk()->delete($file);
+        } else {
+            $this->handleUploadedFileDeletion($file);
         }
 
         return $this;
@@ -141,39 +135,21 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function getUploadedFile()
-    {
-        return $this->getState();
-    }
-
     public function getUploadedFileUrl(): ?string
     {
-        if ($callback = $this->getUploadedFileUrlUsing) {
-            return $this->evaluate($callback);
-        }
+        $file = $this->getState();
 
-        return $this->getUploadedFileUrlFromStorage();
-    }
-
-    public function getUploadedFileUrlFromStorage(): ?string
-    {
-        if (! ($path = $this->getState())) {
+        if (! $file) {
             return null;
         }
 
-        $storage = $this->getDisk();
-
-        if (
-            $storage->getDriver()->getAdapter() instanceof AwsS3Adapter &&
-            $storage->getVisibility($path) === 'private'
-        ) {
-            return $storage->temporaryUrl(
-                $path,
-                now()->addMinutes(5),
-            );
+        if ($callback = $this->getUploadedFileUrlUsing) {
+            return $this->evaluate($callback, [
+                'file' => $file,
+            ]);
         }
 
-        return $storage->url($path);
+        return $this->handleUploadedFileUrlRetrieval($file);
     }
 
     public function getUploadedFileUrlUsing(callable $callback): static
@@ -280,12 +256,6 @@ class FileUpload extends Field
 
     public function removeUploadedFile(): static
     {
-        if (! $this->getState()) {
-            return $this;
-        }
-
-        $this->deleteUploadedFile();
-
         return $this->state(null);
     }
 
@@ -293,28 +263,17 @@ class FileUpload extends Field
     {
         $file = $this->getState();
 
-        if (! ($file instanceof TemporaryUploadedFile)) {
+        if (! $this->hasFileObjectState()) {
             return $file;
         }
 
         if ($callback = $this->saveUploadedFileUsing) {
-            return $this->evaluate($callback);
+            return $this->evaluate($callback, [
+                'file' => $file,
+            ]);
         }
 
-        return $this->saveUploadedFileToStorage();
-    }
-
-    public function saveUploadedFileToStorage()
-    {
-        $file = $this->getState();
-
-        $storeMethod = $this->getVisibility() === 'public' ? 'storePublicly' : 'store';
-
-        $path = $file->{$storeMethod}($this->getDirectory(), $this->getDiskName());
-
-        $this->state($path);
-
-        return $path;
+        return $this->handleUpload($file);
     }
 
     public function saveUploadedFileUsing(callable $callback): static
@@ -334,13 +293,6 @@ class FileUpload extends Field
     public function uploadProgressIndicatorPosition(string | callable $position): static
     {
         $this->uploadProgressIndicatorPosition = $position;
-
-        return $this;
-    }
-
-    public function uploadedFileShouldBeDeletedOnRemoval(bool | callable $condition = true): static
-    {
-        $this->shouldUploadedFileBeDeletedOnRemoval = $condition;
 
         return $this;
     }
@@ -437,18 +389,39 @@ class FileUpload extends Field
         return $this->evaluate($this->visibility);
     }
 
+    public function hasFileObjectState(): bool
+    {
+        return $this->getState() instanceof SplFileInfo;
+    }
+
     public function isAvatar(): bool
     {
         return (bool) $this->evaluate($this->isAvatar);
     }
 
-    public function shouldUploadedFileBeDeletedOnRemoval(): bool
+    protected function handleUpload($file)
     {
-        return (bool) $this->evaluate($this->shouldUploadedFileBeDeletedOnRemoval);
+        $storeMethod = $this->getVisibility() === 'public' ? 'storePublicly' : 'store';
+
+        return $file->{$storeMethod}($this->getDirectory(), $this->getDiskName());
     }
 
-    protected function hasFileObjectState(): bool
+    protected function handleUploadedFileDeletion($file): void {}
+
+    protected function handleUploadedFileUrlRetrieval($file): ?string
     {
-        return $this->getState() instanceof SplFileInfo;
+        $storage = $this->getDisk();
+
+        if (
+            $storage->getDriver()->getAdapter() instanceof AwsS3Adapter &&
+            $storage->getVisibility($file) === 'private'
+        ) {
+            return $storage->temporaryUrl(
+                $file,
+                now()->addMinutes(5),
+            );
+        }
+
+        return $storage->url($file);
     }
 }

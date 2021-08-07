@@ -68,7 +68,7 @@ test('state can be hydrated from array', function () {
             (new Component())
                 ->statePath($statePath = Str::random()),
         ])
-        ->hydrateState([$statePath => ($state = Str::random())]);
+        ->fill([$statePath => ($state = Str::random())]);
 
     expect($livewire)
         ->getData()->toBe([$statePath => $state]);
@@ -82,7 +82,7 @@ test('state can be hydrated from defaults', function () {
                 ->statePath($statePath = Str::random())
                 ->default($state = Str::random()),
         ])
-        ->hydrateState();
+        ->fill();
 
     expect($livewire)
         ->getData()->toBe([$statePath => $state]);
@@ -96,7 +96,7 @@ test('state can be hydrated using custom logic', function () {
                 ->statePath($statePath = Str::random())
                 ->hydrateStateUsing(fn ($state) => strrev($state)),
         ])
-        ->hydrateState([$statePath => ($value = Str::random())]);
+        ->fill([$statePath => ($value = Str::random())]);
 
     expect($livewire)
         ->getData()->toBe([$statePath => strrev($value)]);
@@ -110,7 +110,7 @@ test('custom logic can be executed after state is updated', function () {
                 ->statePath($statePath = Str::random())
                 ->afterStateUpdated(fn (callable $setState, $state) => $setState($component, strrev($state))),
         ])
-        ->hydrateState([$statePath => ($state = Str::random())])
+        ->fill([$statePath => ($state = Str::random())])
         ->callAfterStateUpdated("data.{$statePath}");
 
     expect($livewire)
@@ -125,7 +125,7 @@ test('state can be dehydrated', function () {
                 ->statePath($statePath = Str::random())
                 ->default($state = Str::random()),
         ])
-        ->hydrateState();
+        ->fill();
 
     expect($container)
         ->dehydrateState()->toBe([$statePath => $state]);
@@ -140,7 +140,7 @@ test('state can be dehydrated using custom logic', function () {
                 ->default($state = Str::random())
                 ->dehydrateStateUsing(fn ($state) => strrev($state)),
         ])
-        ->hydrateState();
+        ->fill();
 
     expect($container)
         ->dehydrateState()->toBe([$statePath => strrev($state)]);
@@ -155,7 +155,7 @@ test('custom logic can be executed before state is dehydrated', function () {
                 ->default($state = Str::random())
                 ->beforeStateDehydrated(fn (callable $setState, $state) => $setState($component, strrev($state))),
         ])
-        ->hydrateState();
+        ->fill();
 
     expect($container)
         ->dehydrateState()->toBe([$statePath => strrev($state)]);
@@ -170,7 +170,7 @@ test('components can be excluded from state dehydration', function () {
                 ->default(Str::random())
                 ->dehydrated(false),
         ])
-        ->hydrateState();
+        ->fill();
 
     expect($container)
         ->dehydrateState()->toBe([]);

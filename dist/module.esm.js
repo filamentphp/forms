@@ -10369,7 +10369,7 @@ var file_upload_default = (Alpine) => {
               removeUploadedFileUsing(statePath).then(() => load());
             },
             revert: (uniqueFileId, load) => {
-              removeTemporaryUploadedFileUsing(statePath, uniqueFileId).then(() => load());
+              removeUploadedFileUsing(statePath, uniqueFileId).then(() => load());
             }
           }
         });

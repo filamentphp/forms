@@ -88,15 +88,15 @@ trait HasState
 
     public function hydrateDefaultState(): static
     {
-        if (($state = $this->getDefaultState()) !== null) {
-            if ($callback = $this->hydrateStateUsing) {
-                $state = $this->evaluate($callback, [
-                    'state' => $state,
-                ]);
-            }
+        $state = $this->getDefaultState();
 
-            $this->state($state);
+        if ($callback = $this->hydrateStateUsing) {
+            $state = $this->evaluate($callback, [
+                'state' => $state,
+            ]);
         }
+
+        $this->state($state);
 
         return $this;
     }
@@ -173,7 +173,6 @@ trait HasState
             }
 
             $livewire = $this->getLivewire();
-
             data_set($livewire, $statePath, $this->evaluate($state));
 
             return $state;
