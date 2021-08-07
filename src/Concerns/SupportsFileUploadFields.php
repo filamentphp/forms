@@ -3,12 +3,9 @@
 namespace Filament\Forms2\Concerns;
 
 use Filament\Forms2\Components\FileUpload;
-use Spatie\MediaLibrary\HasMedia;
 
 trait SupportsFileUploadFields
 {
-    protected ?HasMedia $mediaLibraryModel = null;
-
     public function getUploadedFileUrl(string $statePath): ?string
     {
         foreach ($this->getComponents() as $component) {
@@ -24,13 +21,6 @@ trait SupportsFileUploadFields
         }
 
         return null;
-    }
-
-    public function mediaLibraryModel(HasMedia $model): static
-    {
-        $this->mediaLibraryModel = $model;
-
-        return $this;
     }
 
     public function removeUploadedFile(string $statePath): bool
@@ -63,10 +53,5 @@ trait SupportsFileUploadFields
                 $container->saveUploadedFiles();
             }
         }
-    }
-
-    public function getMediaLibraryModel(): ?HasMedia
-    {
-        return $this->mediaLibraryModel ?? $this->getParentComponent()?->getContainer()->getMediaLibraryModel();
     }
 }

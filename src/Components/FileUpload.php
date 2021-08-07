@@ -6,8 +6,6 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Livewire\TemporaryUploadedFile;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use SplFileInfo;
 
 class FileUpload extends Field
@@ -40,10 +38,6 @@ class FileUpload extends Field
 
     protected $maxSize = null;
 
-    protected $mediaLibraryCollection = null;
-
-    protected $mediaLibraryModel = null;
-
     protected $minSize = null;
 
     protected $panelAspectRatio = null;
@@ -72,18 +66,6 @@ class FileUpload extends Field
             }
 
             $setState($this, $this->saveUploadedFile());
-        });
-
-        $this->dehydrated(function ($state) {
-            if (! ($state instanceof TemporaryUploadedFile)) {
-                return false;
-            }
-
-            if ($this->usesMediaLibrary()) {
-                return false;
-            }
-
-            return true;
         });
 
         $this->hydrateStateUsing(function () {
@@ -131,8 +113,6 @@ class FileUpload extends Field
             $this->evaluate($callback, [
                 'file' => $file,
             ]);
-        } elseif ($this->usesMediaLibrary()) {
-            Media::findByUuid($file)?->delete();
         } elseif ($this->shouldUploadedFileBeDeletedOnRemoval()) {
             $this->getDisk()->delete($file);
         }
@@ -163,30 +143,7 @@ class FileUpload extends Field
 
     public function getUploadedFile()
     {
-        if (! ($state = $this->getState())) {
-            if ($this->usesMediaLibrary()) {
-                $state = $this->getUploadedFileFromMediaLibrary();
-            }
-        }
-
-        return $state;
-    }
-
-    public function getUploadedFileFromMediaLibrary(): ?string
-    {
-        if (! ($model = $this->getMediaLibraryModel())) {
-            return null;
-        }
-
-        $media = $model
-            ->getMedia($this->getMediaLibraryCollection())
-            ->first();
-
-        if (! $media) {
-            return null;
-        }
-
-        return $media->uuid;
+        return $this->getState();
     }
 
     public function getUploadedFileUrl(): ?string
@@ -195,28 +152,7 @@ class FileUpload extends Field
             return $this->evaluate($callback);
         }
 
-        if ($this->usesMediaLibrary()) {
-            return $this->getUploadedFileUrlFromMediaLibrary();
-        }
-
         return $this->getUploadedFileUrlFromStorage();
-    }
-
-    public function getUploadedFileUrlFromMediaLibrary(): ?string
-    {
-        if (! $this->getMediaLibraryModel()) {
-            return null;
-        }
-
-        if (! ($mediaUuid = $this->getState())) {
-            return null;
-        }
-
-        if ($mediaUuid instanceof SplFileInfo) {
-            return null;
-        }
-
-        return Media::findByUuid($mediaUuid)?->getUrl();
     }
 
     public function getUploadedFileUrlFromStorage(): ?string
@@ -306,20 +242,6 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function mediaLibraryCollection(string | callable $collection): static
-    {
-        $this->mediaLibraryCollection = $collection;
-
-        return $this;
-    }
-
-    public function mediaLibraryModel(HasMedia | callable $model): static
-    {
-        $this->mediaLibraryModel = $model;
-
-        return $this;
-    }
-
     public function minSize(int | callable $size): static
     {
         $this->minSize = $size;
@@ -371,35 +293,15 @@ class FileUpload extends Field
     {
         $file = $this->getState();
 
+        if (! ($file instanceof TemporaryUploadedFile)) {
+            return $file;
+        }
+
         if ($callback = $this->saveUploadedFileUsing) {
             return $this->evaluate($callback);
         }
 
-        if ($this->usesMediaLibrary()) {
-            return $this->saveUploadedFileToMediaLibrary();
-        }
-
         return $this->saveUploadedFileToStorage();
-    }
-
-    public function saveUploadedFileToMediaLibrary()
-    {
-        $file = $this->getState();
-
-        if (! ($model = $this->getMediaLibraryModel())) {
-            return $file;
-        }
-
-        $collection = $this->getMediaLibraryCollection();
-
-        $media = $model
-            ->addMediaFromString($file->get())
-            ->usingFileName($file->getFilename())
-            ->toMediaCollection($collection);
-
-        $this->state($media->uuid);
-
-        return $media->uuid;
     }
 
     public function saveUploadedFileToStorage()
@@ -500,16 +402,6 @@ class FileUpload extends Field
         return $this->evaluate($this->maxSize);
     }
 
-    public function getMediaLibraryCollection(): ?string
-    {
-        return $this->evaluate($this->mediaLibraryCollection);
-    }
-
-    public function getMediaLibraryModel(): ?HasMedia
-    {
-        return $this->evaluate($this->mediaLibraryModel) ?? $this->getContainer()->getMediaLibraryModel();
-    }
-
     public function getMinSize(): ?int
     {
         return $this->evaluate($this->minSize);
@@ -553,11 +445,6 @@ class FileUpload extends Field
     public function shouldUploadedFileBeDeletedOnRemoval(): bool
     {
         return (bool) $this->evaluate($this->shouldUploadedFileBeDeletedOnRemoval);
-    }
-
-    public function usesMediaLibrary(): bool
-    {
-        return (bool) $this->getMediaLibraryCollection();
     }
 
     protected function hasFileObjectState(): bool

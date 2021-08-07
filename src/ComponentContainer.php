@@ -25,6 +25,8 @@ class ComponentContainer extends ViewComponent implements Htmlable
     use Macroable;
     use Tappable;
 
+    protected array $meta = [];
+
     final public function __construct(HasForms $livewire)
     {
         $this->livewire($livewire);
