@@ -2,7 +2,6 @@
 
 namespace Filament\Forms2\Components;
 
-use Filament\SpatieLaravelMediaLibraryPlugin\Forms\Components\MultipleMediaLibraryFileUpload;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
