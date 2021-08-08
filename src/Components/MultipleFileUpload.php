@@ -3,11 +3,14 @@
 namespace Filament\Forms2\Components;
 
 use Filament\Forms2\ComponentContainer;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class MultipleFileUpload extends Field
 {
     protected string $view = 'forms2::components.multiple-file-upload';
+
+    protected $model = null;
 
     protected $uploadComponent = null;
 
@@ -63,6 +66,13 @@ class MultipleFileUpload extends Field
         $this->state($files);
     }
 
+    public function model(Model | callable $model): static
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
     public function removeUploadedFile(string $uuid): void
     {
         $files = $this->getState();
@@ -95,6 +105,15 @@ class MultipleFileUpload extends Field
         return [
             $this->getUploadComponent(),
         ];
+    }
+
+    public function getModel(): ?Model
+    {
+        if ($model = $this->evaluate($this->model)) {
+            return $model;
+        }
+
+        return $this->getContainer()->getFileUploadModel();
     }
 
     public function getUploadComponent(): Component

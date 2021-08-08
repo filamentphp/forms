@@ -2,7 +2,9 @@
 
 namespace Filament\Forms2\Components;
 
+use Filament\SpatieLaravelMediaLibraryPlugin\Forms\Components\MultipleMediaLibraryFileUpload;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use SplFileInfo;
@@ -38,6 +40,8 @@ class FileUpload extends Field
     protected $maxSize = null;
 
     protected $minSize = null;
+
+    protected $model = null;
 
     protected $panelAspectRatio = null;
 
@@ -248,6 +252,13 @@ class FileUpload extends Field
         return $this;
     }
 
+    public function model(Model | callable $model): static
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
     public function panelAspectRatio(string | callable $ratio): static
     {
         $this->panelAspectRatio = $ratio;
@@ -394,6 +405,25 @@ class FileUpload extends Field
     public function getMinSize(): ?int
     {
         return $this->evaluate($this->minSize);
+    }
+
+    public function getModel(): ?Model
+    {
+        if ($model = $this->evaluate($this->model)) {
+            return $model;
+        }
+
+        if ($model = $this->getContainer()->getFileUploadModel()) {
+            return $model;
+        }
+
+        $containerParentComponent = $this->getContainer()->getParentComponent();
+
+        if (! $containerParentComponent instanceof MultipleFileUpload) {
+            return null;
+        }
+
+        return $containerParentComponent->getModel();
     }
 
     public function getPanelAspectRatio(): ?string
