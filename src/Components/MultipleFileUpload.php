@@ -3,7 +3,6 @@
 namespace Filament\Forms2\Components;
 
 use Filament\Forms2\ComponentContainer;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class MultipleFileUpload extends Field
