@@ -18,7 +18,9 @@ class MultipleFileUpload extends Repeater
             $files = [];
 
             foreach ($state as $item) {
-                $files[] = $item['file'];
+                if ($file = $item['file'] ?? null) {
+                    $files[] = $file;
+                }
             }
 
             return $files;
@@ -34,10 +36,16 @@ class MultipleFileUpload extends Repeater
             $state = [];
 
             foreach ($files as $file) {
-                $state[(string) Str::uuid()] = [
-                    'file' => $file,
-                ];
+                if ($file) {
+                    $state[(string) Str::uuid()] = [
+                        'file' => $file,
+                    ];
+                }
             }
+
+            $state[(string) Str::uuid()] = [
+                'file' => null,
+            ];
 
             return $state;
         });
