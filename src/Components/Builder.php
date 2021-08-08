@@ -55,7 +55,9 @@ class Builder extends Field
                         return;
                     }
 
-                    $items = Arr::except($this->getNormalisedState(), $uuidToDelete);
+                    $items = $this->getNormalisedState();
+
+                    unset($items[$uuidToDelete]);
 
                     $livewire = $this->getLivewire();
                     data_set($livewire, $statePath, $items);

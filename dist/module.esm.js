@@ -10342,6 +10342,7 @@ var file_upload_default = (Alpine) => {
         }
         this.pond = create$f(this.$refs.input, {
           acceptedFileTypes,
+          credits: false,
           files: this.files,
           imageCropAspectRatio,
           imagePreviewHeight,

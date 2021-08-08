@@ -2,11 +2,13 @@
 
 namespace Filament\Forms2\Components;
 
+use Filament\Forms2\ComponentContainer;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class MultipleFileUpload extends Repeater
+class MultipleFileUpload extends Field
 {
-    protected string $view = 'forms2::components.repeater';
+    protected string $view = 'forms2::components.multiple-file-upload';
 
     protected $uploadComponent = null;
 
@@ -51,11 +53,42 @@ class MultipleFileUpload extends Repeater
         });
     }
 
+    public function appendNewUploadField(): void
+    {
+        $files = $this->getState();
+
+        $files[(string) Str::uuid()] = [
+            'file' => null,
+        ];
+
+        $this->state($files);
+    }
+
+    public function removeUploadedFile(string $uuid): void
+    {
+        $files = $this->getState();
+
+        unset($files[$uuid]);
+
+        $this->state($files);
+    }
+
     public function uploadComponent(Component | callable $component): static
     {
         $this->uploadComponent = $component;
 
         return $this;
+    }
+
+    public function getChildComponentContainers(): array
+    {
+        return collect($this->getState())
+            ->map(function ($item, $index): ComponentContainer {
+                return $this
+                    ->getChildComponentContainer()
+                    ->getClone()
+                    ->statePath($index);
+            })->toArray();
     }
 
     public function getChildComponents(): array

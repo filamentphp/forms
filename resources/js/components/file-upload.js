@@ -9,6 +9,7 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform'
 
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+import '../../css/components/file-upload.css'
 
 FilePond.registerPlugin(FilePondPluginFileValidateSize)
 FilePond.registerPlugin(FilePondPluginFileValidateType)
@@ -61,6 +62,7 @@ export default (Alpine) => {
 
                 this.pond = FilePond.create(this.$refs.input, {
                     acceptedFileTypes,
+                    credits: false,
                     files: this.files,
                     imageCropAspectRatio,
                     imagePreviewHeight,

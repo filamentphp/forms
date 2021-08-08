@@ -973,3 +973,8 @@
   margin-bottom: 0.1875em;
   margin-left: 0.1875em;
 }
+
+/* resources/css/components/file-upload.css */
+.filepond--root {
+  margin-bottom: 0;
+}

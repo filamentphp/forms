@@ -45,6 +45,8 @@ class FileUpload extends Field
 
     protected $removeUploadButtonPosition = 'left';
 
+    protected $removeUploadedFileUsing = null;
+
     protected $saveUploadedFileUsing = null;
 
     protected $uploadButtonPosition = 'right';
@@ -63,6 +65,18 @@ class FileUpload extends Field
             }
 
             $setState($component, $component->saveUploadedFile());
+        });
+
+        $this->afterStateUpdated(function (FileUpload $component, $state): void {
+            if (! $component->isMultiple()) {
+                return;
+            }
+
+            if (! $state) {
+                return;
+            }
+
+            $component->getContainer()->getParentComponent()->appendNewUploadField();
         });
     }
 
@@ -257,7 +271,29 @@ class FileUpload extends Field
 
     public function removeUploadedFile(): static
     {
-        return $this->state(null);
+        $file = $this->getState();
+
+        if ($callback = $this->removeUploadedFileUsing) {
+            $this->evaluate($callback, [
+                'file' => $file,
+            ]);
+        } else {
+            $this->handleUploadedFileRemoval($file);
+        }
+
+        $container = $this->getContainer();
+        $container->getParentComponent()->removeUploadedFile(
+            $container->getStatePath(absolute: false),
+        );
+
+        return $this;
+    }
+
+    public function removeUploadedFileUsing(callable $callback): static
+    {
+        $this->removeUploadedFileUsing = $callback;
+
+        return $this;
     }
 
     public function saveUploadedFile()
@@ -400,6 +436,17 @@ class FileUpload extends Field
         return (bool) $this->evaluate($this->isAvatar);
     }
 
+    public function isMultiple(): bool
+    {
+        $containerParentComponent = $this->getContainer()->getParentComponent();
+
+        if (! $containerParentComponent) {
+            return false;
+        }
+
+        return $containerParentComponent instanceof MultipleFileUpload;
+    }
+
     protected function handleUpload($file)
     {
         $storeMethod = $this->getVisibility() === 'public' ? 'storePublicly' : 'store';
@@ -409,6 +456,11 @@ class FileUpload extends Field
 
     protected function handleUploadedFileDeletion($file): void
     {
+    }
+
+    protected function handleUploadedFileRemoval($file): void
+    {
+        $this->state(null);
     }
 
     protected function handleUploadedFileUrlRetrieval($file): ?string
