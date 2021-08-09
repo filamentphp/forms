@@ -20,14 +20,14 @@ trait HasState
 
     protected ?string $statePath = null;
 
-    public function afterStateUpdated(callable $callback): static
+    public function afterStateUpdated(?callable $callback): static
     {
         $this->afterStateUpdated = $callback;
 
         return $this;
     }
 
-    public function beforeStateDehydrated(callable $callback): static
+    public function beforeStateDehydrated(?callable $callback): static
     {
         $this->beforeStateDehydrated = $callback;
 
@@ -79,7 +79,7 @@ trait HasState
         return $this->getState();
     }
 
-    public function dehydrateStateUsing(callable $callback): static
+    public function dehydrateStateUsing(?callable $callback): static
     {
         $this->dehydrateStateUsing = $callback;
 
@@ -110,7 +110,7 @@ trait HasState
         return $this;
     }
 
-    public function hydrateStateUsing(callable $callback): static
+    public function hydrateStateUsing(?callable $callback): static
     {
         $this->hydrateStateUsing = $callback;
 

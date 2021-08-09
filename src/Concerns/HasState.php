@@ -32,6 +32,10 @@ trait HasState
         foreach ($this->getComponents() as $component) {
             $component->callBeforeStateDehydrated();
 
+            if ($component->getModel()) {
+                $component->saveRelationships();
+            }
+
             foreach ($component->getChildComponentContainers() as $container) {
                 $container->callBeforeStateDehydrated();
             }

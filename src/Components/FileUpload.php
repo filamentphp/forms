@@ -277,10 +277,12 @@ class FileUpload extends Field
             $this->handleUploadedFileRemoval($file);
         }
 
-        $container = $this->getContainer();
-        $container->getParentComponent()->removeUploadedFile(
-            $container->getStatePath(absolute: false),
-        );
+        if ($this->isMultiple()) {
+            $container = $this->getContainer();
+            $container->getParentComponent()->removeUploadedFile(
+                $container->getStatePath(absolute: false),
+            );
+        }
 
         return $this;
     }
@@ -440,13 +442,7 @@ class FileUpload extends Field
 
     public function isMultiple(): bool
     {
-        $containerParentComponent = $this->getContainer()->getParentComponent();
-
-        if (! $containerParentComponent) {
-            return false;
-        }
-
-        return $containerParentComponent instanceof MultipleFileUpload;
+        return $this->getContainer()->getParentComponent() instanceof MultipleFileUpload;
     }
 
     protected function handleUpload($file)
