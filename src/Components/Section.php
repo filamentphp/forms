@@ -75,7 +75,9 @@ class Section extends Component implements Contracts\CanConcealComponents
 
     public function getId(): ?string
     {
-        if (! ($id = parent::getId())) {
+        $id = parent::getId();
+
+        if (! $id) {
             $id = Str::slug($this->getHeading());
 
             if ($statePath = $this->getStatePath()) {

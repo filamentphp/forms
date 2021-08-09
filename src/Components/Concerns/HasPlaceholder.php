@@ -15,10 +15,6 @@ trait HasPlaceholder
 
     public function getPlaceholder(): ?string
     {
-        if (! ($placeholder = $this->evaluate($this->placeholder))) {
-            return null;
-        }
-
-        return $placeholder;
+        return $this->evaluate($this->placeholder);
     }
 }

@@ -36,19 +36,11 @@ trait CanBeLengthConstrained
 
     public function getMaxLength(): ?int
     {
-        if (! ($length = $this->evaluate($this->maxLength))) {
-            return null;
-        }
-
-        return $length;
+        return $this->evaluate($this->maxLength);
     }
 
     public function getMinLength(): ?int
     {
-        if (! ($length = $this->evaluate($this->minLength))) {
-            return null;
-        }
-
-        return $length;
+        return $this->evaluate($this->minLength);
     }
 }

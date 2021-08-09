@@ -24,10 +24,6 @@ trait CanBeAutocompleted
 
     public function getAutocomplete(): ?string
     {
-        if (! ($autocomplete = $this->evaluate($this->autocomplete))) {
-            return null;
-        }
-
-        return $autocomplete;
+        return $this->evaluate($this->autocomplete);
     }
 }

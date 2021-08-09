@@ -3,7 +3,6 @@
 namespace Filament\Forms2\Components;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use SplFileInfo;
@@ -40,8 +39,6 @@ class FileUpload extends Field
 
     protected $minSize = null;
 
-    protected $model = null;
-
     protected $panelAspectRatio = null;
 
     protected $panelLayout = null;
@@ -62,12 +59,8 @@ class FileUpload extends Field
     {
         parent::setUp();
 
-        $this->beforeStateDehydrated(function (FileUpload $component, callable $setState): void {
-            if (! $component->hasFileObjectState()) {
-                return;
-            }
-
-            $setState($component, $component->saveUploadedFile());
+        $this->beforeStateDehydrated(function (FileUpload $component): void {
+            $component->saveUploadedFile();
         });
 
         $this->afterStateUpdated(function (FileUpload $component, $state): void {
@@ -251,13 +244,6 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function model(Model | callable $model): static
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
     public function panelAspectRatio(string | callable $ratio): static
     {
         $this->panelAspectRatio = $ratio;
@@ -306,21 +292,27 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function saveUploadedFile()
+    public function saveUploadedFile(): void
     {
+        if (! $this->hasFileObjectState()) {
+            return;
+        }
+
         $file = $this->getState();
 
-        if (! $this->hasFileObjectState()) {
-            return $file;
+        if (! $file) {
+            return;
         }
 
         if ($callback = $this->saveUploadedFileUsing) {
-            return $this->evaluate($callback, [
+            $file = $this->evaluate($callback, [
                 'file' => $file,
             ]);
+        } else {
+            $file = $this->handleUpload($file);
         }
 
-        return $this->handleUpload($file);
+        $this->state($file);
     }
 
     public function saveUploadedFileUsing(callable $callback): static
@@ -404,25 +396,6 @@ class FileUpload extends Field
     public function getMinSize(): ?int
     {
         return $this->evaluate($this->minSize);
-    }
-
-    public function getModel(): ?Model
-    {
-        if ($model = $this->evaluate($this->model)) {
-            return $model;
-        }
-
-        if ($model = $this->getContainer()->getFileUploadModel()) {
-            return $model;
-        }
-
-        $containerParentComponent = $this->getContainer()->getParentComponent();
-
-        if (! $containerParentComponent instanceof MultipleFileUpload) {
-            return null;
-        }
-
-        return $containerParentComponent->getModel();
     }
 
     public function getPanelAspectRatio(): ?string

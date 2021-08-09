@@ -12,6 +12,7 @@ use Illuminate\View\Component as ViewComponent;
 class ComponentContainer extends ViewComponent implements Htmlable
 {
     use Concerns\BelongsToLivewire;
+    use Concerns\BelongsToModel;
     use Concerns\BelongsToParentComponent;
     use Concerns\CanBeDisabled;
     use Concerns\CanBeValidated;

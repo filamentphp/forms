@@ -119,6 +119,13 @@ trait HasState
         return $this;
     }
 
+    public function getState(): array
+    {
+        $state = $this->validate();
+
+        return $this->dehydrateState($state);
+    }
+
     public function getStatePath(bool $absolute = true): string
     {
         $pathComponents = [];
@@ -132,12 +139,5 @@ trait HasState
         }
 
         return implode('.', $pathComponents);
-    }
-
-    public function getValidState(): array
-    {
-        $state = $this->validate();
-
-        return $this->dehydrateState($state);
     }
 }

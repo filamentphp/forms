@@ -137,20 +137,12 @@ class TextInput extends Field
 
     public function getPrefixLabel(): ?string
     {
-        if (! ($label = $this->evaluate($this->prefixLabel))) {
-            return null;
-        }
-
-        return $label;
+        return $this->evaluate($this->prefixLabel);
     }
 
     public function getPostfixLabel(): ?string
     {
-        if (! ($label = $this->evaluate($this->postfixLabel))) {
-            return null;
-        }
-
-        return $label;
+        return $this->evaluate($this->postfixLabel);
     }
 
     public function getType(): string
