@@ -2,8 +2,6 @@
 
 namespace Filament\Forms2\Concerns;
 
-use Filament\Forms2\Components\FileUpload;
-use Filament\Forms2\Components\MultipleFileUpload;
 use Illuminate\Database\Eloquent\Model;
 
 trait BelongsToModel
