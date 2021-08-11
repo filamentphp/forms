@@ -16,54 +16,54 @@ class Repeater extends Field
 
         $this->registerListeners([
             'repeater.createItem' => [
-                function (string $statePath): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Repeater $component, string $statePath): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
                     $newUuid = (string) Str::uuid();
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, "{$statePath}.{$newUuid}", []);
 
-                    $this->hydrateDefaultItemState($newUuid);
+                    $component->hydrateDefaultItemState($newUuid);
                 },
             ],
             'repeater.deleteItem' => [
-                function (string $statePath, string $uuidToDelete): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Repeater $component, string $statePath, string $uuidToDelete): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $items = $this->getNormalisedState();
+                    $items = $component->getNormalisedState();
 
                     unset($items[$uuidToDelete]);
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],
             'repeater.moveItemDown' => [
-                function (string $statePath, string $uuidToMoveDown): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Repeater $component, string $statePath, string $uuidToMoveDown): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $items = Arr::moveElementAfter($this->getNormalisedState(), $uuidToMoveDown);
+                    $items = Arr::moveElementAfter($component->getNormalisedState(), $uuidToMoveDown);
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],
             'repeater.moveItemUp' => [
-                function (string $statePath, string $uuidToMoveUp): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Repeater $component, string $statePath, string $uuidToMoveUp): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $items = Arr::moveElementBefore($this->getNormalisedState(), $uuidToMoveUp);
+                    $items = Arr::moveElementBefore($component->getNormalisedState(), $uuidToMoveUp);
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],

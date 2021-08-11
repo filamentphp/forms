@@ -17,12 +17,12 @@ class Builder extends Field
 
         $this->registerListeners([
             'builder.createItem' => [
-                function (string $statePath, string $block, ?string $afterUuid = null): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Builder $component, string $statePath, string $block, ?string $afterUuid = null): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
 
                     $newUuid = (string) Str::uuid();
                     $newItem = [
@@ -33,7 +33,7 @@ class Builder extends Field
                     if ($afterUuid) {
                         $newItems = [];
 
-                        foreach ($this->getNormalisedState() as $uuid => $item) {
+                        foreach ($component->getNormalisedState() as $uuid => $item) {
                             $newItems[$uuid] = $item;
 
                             if ($uuid === $afterUuid) {
@@ -46,44 +46,44 @@ class Builder extends Field
                         data_set($livewire, "{$statePath}.{$newUuid}", $newItem);
                     }
 
-                    $this->hydrateDefaultItemState($newUuid);
+                    $component->hydrateDefaultItemState($newUuid);
                 },
             ],
             'builder.deleteItem' => [
-                function (string $statePath, string $uuidToDelete): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Builder $component, string $statePath, string $uuidToDelete): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $items = $this->getNormalisedState();
+                    $items = $component->getNormalisedState();
 
                     unset($items[$uuidToDelete]);
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],
             'builder.moveItemDown' => [
-                function (string $statePath, string $uuidToMoveDown): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Builder $component, string $statePath, string $uuidToMoveDown): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $items = Arr::moveElementAfter($this->getNormalisedState(), $uuidToMoveDown);
+                    $items = Arr::moveElementAfter($component->getNormalisedState(), $uuidToMoveDown);
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],
             'builder.moveItemUp' => [
-                function (string $statePath, string $uuidToMoveUp): void {
-                    if ($statePath !== $this->getStatePath()) {
+                function (Builder $component, string $statePath, string $uuidToMoveUp): void {
+                    if ($statePath !== $component->getStatePath()) {
                         return;
                     }
 
-                    $items = Arr::moveElementBefore($this->getNormalisedState(), $uuidToMoveUp);
+                    $items = Arr::moveElementBefore($component->getNormalisedState(), $uuidToMoveUp);
 
-                    $livewire = $this->getLivewire();
+                    $livewire = $component->getLivewire();
                     data_set($livewire, $statePath, $items);
                 },
             ],

@@ -147,7 +147,7 @@ trait HasState
     {
         $pathComponents = [];
 
-        if ($absolute && $containerStatePath = $this->getContainer()->getStatePath()) {
+        if ($absolute && ($containerStatePath = $this->getContainer()->getStatePath())) {
             $pathComponents[] = $containerStatePath;
         }
 

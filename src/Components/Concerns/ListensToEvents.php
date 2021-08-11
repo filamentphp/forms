@@ -9,7 +9,7 @@ trait ListensToEvents
     public function dispatchEvent(string $event, ...$parameters): static
     {
         foreach ($this->getListeners($event) as $callback) {
-            $callback(...$parameters);
+            $callback($this, ...$parameters);
         }
 
         return $this;
