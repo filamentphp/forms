@@ -97,6 +97,11 @@ class Builder extends Field
         return $this;
     }
 
+    public function hydrateDefaultItemState(string $uuid): void
+    {
+        $this->getChildComponentContainers()[$uuid]->hydrateDefaultState();
+    }
+
     public function getBlock($name): ?Block
     {
         return Arr::first(
@@ -136,10 +141,5 @@ class Builder extends Field
     public function hasBlock($name): bool
     {
         return (bool) $this->getBlock($name);
-    }
-
-    protected function hydrateDefaultItemState(string $uuid): void
-    {
-        $this->getChildComponentContainers()[$uuid]->hydrateDefaultState();
     }
 }

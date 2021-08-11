@@ -70,6 +70,11 @@ class Repeater extends Field
         ]);
     }
 
+    public function hydrateDefaultItemState(string $uuid): void
+    {
+        $this->getChildComponentContainers()[$uuid]->hydrateDefaultState();
+    }
+
     public function getChildComponentContainers(): array
     {
         return collect($this->getNormalisedState())
@@ -88,10 +93,5 @@ class Repeater extends Field
         }
 
         return array_filter($state, fn ($item) => is_array($item));
-    }
-
-    protected function hydrateDefaultItemState(string $uuid): void
-    {
-        $this->getChildComponentContainers()[$uuid]->hydrateDefaultState();
     }
 }
