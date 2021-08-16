@@ -18,6 +18,10 @@ class Builder extends Field
         $this->registerListeners([
             'builder.createItem' => [
                 function (Builder $component, string $statePath, string $block, ?string $afterUuid = null): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }
@@ -51,6 +55,10 @@ class Builder extends Field
             ],
             'builder.deleteItem' => [
                 function (Builder $component, string $statePath, string $uuidToDelete): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }
@@ -65,6 +73,10 @@ class Builder extends Field
             ],
             'builder.moveItemDown' => [
                 function (Builder $component, string $statePath, string $uuidToMoveDown): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }
@@ -77,6 +89,10 @@ class Builder extends Field
             ],
             'builder.moveItemUp' => [
                 function (Builder $component, string $statePath, string $uuidToMoveUp): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }

@@ -39,6 +39,7 @@ class Field extends Component implements Contracts\HasValidationRules
     public function getLabel(): string
     {
         return parent::getLabel() ?? (string) Str::of($this->getName())
+            ->afterLast('.')
             ->kebab()
             ->replace(['-', '_'], ' ')
             ->ucfirst();

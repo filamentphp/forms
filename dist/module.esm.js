@@ -683,74 +683,6 @@ var date_time_picker_default = (Alpine) => {
       open: false,
       seconds: null,
       state: state2,
-      clearState: function() {
-        this.setState(null);
-        this.closePicker();
-      },
-      closePicker: function() {
-        this.open = false;
-      },
-      dateIsDisabled: function(date) {
-        if (this.maxDate && date.isAfter(this.maxDate))
-          return true;
-        if (this.minDate && date.isBefore(this.minDate))
-          return true;
-        return false;
-      },
-      dayIsDisabled: function(day) {
-        return this.dateIsDisabled(this.focusedDate.date(day));
-      },
-      dayIsSelected: function(day) {
-        let selectedDate = this.getSelectedDate();
-        if (selectedDate === null)
-          return false;
-        return selectedDate.date() === day && selectedDate.month() === this.focusedDate.month() && selectedDate.year() === this.focusedDate.year();
-      },
-      dayIsToday: function(day) {
-        let date = esm_default();
-        return date.date() === day && date.month() === this.focusedDate.month() && date.year() === this.focusedDate.year();
-      },
-      evaluatePosition: function() {
-        let availableHeight = window.innerHeight - this.$refs.button.offsetHeight;
-        let element = this.$refs.button;
-        while (element) {
-          availableHeight -= element.offsetTop;
-          element = element.offsetParent;
-        }
-        if (this.$refs.picker.offsetHeight <= availableHeight) {
-          this.$refs.picker.style.bottom = "auto";
-          return;
-        }
-        this.$refs.picker.style.bottom = `${this.$refs.button.offsetHeight}px`;
-      },
-      focusPreviousDay: function() {
-        this.focusedDate = this.focusedDate.subtract(1, "day");
-      },
-      focusPreviousWeek: function() {
-        this.focusedDate = this.focusedDate.subtract(1, "week");
-      },
-      focusNextDay: function() {
-        this.focusedDate = this.focusedDate.add(1, "day");
-      },
-      focusNextWeek: function() {
-        this.focusedDate = this.focusedDate.add(1, "week");
-      },
-      getDayLabels: function() {
-        const labels = esm_default.weekdaysShort();
-        if (firstDayOfWeek === 0) {
-          return labels;
-        }
-        return [
-          ...labels.slice(firstDayOfWeek),
-          ...labels.slice(0, firstDayOfWeek)
-        ];
-      },
-      getSelectedDate: function() {
-        let date = esm_default(this.state, format);
-        if (!date.isValid())
-          return null;
-        return date;
-      },
       init: function() {
         this.maxDate = esm_default(this.maxDate);
         if (!this.maxDate.isValid())
@@ -852,6 +784,74 @@ var date_time_picker_default = (Alpine) => {
             this.setState(date2);
           this.setDisplayText();
         });
+      },
+      clearState: function() {
+        this.setState(null);
+        this.closePicker();
+      },
+      closePicker: function() {
+        this.open = false;
+      },
+      dateIsDisabled: function(date) {
+        if (this.maxDate && date.isAfter(this.maxDate))
+          return true;
+        if (this.minDate && date.isBefore(this.minDate))
+          return true;
+        return false;
+      },
+      dayIsDisabled: function(day) {
+        return this.dateIsDisabled(this.focusedDate.date(day));
+      },
+      dayIsSelected: function(day) {
+        let selectedDate = this.getSelectedDate();
+        if (selectedDate === null)
+          return false;
+        return selectedDate.date() === day && selectedDate.month() === this.focusedDate.month() && selectedDate.year() === this.focusedDate.year();
+      },
+      dayIsToday: function(day) {
+        let date = esm_default();
+        return date.date() === day && date.month() === this.focusedDate.month() && date.year() === this.focusedDate.year();
+      },
+      evaluatePosition: function() {
+        let availableHeight = window.innerHeight - this.$refs.button.offsetHeight;
+        let element = this.$refs.button;
+        while (element) {
+          availableHeight -= element.offsetTop;
+          element = element.offsetParent;
+        }
+        if (this.$refs.picker.offsetHeight <= availableHeight) {
+          this.$refs.picker.style.bottom = "auto";
+          return;
+        }
+        this.$refs.picker.style.bottom = `${this.$refs.button.offsetHeight}px`;
+      },
+      focusPreviousDay: function() {
+        this.focusedDate = this.focusedDate.subtract(1, "day");
+      },
+      focusPreviousWeek: function() {
+        this.focusedDate = this.focusedDate.subtract(1, "week");
+      },
+      focusNextDay: function() {
+        this.focusedDate = this.focusedDate.add(1, "day");
+      },
+      focusNextWeek: function() {
+        this.focusedDate = this.focusedDate.add(1, "week");
+      },
+      getDayLabels: function() {
+        const labels = esm_default.weekdaysShort();
+        if (firstDayOfWeek === 0) {
+          return labels;
+        }
+        return [
+          ...labels.slice(firstDayOfWeek),
+          ...labels.slice(0, firstDayOfWeek)
+        ];
+      },
+      getSelectedDate: function() {
+        let date = esm_default(this.state, format);
+        if (!date.isValid())
+          return null;
+        return date;
       },
       openPicker: function() {
         this.focusedDate = this.getSelectedDate() ?? esm_default();
@@ -10317,7 +10317,6 @@ var file_upload_default = (Alpine) => {
     placeholder,
     maxSize,
     minSize,
-    removeTemporaryUploadedFileUsing,
     removeUploadButtonPosition,
     removeUploadedFileUsing,
     state: state2,
@@ -10418,6 +10417,41 @@ var select_default = (Alpine) => {
       options,
       search: "",
       state: state2,
+      init: function() {
+        if (this.isAutofocused)
+          this.openListbox();
+        this.$watch("search", () => {
+          if (!this.isOpen || this.search === "" || this.search === null) {
+            this.options = options;
+            this.focusedOptionIndex = 0;
+            return;
+          }
+          if (Object.keys(options).length) {
+            this.options = {};
+            let search = this.search.trim().toLowerCase();
+            for (let key in options) {
+              if (options[key].trim().toLowerCase().includes(search)) {
+                this.options[key] = options[key];
+              }
+            }
+            this.focusedOptionIndex = 0;
+          } else {
+            this.isLoading = true;
+            getSearchResultsUsing(statePath, this.search).then((options2) => {
+              this.options = options2;
+              this.focusedOptionIndex = 0;
+              this.isLoading = false;
+            });
+          }
+        });
+        this.$watch("state", () => {
+          if (this.state in this.options) {
+            this.displayText = this.options[this.state];
+          } else if (!this.state) {
+            this.clearValue();
+          }
+        });
+      },
       clearValue: function() {
         this.state = null;
         this.displayText = null;
@@ -10463,41 +10497,6 @@ var select_default = (Alpine) => {
         this.focusedOptionIndex--;
         this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
           block: "center"
-        });
-      },
-      init: function() {
-        if (this.isAutofocus)
-          this.openListbox();
-        this.$watch("search", () => {
-          if (!this.isOpen || this.search === "" || this.search === null) {
-            this.options = options;
-            this.focusedOptionIndex = 0;
-            return;
-          }
-          if (Object.keys(options).length) {
-            this.options = {};
-            let search = this.search.trim().toLowerCase();
-            for (let key in options) {
-              if (options[key].trim().toLowerCase().includes(search)) {
-                this.options[key] = options[key];
-              }
-            }
-            this.focusedOptionIndex = 0;
-          } else {
-            this.isLoading = true;
-            getSearchResultsUsing(statePath, this.search).then((options2) => {
-              this.options = options2;
-              this.focusedOptionIndex = 0;
-              this.isLoading = false;
-            });
-          }
-        });
-        this.$watch("state", () => {
-          if (this.state in this.options) {
-            this.displayText = this.options[this.state];
-          } else if (!this.state) {
-            this.clearValue();
-          }
         });
       },
       openListbox: function() {

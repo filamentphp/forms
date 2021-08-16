@@ -17,6 +17,10 @@ class Repeater extends Field
         $this->registerListeners([
             'repeater.createItem' => [
                 function (Repeater $component, string $statePath): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }
@@ -31,6 +35,10 @@ class Repeater extends Field
             ],
             'repeater.deleteItem' => [
                 function (Repeater $component, string $statePath, string $uuidToDelete): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }
@@ -45,6 +53,10 @@ class Repeater extends Field
             ],
             'repeater.moveItemDown' => [
                 function (Repeater $component, string $statePath, string $uuidToMoveDown): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }
@@ -57,6 +69,10 @@ class Repeater extends Field
             ],
             'repeater.moveItemUp' => [
                 function (Repeater $component, string $statePath, string $uuidToMoveUp): void {
+                    if ($component->isDisabled()) {
+                        return;
+                    }
+
                     if ($statePath !== $component->getStatePath()) {
                         return;
                     }

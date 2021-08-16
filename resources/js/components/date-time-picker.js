@@ -48,102 +48,6 @@ export default (Alpine) => {
 
             state,
 
-            clearState: function () {
-                this.setState(null)
-
-                this.closePicker()
-            },
-
-            closePicker: function () {
-                this.open = false
-            },
-
-            dateIsDisabled: function (date) {
-                if (this.maxDate && date.isAfter(this.maxDate)) return true
-                if (this.minDate && date.isBefore(this.minDate)) return true
-
-                return false
-            },
-
-            dayIsDisabled: function (day) {
-                return this.dateIsDisabled(this.focusedDate.date(day))
-            },
-
-            dayIsSelected: function (day) {
-                let selectedDate = this.getSelectedDate()
-
-                if (selectedDate === null) return false
-
-                return selectedDate.date() === day &&
-                    selectedDate.month() === this.focusedDate.month() &&
-                    selectedDate.year() === this.focusedDate.year()
-            },
-
-            dayIsToday: function (day) {
-                let date = dayjs()
-
-                return date.date() === day &&
-                    date.month() === this.focusedDate.month() &&
-                    date.year() === this.focusedDate.year()
-            },
-
-            evaluatePosition: function () {
-                let availableHeight = window.innerHeight - this.$refs.button.offsetHeight
-
-                let element = this.$refs.button
-
-                while (element) {
-                    availableHeight -= element.offsetTop
-
-                    element = element.offsetParent
-                }
-
-                if (this.$refs.picker.offsetHeight <= availableHeight) {
-                    this.$refs.picker.style.bottom = 'auto'
-
-                    return
-                }
-
-                this.$refs.picker.style.bottom = `${this.$refs.button.offsetHeight}px`
-            },
-
-            focusPreviousDay: function () {
-                this.focusedDate = this.focusedDate.subtract(1, 'day')
-            },
-
-            focusPreviousWeek: function () {
-                this.focusedDate = this.focusedDate.subtract(1, 'week')
-            },
-
-            focusNextDay: function () {
-                this.focusedDate = this.focusedDate.add(1, 'day')
-            },
-
-            focusNextWeek: function () {
-                this.focusedDate = this.focusedDate.add(1, 'week')
-            },
-
-            getDayLabels: function () {
-                const labels = dayjs.weekdaysShort()
-
-                if (firstDayOfWeek === 0) {
-                    return labels
-                }
-
-                return [
-                    ...labels.slice(firstDayOfWeek),
-                    ...labels.slice(0, firstDayOfWeek),
-                ]
-            },
-
-            getSelectedDate: function () {
-                let date = dayjs(this.state, format)
-
-                if (! date.isValid()) return null
-
-                return date
-            },
-
             init: function () {
                 this.maxDate = dayjs(this.maxDate)
                 if (! this.maxDate.isValid()) this.maxDate = null
@@ -267,6 +171,102 @@ export default (Alpine) => {
 
                     this.setDisplayText()
                 })
+            },
+
+            clearState: function () {
+                this.setState(null)
+
+                this.closePicker()
+            },
+
+            closePicker: function () {
+                this.open = false
+            },
+
+            dateIsDisabled: function (date) {
+                if (this.maxDate && date.isAfter(this.maxDate)) return true
+                if (this.minDate && date.isBefore(this.minDate)) return true
+
+                return false
+            },
+
+            dayIsDisabled: function (day) {
+                return this.dateIsDisabled(this.focusedDate.date(day))
+            },
+
+            dayIsSelected: function (day) {
+                let selectedDate = this.getSelectedDate()
+
+                if (selectedDate === null) return false
+
+                return selectedDate.date() === day &&
+                    selectedDate.month() === this.focusedDate.month() &&
+                    selectedDate.year() === this.focusedDate.year()
+            },
+
+            dayIsToday: function (day) {
+                let date = dayjs()
+
+                return date.date() === day &&
+                    date.month() === this.focusedDate.month() &&
+                    date.year() === this.focusedDate.year()
+            },
+
+            evaluatePosition: function () {
+                let availableHeight = window.innerHeight - this.$refs.button.offsetHeight
+
+                let element = this.$refs.button
+
+                while (element) {
+                    availableHeight -= element.offsetTop
+
+                    element = element.offsetParent
+                }
+
+                if (this.$refs.picker.offsetHeight <= availableHeight) {
+                    this.$refs.picker.style.bottom = 'auto'
+
+                    return
+                }
+
+                this.$refs.picker.style.bottom = `${this.$refs.button.offsetHeight}px`
+            },
+
+            focusPreviousDay: function () {
+                this.focusedDate = this.focusedDate.subtract(1, 'day')
+            },
+
+            focusPreviousWeek: function () {
+                this.focusedDate = this.focusedDate.subtract(1, 'week')
+            },
+
+            focusNextDay: function () {
+                this.focusedDate = this.focusedDate.add(1, 'day')
+            },
+
+            focusNextWeek: function () {
+                this.focusedDate = this.focusedDate.add(1, 'week')
+            },
+
+            getDayLabels: function () {
+                const labels = dayjs.weekdaysShort()
+
+                if (firstDayOfWeek === 0) {
+                    return labels
+                }
+
+                return [
+                    ...labels.slice(firstDayOfWeek),
+                    ...labels.slice(0, firstDayOfWeek),
+                ]
+            },
+
+            getSelectedDate: function () {
+                let date = dayjs(this.state, format)
+
+                if (! date.isValid()) return null
+
+                return date
             },
 
             openPicker: function () {

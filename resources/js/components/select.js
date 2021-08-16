@@ -24,6 +24,49 @@ export default (Alpine) => {
 
             state,
 
+            init: function () {
+                if (this.isAutofocused) this.openListbox()
+
+                this.$watch('search', () => {
+                    if (! this.isOpen || this.search === '' || this.search === null) {
+                        this.options = options
+                        this.focusedOptionIndex = 0
+
+                        return
+                    }
+
+                    if (Object.keys(options).length) {
+                        this.options = {}
+
+                        let search = this.search.trim().toLowerCase()
+
+                        for (let key in options) {
+                            if (options[key].trim().toLowerCase().includes(search)) {
+                                this.options[key] = options[key]
+                            }
+                        }
+
+                        this.focusedOptionIndex = 0
+                    } else {
+                        this.isLoading = true
+
+                        getSearchResultsUsing(statePath, this.search).then((options) => {
+                            this.options = options
+                            this.focusedOptionIndex = 0
+                            this.isLoading = false
+                        })
+                    }
+                })
+
+                this.$watch('state', () => {
+                    if (this.state in this.options) {
+                        this.displayText = this.options[this.state]
+                    } else if (! this.state) {
+                        this.clearValue()
+                    }
+                })
+            },
+
             clearValue: function () {
                 this.state = null
                 this.displayText = null
@@ -88,49 +131,6 @@ export default (Alpine) => {
 
                 this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
                     block: 'center',
-                })
-            },
-
-            init: function () {
-                if (this.isAutofocus) this.openListbox()
-
-                this.$watch('search', () => {
-                    if (! this.isOpen || this.search === '' || this.search === null) {
-                        this.options = options
-                        this.focusedOptionIndex = 0
-
-                        return
-                    }
-
-                    if (Object.keys(options).length) {
-                        this.options = {}
-
-                        let search = this.search.trim().toLowerCase()
-
-                        for (let key in options) {
-                            if (options[key].trim().toLowerCase().includes(search)) {
-                                this.options[key] = options[key]
-                            }
-                        }
-
-                        this.focusedOptionIndex = 0
-                    } else {
-                        this.isLoading = true
-
-                        getSearchResultsUsing(statePath, this.search).then((options) => {
-                            this.options = options
-                            this.focusedOptionIndex = 0
-                            this.isLoading = false
-                        })
-                    }
-                })
-
-                this.$watch('state', () => {
-                    if (this.state in this.options) {
-                        this.displayText = this.options[this.state]
-                    } else if (! this.state) {
-                        this.clearValue()
-                    }
                 })
             },
 

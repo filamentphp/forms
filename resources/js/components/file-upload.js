@@ -33,7 +33,6 @@ export default (Alpine) => {
         placeholder,
         maxSize,
         minSize,
-        removeTemporaryUploadedFileUsing,
         removeUploadButtonPosition,
         removeUploadedFileUsing,
         state,
