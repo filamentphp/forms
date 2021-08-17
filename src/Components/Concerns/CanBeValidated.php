@@ -25,6 +25,18 @@ trait CanBeValidated
         return $this;
     }
 
+    public function exists(string | callable $table, string | callable | null $columnName = null): static
+    {
+        $this->addValidationRule(function () use ($columnName, $table) {
+            $table = $this->evaluate($table);
+            $columnName = $this->evaluate($columnName) ?? $this->getName();
+
+            return Rule::exists($table, $columnName);
+        }, fn (): bool => (bool) $this->evaluate($table));
+
+        return $this;
+    }
+
     public function nullable(bool | callable $condition = true): static
     {
         $this->required(function () use ($condition): bool {
