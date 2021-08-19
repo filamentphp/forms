@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 use Illuminate\Support\Str;
 

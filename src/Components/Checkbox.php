@@ -1,13 +1,13 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Checkbox extends Field
 {
     use Concerns\CanBeAccepted;
     use Concerns\CanBeInline;
 
-    protected string $view = 'forms2::components.checkbox';
+    protected string $view = 'forms::components.checkbox';
 
     protected function setUp(): void
     {

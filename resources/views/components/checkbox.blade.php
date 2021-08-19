@@ -1,4 +1,4 @@
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :helper-text="$getHelperText()"
@@ -25,4 +25,4 @@
     @if ($isInline())
         </x-slot>
     @endif
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

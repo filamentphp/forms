@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components\Concerns;
+namespace Filament\Forms\Components\Concerns;
 
 trait EvaluatesCallbacks
 {

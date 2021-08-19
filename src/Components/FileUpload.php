@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +11,7 @@ class FileUpload extends Field
 {
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms2::components.file-upload';
+    protected string $view = 'forms::components.file-upload';
 
     protected $acceptedFileTypes = [];
 
@@ -362,7 +362,7 @@ class FileUpload extends Field
 
     public function getDiskName(): string
     {
-        return $this->evaluate($this->diskName) ?? config('forms2.default_filesystem_disk');
+        return $this->evaluate($this->diskName) ?? config('forms.default_filesystem_disk');
     }
 
     public function getImageCropAspectRatio(): ?string

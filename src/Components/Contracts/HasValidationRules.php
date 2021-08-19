@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components\Contracts;
+namespace Filament\Forms\Components\Contracts;
 
 interface HasValidationRules
 {

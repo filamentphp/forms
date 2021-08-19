@@ -1,8 +1,8 @@
 <?php
 
-namespace Filament\Forms2;
+namespace Filament\Forms;
 
-use Filament\Forms2\Contracts\HasForms;
+use Filament\Forms\Contracts\HasForms;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Traits\Macroable;
@@ -45,7 +45,7 @@ class ComponentContainer extends ViewComponent implements Htmlable
 
     public function render(): View
     {
-        return view('forms2::component-container', array_merge($this->data(), [
+        return view('forms::component-container', array_merge($this->data(), [
             'container' => $this,
         ]));
     }

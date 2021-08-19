@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Grid extends Component
 {
-    protected string $view = 'forms2::components.grid';
+    protected string $view = 'forms::components.grid';
 
     final public function __construct(array | int | null $columns)
     {

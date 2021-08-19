@@ -1,13 +1,13 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
-use Filament\Forms2\ComponentContainer;
+use Filament\Forms\ComponentContainer;
 use Illuminate\Support\Str;
 
 class MultipleFileUpload extends Field
 {
-    protected string $view = 'forms2::components.multiple-file-upload';
+    protected string $view = 'forms::components.multiple-file-upload';
 
     protected $uploadComponent = null;
 

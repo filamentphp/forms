@@ -1,16 +1,16 @@
 <?php
 
-namespace Filament\Forms2\Components\Builder;
+namespace Filament\Forms\Components\Builder;
 
-use Filament\Forms2\Components\Component;
-use Filament\Forms2\Components\Concerns;
+use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Concerns;
 use Illuminate\Support\Str;
 
 class Block extends Component
 {
     use Concerns\HasName;
 
-    protected string $view = 'forms2::components.builder.block';
+    protected string $view = 'forms::components.builder.block';
 
     protected $icon;
 

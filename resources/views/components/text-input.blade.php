@@ -6,7 +6,7 @@
     ];
 @endphp
 
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :helper-text="$getHelperText()"
@@ -49,4 +49,4 @@
             </span>
         @endif
     </div>
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

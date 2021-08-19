@@ -1,4 +1,4 @@
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :label-sr-only="$isAvatar() || $isMultiple()"
@@ -43,4 +43,4 @@
             type="file"
         />
     </div>
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

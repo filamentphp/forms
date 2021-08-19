@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2;
+namespace Filament\Forms;
 
 use Illuminate\Support\Arr;
 use Spatie\LaravelPackageTools\Package;
@@ -11,7 +11,7 @@ class FormsServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('forms2')
+            ->name('forms')
             ->hasConfigFile()
             ->hasViews();
     }

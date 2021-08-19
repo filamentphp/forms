@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Textarea extends Field
 {
@@ -8,7 +8,7 @@ class Textarea extends Field
     use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms2::components.textarea';
+    protected string $view = 'forms::components.textarea';
 
     protected $cols = null;
 

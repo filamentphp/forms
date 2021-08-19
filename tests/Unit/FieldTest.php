@@ -1,7 +1,7 @@
 <?php
 
-use Filament\Forms2\ComponentContainer;
-use Filament\Forms2\Components\Field;
+use Filament\Forms\ComponentContainer;
+use Filament\Forms\Components\Field;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Unit\Fixtures\Livewire;

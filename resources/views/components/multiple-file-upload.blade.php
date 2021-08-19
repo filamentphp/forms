@@ -1,4 +1,4 @@
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :helper-text="$getHelperText()"
@@ -13,4 +13,4 @@
             </li>
         @endforeach
     </ul>
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

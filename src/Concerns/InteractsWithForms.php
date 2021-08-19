@@ -1,8 +1,8 @@
 <?php
 
-namespace Filament\Forms2\Concerns;
+namespace Filament\Forms\Concerns;
 
-use Filament\Forms2\ComponentContainer;
+use Filament\Forms\ComponentContainer;
 use Illuminate\Validation\ValidationException;
 use Livewire\WithFileUploads;
 

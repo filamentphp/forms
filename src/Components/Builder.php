@@ -1,15 +1,15 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
-use Filament\Forms2\ComponentContainer;
-use Filament\Forms2\Components\Builder\Block;
+use Filament\Forms\ComponentContainer;
+use Filament\Forms\Components\Builder\Block;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Builder extends Field
 {
-    protected string $view = 'forms2::components.builder';
+    protected string $view = 'forms::components.builder';
 
     protected function setUp(): void
     {

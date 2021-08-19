@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Contracts;
+namespace Filament\Forms\Contracts;
 
 interface HasForms
 {

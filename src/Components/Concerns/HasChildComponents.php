@@ -1,8 +1,8 @@
 <?php
 
-namespace Filament\Forms2\Components\Concerns;
+namespace Filament\Forms\Components\Concerns;
 
-use Filament\Forms2\ComponentContainer;
+use Filament\Forms\ComponentContainer;
 
 trait HasChildComponents
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Select extends Field
 {
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms2::components.select';
+    protected string $view = 'forms::components.select';
 
     protected $getSearchResultsUsing = null;
 
@@ -32,11 +32,11 @@ class Select extends Field
             return $state;
         });
 
-        $this->noOptionsMessage(__('forms2::components.select.noOptionsMessage'));
+        $this->noOptionsMessage(__('forms::components.select.noOptionsMessage'));
 
-        $this->noSearchResultsMessage(__('forms2::components.select.noSearchResultsMessage'));
+        $this->noSearchResultsMessage(__('forms::components.select.noSearchResultsMessage'));
 
-        $this->placeholder(__('forms2::components.select.placeholder'));
+        $this->placeholder(__('forms::components.select.placeholder'));
     }
 
     public function getSearchResultsUsing(callable $callback): static

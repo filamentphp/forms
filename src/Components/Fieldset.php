@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Fieldset extends Component
 {
-    protected string $view = 'forms2::components.fieldset';
+    protected string $view = 'forms::components.fieldset';
 
     final public function __construct(string $label)
     {

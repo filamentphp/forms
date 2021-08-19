@@ -1,14 +1,14 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
-use Filament\Forms2\ComponentContainer;
+use Filament\Forms\ComponentContainer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Repeater extends Field
 {
-    protected string $view = 'forms2::components.repeater';
+    protected string $view = 'forms::components.repeater';
 
     protected function setUp(): void
     {

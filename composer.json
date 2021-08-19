@@ -1,5 +1,5 @@
 {
-    "name": "filament/forms2",
+    "name": "filament/forms",
     "description": "Effortlessly build TALL-powered forms.",
     "license": "MIT",
     "homepage": "https://github.com/laravel-filament/forms",
@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Filament\\Forms2\\": "src"
+            "Filament\\Forms\\": "src"
         }
     },
     "autoload-dev": {
@@ -39,7 +39,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Filament\\Forms2\\FormsServiceProvider"
+                "Filament\\Forms\\FormsServiceProvider"
             ]
         }
     },

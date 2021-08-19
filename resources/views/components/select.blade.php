@@ -1,4 +1,4 @@
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :helper-text="$getHelperText()"
@@ -162,4 +162,4 @@
             @endunless
         </div>
     @endif
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

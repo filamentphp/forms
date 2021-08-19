@@ -1,13 +1,13 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Toggle extends Field
 {
     use Concerns\CanBeAccepted;
     use Concerns\CanBeInline;
 
-    protected string $view = 'forms2::components.toggle';
+    protected string $view = 'forms::components.toggle';
 
     protected $offIcon = null;
 

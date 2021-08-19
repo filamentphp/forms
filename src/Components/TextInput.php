@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class TextInput extends Field
 {
@@ -8,7 +8,7 @@ class TextInput extends Field
     use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms2::components.text-input';
+    protected string $view = 'forms::components.text-input';
 
     protected $isEmail = false;
 

@@ -1395,31 +1395,31 @@ var applyStyles = (element, {
   width,
   height
 }) => {
-  let transforms2 = "";
+  let transforms = "";
   let styles2 = "";
   if (isDefined(originX) || isDefined(originY)) {
     styles2 += `transform-origin: ${originX || 0}px ${originY || 0}px;`;
   }
   if (isDefined(perspective)) {
-    transforms2 += `perspective(${perspective}px) `;
+    transforms += `perspective(${perspective}px) `;
   }
   if (isDefined(translateX) || isDefined(translateY)) {
-    transforms2 += `translate3d(${translateX || 0}px, ${translateY || 0}px, 0) `;
+    transforms += `translate3d(${translateX || 0}px, ${translateY || 0}px, 0) `;
   }
   if (isDefined(scaleX) || isDefined(scaleY)) {
-    transforms2 += `scale3d(${isDefined(scaleX) ? scaleX : 1}, ${isDefined(scaleY) ? scaleY : 1}, 1) `;
+    transforms += `scale3d(${isDefined(scaleX) ? scaleX : 1}, ${isDefined(scaleY) ? scaleY : 1}, 1) `;
   }
   if (isDefined(rotateZ)) {
-    transforms2 += `rotateZ(${rotateZ}rad) `;
+    transforms += `rotateZ(${rotateZ}rad) `;
   }
   if (isDefined(rotateX)) {
-    transforms2 += `rotateX(${rotateX}rad) `;
+    transforms += `rotateX(${rotateX}rad) `;
   }
   if (isDefined(rotateY)) {
-    transforms2 += `rotateY(${rotateY}rad) `;
+    transforms += `rotateY(${rotateY}rad) `;
   }
-  if (transforms2.length) {
-    styles2 += `transform:${transforms2};`;
+  if (transforms.length) {
+    styles2 += `transform:${transforms};`;
   }
   if (isDefined(opacity)) {
     styles2 += `opacity:${opacity};`;
@@ -9502,7 +9502,7 @@ var cropSVG = (blob2, crop = {}, markup, options) => new Promise((resolve) => {
       `translate(${cropFlipHorizontal ? -imageWidth : 0} ${cropFlipVertical ? -imageHeight : 0})`
     ];
     const transformed = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${canvasWidth}${widthUnits}" height="${canvasHeight}${heightUnits}" 
+<svg width="${canvasWidth}${widthUnits}" height="${canvasHeight}${heightUnits}"
 viewBox="0 0 ${canvasWidth} ${canvasHeight}" ${background ? 'style="background:' + background + '" ' : ""}
 preserveAspectRatio="xMinYMin"
 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -9532,33 +9532,33 @@ var objectToImageData = (obj) => {
 };
 var TransformWorker = () => {
   const TRANSFORMS = { resize, filter };
-  const applyTransforms = (transforms2, imageData) => {
-    transforms2.forEach((transform2) => {
+  const applyTransforms = (transforms, imageData) => {
+    transforms.forEach((transform2) => {
       imageData = TRANSFORMS[transform2.type](imageData, transform2.data);
     });
     return imageData;
   };
   const transform = (data3, cb) => {
-    let transforms2 = data3.transforms;
+    let transforms = data3.transforms;
     let filterTransform = null;
-    transforms2.forEach((transform2) => {
+    transforms.forEach((transform2) => {
       if (transform2.type === "filter") {
         filterTransform = transform2;
       }
     });
     if (filterTransform) {
       let resizeTransform = null;
-      transforms2.forEach((transform2) => {
+      transforms.forEach((transform2) => {
         if (transform2.type === "resize") {
           resizeTransform = transform2;
         }
       });
       if (resizeTransform) {
         resizeTransform.data.matrix = filterTransform.data;
-        transforms2 = transforms2.filter((transform2) => transform2.type !== "filter");
+        transforms = transforms.filter((transform2) => transform2.type !== "filter");
       }
     }
-    cb(applyTransforms(transforms2, data3.imageData));
+    cb(applyTransforms(transforms, data3.imageData));
   };
   self.onmessage = (e) => {
     transform(e.data.message, (response) => {
@@ -10019,12 +10019,12 @@ var transformImage = (file2, instructions, options = {}) => new Promise((resolve
   const quality = qualityAsPercentage === null ? null : qualityAsPercentage / 100;
   const type = output && output.type || null;
   const background = output && output.background || null;
-  const transforms2 = [];
+  const transforms = [];
   if (size && (typeof size.width === "number" || typeof size.height === "number")) {
-    transforms2.push({ type: "resize", data: size });
+    transforms.push({ type: "resize", data: size });
   }
   if (filter && filter.length === 20) {
-    transforms2.push({ type: "filter", data: filter });
+    transforms.push({ type: "filter", data: filter });
   }
   const resolveWithBlob = (blob2) => {
     const promisedBlob = afterCreateBlob ? afterCreateBlob(blob2) : blob2;
@@ -10063,12 +10063,12 @@ var transformImage = (file2, instructions, options = {}) => new Promise((resolve
       quality,
       type: type || file2.type
     };
-    if (!transforms2.length) {
+    if (!transforms.length) {
       return toBlob(imageData, outputFormat);
     }
     const worker = createWorker2(TransformWorker);
     worker.post({
-      transforms: transforms2,
+      transforms: transforms,
       imageData
     }, (response) => {
       toBlob(objectToImageData(response), outputFormat);

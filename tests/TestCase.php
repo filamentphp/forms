@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Filament\Forms2\FormsServiceProvider;
+use Filament\Forms\FormsServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase

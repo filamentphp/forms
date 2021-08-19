@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Group extends Component
 {
-    protected string $view = 'forms2::components.group';
+    protected string $view = 'forms::components.group';
 
     final public function __construct(array $schema = [])
     {

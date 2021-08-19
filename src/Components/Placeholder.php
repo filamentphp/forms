@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 use Illuminate\Support\Str;
 
@@ -10,7 +10,7 @@ class Placeholder extends Component
     use Concerns\HasHint;
     use Concerns\HasName;
 
-    protected string $view = 'forms2::components.placeholder';
+    protected string $view = 'forms::components.placeholder';
 
     protected $state = null;
 

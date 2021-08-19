@@ -1,4 +1,4 @@
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :helper-text="$getHelperText()"
@@ -24,4 +24,4 @@
             'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
         ]) }}
     ></textarea>
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

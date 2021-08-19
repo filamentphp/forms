@@ -1,8 +1,8 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
-use Filament\Forms2\Concerns\HasColumns;
+use Filament\Forms\Concerns\HasColumns;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Traits\Macroable;

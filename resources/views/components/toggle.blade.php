@@ -1,4 +1,4 @@
-<x-forms2::field-wrapper
+<x-forms::field-wrapper
     :id="$getId()"
     :label="$getLabel()"
     :helper-text="$getHelperText()"
@@ -49,7 +49,7 @@
                             <x-dynamic-component :component="$getOffIcon()" class="bg-white h-3 w-3 text-gray-400" />
                         @endif
                     </span>
-    
+
                     <span
                         class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity opacity-0 ease-out duration-100"
                         aria-hidden="true"
@@ -67,4 +67,4 @@
     @if ($isInline())
         </x-slot>
     @endif
-</x-forms2::field-wrapper>
+</x-forms::field-wrapper>

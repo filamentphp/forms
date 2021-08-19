@@ -1,12 +1,12 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class DatePicker extends Field
 {
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms2::components.date-time-picker';
+    protected string $view = 'forms::components.date-time-picker';
 
     protected $displayFormat = null;
 
@@ -142,6 +142,6 @@ class DatePicker extends Field
 
     protected function getDefaultFirstDayOfWeek(): int
     {
-        return config('forms2.components.date_time_picker.first_day_of_week', 1);
+        return config('forms.components.date_time_picker.first_day_of_week', 1);
     }
 }

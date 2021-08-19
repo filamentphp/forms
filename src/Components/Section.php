@@ -1,12 +1,12 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 use Illuminate\Support\Str;
 
 class Section extends Component implements Contracts\CanConcealComponents
 {
-    protected string $view = 'forms2::components.section';
+    protected string $view = 'forms::components.section';
 
     protected $isCollapsed = false;
 

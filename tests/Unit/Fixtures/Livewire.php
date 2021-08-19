@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Fixtures;
 
-use Filament\Forms2\Concerns\InteractsWithForms;
-use Filament\Forms2\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Livewire\Component;
 
 class Livewire extends Component implements HasForms

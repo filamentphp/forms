@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Forms2\Components;
+namespace Filament\Forms\Components;
 
 class Card extends Component
 {
-    protected string $view = 'forms2::components.card';
+    protected string $view = 'forms::components.card';
 
     final public function __construct(array $schema = [])
     {
