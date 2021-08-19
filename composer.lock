@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4582dd848c8aa0fc4f0737ce18e98b3d",
+    "content-hash": "8ad9bdc11cd34cd139ff6b7ba25a818f",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.188.0",
+            "version": "3.191.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "613cea76913b632d75ed2f6ed5afb11c53762a6e"
+                "reference": "15e97fe060decf30fa103be091b113adcc578c5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/613cea76913b632d75ed2f6ed5afb11c53762a6e",
-                "reference": "613cea76913b632d75ed2f6ed5afb11c53762a6e",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/15e97fe060decf30fa103be091b113adcc578c5d",
+                "reference": "15e97fe060decf30fa103be091b113adcc578c5d",
                 "shasum": ""
             },
             "require": {
@@ -92,9 +92,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.188.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.191.0"
             },
-            "time": "2021-08-06T18:17:12+00:00"
+            "time": "2021-08-19T18:15:49+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -1478,16 +1478,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "f3ad69181b8afed2c9edf7be5a2918144ff4ea32"
+                "reference": "18634df356bfd4119fe3d6156bdb990c414c14ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f3ad69181b8afed2c9edf7be5a2918144ff4ea32",
-                "reference": "f3ad69181b8afed2c9edf7be5a2918144ff4ea32",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/18634df356bfd4119fe3d6156bdb990c414c14ea",
+                "reference": "18634df356bfd4119fe3d6156bdb990c414c14ea",
                 "shasum": ""
             },
             "require": {
@@ -1560,7 +1560,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/1.1.4"
+                "source": "https://github.com/thephpleague/flysystem/tree/1.1.5"
             },
             "funding": [
                 {
@@ -1568,7 +1568,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-06-23T21:56:05+00:00"
+            "time": "2021-08-17T13:49:42+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
