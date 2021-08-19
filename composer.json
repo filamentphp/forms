@@ -11,7 +11,6 @@
         "php": "^8.0",
         "blade-ui-kit/blade-heroicons": "^1.2",
         "laravel/framework": "^8.5",
-        "league/flysystem-aws-s3-v3": "^1.0",
         "livewire/livewire": "^2.5",
         "spatie/laravel-medialibrary": "^9.7",
         "spatie/laravel-package-tools": "^1.9"
