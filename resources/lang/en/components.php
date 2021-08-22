@@ -39,16 +39,16 @@ return [
     'markdownEditor' => [
 
         'toolbarButtons' => [
-            'attachFiles' => 'Attach Files',
+            'attachFiles' => 'Attach files',
             'bold' => 'Bold',
-            'bullet' => 'Bullets',
-            'code' => 'Code',
+            'bulletList' => 'Bullet list',
+            'codeBlock' => 'Code block',
+            'edit' => 'Edit',
             'italic' => 'Italic',
             'link' => 'Link',
-            'number' => 'Numbers',
+            'orderedList' => 'Numbered list',
             'preview' => 'Preview',
             'strike' => 'Strikethrough',
-            'write' => 'Write',
         ],
 
     ],
@@ -79,7 +79,7 @@ return [
         ],
 
         'toolbarButtons' => [
-            'attachFiles' => 'Attach Files',
+            'attachFiles' => 'Attach files',
             'blockquote' => 'Blockquote',
             'bold' => 'Bold',
             'bulletList' => 'Bullet list',

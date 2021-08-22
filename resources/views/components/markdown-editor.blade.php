@@ -9,7 +9,7 @@
     <div
         x-data="markdownEditorFormComponent({
             state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
-            tab: '{{ $isDisabled() ? 'preview' : 'write' }}',
+            tab: '{{ $isDisabled() ? 'preview' : 'edit' }}',
         })"
         x-cloak
         wire:ignore
@@ -65,7 +65,7 @@
                             </div>
                         @endif
 
-                        @if ($hasToolbarButton(['link', 'attachFiles', 'code']))
+                        @if ($hasToolbarButton(['link', 'attachFiles', 'codeBlock']))
                             <div class="flex items-stretch space-x-1 rtl:space-x-reverse">
                                 @if ($hasToolbarButton('link'))
                                     <x-forms::markdown-editor.toolbar-button
@@ -89,9 +89,9 @@
                                     </x-forms::markdown-editor.toolbar-button>
                                 @endif
 
-                                @if ($hasToolbarButton('code'))
+                                @if ($hasToolbarButton('codeBlock'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.code') }}"
+                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.codeBlock') }}"
                                         class="text-base"
                                     >
                                         <md-code class="w-full h-full">
@@ -102,11 +102,11 @@
                             </div>
                         @endif
 
-                        @if ($hasToolbarButton(['bullet', 'number']))
+                        @if ($hasToolbarButton(['bulletList', 'orderedList']))
                             <div class="flex items-stretch space-x-1 rtl:space-x-reverse">
-                                @if ($hasToolbarButton('bullet'))
+                                @if ($hasToolbarButton('bulletList'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.bullet') }}"
+                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.bulletList') }}"
                                         class="text-base"
                                     >
                                         <md-unordered-list class="w-full h-full">
@@ -115,9 +115,9 @@
                                     </x-forms::markdown-editor.toolbar-button>
                                 @endif
 
-                                @if ($hasToolbarButton('number'))
+                                @if ($hasToolbarButton('orderedList'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.number') }}"
+                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.orderedList') }}"
                                         class="text-base"
                                     >
                                         <md-ordered-list class="w-full h-full">
@@ -129,15 +129,15 @@
                         @endif
                     </markdown-toolbar>
 
-                    @if ($hasToolbarButton(['write', 'preview']) && ! $isDisabled())
+                    @if ($hasToolbarButton(['edit', 'preview']) && ! $isDisabled())
                         <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                            @if ($hasToolbarButton('write'))
+                            @if ($hasToolbarButton('edit'))
                                 <button
-                                    x-on:click.prevent="tab = 'write'"
-                                    x-bind:class="{ 'text-gray-400': tab !== 'write' }"
+                                    x-on:click.prevent="tab = 'edit'"
+                                    x-bind:class="{ 'text-gray-400': tab !== 'edit' }"
                                     class="font-mono text-sm hover:underline"
                                 >
-                                    {{ __('forms::components.markdownEditor.toolbarButtons.write') }}
+                                    {{ __('forms::components.markdownEditor.toolbarButtons.edit') }}
                                 </button>
                             @endif
 
@@ -155,7 +155,7 @@
                 </div>
             @endunless
 
-            <div x-show="tab === 'write'" class="relative w-full h-full" style="min-height: 150px;">
+            <div x-show="tab === 'edit'" class="relative w-full h-full" style="min-height: 150px;">
                 <file-attachment directory>
                     <textarea
                         {!! $isAutofocused() ? 'autofocus' : null !!}

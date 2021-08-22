@@ -13,13 +13,13 @@ class MarkdownEditor extends Field implements Contracts\HasFileAttachments
     protected $toolbarButtons = [
         'attachFiles',
         'bold',
-        'bullet',
-        'code',
+        'bulletList',
+        'codeBlock',
+        'edit',
         'italic',
         'link',
-        'number',
+        'orderedList',
         'preview',
         'strike',
-        'write',
     ];
 }
