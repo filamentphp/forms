@@ -2,27 +2,24 @@
 
 namespace Filament\Forms\Components;
 
-class RichEditor extends Field implements Contracts\HasFileAttachments
+class MarkdownEditor extends Field implements Contracts\HasFileAttachments
 {
     use Concerns\HasFileAttachments;
     use Concerns\HasPlaceholder;
     use Concerns\InteractsWithToolbarButtons;
 
-    protected string $view = 'forms::components.rich-editor';
+    protected string $view = 'forms::components.markdown-editor';
 
     protected $toolbarButtons = [
         'attachFiles',
-        'blockquote',
         'bold',
-        'bulletList',
-        'codeBlock',
-        'h2',
-        'h3',
+        'bullet',
+        'code',
         'italic',
         'link',
-        'orderedList',
-        'redo',
+        'number',
+        'preview',
         'strike',
-        'undo',
+        'write',
     ];
 }

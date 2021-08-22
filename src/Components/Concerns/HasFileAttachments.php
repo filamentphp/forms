@@ -2,6 +2,9 @@
 
 namespace Filament\Forms\Components\Concerns;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use SplFileInfo;
 
 trait HasFileAttachments
@@ -9,6 +12,8 @@ trait HasFileAttachments
     protected $fileAttachmentsDirectory = null;
 
     protected $fileAttachmentsDiskName = null;
+
+    protected $getUploadedAttachmentUrlUsing = null;
 
     protected $saveUploadedFileAttachmentsUsing = null;
 
@@ -31,14 +36,20 @@ trait HasFileAttachments
     public function saveUploadedFileAttachment(SplFileInfo $attachment): ?string
     {
         if ($callback = $this->saveUploadedFileAttachmentsUsing) {
-            $url = $this->evaluate($callback, [
+            $file = $this->evaluate($callback, [
                 'file' => $attachment,
             ]);
         } else {
-            $url = $this->handleFileAttachmentUpload($attachment);
+            $file = $this->handleFileAttachmentUpload($attachment);
         }
 
-        return $url;
+        if ($callback = $this->getUploadedAttachmentUrlUsing) {
+            return $this->evaluate($callback, [
+                'file' => $file,
+            ]);
+        }
+
+        return $this->handleUploadedAttachmentUrlRetrieval($file);
     }
 
     public function fileAttachmentsVisibility(string | callable $visibility): static
@@ -53,6 +64,11 @@ trait HasFileAttachments
         return $this->evaluate($this->fileAttachmentsDirectory);
     }
 
+    public function getFileAttachmentsDisk(): Filesystem
+    {
+        return Storage::disk($this->getFileAttachmentsDiskName());
+    }
+
     public function getFileAttachmentsDiskName(): string
     {
         return $this->evaluate($this->fileAttachmentsDiskName) ?? config('forms.default_filesystem_disk');
@@ -63,10 +79,34 @@ trait HasFileAttachments
         return $this->evaluate($this->fileAttachmentsVisibility);
     }
 
+    public function getUploadedAttachmentUrlUsing(callable $callback): static
+    {
+        $this->getUploadedAttachmentUrlUsing = $callback;
+
+        return $this;
+    }
+
     protected function handleFileAttachmentUpload($file)
     {
         $storeMethod = $this->getFileAttachmentsVisibility() === 'public' ? 'storePublicly' : 'store';
 
         return $file->{$storeMethod}($this->getFileAttachmentsDirectory(), $this->getFileAttachmentsDiskName());
+    }
+
+    protected function handleUploadedAttachmentUrlRetrieval($file): ?string
+    {
+        $storage = $this->getFileAttachmentsDisk();
+
+        if (
+            $storage->getDriver()->getAdapter() instanceof AwsS3Adapter &&
+            $storage->getVisibility($file) === 'private'
+        ) {
+            return $storage->temporaryUrl(
+                $file,
+                now()->addMinutes(5),
+            );
+        }
+
+        return $storage->url($file);
     }
 }
