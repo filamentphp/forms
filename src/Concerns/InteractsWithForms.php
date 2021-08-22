@@ -5,10 +5,13 @@ namespace Filament\Forms\Concerns;
 use Filament\Forms\ComponentContainer;
 use Illuminate\Validation\ValidationException;
 use Livewire\WithFileUploads;
+use SplFileInfo;
 
 trait InteractsWithForms
 {
     use WithFileUploads;
+
+    public array $componentFileAttachments = [];
 
     protected ?array $cachedForms = null;
 
@@ -26,6 +29,22 @@ trait InteractsWithForms
         foreach ($this->getCachedForms() as $form) {
             $form->dispatchEvent(...$args);
         }
+    }
+
+    public function getComponentFileAttachment(string $statePath): ?SplFileInfo
+    {
+        return data_get($this->componentFileAttachments, $statePath);
+    }
+
+    public function getComponentFileAttachmentUrl(string $statePath): ?string
+    {
+        foreach ($this->getCachedForms() as $form) {
+            if ($url = $form->getComponentFileAttachmentUrl($statePath)) {
+                return $url;
+            }
+        }
+
+        return null;
     }
 
     public function getSelectSearchResults(string $statePath, string $query): array

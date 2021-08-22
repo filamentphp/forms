@@ -13,6 +13,7 @@ class FormsServiceProvider extends PackageServiceProvider
         $package
             ->name('forms')
             ->hasConfigFile()
+            ->hasTranslations()
             ->hasViews();
     }
 

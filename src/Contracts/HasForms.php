@@ -2,9 +2,15 @@
 
 namespace Filament\Forms\Contracts;
 
+use SplFileInfo;
+
 interface HasForms
 {
     public function dispatchFormEvent(...$args): void;
+
+    public function getComponentFileAttachment(string $statePath): ?SplFileInfo;
+
+    public function getComponentFileAttachmentUrl(string $statePath): ?string;
 
     public function getSelectSearchResults(string $statePath, string $query): array;
 
