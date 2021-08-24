@@ -2,6 +2,8 @@
 
 namespace Filament\Forms\Components;
 
+use Filament\Forms\Components\TextInput\Mask;
+
 class TextInput extends Field
 {
     use Concerns\CanBeAutocompleted;
@@ -9,6 +11,8 @@ class TextInput extends Field
     use Concerns\HasPlaceholder;
 
     protected string $view = 'forms::components.text-input';
+
+    protected $configureMaskUsing = null;
 
     protected $isEmail = false;
 
@@ -42,6 +46,13 @@ class TextInput extends Field
         $this->isEmail = $condition;
 
         $this->addValidationRule('email', $condition);
+
+        return $this;
+    }
+
+    public function mask(?callable $configuration): static
+    {
+        $this->configureMaskUsing = $configuration;
 
         return $this;
     }
@@ -125,6 +136,22 @@ class TextInput extends Field
         return $this;
     }
 
+    public function getMask(): ?Mask
+    {
+        if (! $this->hasMask()) {
+            return null;
+        }
+
+        return $this->evaluate($this->configureMaskUsing, [
+            'mask' => new TextInput\Mask(),
+        ]);
+    }
+
+    public function getJsonMaskConfiguration(): ?string
+    {
+        return $this->getMask()?->toJson();
+    }
+
     public function getMaxValue()
     {
         return $this->evaluate($this->maxValue);
@@ -162,6 +189,11 @@ class TextInput extends Field
         }
 
         return 'text';
+    }
+
+    public function hasMask(): bool
+    {
+        return $this->configureMaskUsing !== null;
     }
 
     public function isEmail(): bool
