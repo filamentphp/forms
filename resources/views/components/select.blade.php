@@ -28,12 +28,15 @@
     @else
         <div
             x-data="selectFormComponent({
-                getSearchResultsUsing: $wire.getSelectSearchResults,
+                getOptionLabelUsing: async (value) => {
+                    return await $wire.getSelectOptionLabel('{{ $getStatePath() }}')
+                },
+                getSearchResultsUsing: async (query) => {
+                    return await $wire.getSelectSearchResults('{{ $getStatePath() }}', query)
+                },
                 isAutofocused: {{ $isAutofocused() ? 'true' : 'false' }},
                 options: {{ json_encode($getOptions()) }},
-                selectedOptionLabel: {{ $label = $getSelectedOptionLabel() ? "'{$label}'" : 'null' }},
                 state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
-                statePath: '{{ $getStatePath() }}',
             })"
             x-on:click.away="closeListbox()"
             x-on:blur="closeListbox()"
@@ -63,10 +66,10 @@
             >
                 <span
                     x-show="! isOpen"
-                    x-text="displayText ?? '{{ $getPlaceholder() }}'"
+                    x-text="label ?? '{{ $getPlaceholder() }}'"
                     class="absolute w-full bg-white"
                     x-bind:class="{
-                        'text-gray-400': displayText === null,
+                        'text-gray-400': label === null,
                     }"
                 ></span>
 

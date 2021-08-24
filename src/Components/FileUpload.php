@@ -43,7 +43,7 @@ class FileUpload extends Field
 
     protected $panelLayout = null;
 
-    protected $removeUploadButtonPosition = 'left';
+    protected $removeUploadedFileButtonPosition = 'left';
 
     protected $removeUploadedFileUsing = null;
 
@@ -101,7 +101,7 @@ class FileUpload extends Field
         $this->imageResizeTargetWidth('500');
         $this->loadingIndicatorPosition('center bottom');
         $this->panelLayout('compact circle');
-        $this->removeUploadButtonPosition('center bottom');
+        $this->removeUploadedFileButtonPosition('center bottom');
         $this->uploadButtonPosition('center bottom');
         $this->uploadProgressIndicatorPosition('center bottom');
 
@@ -258,9 +258,9 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function removeUploadButtonPosition(string | callable $position): static
+    public function removeUploadedFileButtonPosition(string | callable $position): static
     {
-        $this->removeUploadButtonPosition = $position;
+        $this->removeUploadedFileButtonPosition = $position;
 
         return $this;
     }
@@ -410,9 +410,9 @@ class FileUpload extends Field
         return $this->evaluate($this->panelLayout);
     }
 
-    public function getRemoveUploadButtonPosition(): string
+    public function getRemoveUploadedFileButtonPosition(): string
     {
-        return $this->evaluate($this->removeUploadButtonPosition);
+        return $this->evaluate($this->removeUploadedFileButtonPosition);
     }
 
     public function getUploadButtonPosition(): string

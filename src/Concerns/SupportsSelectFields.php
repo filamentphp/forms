@@ -6,6 +6,23 @@ use Filament\Forms\Components\Select;
 
 trait SupportsSelectFields
 {
+    public function getSelectOptionLabel(string $statePath)
+    {
+        foreach ($this->getComponents() as $component) {
+            if ($component instanceof Select && $component->getStatePath() === $statePath) {
+                return $component->getOptionLabel();
+            }
+
+            foreach ($component->getChildComponentContainers() as $container) {
+                if ($results = $container->getSelectOptionLabel($statePath)) {
+                    return $results;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getSelectSearchResults(string $statePath, string $query): array
     {
         foreach ($this->getComponents() as $component) {

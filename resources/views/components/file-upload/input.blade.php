@@ -21,7 +21,7 @@
         placeholder: {{ ($placeholder = $getPlaceholder()) ? "'{$placeholder}'" : 'null' }},
         maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
         minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
-        removeUploadPosition: '{{ $getRemoveUploadButtonPosition() }}',
+        removeUploadedFilePosition: '{{ $getRemoveUploadedFileButtonPosition() }}',
         uploadButtonPosition: '{{ $getUploadButtonPosition() }}',
         uploadProgressIndicatorPosition: '{{ $getUploadProgressIndicatorPosition() }}',
     })"

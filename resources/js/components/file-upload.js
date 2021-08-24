@@ -33,12 +33,10 @@ export default (Alpine) => {
         placeholder,
         maxSize,
         minSize,
-        removeUploadButtonPosition,
+        removeUploadedFileButtonPosition,
         removeUploadedFileUsing,
         state,
-        statePath,
         uploadButtonPosition,
-        uploadedFileUrl,
         uploadProgressIndicatorPosition,
         uploadUsing,
     }) => {
@@ -49,7 +47,9 @@ export default (Alpine) => {
 
             state,
 
-            init: function () {
+            init: async function () {
+                let uploadedFileUrl = await getUploadedFileUrlUsing()
+
                 if (uploadedFileUrl) {
                     this.files = [{
                         source: uploadedFileUrl,
@@ -71,30 +71,35 @@ export default (Alpine) => {
                     maxFileSize: maxSize,
                     minFileSize: minSize,
                     styleButtonProcessItemPosition: uploadButtonPosition,
-                    styleButtonRemoveItemPosition: removeUploadButtonPosition,
+                    styleButtonRemoveItemPosition: removeUploadedFileButtonPosition,
                     styleLoadIndicatorPosition: loadingIndicatorPosition,
                     stylePanelAspectRatio: panelAspectRatio,
                     stylePanelLayout: panelLayout,
                     styleProgressIndicatorPosition: uploadProgressIndicatorPosition,
                     server: {
-                        load: (source, load) => {
-                            fetch(source).then((response) => {
-                                response.blob().then((blob) => load(blob))
-                            })
+                        load: async (source, load) => {
+                            let response = await fetch(source)
+                            let blob = await response.blob()
+
+                            load(blob)
                         },
                         process: (fieldName, file, metadata, load, error, progress) => {
-                            uploadUsing(statePath, file, load, error, progress)
+                            uploadUsing(file, load, error, progress)
                         },
-                        remove: (source, load) => {
-                            removeUploadedFileUsing(statePath).then(() => load())
+                        remove: async (source, load) => {
+                            await removeUploadedFileUsing()
+
+                            load()
                         },
-                        revert: (uniqueFileId, load) => {
-                            removeUploadedFileUsing(statePath, uniqueFileId).then(() => load())
+                        revert: async (uniqueFileId, load) => {
+                            await removeUploadedFileUsing(uniqueFileId)
+
+                            load()
                         },
                     },
                 })
 
-                this.$watch('state', () => {
+                this.$watch('state', async () => {
                     if (! this.state) {
                         this.pond.removeFiles()
 
@@ -103,18 +108,18 @@ export default (Alpine) => {
 
                     if (this.state.startsWith('livewire-file:')) return
 
-                    getUploadedFileUrlUsing(statePath).then((uploadedFileUrl) => {
-                        if (uploadedFileUrl) {
-                            this.pond.files = [{
-                                source: uploadedFileUrl,
-                                options: {
-                                    type: 'local',
-                                },
-                            }]
-                        } else {
-                            this.pond.files = []
-                        }
-                    })
+                    let uploadedFileUrl = await getUploadedFileUrlUsing()
+
+                    if (uploadedFileUrl) {
+                        this.pond.files = [{
+                            source: uploadedFileUrl,
+                            options: {
+                                type: 'local',
+                            },
+                        }]
+                    } else {
+                        this.pond.files = []
+                    }
                 })
             }
         }

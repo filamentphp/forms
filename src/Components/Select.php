@@ -2,15 +2,17 @@
 
 namespace Filament\Forms\Components;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 class Select extends Field
 {
     use Concerns\HasPlaceholder;
 
     protected string $view = 'forms::components.select';
 
-    protected $getSearchResultsUsing = null;
+    protected $getOptionLabelUsing = null;
 
-    protected $getSelectedOptionLabelUsing = null;
+    protected $getSearchResultsUsing = null;
 
     protected $isSearchable = false;
 
@@ -24,12 +26,12 @@ class Select extends Field
     {
         parent::setUp();
 
-        $this->getSelectedOptionLabelUsing(function (Select $component, $state): ?string {
-            if (array_key_exists($state, $options = $component->getOptions())) {
-                return $options[$state];
+        $this->getOptionLabelUsing(function (Select $component, $value): ?string {
+            if (array_key_exists($value, $options = $component->getOptions())) {
+                return $options[$value];
             }
 
-            return $state;
+            return $value;
         });
 
         $this->noOptionsMessage(__('forms::components.select.noOptionsMessage'));
@@ -39,16 +41,16 @@ class Select extends Field
         $this->placeholder(__('forms::components.select.placeholder'));
     }
 
-    public function getSearchResultsUsing(callable $callback): static
+    public function getOptionLabelUsing(callable $callback): static
     {
-        $this->getSearchResultsUsing = $callback;
+        $this->getOptionLabelUsing = $callback;
 
         return $this;
     }
 
-    public function getSelectedOptionLabelUsing(callable $callback): static
+    public function getSearchResultsUsing(callable $callback): static
     {
-        $this->getSelectedOptionLabelUsing = $callback;
+        $this->getSearchResultsUsing = $callback;
 
         return $this;
     }
@@ -91,9 +93,22 @@ class Select extends Field
         return $this->evaluate($this->noSearchResultsMessage);
     }
 
+    public function getOptionLabel()
+    {
+        return $this->evaluate($this->getOptionLabelUsing, [
+            'value' => $this->getState(),
+        ]);
+    }
+
     public function getOptions(): array
     {
-        return $this->evaluate($this->options);
+        $options = $this->evaluate($this->options);
+
+        if ($options instanceof Arrayable) {
+            $options = $options->toArray();
+        }
+
+        return $options;
     }
 
     public function getSearchResults(string $query): array
@@ -102,14 +117,15 @@ class Select extends Field
             return [];
         }
 
-        return $this->evaluate($this->getSearchResultsUsing, [
+        $results = $this->evaluate($this->getSearchResultsUsing, [
             'query' => $query,
         ]);
-    }
 
-    public function getSelectedOptionLabel(): ?string
-    {
-        return $this->evaluate($this->getSelectedOptionLabelUsing);
+        if ($results instanceof Arrayable) {
+            $results = $results->toArray();
+        }
+
+        return $results;
     }
 
     public function isSearchable(): bool

@@ -10,6 +10,7 @@ trait EvaluatesCallbacks
             return $value = app()->call($value, array_merge([
                 'component' => $this,
                 'livewire' => $this->getLivewire(),
+                'model' => $this->getModel(),
                 'state' => $this->getState(),
             ], $parameters));
         }

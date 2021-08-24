@@ -15581,12 +15581,10 @@ var file_upload_default = (Alpine) => {
     placeholder,
     maxSize,
     minSize,
-    removeUploadButtonPosition,
+    removeUploadedFileButtonPosition,
     removeUploadedFileUsing,
     state: state2,
-    statePath,
     uploadButtonPosition,
-    uploadedFileUrl,
     uploadProgressIndicatorPosition,
     uploadUsing
   }) => {
@@ -15594,7 +15592,8 @@ var file_upload_default = (Alpine) => {
       files: [],
       pond: null,
       state: state2,
-      init: function() {
+      init: async function() {
+        let uploadedFileUrl = await getUploadedFileUrlUsing();
         if (uploadedFileUrl) {
           this.files = [{
             source: uploadedFileUrl,
@@ -15615,47 +15614,48 @@ var file_upload_default = (Alpine) => {
           maxFileSize: maxSize,
           minFileSize: minSize,
           styleButtonProcessItemPosition: uploadButtonPosition,
-          styleButtonRemoveItemPosition: removeUploadButtonPosition,
+          styleButtonRemoveItemPosition: removeUploadedFileButtonPosition,
           styleLoadIndicatorPosition: loadingIndicatorPosition,
           stylePanelAspectRatio: panelAspectRatio,
           stylePanelLayout: panelLayout,
           styleProgressIndicatorPosition: uploadProgressIndicatorPosition,
           server: {
-            load: (source, load) => {
-              fetch(source).then((response) => {
-                response.blob().then((blob2) => load(blob2));
-              });
+            load: async (source, load) => {
+              let response = await fetch(source);
+              let blob2 = await response.blob();
+              load(blob2);
             },
             process: (fieldName, file2, metadata, load, error2, progress) => {
-              uploadUsing(statePath, file2, load, error2, progress);
+              uploadUsing(file2, load, error2, progress);
             },
-            remove: (source, load) => {
-              removeUploadedFileUsing(statePath).then(() => load());
+            remove: async (source, load) => {
+              await removeUploadedFileUsing();
+              load();
             },
-            revert: (uniqueFileId, load) => {
-              removeUploadedFileUsing(statePath, uniqueFileId).then(() => load());
+            revert: async (uniqueFileId, load) => {
+              await removeUploadedFileUsing(uniqueFileId);
+              load();
             }
           }
         });
-        this.$watch("state", () => {
+        this.$watch("state", async () => {
           if (!this.state) {
             this.pond.removeFiles();
             return;
           }
           if (this.state.startsWith("livewire-file:"))
             return;
-          getUploadedFileUrlUsing(statePath).then((uploadedFileUrl2) => {
-            if (uploadedFileUrl2) {
-              this.pond.files = [{
-                source: uploadedFileUrl2,
-                options: {
-                  type: "local"
-                }
-              }];
-            } else {
-              this.pond.files = [];
-            }
-          });
+          let uploadedFileUrl2 = await getUploadedFileUrlUsing();
+          if (uploadedFileUrl2) {
+            this.pond.files = [{
+              source: uploadedFileUrl2,
+              options: {
+                type: "local"
+              }
+            }];
+          } else {
+            this.pond.files = [];
+          }
         });
       }
     };
@@ -18642,26 +18642,25 @@ var rich_editor_default = (Alpine) => {
 // resources/js/components/select.js
 var select_default = (Alpine) => {
   Alpine.data("selectFormComponent", ({
+    getOptionLabelUsing,
     getSearchResultsUsing,
     isAutofocused,
     options,
-    selectedOptionLabel,
-    state: state2,
-    statePath
+    state: state2
   }) => {
     return {
-      displayText: selectedOptionLabel,
       focusedOptionIndex: null,
-      isAutofocused,
       isLoading: false,
       isOpen: false,
+      label: null,
       options,
       search: "",
       state: state2,
-      init: function() {
-        if (this.isAutofocused)
+      init: async function() {
+        if (isAutofocused)
           this.openListbox();
-        this.$watch("search", () => {
+        this.label = await getOptionLabelUsing(this.state);
+        this.$watch("search", async () => {
           if (!this.isOpen || this.search === "" || this.search === null) {
             this.options = options;
             this.focusedOptionIndex = 0;
@@ -18678,24 +18677,18 @@ var select_default = (Alpine) => {
             this.focusedOptionIndex = 0;
           } else {
             this.isLoading = true;
-            getSearchResultsUsing(statePath, this.search).then((options2) => {
-              this.options = options2;
-              this.focusedOptionIndex = 0;
-              this.isLoading = false;
-            });
+            this.options = await getSearchResultsUsing(this.search);
+            this.focusedOptionIndex = 0;
+            this.isLoading = false;
           }
         });
-        this.$watch("state", () => {
-          if (this.state in this.options) {
-            this.displayText = this.options[this.state];
-          } else if (!this.state) {
-            this.clearValue();
-          }
+        this.$watch("state", async () => {
+          this.label = await getOptionLabelUsing(this.state);
         });
       },
       clearValue: function() {
         this.state = null;
-        this.displayText = null;
+        this.label = null;
         this.closeListbox();
       },
       closeListbox: function() {
@@ -18759,7 +18752,7 @@ var select_default = (Alpine) => {
           return;
         }
         this.state = Object.keys(this.options)[index ?? this.focusedOptionIndex];
-        this.displayText = this.options[this.state];
+        this.label = this.options[this.state];
         this.closeListbox();
       },
       toggleListboxVisibility: function() {

@@ -1,22 +1,19 @@
 export default (Alpine) => {
     Alpine.data('selectFormComponent', ({
+        getOptionLabelUsing,
         getSearchResultsUsing,
         isAutofocused,
         options,
-        selectedOptionLabel,
         state,
-        statePath,
     }) => {
         return {
-            displayText: selectedOptionLabel,
-
             focusedOptionIndex: null,
-
-            isAutofocused,
 
             isLoading: false,
 
             isOpen: false,
+
+            label: null,
 
             options,
 
@@ -24,10 +21,12 @@ export default (Alpine) => {
 
             state,
 
-            init: function () {
-                if (this.isAutofocused) this.openListbox()
+            init: async function () {
+                if (isAutofocused) this.openListbox()
 
-                this.$watch('search', () => {
+                this.label = await getOptionLabelUsing()
+
+                this.$watch('search', async () => {
                     if (! this.isOpen || this.search === '' || this.search === null) {
                         this.options = options
                         this.focusedOptionIndex = 0
@@ -49,27 +48,20 @@ export default (Alpine) => {
                         this.focusedOptionIndex = 0
                     } else {
                         this.isLoading = true
-
-                        getSearchResultsUsing(statePath, this.search).then((options) => {
-                            this.options = options
-                            this.focusedOptionIndex = 0
-                            this.isLoading = false
-                        })
+                        this.options = await getSearchResultsUsing(this.search)
+                        this.focusedOptionIndex = 0
+                        this.isLoading = false
                     }
                 })
 
-                this.$watch('state', () => {
-                    if (this.state in this.options) {
-                        this.displayText = this.options[this.state]
-                    } else if (! this.state) {
-                        this.clearValue()
-                    }
+                this.$watch('state', async () => {
+                    this.label = await getOptionLabelUsing()
                 })
             },
 
             clearValue: function () {
                 this.state = null
-                this.displayText = null
+                this.label = null
 
                 this.closeListbox()
             },
@@ -160,7 +152,7 @@ export default (Alpine) => {
                 }
 
                 this.state = Object.keys(this.options)[index ?? this.focusedOptionIndex]
-                this.displayText = this.options[this.state]
+                this.label = this.options[this.state]
 
                 this.closeListbox()
             },

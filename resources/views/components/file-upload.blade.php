@@ -13,7 +13,9 @@
         ])
         x-data="fileUploadFormComponent({
             acceptedFileTypes: {{ json_encode($getAcceptedFileTypes()) }},
-            getUploadedFileUrlUsing: $wire.getUploadedFileUrl,
+            getUploadedFileUrlUsing: async () => {
+                return await $wire.getUploadedFileUrl('{{ $getStatePath() }}')
+            },
             imageCropAspectRatio: {{ ($aspectRatio = $getImageCropAspectRatio()) ? "'{$aspectRatio}'" : 'null' }},
             imagePreviewHeight: {{ ($height = $getImagePreviewHeight()) ? "'{$height}'" : 'null' }},
             imageResizeTargetHeight: {{ ($height = $getImageResizeTargetHeight()) ? "'{$height}'" : 'null' }},
@@ -24,14 +26,16 @@
             placeholder: {{ ($placeholder = $getPlaceholder()) ? "'{$placeholder}'" : 'null' }},
             maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
             minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
-            removeUploadedFileUsing: $wire.removeUploadedFile,
-            removeUploadButtonPosition: '{{ $getRemoveUploadButtonPosition() }}',
+            removeUploadedFileUsing: async (file = null) => {
+                return await $wire.removeUploadedFile('{{ $getStatePath() }}', file)
+            },
+            removeUploadedFileButtonPosition: '{{ $getRemoveUploadedFileButtonPosition() }}',
             state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
-            statePath: '{{ $getStatePath() }}',
             uploadButtonPosition: '{{ $getUploadButtonPosition() }}',
-            uploadedFileUrl: {{ ($url = $getUploadedFileUrl()) ? "'{$url}'" : 'null' }},
             uploadProgressIndicatorPosition: '{{ $getUploadProgressIndicatorPosition() }}',
-            uploadUsing: $wire.upload,
+            uploadUsing: async (file, load, error, progress) => {
+                return await $wire.upload('{{ $getStatePath() }}', file, load, error, progress)
+            },
         })"
         wire:ignore
         {{ $attributes->merge($getExtraAttributes()) }}
