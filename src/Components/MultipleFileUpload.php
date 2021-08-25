@@ -15,19 +15,7 @@ class MultipleFileUpload extends Field
     {
         parent::setUp();
 
-        $this->dehydrateStateUsing(function ($state) {
-            $files = [];
-
-            foreach ($state as $item) {
-                if ($file = $item['file'] ?? null) {
-                    $files[] = $file;
-                }
-            }
-
-            return $files;
-        });
-
-        $this->hydrateStateUsing(function ($state) {
+        $this->afterStateHydrated(function (MultipleFileUpload $component, $state) {
             $files = $state;
 
             if (! is_array($files)) {
@@ -48,7 +36,19 @@ class MultipleFileUpload extends Field
                 'file' => null,
             ];
 
-            return $state;
+            $component->state($state);
+        });
+
+        $this->dehydrateStateUsing(function ($state) {
+            $files = [];
+
+            foreach ($state as $item) {
+                if ($file = $item['file'] ?? null) {
+                    $files[] = $file;
+                }
+            }
+
+            return $files;
         });
     }
 

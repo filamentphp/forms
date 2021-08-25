@@ -8,6 +8,17 @@ trait HasState
 {
     protected ?string $statePath = null;
 
+    public function callAfterStateHydrated(): void
+    {
+        foreach ($this->getComponents() as $component) {
+            $component->callAfterStateHydrated();
+
+            foreach ($component->getChildComponentContainers() as $container) {
+                $container->callAfterStateHydrated();
+            }
+        }
+    }
+
     public function callAfterStateUpdated(string $path): bool
     {
         foreach ($this->getComponents() as $component) {
@@ -82,7 +93,7 @@ trait HasState
                 }
             }
 
-            $this->hydrateState();
+            $this->callAfterStateHydrated();
         } else {
             $this->hydrateDefaultState();
         }
@@ -94,22 +105,10 @@ trait HasState
     {
         foreach ($this->getComponents() as $component) {
             $component->hydrateDefaultState();
+            $component->callAfterStateHydrated();
 
             foreach ($component->getChildComponentContainers() as $container) {
                 $container->hydrateDefaultState();
-            }
-        }
-
-        return $this;
-    }
-
-    public function hydrateState(): static
-    {
-        foreach ($this->getComponents() as $component) {
-            $component->hydrateState();
-
-            foreach ($component->getChildComponentContainers() as $container) {
-                $container->hydrateState();
             }
         }
 

@@ -6,6 +6,8 @@ use Filament\Forms\Components\Component;
 
 trait HasState
 {
+    protected $afterStateHydrated = null;
+
     protected $afterStateUpdated = null;
 
     protected $beforeStateDehydrated = null;
@@ -14,11 +16,16 @@ trait HasState
 
     protected $dehydrateStateUsing = null;
 
-    protected $hydrateStateUsing = null;
-
     protected $isDehydrated = true;
 
     protected ?string $statePath = null;
+
+    public function afterStateHydrated(?callable $callback): static
+    {
+        $this->afterStateHydrated = $callback;
+
+        return $this;
+    }
 
     public function afterStateUpdated(?callable $callback): static
     {
@@ -30,6 +37,17 @@ trait HasState
     public function beforeStateDehydrated(?callable $callback): static
     {
         $this->beforeStateDehydrated = $callback;
+
+        return $this;
+    }
+
+    public function callAfterStateHydrated(): static
+    {
+        if ($callback = $this->afterStateHydrated) {
+            $this->evaluate($callback, [
+                'setState' => $this->getSetStateCallback(),
+            ]);
+        }
 
         return $this;
     }
@@ -88,31 +106,7 @@ trait HasState
 
     public function hydrateDefaultState(): static
     {
-        $state = $this->getDefaultState();
-
-        if ($callback = $this->hydrateStateUsing) {
-            $state = $this->evaluate($callback, [
-                'state' => $state,
-            ]);
-        }
-
-        $this->state($state);
-
-        return $this;
-    }
-
-    public function hydrateState(): static
-    {
-        if ($callback = $this->hydrateStateUsing) {
-            $this->state($callback);
-        }
-
-        return $this;
-    }
-
-    public function hydrateStateUsing(?callable $callback): static
-    {
-        $this->hydrateStateUsing = $callback;
+        $this->state($this->getDefaultState());
 
         return $this;
     }
