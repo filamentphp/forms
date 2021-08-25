@@ -3,6 +3,7 @@ import FileUploadFormComponentAlpinePlugin from './components/file-upload'
 import MarkdownEditorFormComponentAlpinePlugin from './components/markdown-editor'
 import RichEditorFormComponentAlpinePlugin from './components/rich-editor'
 import SelectFormComponentAlpinePlugin from './components/select'
+import TagsInputFormComponentAlpinePlugin from './components/tags-input'
 import TextInputFormComponentAlpinePlugin from './components/text-input'
 
 export default (Alpine) => {
@@ -11,5 +12,6 @@ export default (Alpine) => {
     Alpine.plugin(MarkdownEditorFormComponentAlpinePlugin)
     Alpine.plugin(RichEditorFormComponentAlpinePlugin)
     Alpine.plugin(SelectFormComponentAlpinePlugin)
+    Alpine.plugin(TagsInputFormComponentAlpinePlugin)
     Alpine.plugin(TextInputFormComponentAlpinePlugin)
 }

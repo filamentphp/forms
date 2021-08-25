@@ -41,7 +41,7 @@
             x-on:click.away="closeListbox()"
             x-on:blur="closeListbox()"
             x-on:keydown.escape.stop="closeListbox()"
-            {!! $getId() ? "id=\"{$getId()}\"" : null !!}
+            {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
             class="relative"
             {{ $attributes->merge($getExtraAttributes()) }}
         >

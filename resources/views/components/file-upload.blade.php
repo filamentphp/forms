@@ -43,7 +43,7 @@
         <input
             x-ref="input"
             {{ $isDisabled() ? 'disabled' : '' }}
-            id="{{ $getId() }}"
+            {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
             type="file"
         />
     </div>

@@ -18766,6 +18766,33 @@ var select_default = (Alpine) => {
   });
 };
 
+// resources/js/components/tags-input.js
+var tags_input_default = (Alpine) => {
+  Alpine.data("tagsInputFormComponent", ({
+    state: state2
+  }) => {
+    return {
+      newTag: "",
+      state: state2,
+      createTag: function() {
+        this.newTag = this.newTag.trim();
+        if (this.newTag === "") {
+          return;
+        }
+        if (this.state.includes(this.newTag)) {
+          this.newTag = "";
+          return;
+        }
+        this.state.push(this.newTag);
+        this.newTag = "";
+      },
+      deleteTag: function(tagToDelete) {
+        this.state = this.state.filter((tag) => tag !== tagToDelete);
+      }
+    };
+  });
+};
+
 // node_modules/imask/esm/_rollupPluginBabelHelpers-74ba0139.js
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -21775,6 +21802,7 @@ var js_default = (Alpine) => {
   Alpine.plugin(markdown_editor_default);
   Alpine.plugin(rich_editor_default);
   Alpine.plugin(select_default);
+  Alpine.plugin(tags_input_default);
   Alpine.plugin(text_input_default);
 };
 export {

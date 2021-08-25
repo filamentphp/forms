@@ -39,7 +39,7 @@
         x-on:click.away="closePicker()"
         x-on:keydown.escape.stop="closePicker()"
         x-on:blur="closePicker()"
-        {!! $getId() ? "id=\"{$getId()}\"" : null !!}
+        {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
         class="relative"
         {{ $attributes->merge($getExtraAttributes()) }}
     >
