@@ -23,10 +23,14 @@
 
         <div class="flex-1">
             <input
-                x-data="textInputFormComponent({
-                    {{ $hasMask() ? "getMaskOptionsUsing: (IMask) => ({$getJsonMaskConfiguration()})," : null }}
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
-                })"
+                @unless ($hasMask())
+                    {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
+                @else
+                    x-data="textInputFormComponent({
+                        {{ $hasMask() ? "getMaskOptionsUsing: (IMask) => ({$getJsonMaskConfiguration()})," : null }}
+                        state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
+                    })"
+                @endunless
                 {!! ($autocomplete = $getAutocomplete()) ? "autocomplete=\"{$autocomplete}\"" : null !!}
                 {!! $isAutofocused() ? 'autofocus' : null !!}
                 {!! $isDisabled() ? 'disabled' : null !!}
@@ -38,7 +42,6 @@
                 {!! ($placeholder = $getPlaceholder()) ? "placeholder=\"{$placeholder}\"" : null !!}
                 {!! $isRequired() ? 'required' : null !!}
                 type="{{ $getType() }}"
-                {!! (! $hasMask()) ? 'x-model="state"' : null !!}
                 {{ $attributes->merge($getExtraAttributes())->class([
                     'block w-full h-10 transition duration-75 rounded-lg shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-inset focus:ring-primary-600',
                     'border-gray-300' => ! $errors->has($getStatePath()),

@@ -48,6 +48,8 @@ class Mask implements Jsonable
 
     protected ?int $toValue = null;
 
+    final public function __construct() {}
+
     public function autofix(bool $condition = true): static
     {
         $this->shouldAutofix = $condition;
@@ -222,7 +224,10 @@ class Mask implements Jsonable
         }
 
         if ($this->patternBlocks !== []) {
-            $configuration['blocks'] = $this->patternBlocks;
+            $configuration['blocks'] = array_map(
+                fn (callable $configuration): array => $configuration(new static())->getArrayableConfiguration(),
+                $this->patternBlocks,
+            );
         }
 
         if ($this->patternDefinitions !== []) {
