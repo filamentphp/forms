@@ -48,7 +48,9 @@ class Mask implements Jsonable
 
     protected ?int $toValue = null;
 
-    final public function __construct() {}
+    final public function __construct()
+    {
+    }
 
     public function autofix(bool $condition = true): static
     {
