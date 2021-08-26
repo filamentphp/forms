@@ -18599,9 +18599,146 @@ var markdown_editor_default = (Alpine) => {
         this.resize();
       },
       resize: function() {
-        this.$refs.overlay.style.height = "150px";
-        this.$refs.overlay.style.height = this.$refs.textarea.scrollHeight + "px";
+        if (this.$refs.textarea.scrollHeight > 0) {
+          this.$refs.overlay.style.height = "150px";
+          this.$refs.overlay.style.height = this.$refs.textarea.scrollHeight + "px";
+        }
         this.overlay = a(this.state = this.$refs.textarea.value);
+      }
+    };
+  });
+};
+
+// resources/js/components/multi-select.js
+var multi_select_default = (Alpine) => {
+  Alpine.data("multiSelectFormComponent", ({
+    getOptionLabelsUsing,
+    getSearchResultsUsing,
+    isAutofocused,
+    options,
+    state: state2
+  }) => {
+    return {
+      focusedOptionIndex: null,
+      isLoading: false,
+      isOpen: false,
+      labels: [],
+      options,
+      search: "",
+      state: state2,
+      init: async function() {
+        if (isAutofocused)
+          this.openListbox();
+        if (!this.state) {
+          this.state = [];
+        }
+        this.labels = await getOptionLabelsUsing();
+        this.$watch("search", async () => {
+          if (!this.isOpen || this.search === "" || this.search === null) {
+            this.options = options;
+            this.focusedOptionIndex = 0;
+            return;
+          }
+          if (Object.keys(options).length) {
+            this.options = {};
+            let search = this.search.trim().toLowerCase();
+            for (let key in options) {
+              if (options[key].trim().toLowerCase().includes(search)) {
+                this.options[key] = options[key];
+              }
+            }
+            this.focusedOptionIndex = 0;
+          } else {
+            this.isLoading = true;
+            this.options = await getSearchResultsUsing(this.search);
+            this.focusedOptionIndex = 0;
+            this.isLoading = false;
+          }
+        });
+        this.$watch("state", async () => {
+          this.labels = await getOptionLabelsUsing();
+        });
+      },
+      clearState: function() {
+        this.state = [];
+        this.labels = [];
+        this.closeListbox();
+      },
+      closeListbox: function() {
+        this.isOpen = false;
+        this.focusedOptionIndex = null;
+        this.search = "";
+      },
+      evaluatePosition: function() {
+        let availableHeight = window.innerHeight - this.$refs.button.offsetHeight;
+        let element = this.$refs.button;
+        while (element) {
+          availableHeight -= element.offsetTop;
+          element = element.offsetParent;
+        }
+        if (this.$refs.listbox.offsetHeight <= availableHeight) {
+          this.$refs.listbox.style.bottom = "auto";
+          return;
+        }
+        this.$refs.listbox.style.bottom = `${this.$refs.button.offsetHeight}px`;
+      },
+      focusNextOption: function() {
+        if (this.focusedOptionIndex === null) {
+          this.focusedOptionIndex = Object.keys(this.options).length - 1;
+          return;
+        }
+        if (this.focusedOptionIndex + 1 >= Object.keys(this.options).length)
+          return;
+        this.focusedOptionIndex++;
+        this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
+          block: "center"
+        });
+      },
+      focusPreviousOption: function() {
+        if (this.focusedOptionIndex === null) {
+          this.focusedOptionIndex = 0;
+          return;
+        }
+        if (this.focusedOptionIndex <= 0)
+          return;
+        this.focusedOptionIndex--;
+        this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
+          block: "center"
+        });
+      },
+      openListbox: function() {
+        this.focusedOptionIndex = 0;
+        this.isOpen = true;
+        this.$nextTick(() => {
+          this.$refs.search.focus();
+          this.evaluatePosition();
+          this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
+            block: "center"
+          });
+        });
+      },
+      selectOption: function(index = null) {
+        if (!this.isOpen) {
+          this.closeListbox();
+          return;
+        }
+        let value = Object.keys(this.options)[index ?? this.focusedOptionIndex];
+        if (this.state.indexOf(value) < 0) {
+          this.state.push(value);
+        } else {
+          this.deselectOption(value);
+        }
+        this.closeListbox();
+      },
+      deselectOption: function(optionToDeselect) {
+        this.state = this.state.filter((option2) => option2 !== optionToDeselect);
+      },
+      toggleListboxVisibility: function() {
+        if (this.isOpen) {
+          this.closeListbox();
+          return;
+        }
+        this.openListbox();
       }
     };
   });
@@ -18686,7 +18823,7 @@ var select_default = (Alpine) => {
           this.label = await getOptionLabelUsing();
         });
       },
-      clearValue: function() {
+      clearState: function() {
         this.state = null;
         this.label = null;
         this.closeListbox();
@@ -21800,6 +21937,7 @@ var js_default = (Alpine) => {
   Alpine.plugin(date_time_picker_default);
   Alpine.plugin(file_upload_default);
   Alpine.plugin(markdown_editor_default);
+  Alpine.plugin(multi_select_default);
   Alpine.plugin(rich_editor_default);
   Alpine.plugin(select_default);
   Alpine.plugin(tags_input_default);

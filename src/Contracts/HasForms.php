@@ -12,6 +12,8 @@ interface HasForms
 
     public function getComponentFileAttachmentUrl(string $statePath): ?string;
 
+    public function getMultiSelectSearchResults(string $statePath, string $query): array;
+
     public function getSelectSearchResults(string $statePath, string $query): array;
 
     public function getUploadedFileUrl(string $statePath): ?string;

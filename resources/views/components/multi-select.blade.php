@@ -6,47 +6,34 @@
     :required="$isRequired()"
     :state-path="$getStatePath()"
 >
-    @unless ($isSearchable())
-        <select
-            {!! $isAutofocused() ? 'autofocus' : null !!}
-            {!! $isDisabled() ? 'disabled' : null !!}
-            id="{{ $getId() }}"
-            {!! $isRequired() ? 'required' : null !!}
-            {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-            {{ $attributes->merge($getExtraAttributes())->class([
-                'block w-full h-10 transition duration-75 rounded-lg shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-inset focus:ring-primary-600',
-                'border-gray-300' => ! $errors->has($getStatePath()),
-                'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
-            ]) }}
-        >
-            @foreach ($getOptions() as $value => $label)
-                <option value="{{ $value }}">
-                    {{ $label }}
-                </option>
-            @endforeach
-        </select>
-    @else
-        <div
-            x-data="selectFormComponent({
-                getOptionLabelUsing: async (value) => {
-                    return await $wire.getSelectOptionLabel('{{ $getStatePath() }}')
-                },
-                getSearchResultsUsing: async (query) => {
-                    return await $wire.getSelectSearchResults('{{ $getStatePath() }}', query)
-                },
-                isAutofocused: {{ $isAutofocused() ? 'true' : 'false' }},
-                options: {{ json_encode($getOptions()) }},
-                state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
-            })"
-            x-on:click.away="closeListbox()"
-            x-on:blur="closeListbox()"
-            x-on:keydown.escape.stop="closeListbox()"
-            {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
-            class="relative"
-            {{ $attributes->merge($getExtraAttributes()) }}
-        >
+    <div
+        x-data="multiSelectFormComponent({
+            getOptionLabelsUsing: async (values) => {
+                return await $wire.getMultiSelectOptionLabels('{{ $getStatePath() }}')
+            },
+            getSearchResultsUsing: async (query) => {
+                return await $wire.getMultiSelectSearchResults('{{ $getStatePath() }}', query)
+            },
+            isAutofocused: {{ $isAutofocused() ? 'true' : 'false' }},
+            options: {{ json_encode($getOptions()) }},
+            state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
+        })"
+        {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
+        x-show="state.length || {{ $isDisabled() ? 'false' : 'true' }}"
+        {{ $attributes->merge($getExtraAttributes())->class([
+            'block w-full transition duration-75 divide-y rounded-lg shadow-sm border focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600',
+            'border-gray-300' => ! $errors->has($getStatePath()),
+            'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
+        ]) }}
+    >
+        @unless ($isDisabled())
             <div
-                @unless($isDisabled())
+                x-on:click.away="closeListbox()"
+                x-on:blur="closeListbox()"
+                x-on:keydown.escape.stop="closeListbox()"
+                class="relative"
+            >
+                <div
                     x-ref="button"
                     x-on:click="toggleListboxVisibility()"
                     x-on:keydown.enter.stop.prevent="isOpen ? selectOption() : openListbox()"
@@ -57,31 +44,17 @@
                     x-bind:aria-expanded="isOpen"
                     aria-haspopup="listbox"
                     tabindex="1"
-                @endunless
-                @class([
-                    'relative flex items-center h-10 pl-3 pr-10 border overflow-hidden transition duration-75 rounded-lg shadow-sm focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-600 focus:outline-none',
-                    'border-gray-300' => ! $errors->has($getStatePath()),
-                    'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
-                ])
-            >
-                <span
-                    x-show="! isOpen"
-                    x-text="label ?? '{{ $getPlaceholder() }}'"
-                    class="absolute w-full bg-white"
-                    x-bind:class="{
-                        'text-gray-400': label === null,
-                    }"
-                ></span>
-
-                @unless ($isDisabled())
+                    class="rounded-lg overflow-hidden"
+                >
                     <input
                         x-ref="search"
                         x-model.debounce.500="search"
                         x-on:keydown.enter.stop.prevent="selectOption()"
                         x-on:keydown.arrow-up.stop.prevent="focusPreviousOption()"
                         x-on:keydown.arrow-down.stop.prevent="focusNextOption()"
+                        placeholder="{{ $getPlaceholder() }}"
                         type="search"
-                        class="w-full my-1 p-0 border-0 focus:ring-0 focus:outline-none"
+                        class="block w-full border-0"
                     />
 
                     <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -95,10 +68,8 @@
                             <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur=".7s" repeatCount="indefinite" /></path>
                         </svg>
                     </span>
-                @endunless
-            </div>
+                </div>
 
-            @unless($isDisabled())
                 <div
                     x-ref="listbox"
                     x-show="isOpen"
@@ -139,7 +110,7 @@
                                 ></span>
 
                                 <span
-                                    x-show="key === state"
+                                    x-show="state.indexOf(key) >= 0"
                                     x-bind:class="{
                                         'text-white': index === focusedOptionIndex,
                                         'text-primary-600': index !== focusedOptionIndex,
@@ -162,7 +133,33 @@
                         ></div>
                     </ul>
                 </div>
-            @endunless
+            </div>
+        @endunless
+
+        <div
+            x-show="state.length"
+            class="overflow-hidden space-x-1 rtl:space-x-reverse relative w-full px-2 py-1"
+        >
+            <div class="-ml-1">
+                <template class="inline" x-for="option in state" x-bind:key="option">
+                    <button
+                        @unless ($isDisabled())
+                            x-on:click="deselectOption(option)"
+                        @endunless
+                        type="button"
+                        @class([
+                            'inline-flex items-center justify-center h-6 px-2 my-1 text-sm font-semibold tracking-tight text-primary-700 rounded-full bg-primary-500/10 space-x-1',
+                            'cursor-default' => $isDisabled(),
+                        ])
+                    >
+                        <span x-text="labels[option]"></span>
+
+                        @unless ($isDisabled())
+                            <x-heroicon-s-x class="w-3 h-3" />
+                        @endunless
+                    </button>
+                </template>
+            </div>
         </div>
-    @endif
+    </div>
 </x-forms::field-wrapper>

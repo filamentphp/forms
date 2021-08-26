@@ -35,26 +35,28 @@
 
             <div
                 x-show="state.length"
-                class="bg-white space-x-1 -ml-1 rtl:space-x-reverse relative w-full p-2"
+                class="bg-white space-x-1 rtl:space-x-reverse relative w-full px-2 py-1"
             >
-                <template class="inline" x-for="tag in state" x-bind:key="tag">
-                    <button
-                        @unless ($isDisabled())
-                            x-on:click="deleteTag(tag)"
-                        @endunless
-                        type="button"
-                        @class([
-                            'inline-flex items-center justify-center h-6 px-2 text-sm font-semibold tracking-tight text-primary-700 rounded-full bg-primary-500/10 space-x-1',
-                            'cursor-default' => $isDisabled(),
-                        ])
-                    >
-                        <span x-text="tag"></span>
+                <div class="-ml-1">
+                    <template class="inline" x-for="tag in state" x-bind:key="tag">
+                        <button
+                            @unless ($isDisabled())
+                                x-on:click="deleteTag(tag)"
+                            @endunless
+                            type="button"
+                            @class([
+                                'inline-flex items-center justify-center h-6 px-2 my-1 text-sm font-semibold tracking-tight text-primary-700 rounded-full bg-primary-500/10 space-x-1',
+                                'cursor-default' => $isDisabled(),
+                            ])
+                        >
+                            <span x-text="tag"></span>
 
-                        @unless ($isDisabled())
-                            <x-heroicon-s-x class="w-3 h-3" />
-                        @endunless
-                    </button>
-                </template>
+                            @unless ($isDisabled())
+                                <x-heroicon-s-x class="w-3 h-3" />
+                            @endunless
+                        </button>
+                    </template>
+                </div>
             </div>
         </div>
     </div>

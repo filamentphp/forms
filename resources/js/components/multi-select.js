@@ -1,6 +1,6 @@
 export default (Alpine) => {
-    Alpine.data('selectFormComponent', ({
-        getOptionLabelUsing,
+    Alpine.data('multiSelectFormComponent', ({
+        getOptionLabelsUsing,
         getSearchResultsUsing,
         isAutofocused,
         options,
@@ -13,7 +13,7 @@ export default (Alpine) => {
 
             isOpen: false,
 
-            label: null,
+            labels: [],
 
             options,
 
@@ -24,7 +24,11 @@ export default (Alpine) => {
             init: async function () {
                 if (isAutofocused) this.openListbox()
 
-                this.label = await getOptionLabelUsing()
+                if (! this.state) {
+                    this.state = []
+                }
+
+                this.labels = await getOptionLabelsUsing()
 
                 this.$watch('search', async () => {
                     if (! this.isOpen || this.search === '' || this.search === null) {
@@ -55,13 +59,13 @@ export default (Alpine) => {
                 })
 
                 this.$watch('state', async () => {
-                    this.label = await getOptionLabelUsing()
+                    this.labels = await getOptionLabelsUsing()
                 })
             },
 
             clearState: function () {
-                this.state = null
-                this.label = null
+                this.state = []
+                this.labels = []
 
                 this.closeListbox()
             },
@@ -127,9 +131,7 @@ export default (Alpine) => {
             },
 
             openListbox: function () {
-                this.focusedOptionIndex = Object.keys(this.options).indexOf(this.state)
-
-                if (this.focusedOptionIndex < 0) this.focusedOptionIndex = 0
+                this.focusedOptionIndex = 0
 
                 this.isOpen = true
 
@@ -151,10 +153,19 @@ export default (Alpine) => {
                     return
                 }
 
-                this.state = Object.keys(this.options)[index ?? this.focusedOptionIndex]
-                this.label = this.options[this.state]
+                let value = Object.keys(this.options)[index ?? this.focusedOptionIndex]
+
+                if (this.state.indexOf(value) < 0) {
+                    this.state.push(value)
+                } else {
+                    this.deselectOption(value)
+                }
 
                 this.closeListbox()
+            },
+
+            deselectOption: function (optionToDeselect) {
+                this.state = this.state.filter((option) => option !== optionToDeselect)
             },
 
             toggleListboxVisibility: function () {
