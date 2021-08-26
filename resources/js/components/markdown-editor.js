@@ -70,8 +70,11 @@ export default (Alpine) => {
             },
 
             resize: function () {
-                this.$refs.overlay.style.height = '150px'
-                this.$refs.overlay.style.height = this.$refs.textarea.scrollHeight + 'px'
+                if (this.$refs.textarea.scrollHeight > 0) {
+                    this.$refs.overlay.style.height = '150px'
+                    this.$refs.overlay.style.height = this.$refs.textarea.scrollHeight + 'px'
+                }
+
                 this.overlay = highlight(this.state = this.$refs.textarea.value)
             },
         }
