@@ -54,7 +54,7 @@ return [
     ],
 
     'multiSelect' => [
-        'noOptionsMessage' => 'No options to choose from.',
+        'noOptionsMessage' => 'Start typing to search...',
         'noSearchResultsMessage' => 'No options match your search.',
         'placeholder' => 'Select an option',
     ],

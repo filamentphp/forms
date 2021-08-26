@@ -32,11 +32,11 @@ class MultiSelect extends Field
                 ->toArray();
         });
 
-        $this->noOptionsMessage(__('forms::components.select.noOptionsMessage'));
+        $this->noOptionsMessage(__('forms::components.multiSelect.noOptionsMessage'));
 
-        $this->noSearchResultsMessage(__('forms::components.select.noSearchResultsMessage'));
+        $this->noSearchResultsMessage(__('forms::components.multiSelect.noSearchResultsMessage'));
 
-        $this->placeholder(__('forms::components.select.placeholder'));
+        $this->placeholder(__('forms::components.multiSelect.placeholder'));
     }
 
     public function getOptionLabelsUsing(callable $callback): static
