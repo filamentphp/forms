@@ -75,7 +75,14 @@ trait CanBeValidated
             $columnName = $this->evaluate($columnName) ?? $this->getName();
             $ignorable = $this->evaluate($ignorable);
 
-            return Rule::unique($table, $columnName)->when($ignorable, fn (Unique $rule) => $rule->ignore($ignorable));
+            return Rule::unique($table, $columnName)
+                ->when(
+                    $ignorable,
+                    fn (Unique $rule) => $rule->ignore(
+                        $ignorable->getOriginal($ignorable->getKeyName()),
+                        $ignorable->getKeyName(),
+                    ),
+                );
         }, fn (): bool => (bool) $this->evaluate($table));
 
         return $this;
