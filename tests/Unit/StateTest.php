@@ -88,13 +88,13 @@ test('state can be hydrated from defaults', function () {
         ->getData()->toBe([$statePath => $state]);
 });
 
-test('state can be hydrated using custom logic', function () {
+test('custom logic can be executed after state is hydrated', function () {
     ComponentContainer::make($livewire = Livewire::make())
         ->statePath('data')
         ->components([
             (new Component())
                 ->statePath($statePath = Str::random())
-                ->hydrateStateUsing(fn ($state) => strrev($state)),
+                ->afterStateHydrated(fn (callable $setState, $state) => $setState($statePath, strrev($state))),
         ])
         ->fill([$statePath => ($value = Str::random())]);
 

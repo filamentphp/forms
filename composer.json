@@ -12,7 +12,6 @@
         "blade-ui-kit/blade-heroicons": "^1.2",
         "laravel/framework": "^8.5",
         "livewire/livewire": "^2.5",
-        "spatie/laravel-medialibrary": "^9.7",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
