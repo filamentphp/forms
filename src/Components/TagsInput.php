@@ -14,18 +14,18 @@ class TagsInput extends Field
     {
         parent::setUp();
 
-        $this->afterStateHydrated(function (TagsInput $component, callable $setState, $state): void {
+        $this->afterStateHydrated(function (TagsInput $component, $state): void {
             if (is_array($state)) {
                 return;
             }
 
             if ($separator = $component->getSeparator()) {
-                $setState($component, explode($separator, $state));
+                $component->state(explode($separator, $state));
 
                 return;
             }
 
-            $setState($component, []);
+            $component->state([]);
         });
 
         $this->dehydrateStateUsing(function (TagsInput $component, $state) {

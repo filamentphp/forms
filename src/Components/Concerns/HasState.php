@@ -45,7 +45,8 @@ trait HasState
     {
         if ($callback = $this->afterStateHydrated) {
             $this->evaluate($callback, [
-                'setState' => $this->getSetStateCallback(),
+                'get' => $this->getGetCallback(),
+                'set' => $this->getSetCallback(),
             ]);
         }
 
@@ -56,7 +57,8 @@ trait HasState
     {
         if ($callback = $this->afterStateUpdated) {
             $this->evaluate($callback, [
-                'setState' => $this->getSetStateCallback(),
+                'get' => $this->getGetCallback(),
+                'set' => $this->getSetCallback(),
             ]);
         }
 
@@ -67,7 +69,8 @@ trait HasState
     {
         if ($callback = $this->beforeStateDehydrated) {
             $this->evaluate($callback, [
-                'setState' => $this->getSetStateCallback(),
+                'get' => $this->getGetCallback(),
+                'set' => $this->getSetCallback(),
             ]);
         }
 
@@ -157,17 +160,38 @@ trait HasState
         return (bool) $this->evaluate($this->isDehydrated);
     }
 
-    protected function getSetStateCallback(): callable
+    protected function getGetCallback(): callable
     {
-        return function ($statePath, $state) {
-            if ($statePath instanceof Component) {
-                $statePath = $statePath->getStatePath();
-            } elseif ($containerStatePath = $this->getContainer()->getStatePath()) {
-                $statePath = "{$containerStatePath}.{$statePath}";
+        return function (Component | string $path, bool $isAbsolute = false) {
+            if ($path instanceof Component) {
+                $path = $path->getStatePath();
+            } elseif (
+                (! $isAbsolute) &&
+                ($containerPath = $this->getContainer()->getStatePath())
+            ) {
+                $path = "{$containerPath}.{$path}";
             }
 
             $livewire = $this->getLivewire();
-            data_set($livewire, $statePath, $this->evaluate($state));
+
+            return data_get($livewire, $path);
+        };
+    }
+
+    protected function getSetCallback(): callable
+    {
+        return function (string | Component $path, $state, bool $isAbsolute = false) {
+            if ($path instanceof Component) {
+                $path = $path->getStatePath();
+            } elseif (
+                (! $isAbsolute) &&
+                ($containerPath = $this->getContainer()->getStatePath())
+            ) {
+                $path = "{$containerPath}.{$path}";
+            }
+
+            $livewire = $this->getLivewire();
+            data_set($livewire, $path, $this->evaluate($state));
 
             return $state;
         };
