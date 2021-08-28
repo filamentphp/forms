@@ -30,6 +30,10 @@ class Component extends ViewComponent implements Htmlable
     use Macroable;
     use Tappable;
 
+    protected function setUp(): void
+    {
+    }
+
     public function toHtml(): string
     {
         return $this->render()->render();

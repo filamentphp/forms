@@ -27,10 +27,6 @@ class Field extends Component implements Contracts\HasValidationRules
         return $static;
     }
 
-    protected function setUp(): void
-    {
-    }
-
     public function getId(): string
     {
         return parent::getId() ?? $this->getStatePath();
