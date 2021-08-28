@@ -2,11 +2,10 @@
 
 namespace Filament\Forms\Components;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
-class BelongsToSelect extends Select
+class BelongsToManyMultiSelect extends MultiSelect
 {
     protected $displayColumnName;
 
@@ -18,18 +17,18 @@ class BelongsToSelect extends Select
     {
         parent::setUp();
 
-        $this->afterStateHydrated(function (BelongsToSelect $component): void {
+        $this->afterStateHydrated(function (BelongsToManyMultiSelect $component): void {
             $relationship = $component->getRelationship();
-            $relatedModel = $relationship->getResults();
+            $relatedModels = $relationship->getResults();
 
-            if (! $relatedModel) {
+            if (! $relatedModels) {
                 return;
             }
 
             $component->state(
-                $relatedModel->getAttribute(
-                    $relationship->getOwnerKeyName(),
-                ),
+                $relatedModels->pluck(
+                    $relationship->getRelatedKeyName(),
+                )->toArray(),
             );
         });
 
@@ -48,15 +47,17 @@ class BelongsToSelect extends Select
         $this->displayColumnName = $displayColumnName;
         $this->relationship = $relationshipName;
 
-        $this->getOptionLabelUsing(function (BelongsToSelect $component, $value) {
+        $this->getOptionLabelsUsing(function (BelongsToManyMultiSelect $component, array $values): array {
             $relationship = $component->getRelationship();
+            $relatedKeyName = $relationship->getRelatedKeyName();
 
-            $record = $relationship->getRelated()->where($relationship->getOwnerKeyName(), $value)->first();
-
-            return $record ? $record->getAttributeValue($component->getDisplayColumnName()) : null;
+            return $relationship->getRelated()
+                ->whereIn($relatedKeyName, $values)
+                ->pluck($component->getDisplayColumnName(), $relatedKeyName)
+                ->toArray();
         });
 
-        $this->getSearchResultsUsing(function (BelongsToSelect $component, ?string $query) use ($callback): array {
+        $this->getSearchResultsUsing(function (BelongsToManyMultiSelect $component, ?string $query) use ($callback): array {
             $relationship = $component->getRelationship();
 
             $relationshipQuery = $relationship->getRelated();
@@ -73,12 +74,12 @@ class BelongsToSelect extends Select
 
             return $relationshipQuery
                 ->where($component->getDisplayColumnName(), $searchOperator, "%{$query}%")
-                ->pluck($component->getDisplayColumnName(), $relationship->getOwnerKeyName())
+                ->pluck($component->getDisplayColumnName(), $relationship->getRelatedKeyName())
                 ->toArray();
         });
 
-        $this->options(function (BelongsToSelect $component) use ($callback): array {
-            if ($component->isSearchable() && ! $component->isPreloaded()) {
+        $this->options(function (BelongsToManyMultiSelect $component) use ($callback): array {
+            if (! $component->isPreloaded()) {
                 return [];
             }
 
@@ -91,22 +92,16 @@ class BelongsToSelect extends Select
             }
 
             return $relationshipQuery
-                ->pluck($component->getDisplayColumnName(), $relationship->getOwnerKeyName())
+                ->pluck($component->getDisplayColumnName(), $relationship->getRelatedKeyName())
                 ->toArray();
         });
-
-        $this->exists(
-            fn (BelongsToSelect $component): string => get_class($component->getRelationship()->getModel()),
-            fn (BelongsToSelect $component): string => $component->getRelationship()->getOwnerKeyName(),
-        );
 
         return $this;
     }
 
     public function saveRelationships(): void
     {
-        $this->getRelationship()->associate($this->getState());
-        $this->getModel()->save();
+        $this->getRelationship()->sync($this->getState());
     }
 
     public function getDisplayColumnName(): string
@@ -127,7 +122,7 @@ class BelongsToSelect extends Select
         return parent::getLabel();
     }
 
-    public function getRelationship(): BelongsTo
+    public function getRelationship(): BelongsToMany
     {
         $model = $this->getModel();
 
