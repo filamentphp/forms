@@ -28,7 +28,7 @@ trait BelongsToModel
         }
     }
 
-    public function getModel(): ?Model
+    public function getModel(): Model | string | null
     {
         if ($model = $this->model) {
             return $model;

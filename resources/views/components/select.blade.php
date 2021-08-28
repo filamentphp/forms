@@ -19,6 +19,10 @@
                 'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
             ]) }}
         >
+            @unless ($isRequired())
+                <option value=""></option>
+            @endunless
+
             @foreach ($getOptions() as $value => $label)
                 <option value="{{ $value }}">
                     {{ $label }}
