@@ -44,7 +44,7 @@
                     x-bind:aria-expanded="isOpen"
                     aria-haspopup="listbox"
                     tabindex="1"
-                    class="rounded-lg overflow-hidden"
+                    class="relative rounded-lg overflow-hidden"
                 >
                     <input
                         x-ref="search"
@@ -53,7 +53,8 @@
                         x-on:keydown.arrow-up.stop.prevent="focusPreviousOption()"
                         x-on:keydown.arrow-down.stop.prevent="focusNextOption()"
                         placeholder="{{ $getPlaceholder() }}"
-                        type="search"
+                        type="text"
+                        autocomplete="off"
                         class="block w-full border-0"
                     />
 
@@ -95,7 +96,7 @@
                                 role="option"
                                 x-bind:aria-selected="focusedOptionIndex === index"
                                 x-bind:class="{
-                                    'text-white bg-primary-600': index === focusedOptionIndex,
+                                    'text-white bg-primary-500': index === focusedOptionIndex,
                                     'text-gray-900': index !== focusedOptionIndex,
                                 }"
                                 class="relative py-2 pl-3 h-10 flex items-center text-gray-900 cursor-default select-none pr-9"
@@ -113,9 +114,9 @@
                                     x-show="state.indexOf(key) >= 0"
                                     x-bind:class="{
                                         'text-white': index === focusedOptionIndex,
-                                        'text-primary-600': index !== focusedOptionIndex,
+                                        'text-primary-500': index !== focusedOptionIndex,
                                     }"
-                                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-primary-600"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-primary-500"
                                 >
                                     <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"

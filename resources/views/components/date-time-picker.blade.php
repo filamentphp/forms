@@ -129,7 +129,7 @@
                                     'cursor-pointer': ! dayIsDisabled(day),
                                     'bg-primary-50': dayIsToday(day) && ! dayIsSelected(day) && focusedDate.date() !== day && ! dayIsDisabled(day),
                                     'bg-primary-200': focusedDate.date() === day && ! dayIsSelected(day),
-                                    'bg-primary-600 text-white': dayIsSelected(day),
+                                    'bg-primary-500 text-white': dayIsSelected(day),
                                     'cursor-not-allowed': dayIsDisabled(day),
                                     'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
                                 }"
