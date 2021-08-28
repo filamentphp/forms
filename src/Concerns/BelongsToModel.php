@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 trait BelongsToModel
 {
-    public ?Model $model = null;
+    public Model | string | null $model = null;
 
-    public function model(Model $model): static
+    public function model(Model | string $model): static
     {
         $this->model = $model;
 

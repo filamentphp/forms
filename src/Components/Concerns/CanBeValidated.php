@@ -11,6 +11,8 @@ trait CanBeValidated
 
     protected array $rules = [];
 
+    protected $validationAttribute = null;
+
     public function addValidationRule(string | object | callable $rule, bool | callable $condition = true): static
     {
         $this->addValidationRules([[$rule, $condition]]);
@@ -88,9 +90,21 @@ trait CanBeValidated
         return $this;
     }
 
+    public function validationAttribute(string | callable $label): static
+    {
+        $this->validationAttribute = $label;
+
+        return $this;
+    }
+
     public function getRequiredValidationRule(): string
     {
         return $this->isRequired() ? 'required' : 'nullable';
+    }
+
+    public function getValidationAttribute(): string
+    {
+        return $this->evaluate($this->validationAttribute) ?? lcfirst($this->getLabel());
     }
 
     public function getValidationRules(): array

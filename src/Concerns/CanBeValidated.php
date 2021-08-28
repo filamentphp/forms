@@ -23,6 +23,23 @@ trait CanBeValidated
         return null;
     }
 
+    public function getValidationAttributes(): array
+    {
+        $attributes = [];
+
+        foreach ($this->getComponents() as $component) {
+            if ($component instanceof Components\Contracts\HasValidationRules) {
+                $attributes[$component->getStatePath()] = $component->getValidationAttribute();
+            }
+
+            foreach ($component->getChildComponentContainers() as $container) {
+                $attributes = array_merge($attributes, $container->getValidationAttributes());
+            }
+        }
+
+        return $attributes;
+    }
+
     public function getValidationRules(): array
     {
         $rules = [];
@@ -45,6 +62,6 @@ trait CanBeValidated
 
     public function validate(): array
     {
-        return $this->getLivewire()->validate($this->getValidationRules());
+        return $this->getLivewire()->validate($this->getValidationRules(), [], $this->getValidationAttributes());
     }
 }
