@@ -1,32 +1,48 @@
+@php
+    $columnSpanClass = [
+        '',
+        'lg:col-span-1',
+        'lg:col-span-2',
+        'lg:col-span-3',
+        'lg:col-span-4',
+        'lg:col-span-5',
+        'lg:col-span-6',
+        'lg:col-span-7',
+        'lg:col-span-8',
+        'lg:col-span-9',
+        'lg:col-span-10',
+        'lg:col-span-11',
+        'lg:col-span-12',
+    ][$formComponent->getColumnSpan()]
+@endphp
+
 <div
-    x-data="{ tab: '{{ count($getTabsConfig()) ? array_key_first($getTabsConfig()) : null }}', tabs: {{ json_encode($getTabsConfig()) }} }"
-    x-on:expand-concealing-component.window="if ($event.detail.id in tabs) tab = $event.detail.id"
+    x-data="{ tab: '{{ count($formComponent->getTabsConfig()) ? array_key_first($formComponent->getTabsConfig()) : null }}', tabs: {{ json_encode($formComponent->getTabsConfig()) }} }"
+    x-on:open.window="if ($event.detail in tabs) tab = $event.detail"
     x-cloak
-    {!! $getId() ? "id=\"{$getId()}\"" : null !!}
-    class="rounded-xl shadow-sm border border-gray-300 overflow-hidden"
+    {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
+    class="{{ $columnSpanClass }} bg-white border border-gray-200 rounded p-4 md:p-6"
 >
-    <div
-        {!! $getLabel() ? 'aria-label="' . $getLabel() . '"' : null !!}
-        role="tablist"
-        class="rounded-t-xl flex overflow-y-auto bg-gray-100"
-    >
-        @foreach ($getTabsConfig() as $tabId => $tabLabel)
-            <button
-                type="button"
-                aria-controls="{{ $tabId }}"
-                x-bind:aria-selected="tab === '{{ $tabId }}'"
-                x-on:click="tab = '{{ $tabId }}'"
-                role="tab"
-                x-bind:tabindex="tab === '{{ $tabId }}' ? 0 : -1"
-                class="flex-shrink-0 p-3 text-sm font-medium"
-                x-bind:class="{ 'bg-white': tab === '{{ $tabId }}' }"
-            >
-                {{ $tabLabel }}
-            </button>
+    <div class="-m-4 md:-m-6">
+        <div {!! __($formComponent->getLabel()) ? 'aria-label="' . __($formComponent->getLabel()) . '"' : null !!} role="tablist"
+             class="flex overflow-hidden bg-gray-100 rounded-t">
+            @foreach ($formComponent->getTabsConfig() as $tabId => $tabLabel)
+                <button type="button"
+                        aria-controls="{{ $tabId }}-tab"
+                        x-bind:aria-selected="tab === '{{ $tabId }}'"
+                        x-on:click="tab = '{{ $tabId }}'"
+                        role="tab"
+                        x-bind:tabindex="tab === '{{ $tabId }}' ? 0 : -1"
+                        class="p-3 text-sm font-medium leading-tight border-r border-gray-200 md:px-6"
+                        x-bind:class="{ 'bg-white': tab === '{{ $tabId }}' }"
+                >
+                    {{ __($tabLabel) }}
+                </button>
+            @endforeach
+        </div>
+
+        @foreach ($formComponent->getSchema() as $tab)
+            {{ $tab->render() }}
         @endforeach
     </div>
-
-    @foreach ($getChildComponentContainer()->getComponents() as $tab)
-        {{ $tab }}
-    @endforeach
 </div>

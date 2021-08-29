@@ -4,17 +4,19 @@ namespace Filament\Forms\Components\Concerns;
 
 trait CanBeAutofocused
 {
-    protected $isAutofocused = false;
+    protected $autofocus = false;
 
-    public function autofocus(bool | callable $condition = true): static
+    public function autofocus()
     {
-        $this->isAutofocused = $condition;
+        $this->configure(function () {
+            $this->autofocus = true;
+        });
 
         return $this;
     }
 
-    public function isAutofocused(): bool
+    public function isAutofocused()
     {
-        return (bool) $this->evaluate($this->isAutofocused);
+        return $this->autofocus;
     }
 }

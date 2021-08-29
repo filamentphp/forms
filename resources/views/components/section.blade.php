@@ -1,44 +1,60 @@
-<div
-    x-data="{ isCollapsed: {{ $isCollapsed ? 'true' : 'false' }} }"
-    x-on:expand-concealing-component.window="if ($event.detail.id === $el.id) isCollapsed = false"
-    id="{{ $getId() }}"
-    class="p-6 space-y-6 rounded-xl shadow-sm border border-gray-300"
->
-    <div class="flex space-x-3">
-        <div class="flex-1 space-y-1">
-            <h3 class="text-xl font-semibold tracking-tight">
-                {{ $getHeading() }}
-            </h3>
+@php
+    $columnSpanClass = [
+        '',
+        'lg:col-span-1',
+        'lg:col-span-2',
+        'lg:col-span-3',
+        'lg:col-span-4',
+        'lg:col-span-5',
+        'lg:col-span-6',
+        'lg:col-span-7',
+        'lg:col-span-8',
+        'lg:col-span-9',
+        'lg:col-span-10',
+        'lg:col-span-11',
+        'lg:col-span-12',
+    ][$formComponent->getColumnSpan()]
+@endphp
 
-            @if ($description = $getDescription())
-                <p class="text-gray-500">
-                    {{ $description }}
+<section
+    x-data="{ open: {{ $formComponent->isCollapsed() ? 'false' : 'true' }} }"
+    x-on:open.window="if ($event.detail === '{{ $formComponent->getId() }}') open = true"
+    aria-labelledby="{{ $formComponent->getId() }}-heading"
+    class="space-y-4 p-4 rounded border border-gray-200 bg-gray-50 {{ $columnSpanClass }}"
+>
+    <div class="flex items-start justify-between space-x-4 rtl:space-x-reverse">
+        <div class="space-y-1">
+            @if ($heading = $formComponent->getHeading())
+                <h2 id="{{ $formComponent->getId() }}-heading" class="text-lg font-medium leading-tight">
+                    {{ __($heading) }}
+                </h2>
+            @endif
+
+            @if ($subheading = $formComponent->getSubheading())
+                <p class="text-sm text-gray-500">
+                    {{ __($subheading) }}
                 </p>
             @endif
         </div>
 
-        @if ($isCollapsible())
-            <button
-                x-on:click="isCollapsed = ! isCollapsed"
-                type="button"
-                class="flex items-center justify-center w-10 h-10 text-primary-500 transition rounded-full hover:bg-gray-500/5 focus:bg-primary-500/10 focus:outline-none"
-            >
-                <svg x-show="isCollapsed" class="h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+        <div class="flex">
+            @if ($formComponent->isCollapsible())
+                <button
+                    aria-controls="{{ $formComponent->getId() }}-content"
+                    x-on:click.prevent="open = ! open"
+                    class="flex p-2 -m-2 text-gray-400 transition-colors duration-200 hover:text-gray-700"
+                >
+                    <x-heroicon-o-chevron-down class="w-4 h-4" x-show="!open" />
 
-                <svg x-show="! isCollapsed" class="h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                </svg>
-            </button>
-        @endif
+                    <x-heroicon-o-chevron-up class="w-4 h-4" x-show="open" />
+
+                    <span class="sr-only">{{ __('Toggle section content') }}</span>
+                </button>
+            @endif
+        </div>
     </div>
 
-    <div
-        x-show="! isCollapsed"
-        x-transition
-        x-bind:aria-expanded="(! isCollapsed).toString()"
-    >
-        {{ $getChildComponentContainer() }}
+    <div id="{{ $formComponent->getId() }}-content" x-show.transition="open" :aria-expanded="open.toString()">
+        <x-forms::form :schema="$formComponent->getSchema()" :columns="$formComponent->getColumns()" />
     </div>
-</div>
+</section>

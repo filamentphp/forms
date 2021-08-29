@@ -4,12 +4,10 @@ namespace Filament\Forms\Components;
 
 class Checkbox extends Field
 {
-    use Concerns\CanBeAccepted;
+    use Concerns\CanBeAutofocused;
     use Concerns\CanBeInline;
 
-    protected string $view = 'forms::components.checkbox';
-
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->default(false);
 

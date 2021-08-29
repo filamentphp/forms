@@ -2,222 +2,99 @@
 
 namespace Filament\Forms\Components;
 
-use Filament\Forms\Components\TextInput\Mask;
-
 class TextInput extends Field
 {
     use Concerns\CanBeAutocompleted;
+    use Concerns\CanBeAutofocused;
+    use Concerns\CanBeCompared;
+    use Concerns\CanBeUnique;
     use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
+    use Concerns\HasPostfix;
+    use Concerns\HasPrefix;
 
-    protected string $view = 'forms::components.text-input';
+    protected $type = 'text';
 
-    protected $configureMaskUsing = null;
-
-    protected $isEmail = false;
-
-    protected $isNumeric = false;
-
-    protected $isPassword = false;
-
-    protected $isTel = false;
-
-    protected $isUrl = false;
-
-    protected $maxValue = null;
-
-    protected $minValue = null;
-
-    protected $postfixLabel = null;
-
-    protected $prefixLabel = null;
-
-    protected $type = null;
-
-    public function currentPassword(bool | callable $condition = true): static
+    public function email()
     {
-        $this->addValidationRule('current_password', $condition);
+        $this->configure(function () {
+            $this->type('email');
 
-        return $this;
-    }
-
-    public function email(bool | callable $condition = true): static
-    {
-        $this->isEmail = $condition;
-
-        $this->addValidationRule('email', $condition);
-
-        return $this;
-    }
-
-    public function mask(?callable $configuration): static
-    {
-        $this->configureMaskUsing = $configuration;
-
-        return $this;
-    }
-
-    public function maxValue($value): static
-    {
-        $this->maxValue = $value;
-
-        $this->addValidationRule(function (): string {
-            $value = $this->getMaxValue();
-
-            return "max:{$value}";
+            $this->addRules([$this->getName() => ['email']]);
         });
 
         return $this;
     }
 
-    public function minValue($value): static
+    public function getType()
     {
-        $this->minValue = $value;
+        return $this->type;
+    }
 
-        $this->addValidationRule(function (): string {
-            $value = $this->getMinValue();
-
-            return "min:{$value}";
+    public function max($value)
+    {
+        $this->configure(function () use ($value) {
+            $this->addRules([$this->getName() => ["max:{$value}"]]);
         });
 
         return $this;
     }
 
-    public function numeric(bool | callable $condition = true): static
+    public function min($value)
     {
-        $this->isNumeric = $condition;
-
-        $this->addValidationRule('numeric', $condition);
+        $this->configure(function () use ($value) {
+            $this->addRules([$this->getName() => ["min:{$value}"]]);
+        });
 
         return $this;
     }
 
-    public function password(bool | callable $condition = true): static
+    public function numeric()
     {
-        $this->isPassword = $condition;
+        $this->configure(function () {
+            $this->type('number');
+
+            $this->addRules([$this->getName() => ['numeric']]);
+        });
 
         return $this;
     }
 
-    public function prefix(string | callable $label): static
+    public function password()
     {
-        $this->prefixLabel = $label;
+        $this->configure(function () {
+            $this->type('password');
+        });
 
         return $this;
     }
 
-    public function postfix(string | callable $label): static
+    public function tel()
     {
-        $this->postfixLabel = $label;
+        $this->configure(function () {
+            $this->type('tel');
+        });
 
         return $this;
     }
 
-    public function tel(bool | callable $condition = true): static
+    public function type($type)
     {
-        $this->isTel = $condition;
+        $this->configure(function () use ($type) {
+            $this->type = $type;
+        });
 
         return $this;
     }
 
-    public function type(string | callable $type): static
+    public function url()
     {
-        $this->type = $type;
+        $this->configure(function () {
+            $this->type('url');
+
+            $this->addRules([$this->getName() => ['url']]);
+        });
 
         return $this;
-    }
-
-    public function url(bool | callable $condition = true): static
-    {
-        $this->isUrl = $condition;
-
-        $this->addValidationRule('url', $condition);
-
-        return $this;
-    }
-
-    public function getMask(): ?Mask
-    {
-        if (! $this->hasMask()) {
-            return null;
-        }
-
-        return $this->evaluate($this->configureMaskUsing, [
-            'mask' => new TextInput\Mask(),
-        ]);
-    }
-
-    public function getJsonMaskConfiguration(): ?string
-    {
-        return $this->getMask()?->toJson();
-    }
-
-    public function getMaxValue()
-    {
-        return $this->evaluate($this->maxValue);
-    }
-
-    public function getMinValue()
-    {
-        return $this->evaluate($this->minValue);
-    }
-
-    public function getPrefixLabel(): ?string
-    {
-        return $this->evaluate($this->prefixLabel);
-    }
-
-    public function getPostfixLabel(): ?string
-    {
-        return $this->evaluate($this->postfixLabel);
-    }
-
-    public function getType(): string
-    {
-        if ($type = $this->evaluate($this->type)) {
-            return $type;
-        } elseif ($this->isEmail()) {
-            return 'email';
-        } elseif ($this->isNumeric()) {
-            return 'number';
-        } elseif ($this->isPassword()) {
-            return 'password';
-        } elseif ($this->isTel()) {
-            return 'tel';
-        } elseif ($this->isUrl()) {
-            return 'url';
-        }
-
-        return 'text';
-    }
-
-    public function hasMask(): bool
-    {
-        return $this->configureMaskUsing !== null;
-    }
-
-    public function isEmail(): bool
-    {
-        return (bool) $this->evaluate($this->isEmail);
-    }
-
-    public function isNumeric(): bool
-    {
-        return (bool) $this->evaluate($this->isNumeric);
-    }
-
-    public function isPassword(): bool
-    {
-        return (bool) $this->evaluate($this->isPassword);
-    }
-
-    public function isTel(): bool
-    {
-        return (bool) $this->evaluate($this->isTel);
-    }
-
-    public function isUrl(): bool
-    {
-        return (bool) $this->evaluate($this->isUrl);
     }
 }

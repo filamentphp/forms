@@ -2,37 +2,25 @@
 
 namespace Filament\Forms\Components;
 
-use Filament\Forms\Components\Tabs\Tab;
-
 class Tabs extends Component
 {
-    protected string $view = 'forms::components.tabs';
-
-    final public function __construct(string $label)
+    public function getTabsConfig()
     {
-        $this->label($label);
+        return collect($this->getSchema())
+            ->filter(fn (Tab $tab) => ! $tab->isHidden())
+            ->mapWithKeys(fn ($tab) => [$tab->getId() => $tab->getLabel()])
+            ->toArray();
     }
 
-    public static function make(string $label): static
+    public static function make($label = null)
     {
-        $static = new static($label);
-        $static->setUp();
-
-        return $static;
+        return (new static())->label($label);
     }
 
-    public function tabs(array $tabs): static
+    public function tabs($tabs)
     {
         $this->schema($tabs);
 
         return $this;
-    }
-
-    public function getTabsConfig(): array
-    {
-        return collect($this->getChildComponentContainer()->getComponents())
-            ->filter(fn (Tab $tab): bool => ! $tab->isHidden())
-            ->mapWithKeys(fn (Tab $tab): array => [$tab->getId() => $tab->getLabel()])
-            ->toArray();
     }
 }

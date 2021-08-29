@@ -4,18 +4,8 @@ namespace Filament\Forms\Components;
 
 class Group extends Component
 {
-    protected string $view = 'forms::components.group';
-
-    final public function __construct(array $schema = [])
+    public static function make($schema = [])
     {
-        $this->schema($schema);
-    }
-
-    public static function make(array $schema = []): static
-    {
-        $static = new static($schema);
-        $static->setUp();
-
-        return $static;
+        return (new static())->schema($schema);
     }
 }

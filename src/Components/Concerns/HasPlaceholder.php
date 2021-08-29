@@ -4,17 +4,19 @@ namespace Filament\Forms\Components\Concerns;
 
 trait HasPlaceholder
 {
-    protected $placeholder = null;
+    protected $placeholder;
 
-    public function placeholder(string | callable $placeholder): static
+    public function getPlaceholder()
     {
-        $this->placeholder = $placeholder;
-
-        return $this;
+        return $this->placeholder;
     }
 
-    public function getPlaceholder(): ?string
+    public function placeholder($placeholder)
     {
-        return $this->evaluate($this->placeholder);
+        $this->configure(function () use ($placeholder) {
+            $this->placeholder = $placeholder;
+        });
+
+        return $this;
     }
 }

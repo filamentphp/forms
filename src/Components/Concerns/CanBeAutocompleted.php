@@ -4,26 +4,28 @@ namespace Filament\Forms\Components\Concerns;
 
 trait CanBeAutocompleted
 {
-    protected $autocomplete = null;
+    protected $autocomplete;
 
-    public function autocomplete(string | callable $autocomplete = 'on'): static
+    public function autocomplete($autocomplete = 'on')
     {
-        $this->autocomplete = $autocomplete;
-
-        return $this;
-    }
-
-    public function disableAutocomplete(bool | callable $condition = true): static
-    {
-        $this->autocomplete(function () use ($condition): ?string {
-            return $this->evaluate($condition) ? 'off' : null;
+        $this->configure(function () use ($autocomplete) {
+            $this->autocomplete = $autocomplete;
         });
 
         return $this;
     }
 
-    public function getAutocomplete(): ?string
+    public function disableAutocomplete()
     {
-        return $this->evaluate($this->autocomplete);
+        $this->configure(function () {
+            $this->autocomplete('off');
+        });
+
+        return $this;
+    }
+
+    public function getAutocomplete()
+    {
+        return $this->autocomplete;
     }
 }

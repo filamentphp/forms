@@ -4,25 +4,31 @@ namespace Filament\Forms\Components;
 
 class Fieldset extends Component
 {
-    protected string $view = 'forms::components.fieldset';
+    protected $columns = 2;
 
-    final public function __construct(string $label)
+    public function columns($columns)
     {
-        $this->label($label);
+        $this->configure(function () use ($columns) {
+            $this->columns = $columns;
+        });
+
+        return $this;
     }
 
-    public static function make(string $label): static
+    public function getColumns()
     {
-        $static = new static($label);
-        $static->setUp();
-
-        return $static;
+        return $this->columns;
     }
 
-    protected function setUp(): void
+    public function getSubform()
     {
-        $this->columnSpan('full');
+        return parent::getSubform()->columns($this->columns);
+    }
 
-        $this->columns(2);
+    public static function make($label, $schema = [])
+    {
+        return (new static())
+            ->label($label)
+            ->schema($schema);
     }
 }

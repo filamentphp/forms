@@ -6,55 +6,57 @@ use Illuminate\Support\Str;
 
 class Placeholder extends Component
 {
-    use Concerns\HasHelperText;
-    use Concerns\HasHint;
-    use Concerns\HasName;
+    protected $name;
 
-    protected string $view = 'forms::components.placeholder';
+    protected $value;
 
-    protected $state = null;
-
-    final public function __construct(string $name)
+    public function __construct($name, $value)
     {
         $this->name($name);
-        $this->statePath($name);
+        $this->value($value);
+
+        $this->setUp();
     }
 
-    public static function make(string $name): static
+    public function getLabel()
     {
-        $static = new static($name);
-        $static->setUp();
+        if ($this->label === null) {
+            return (string) Str::of($this->getName())
+                ->afterLast('.')
+                ->kebab()
+                ->replace(['-', '_'], ' ')
+                ->ucfirst();
+        }
 
-        return $static;
+        return parent::getLabel();
     }
 
-    protected function setUp(): void
+    public function getName()
     {
-        $this->dehydrated(false);
+        return $this->name;
     }
 
-    public function state($state): static
+    public function getValue()
     {
-        $this->state = $state;
+        return $this->value;
+    }
+
+    public static function make($name, $value)
+    {
+        return new static($name, $value);
+    }
+
+    protected function name($name)
+    {
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getId(): string
+    protected function value($value)
     {
-        return parent::getId() ?? $this->getStatePath();
-    }
+        $this->value = $value;
 
-    public function getLabel(): string
-    {
-        return parent::getLabel() ?? (string) Str::of($this->getName())
-            ->kebab()
-            ->replace(['-', '_'], ' ')
-            ->ucfirst();
-    }
-
-    public function getState()
-    {
-        return $this->evaluate($this->state);
+        return $this;
     }
 }

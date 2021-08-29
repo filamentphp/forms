@@ -4,50 +4,34 @@ namespace Filament\Forms\Components;
 
 class TagsInput extends Field
 {
+    use Concerns\CanBeAutofocused;
+    use Concerns\CanBeCompared;
+    use Concerns\CanBeUnique;
+    use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms::components.tags-input';
+    protected $separator = ',';
 
-    protected $separator = null;
-
-    protected function setUp(): void
+    public function getPlaceholder()
     {
-        parent::setUp();
+        if ($this->placeholder === null) {
+            return 'forms::fields.tags.placeholder';
+        }
 
-        $this->afterStateHydrated(function (TagsInput $component, $state): void {
-            if (is_array($state)) {
-                return;
-            }
-
-            if ($separator = $component->getSeparator()) {
-                $component->state(explode($separator, $state));
-
-                return;
-            }
-
-            $component->state([]);
-        });
-
-        $this->dehydrateStateUsing(function (TagsInput $component, $state) {
-            if ($separator = $component->getSeparator()) {
-                return implode($separator, $state);
-            }
-
-            return $state;
-        });
-
-        $this->placeholder(__('forms::components.tags.placeholder'));
+        return $this->placeholder;
     }
 
-    public function separator(string | callable $separator = ','): static
+    public function getSeparator()
     {
-        $this->separator = $separator;
+        return $this->separator;
+    }
+
+    public function separator($separator)
+    {
+        $this->configure(function () use ($separator) {
+            $this->separator = $separator;
+        });
 
         return $this;
-    }
-
-    public function getSeparator(): ?string
-    {
-        return $this->evaluate($this->separator);
     }
 }

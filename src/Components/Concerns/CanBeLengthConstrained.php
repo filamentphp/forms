@@ -4,43 +4,39 @@ namespace Filament\Forms\Components\Concerns;
 
 trait CanBeLengthConstrained
 {
-    protected $maxLength = null;
+    protected $maxLength;
 
-    protected $minLength = null;
+    protected $minLength;
 
-    public function maxLength(int | callable $length): static
+    public function getMaxLength()
     {
-        $this->maxLength = $length;
+        return $this->maxLength;
+    }
 
-        $this->addValidationRule(function (): string {
-            $length = $this->getMaxLength();
+    public function getMinLength()
+    {
+        return $this->minLength;
+    }
 
-            return "max:{$length}";
+    public function maxLength($length)
+    {
+        $this->configure(function () use ($length) {
+            $this->maxLength = $length;
+
+            $this->addRules([$this->getName() => ["max:{$this->maxLength}"]]);
         });
 
         return $this;
     }
 
-    public function minLength(int | callable $length): static
+    public function minLength($length)
     {
-        $this->minLength = $length;
+        $this->configure(function () use ($length) {
+            $this->minLength = $length;
 
-        $this->addValidationRule(function (): string {
-            $length = $this->getMinLength();
-
-            return "min:{$length}";
+            $this->addRules([$this->getName() => ["min:{$this->minLength}"]]);
         });
 
         return $this;
-    }
-
-    public function getMaxLength(): ?int
-    {
-        return $this->evaluate($this->maxLength);
-    }
-
-    public function getMinLength(): ?int
-    {
-        return $this->evaluate($this->minLength);
     }
 }

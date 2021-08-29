@@ -4,17 +4,28 @@ namespace Filament\Forms\Components\Concerns;
 
 trait CanBeInline
 {
-    protected $isInline = true;
+    protected $isInline = false;
 
-    public function inline(bool | callable $condition = true): static
+    public function inline()
     {
-        $this->isInline = $condition;
+        $this->configure(function () {
+            $this->isInline = true;
+        });
 
         return $this;
     }
 
-    public function isInline(): bool
+    public function isInline()
     {
-        return (bool) $this->evaluate($this->isInline);
+        return $this->isInline;
+    }
+
+    public function stacked()
+    {
+        $this->configure(function () {
+            $this->isInline = false;
+        });
+
+        return $this;
     }
 }

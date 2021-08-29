@@ -14,27 +14,23 @@ class DateTimePicker extends DatePicker
 
     protected $hasTime = true;
 
-    protected function setUp(): void
+    protected $view = 'forms::components.date-time-picker';
+
+    protected function setUp()
     {
         parent::setUp();
 
-        $this->displayFormat($this->defaultDisplayFormat);
-
-        $this->format($this->defaultFormat);
+        $this->configure(function () {
+            $this->displayFormat($this->defaultDisplayFormat);
+            $this->format($this->defaultFormat);
+        });
     }
 
-    public function withoutSeconds(bool | callable $condition = true): static
+    public function withoutSeconds()
     {
-        $this->hasSeconds = fn (): bool => ! $this->evaluate($condition);
+        $this->configure(function () {
+            $this->hasSeconds = false;
 
-        return $this;
-    }
-
-    public function hasSeconds(): bool
-    {
-        $hasSeconds = $this->evaluate($this->hasSeconds);
-
-        if (! $hasSeconds) {
             if ($this->getDisplayFormat() === $this->defaultDisplayFormat) {
                 $this->displayFormat($this->defaultDisplayFormatWithoutSeconds);
             }
@@ -42,8 +38,8 @@ class DateTimePicker extends DatePicker
             if ($this->getFormat() === $this->defaultFormat) {
                 $this->format($this->defaultFormatWithoutSeconds);
             }
-        }
+        });
 
-        return (bool) $hasSeconds;
+        return $this;
     }
 }

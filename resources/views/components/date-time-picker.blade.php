@@ -1,50 +1,406 @@
-@once
-    @push('scripts')
-        <script src="https://unpkg.com/dayjs@1.10.4/locale/{{ Str::of(app()->getLocale())->lower()->kebab() }}.js"></script>
-    @endpush
-@endonce
-
 @php
-    if (! $hasTime()) {
-        if ($getDisplayFormat() === 'F j, Y H:i:s') $displayFormat('F j, Y');
-        if ($getFormat() === 'F j, Y H:i:s') $format('Y-m-d');
+    if (! $formComponent->hasTime()) {
+        if ($formComponent->getDisplayFormat() === 'F j, Y H:i:s') $formComponent->displayFormat('F j, Y');
+        if ($formComponent->getFormat() === 'F j, Y H:i:s') $formComponent->format('Y-m-d');
     }
 
-    if ($hasTime() && ! $hasSeconds()) {
-        if ($getDisplayFormat() === 'F j, Y H:i:s') $displayFormat('F j, Y H:i');
+    if ($formComponent->hasTime() && ! $formComponent->hasSeconds()) {
+        if ($formComponent->getDisplayFormat() === 'F j, Y H:i:s') $formComponent->displayFormat('F j, Y H:i');
     }
 @endphp
 
-<x-forms::field-wrapper
-    :id="$getId()"
-    :label="$getLabel()"
-    :helper-text="$getHelperText()"
-    :hint="$getHint()"
-    :required="$isRequired()"
-    :state-path="$getStatePath()"
+@pushonce('filament-scripts:date-time-picker-component')
+    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/locale/{{ (string) Str::of(app()->getLocale())->lower()->kebab() }}.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/plugin/customParseFormat.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/plugin/localeData.js"></script>
+
+    <script>
+        dayjs.extend(window.dayjs_plugin_customParseFormat)
+        dayjs.extend(window.dayjs_plugin_localeData)
+        dayjs.locale('{{ (string) Str::of(app()->getLocale())->lower()->kebab() }}')
+
+        function dateTimePicker(config) {
+            return {
+                autofocus: config.autofocus,
+
+                daysInFocusedMonth: [],
+
+                displayFormat: config.displayFormat,
+
+                displayValue: '',
+
+                emptyDaysInFocusedMonth: [],
+
+                firstDayOfWeek: config.firstDayOfWeek,
+
+                focusedDate: null,
+
+                focusedMonth: null,
+
+                focusedYear: null,
+
+                format: config.format,
+
+                hours: null,
+
+                maxDate: config.maxDate,
+
+                minDate: config.minDate,
+
+                minutes: null,
+
+                open: false,
+
+                required: config.required,
+
+                seconds: null,
+
+                time: config.time,
+
+                value: config.value,
+
+                clearValue: function () {
+                    this.setValue(null)
+
+                    this.closePicker()
+                },
+
+                closePicker: function () {
+                    this.open = false
+                },
+
+                dateIsDisabled: function (date) {
+                    if (this.maxDate && date.isAfter(this.maxDate)) return true
+                    if (this.minDate && date.isBefore(this.minDate)) return true
+
+                    return false
+                },
+
+                dayIsDisabled: function (day) {
+                    return this.dateIsDisabled(this.focusedDate.date(day))
+                },
+
+                dayIsSelected: function (day) {
+                    let selectedDate = this.getSelectedDate()
+
+                    if (selectedDate === null) return false
+
+                    return selectedDate.date() === day &&
+                        selectedDate.month() === this.focusedDate.month() &&
+                        selectedDate.year() === this.focusedDate.year()
+                },
+
+                dayIsToday: function (day) {
+                    let date = dayjs()
+
+                    return date.date() === day &&
+                        date.month() === this.focusedDate.month() &&
+                        date.year() === this.focusedDate.year()
+                },
+
+                evaluatePosition: function () {
+                    let availableHeight = window.innerHeight - this.$refs.button.offsetHeight
+
+                    let element = this.$refs.button
+
+                    while (element) {
+                        availableHeight -= element.offsetTop
+
+                        element = element.offsetParent
+                    }
+
+                    if (this.$refs.picker.offsetHeight <= availableHeight) {
+                        this.$refs.picker.style.bottom = 'auto'
+
+                        return
+                    }
+
+                    this.$refs.picker.style.bottom = `${this.$refs.button.offsetHeight}px`
+                },
+
+                focusPreviousDay: function () {
+                    this.focusedDate = this.focusedDate.subtract(1, 'day')
+                },
+
+                focusPreviousWeek: function () {
+                    this.focusedDate = this.focusedDate.subtract(1, 'week')
+                },
+
+                focusNextDay: function () {
+                    this.focusedDate = this.focusedDate.add(1, 'day')
+                },
+
+                focusNextWeek: function () {
+                    this.focusedDate = this.focusedDate.add(1, 'week')
+                },
+
+                getDayLabels: function () {
+                    const labels = dayjs.weekdaysShort()
+
+                    if (this.firstDayOfWeek === 0) {
+                        return labels
+                    }
+
+                    return [
+                        ...labels.slice(this.firstDayOfWeek),
+                        ...labels.slice(0, this.firstDayOfWeek),
+                    ]
+                },
+
+                getSelectedDate: function () {
+                    let date = dayjs(this.value, this.format)
+
+                    if (! date.isValid()) return null
+
+                    return date
+                },
+
+                init: function () {
+                    this.maxDate = dayjs(this.maxDate)
+                    if (! this.maxDate.isValid()) this.maxDate = null
+
+                    this.minDate = dayjs(this.minDate)
+                    if (! this.minDate.isValid()) this.minDate = null
+
+                    let date = this.getSelectedDate() ?? dayjs()
+
+                    if (this.maxDate !== null && date.isAfter(this.maxDate)) date = this.required ? this.maxDate : null
+                    if (this.minDate !== null && date.isBefore(this.minDate)) date = this.required ? this.minDate : null
+
+                    this.hour = date.hour()
+                    this.minute = date.minute()
+                    this.second = date.second()
+
+                    if (this.required && ! this.getSelectedDate()) this.setValue(date)
+
+                    this.setDisplayValue()
+
+                    if (this.autofocus) this.openPicker()
+
+                    this.$watch('focusedMonth', () => {
+                        this.focusedMonth = +this.focusedMonth
+
+                        if (this.focusedDate.month() === this.focusedMonth) return
+
+                        this.focusedDate = this.focusedDate.set('month', this.focusedMonth)
+                    })
+
+                    this.$watch('focusedYear', () => {
+                        this.focusedYear = Number.isInteger(+this.focusedYear) ? +this.focusedYear : dayjs().year()
+
+                        if (this.focusedDate.year() === this.focusedYear) return
+
+                        this.focusedDate = this.focusedDate.set('year', this.focusedYear)
+                    })
+
+                    this.$watch('focusedDate', () => {
+                        this.focusedMonth = this.focusedDate.month()
+                        this.focusedYear = this.focusedDate.year()
+
+                        this.setupDaysGrid()
+
+                        this.$nextTick(() => {
+                            this.evaluatePosition()
+                        })
+                    })
+
+                    this.$watch('hour', () => {
+                        let hour = +this.hour
+
+                        if (! Number.isInteger(hour)) {
+                            this.hour = dayjs().hour()
+                        } else if (hour > 23) {
+                            this.hour = 0
+                        } else if (hour < 0) {
+                            this.hour = 23
+                        } else {
+                            this.hour = hour
+                        }
+
+                        let date = this.getSelectedDate()
+
+                        if (date === null) return
+
+                        this.setValue(date.set('hour', this.hour))
+                    })
+
+                    this.$watch('minute', () => {
+                        let minute = +this.minute
+
+                        if (! Number.isInteger(minute)) {
+                            this.minute = dayjs().minute()
+                        } else if (minute > 59) {
+                            this.minute = 0
+                        } else if (minute < 0) {
+                            this.minute = 59
+                        } else {
+                            this.minute = minute
+                        }
+
+                        let date = this.getSelectedDate()
+
+                        if (date === null) return
+
+                        this.setValue(date.set('minute', this.minute))
+                    })
+
+                    this.$watch('second', () => {
+                        let second = +this.second
+
+                        if (! Number.isInteger(second)) {
+                            this.second = dayjs().second()
+                        } else if (second > 59) {
+                            this.second = 0
+                        } else if (second < 0) {
+                            this.second = 59
+                        } else {
+                            this.second = second
+                        }
+
+                        let date = this.getSelectedDate()
+
+                        if (date === null) return
+
+                        this.setValue(date.set('second', this.second))
+                    })
+
+                    this.$watch('value', () => {
+                        let date = this.getSelectedDate() ?? dayjs()
+
+                        if (this.maxDate !== null && date.isAfter(this.maxDate)) date = this.required ? this.maxDate : null
+                        if (this.minDate !== null && date.isBefore(this.minDate)) date = this.required ? this.minDate : null
+
+                        this.hour = date.hour()
+                        this.minute = date.minute()
+                        this.second = date.second()
+
+                        if (this.required && ! this.getSelectedDate()) this.setValue(date)
+
+                        this.setDisplayValue()
+                    })
+                },
+
+                openPicker: function () {
+                    this.focusedDate = this.getSelectedDate() ?? dayjs()
+
+                    this.setupDaysGrid()
+
+                    this.open = true
+
+                    this.$nextTick(() => {
+                        this.evaluatePosition()
+                    })
+                },
+
+                selectDate: function (day = null) {
+                    if (day) this.setFocusedDay(day)
+
+                    this.setValue(this.focusedDate)
+                },
+
+                setDisplayValue: function () {
+                    this.displayValue = this.getSelectedDate() ? this.getSelectedDate().format(this.displayFormat) : ''
+                },
+
+                setupDaysGrid: function () {
+                    this.emptyDaysInFocusedMonth = Array.from({
+                        length: this.focusedDate.date(8 - this.firstDayOfWeek).day(),
+                    }, (_, i) => i + 1)
+
+                    this.daysInFocusedMonth = Array.from({
+                        length: this.focusedDate.daysInMonth(),
+                    }, (_, i) => i + 1)
+                },
+
+                setFocusedDay: function (day) {
+                    this.focusedDate = this.focusedDate.date(day)
+                },
+
+                setValue: function (date) {
+                    if (date === null) {
+                        if (this.required) {
+                            date = dayjs()
+
+                            if (this.maxDate !== null && date.isAfter(this.maxDate)) date = this.maxDate
+                            if (this.minDate !== null && date.isBefore(this.minDate)) date = this.minDate
+                        } else {
+                            this.value = null
+
+                            this.setDisplayValue()
+
+                            return
+                        }
+                    } else {
+                        if (this.dateIsDisabled(date)) return
+                    }
+
+                    this.value = date
+                        .set('hour', this.hour)
+                        .set('minute', this.minute)
+                        .set('second', this.second)
+                        .format(this.format)
+
+                    this.setDisplayValue()
+                },
+
+                togglePickerVisibility: function () {
+                    if (this.open) {
+                        this.closePicker()
+
+                        return
+                    }
+
+                    this.openPicker()
+                },
+            }
+        }
+    </script>
+@endpushonce
+
+<x-forms::field-group
+    :column-span="$formComponent->getColumnSpan()"
+    :error-key="$formComponent->getName()"
+    :for="$formComponent->getId()"
+    :help-message="$formComponent->getHelpMessage()"
+    :hint="$formComponent->getHint()"
+    :label="$formComponent->getLabel()"
+    :required="$formComponent->isRequired()"
 >
     <div
-        x-data="dateTimePickerFormComponent({
-            displayFormat: '{{ convert_date_format($getDisplayFormat())->to('day.js') }}',
-            firstDayOfWeek: {{ $getFirstDayOfWeek() }},
-            format: '{{ convert_date_format($getFormat())->to('day.js') }}',
-            isAutofocused: {{ $isAutofocused() ? 'true' : 'false' }},
-            isRequired: {{ $isRequired() ? 'true' : 'false' }},
-            locale: '{{ Str::of(app()->getLocale())->lower()->kebab() }}',
-            maxDate: '{{ $getMaxDate() }}',
-            minDate: '{{ $getMinDate() }}',
-            placeholder: '{{ $getPlaceholder() }}',
-            state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
+        x-data="dateTimePicker({
+            autofocus: {{ $formComponent->isAutofocused() ? 'true' : 'false' }},
+            displayFormat: '{{ convert_date_format($formComponent->getDisplayFormat())->to('day.js') }}',
+            firstDayOfWeek: {{ $formComponent->getFirstDayOfWeek() }},
+            format: '{{ convert_date_format($formComponent->getFormat())->to('day.js') }}',
+            maxDate: '{{ $formComponent->getMaxDate() }}',
+            minDate: '{{ $formComponent->getMinDate() }}',
+            name: '{{ $formComponent->getName() }}',
+            placeholder: '{{ __($formComponent->getPlaceholder()) }}',
+            required: {{ $formComponent->isRequired() ? 'true' : 'false' }},
+            time: {{ $formComponent->hasTime() ? 'true' : 'false' }},
+            @if (Str::of($formComponent->getBindingAttribute())->startsWith('wire:model'))
+                value: @entangle($formComponent->getName()){{ Str::of($formComponent->getBindingAttribute())->after('wire:model') }},
+            @endif
         })"
+        x-init="init()"
         x-on:click.away="closePicker()"
         x-on:keydown.escape.stop="closePicker()"
         x-on:blur="closePicker()"
-        {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
+        {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
         class="relative"
-        {{ $attributes->merge($getExtraAttributes()) }}
+        {!! Filament\format_attributes($formComponent->getExtraAttributes()) !!}
     >
+        @unless (Str::of($formComponent->getBindingAttribute())->startsWith(['wire:model', 'x-model']))
+            <input
+                x-model="value"
+                {!! $formComponent->getName() ? "{$formComponent->getBindingAttribute()}=\"{$formComponent->getName()}\"" : null !!}
+                type="hidden"
+            />
+        @endif
+
         <button
-            @unless($isDisabled())
+            @unless($formComponent->isDisabled())
                 x-ref="button"
                 x-on:click="togglePickerVisibility()"
                 x-on:keydown.enter.stop.prevent="open ? selectDate() : openPicker()"
@@ -56,26 +412,24 @@
                 x-on:keydown.clear.stop.prevent="clearValue()"
                 x-on:keydown.delete.stop.prevent="clearValue()"
                 x-bind:aria-expanded="open"
-                aria-label="{{ $getPlaceholder() }}"
+                aria-label="{{ __($formComponent->getPlaceholder()) }}"
             @endunless
             type="button"
-            class="bg-white relative w-full border pl-3 pr-10 py-2 text-left cursor-default rounded-lg shadow-sm focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-600 {{ $isDisabled() ? 'text-gray-500' : '' }} {{ $errors->has($getStatePath()) ? 'border-danger-600 motion-safe:animate-shake' : 'border-gray-300' }}"
+            class="bg-white relative w-full border rounded shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus-within:border-blue-300 focus-within:ring focus-within:ring-blue-200 focus-within:ring-opacity-50 {{ $formComponent->isDisabled() ? 'text-gray-500' : '' }} {{ $errors->has($formComponent->getName()) ? 'border-danger-600 motion-safe:animate-shake' : 'border-gray-300' }}"
         >
             <input
                 readonly
-                placeholder="{{ $getPlaceholder() }}"
-                x-model="displayText"
+                placeholder="{{ __($formComponent->getPlaceholder()) }}"
+                x-model="displayValue"
                 class="w-full h-full p-0 placeholder-gray-400 border-0 focus:placeholder-gray-500 focus:ring-0 focus:outline-none"
             />
 
             <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+                <x-heroicon-o-calendar class="w-5 h-5 text-gray-400" />
             </span>
         </button>
 
-        @unless ($isDisabled())
+        @unless ($formComponent->isDisabled())
             <div
                 x-ref="picker"
                 x-on:click.away="closePicker()"
@@ -83,7 +437,7 @@
                 aria-modal="true"
                 role="dialog"
                 x-cloak
-                class="absolute z-10 w-64 p-4 my-1 bg-white border border-gray-300 rounded-lg shadow-sm"
+                class="absolute z-10 w-64 p-4 my-1 bg-white border border-gray-300 rounded shadow-sm"
             >
                 <div class="space-y-3">
                     <div class="flex items-center justify-between space-x-1 rtl:space-x-reverse">
@@ -99,7 +453,7 @@
                         <input
                             type="number"
                             x-model.debounce="focusedYear"
-                            class="w-20 p-0 text-lg text-right border-0 focus:ring-0 focus:outline-none"
+                            class="w-20 p-0 text-lg text-right text-gray-600 border-0 focus:ring-0 focus:outline-none"
                         />
                     </div>
 
@@ -125,21 +479,21 @@
                                 role="option"
                                 x-bind:aria-selected="focusedDate.date() === day"
                                 x-bind:class="{
+                                    'bg-blue-600 text-white': dayIsSelected(day),
                                     'text-gray-700': ! dayIsSelected(day),
+                                    'bg-blue-50': dayIsToday(day) && ! dayIsSelected(day) && focusedDate.date() !== day && ! dayIsDisabled(day),
+                                    'bg-blue-200': focusedDate.date() === day && ! dayIsSelected(day),
+                                    'bg-gray-100': dayIsDisabled(day) && focusedDate.date() !== day,
                                     'cursor-pointer': ! dayIsDisabled(day),
-                                    'bg-primary-50': dayIsToday(day) && ! dayIsSelected(day) && focusedDate.date() !== day && ! dayIsDisabled(day),
-                                    'bg-primary-200': focusedDate.date() === day && ! dayIsSelected(day),
-                                    'bg-primary-500 text-white': dayIsSelected(day),
                                     'cursor-not-allowed': dayIsDisabled(day),
-                                    'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
                                 }"
-                                class="text-sm leading-none leading-loose text-center transition duration-100 ease-in-out rounded-full"
+                                class="text-sm leading-none leading-loose text-center transition duration-100 ease-in-out rounded"
                             ></div>
                         </template>
                     </div>
 
-                    @if ($hasTime())
-                        <div class="flex items-center justify-center py-2 bg-gray-100 rounded-lg">
+                    @if ($formComponent->hasTime())
+                        <div class="flex items-center justify-center py-2 bg-gray-100 rounded">
                             <input
                                 max="23"
                                 min="0"
@@ -158,7 +512,7 @@
                                 class="w-16 p-0 pr-1 text-xl text-center text-gray-700 bg-gray-100 border-0 focus:ring-0 focus:outline-none"
                             />
 
-                            @if ($hasSeconds())
+                            @if ($formComponent->hasSeconds())
                                 <span class="text-xl font-medium text-gray-700 bg-gray-100">:</span>
 
                                 <input
@@ -175,4 +529,4 @@
             </div>
         @endunless
     </div>
-</x-forms::field-wrapper>
+</x-forms::field-group>

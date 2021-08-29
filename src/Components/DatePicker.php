@@ -4,144 +4,147 @@ namespace Filament\Forms\Components;
 
 class DatePicker extends Field
 {
+    use Concerns\CanBeAutofocused;
+    use Concerns\CanBeCompared;
+    use Concerns\CanBeUnique;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms::components.date-time-picker';
+    protected $displayFormat;
 
-    protected $displayFormat = null;
+    protected $firstDayOfWeek;
 
-    protected $firstDayOfWeek = null;
-
-    protected $format = null;
+    protected $format;
 
     protected $hasSeconds = true;
 
     protected $hasTime = false;
 
-    protected $maxDate = null;
+    protected $maxDate;
 
-    protected $minDate = null;
+    protected $minDate;
 
-    protected function setUp(): void
+    protected $view = 'forms::components.date-time-picker';
+
+    protected function setUp()
     {
-        parent::setUp();
-
-        $this->displayFormat('F j, Y');
-
-        $this->format('Y-m-d');
-
-        $this->resetFirstDayOfWeek();
+        $this->configure(function () {
+            $this->displayFormat('F j, Y');
+            $this->resetFirstDayOfWeek();
+            $this->format('Y-m-d');
+        });
     }
 
-    public function displayFormat(string | callable $format): static
+    public function displayFormat($format)
     {
-        $this->displayFormat = $format;
+        $this->configure(function () use ($format) {
+            $this->displayFormat = $format;
+        });
 
         return $this;
     }
 
-    public function firstDayOfWeek(int | callable $day): static
+    public function firstDayOfWeek($day = 1)
     {
-        if ($day < 0 || $day > 7) {
-            $day = $this->getDefaultFirstDayOfWeek();
-        }
+        $this->configure(function () use ($day) {
+            if ($day < 0 || $day > 7) {
+                $day = $this->getDefaultFirstDayOfWeek();
+            }
 
-        $this->firstDayOfWeek = $day;
+            $this->firstDayOfWeek = $day;
+        });
 
         return $this;
     }
 
-    public function format(string | callable $format): static
+    public function format($format)
     {
-        $this->format = $format;
+        $this->configure(function () use ($format) {
+            $this->format = $format;
+        });
 
         return $this;
     }
 
-    public function maxDate(string | callable $date): static
+    public function getDisplayFormat()
     {
-        $this->maxDate = $date;
+        return $this->displayFormat;
+    }
 
-        $this->addValidationRule(function () use ($date) {
-            $date = $this->evaluate($date);
+    public function getFirstDayOfWeek()
+    {
+        return $this->firstDayOfWeek;
+    }
 
-            return "before_or_equal:{$date}";
-        }, fn (): bool => (bool) $this->evaluate($date));
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    public function getMaxDate()
+    {
+        return $this->maxDate;
+    }
+
+    public function getMinDate()
+    {
+        return $this->minDate;
+    }
+
+    public function hasSeconds()
+    {
+        return $this->hasSeconds;
+    }
+
+    public function hasTime()
+    {
+        return $this->hasTime;
+    }
+
+    public function maxDate($date)
+    {
+        $this->configure(function () use ($date) {
+            $this->maxDate = $date;
+
+            $this->addRules([$this->getName() => ["before_or_equal:{$date}"]]);
+        });
 
         return $this;
     }
 
-    public function minDate(string | callable $date): static
+    public function minDate($date)
     {
-        $this->minDate = $date;
+        $this->configure(function () use ($date) {
+            $this->minDate = $date;
 
-        $this->addValidationRule(function () use ($date) {
-            $date = $this->evaluate($date);
-
-            return "after_or_equal:{$date}";
-        }, fn (): bool => (bool) $this->evaluate($date));
+            $this->addRules([$this->getName() => ["after_or_equal:{$date}"]]);
+        });
 
         return $this;
     }
 
-    public function resetFirstDayOfWeek(): static
+    public function resetFirstDayOfWeek()
     {
         $this->firstDayOfWeek($this->getDefaultFirstDayOfWeek());
 
         return $this;
     }
 
-    public function weekStartsOnMonday(): static
+    public function weekStartsOnMonday()
     {
         $this->firstDayOfWeek(1);
 
         return $this;
     }
 
-    public function weekStartsOnSunday(): static
+    public function weekStartsOnSunday()
     {
         $this->firstDayOfWeek(7);
 
         return $this;
     }
 
-    public function getDisplayFormat(): string
+    protected function getDefaultFirstDayOfWeek()
     {
-        return $this->evaluate($this->displayFormat);
-    }
-
-    public function getFirstDayOfWeek(): int
-    {
-        return $this->evaluate($this->firstDayOfWeek);
-    }
-
-    public function getFormat(): string
-    {
-        return $this->evaluate($this->format);
-    }
-
-    public function getMaxDate(): ?string
-    {
-        return $this->evaluate($this->maxDate);
-    }
-
-    public function getMinDate(): ?string
-    {
-        return $this->evaluate($this->minDate);
-    }
-
-    public function hasSeconds(): bool
-    {
-        return false;
-    }
-
-    public function hasTime(): bool
-    {
-        return (bool) $this->evaluate($this->hasTime);
-    }
-
-    protected function getDefaultFirstDayOfWeek(): int
-    {
-        return config('forms.components.date_time_picker.first_day_of_week', 1);
+        return config('forms.first_day_of_week', 1);
     }
 }

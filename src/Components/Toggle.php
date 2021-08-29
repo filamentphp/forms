@@ -4,53 +4,55 @@ namespace Filament\Forms\Components;
 
 class Toggle extends Field
 {
-    use Concerns\CanBeAccepted;
+    use Concerns\CanBeAutofocused;
     use Concerns\CanBeInline;
 
-    protected string $view = 'forms::components.toggle';
+    protected $offIcon;
 
-    protected $offIcon = null;
+    protected $onIcon;
 
-    protected $onIcon = null;
-
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->default(false);
 
         $this->inline();
     }
 
-    public function offIcon(string | callable $icon): static
+    public function getOffIcon()
     {
-        $this->offIcon = $icon;
+        return $this->offIcon;
+    }
+
+    public function getOnIcon()
+    {
+        return $this->onIcon;
+    }
+
+    public function hasOffIcon()
+    {
+        return $this->offIcon !== null;
+    }
+
+    public function hasOnIcon()
+    {
+        return $this->onIcon !== null;
+    }
+
+    public function offIcon($icon)
+    {
+        $this->configure(function () use ($icon) {
+            $this->offIcon = $icon;
+        });
 
         return $this;
     }
 
-    public function onIcon(string | callable $icon): static
+    public function onIcon($icon)
     {
-        $this->onIcon = $icon;
+        $this->configure(function () use ($icon) {
+            $this->onIcon = $icon;
+        });
 
         return $this;
-    }
-
-    public function getOffIcon(): ?string
-    {
-        return $this->evaluate($this->offIcon);
-    }
-
-    public function getOnIcon(): ?string
-    {
-        return $this->evaluate($this->onIcon);
-    }
-
-    public function hasOffIcon(): bool
-    {
-        return (bool) $this->getOffIcon();
-    }
-
-    public function hasOnIcon(): bool
-    {
-        return (bool) $this->getOnIcon();
     }
 }

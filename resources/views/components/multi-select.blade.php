@@ -1,166 +1,323 @@
-<x-forms::field-wrapper
-    :id="$getId()"
-    :label="$getLabel()"
-    :helper-text="$getHelperText()"
-    :hint="$getHint()"
-    :required="$isRequired()"
-    :state-path="$getStatePath()"
+@pushonce('filament-scripts:multi-select-component')
+    <script>
+        function multiSelect(config) {
+            return {
+                autofocus: config.autofocus,
+
+                emptyOptionsMessage: config.emptyOptionsMessage,
+
+                focusedOptionIndex: null,
+
+                initialOptions: config.initialOptions,
+
+                name: config.name,
+
+                noSearchResultsMessage: config.noSearchResultsMessage,
+
+                open: false,
+
+                options: {},
+
+                required: config.required,
+
+                search: '',
+
+                value: config.value,
+
+                closeListbox: function () {
+                    this.open = false
+
+                    this.focusedOptionIndex = null
+
+                    this.search = ''
+                },
+
+                evaluatePosition: function () {
+                    let availableHeight = window.innerHeight - this.$refs.button.offsetHeight
+
+                    let element = this.$refs.button
+
+                    while (element) {
+                        availableHeight -= element.offsetTop
+
+                        element = element.offsetParent
+                    }
+
+                    if (this.$refs.listbox.offsetHeight <= availableHeight) {
+                        this.$refs.listbox.style.bottom = 'auto'
+
+                        return
+                    }
+
+                    this.$refs.listbox.style.bottom = `${this.$refs.button.offsetHeight}px`
+                },
+
+                focusNextOption: function () {
+                    if (this.focusedOptionIndex === null) {
+                        this.focusedOptionIndex = Object.keys(this.options).length - 1
+
+                        return
+                    }
+
+                    if (this.focusedOptionIndex + 1 >= Object.keys(this.options).length) return
+
+                    this.focusedOptionIndex++
+
+                    this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
+                        block: 'center',
+                    })
+                },
+
+                focusPreviousOption: function () {
+                    if (this.focusedOptionIndex === null) {
+                        this.focusedOptionIndex = 0
+
+                        return
+                    }
+
+                    if (this.focusedOptionIndex <= 0) return
+
+                    this.focusedOptionIndex--
+
+                    this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
+                        block: 'center',
+                    })
+                },
+
+                init: function () {
+                    if (! this.value) {
+                        this.value = []
+                    }
+
+                    this.setOptions()
+
+                    if (this.autofocus) this.openListbox()
+
+                    this.$watch('search', () => {
+                        if (! this.open || this.search === '' || this.search === null) {
+                            this.setOptions()
+                            this.focusedOptionIndex = 0
+
+                            return
+                        }
+
+                        this.options = {}
+
+                        for (const [key, label] of Object.entries(this.initialOptions)) {
+                            if (
+                                ! this.value.includes(key) &&
+                                label.toLowerCase().includes(this.search.toLowerCase())
+                            ) {
+                                this.options[key] = label
+                            }
+                        }
+
+                        this.focusedOptionIndex = 0
+                    })
+
+                    this.$watch('value', () => {
+                        if (this.value) return
+
+                        this.value = []
+                    })
+                },
+
+                openListbox: function () {
+                    this.setOptions()
+
+                    this.focusedOptionIndex = 0
+
+                    this.open = true
+
+                    this.$nextTick(() => {
+                        this.$refs.search.focus()
+
+                        this.evaluatePosition()
+
+                        this.$refs.listboxOptionsList.children[this.focusedOptionIndex].scrollIntoView({
+                            block: 'center'
+                        })
+                    })
+                },
+
+                selectOption: function (index = null) {
+                    if (! this.open) {
+                        this.closeListbox()
+
+                        return
+                    }
+
+                    this.value.push(Object.keys(this.options)[index ?? this.focusedOptionIndex])
+
+                    this.closeListbox()
+                },
+
+                setOptions: function () {
+                    this.options = {}
+
+                    for (const [key, label] of Object.entries(this.initialOptions)) {
+                        if (! this.value.includes(key)) {
+                            this.options[key] = label
+                        }
+                    }
+                },
+
+                toggleListboxVisibility: function () {
+                    if (this.open) {
+                        this.closeListbox()
+
+                        return
+                    }
+
+                    this.openListbox()
+                },
+
+                unselectOption: function (keyToUnselect) {
+                    this.value = this.value.filter((key) => {
+                        return key !== keyToUnselect
+                    })
+                },
+            }
+        }
+    </script>
+@endpushonce
+
+<x-forms::field-group
+    :column-span="$formComponent->getColumnSpan()"
+    :error-key="$formComponent->getName()"
+    :for="$formComponent->getId()"
+    :help-message="$formComponent->getHelpMessage()"
+    :hint="$formComponent->getHint()"
+    :label="$formComponent->getLabel()"
+    :required="$formComponent->isRequired()"
 >
     <div
-        x-data="multiSelectFormComponent({
-            getOptionLabelsUsing: async (values) => {
-                return await $wire.getMultiSelectOptionLabels('{{ $getStatePath() }}')
-            },
-            getSearchResultsUsing: async (query) => {
-                return await $wire.getMultiSelectSearchResults('{{ $getStatePath() }}', query)
-            },
-            isAutofocused: {{ $isAutofocused() ? 'true' : 'false' }},
-            options: {{ json_encode($getOptions()) }},
-            state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
+        x-data="multiSelect({
+            autofocus: {{ $formComponent->isAutofocused() ? 'true' : 'false' }},
+            emptyOptionsMessage: '{{ __($formComponent->getEmptyOptionsMessage()) }}',
+            initialOptions: {{ json_encode($formComponent->getOptions()) }},
+            name: '{{ $formComponent->getName() }}',
+            noSearchResultsMessage: '{{ __($formComponent->getNoSearchResultsMessage()) }}',
+            required: {{ $formComponent->isRequired() ? 'true' : 'false' }},
+            @if (Str::of($formComponent->getBindingAttribute())->startsWith('wire:model'))
+                value: @entangle($formComponent->getName()){{ Str::of($formComponent->getBindingAttribute())->after('wire:model') }},
+            @endif
         })"
-        {!! ($id = $getId()) ? "id=\"{$id}\"" : null !!}
-        x-show="state.length || {{ $isDisabled() ? 'false' : 'true' }}"
-        {{ $attributes->merge($getExtraAttributes())->class([
-            'block w-full transition duration-75 divide-y rounded-lg shadow-sm border focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600',
-            'border-gray-300' => ! $errors->has($getStatePath()),
-            'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
-        ]) }}
+        x-init="init()"
+        x-on:click.away="closeListbox()"
+        x-on:keydown.escape.stop="closeListbox()"
+        {!! $formComponent->getId() ? "id=\"{$formComponent->getId()}\"" : null !!}
+        class="relative"
+        {!! Filament\format_attributes($formComponent->getExtraAttributes()) !!}
     >
-        @unless ($isDisabled())
+        @unless (Str::of($formComponent->getBindingAttribute())->startsWith(['wire:model', 'x-model']))
+            <input
+                x-model="value"
+                {!! $formComponent->getName() ? "{$formComponent->getBindingAttribute()}=\"{$formComponent->getName()}\"" : null !!}
+                type="hidden"
+            />
+        @endif
+
+        @unless($formComponent->isDisabled())
             <div
-                x-on:click.away="closeListbox()"
-                x-on:blur="closeListbox()"
-                x-on:keydown.escape.stop="closeListbox()"
-                class="relative"
+                x-ref="button"
+                x-on:click="toggleListboxVisibility()"
+                x-on:keydown.enter.stop.prevent="open ? selectOption() : openListbox()"
+                x-on:keydown.space="if (! open) openListbox()"
+                x-bind:aria-expanded="open"
+                aria-haspopup="listbox"
+                tabindex="1"
+                class="bg-white relative w-full border rounded shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 {{ $formComponent->isDisabled() ? 'text-gray-500' : '' }} {{ $errors->has($formComponent->getName()) ? 'border-danger-600 motion-safe:animate-shake' : 'border-gray-300' }}"
             >
-                <div
-                    x-ref="button"
-                    x-on:click="toggleListboxVisibility()"
-                    x-on:keydown.enter.stop.prevent="isOpen ? selectOption() : openListbox()"
-                    x-on:keydown.space="if (! isOpen) openListbox()"
-                    x-on:keydown.backspace="if (! search) clearState()"
-                    x-on:keydown.clear="if (! search) clearState()"
-                    x-on:keydown.delete="if (! search) clearState()"
-                    x-bind:aria-expanded="isOpen"
-                    aria-haspopup="listbox"
-                    tabindex="1"
-                    class="relative rounded-lg overflow-hidden"
+                <span
+                    x-show="! open"
+                    class="block truncate text-gray-400"
                 >
-                    <input
-                        x-ref="search"
-                        x-model.debounce.500="search"
-                        x-on:keydown.enter.stop.prevent="selectOption()"
-                        x-on:keydown.arrow-up.stop.prevent="focusPreviousOption()"
-                        x-on:keydown.arrow-down.stop.prevent="focusNextOption()"
-                        placeholder="{{ $getPlaceholder() }}"
-                        type="text"
-                        autocomplete="off"
-                        class="block w-full border-0"
-                    />
+                    {{ __($formComponent->getPlaceholder()) }}
+                </span>
 
-                    <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                        <svg x-show="! isLoading" x-cloak class="w-5 h-5"xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="#6B7280" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4" />
-                        </svg>
+                <input
+                    x-ref="search"
+                    x-show="open"
+                    x-model.debounce.500="search"
+                    x-on:keydown.enter.stop.prevent="selectOption()"
+                    x-on:keydown.arrow-up.stop.prevent="focusPreviousOption()"
+                    x-on:keydown.arrow-down.stop.prevent="focusNextOption()"
+                    type="search"
+                    class="w-full h-full border-0 p-0 focus:ring-0 focus:outline-none"
+                />
 
-                        <svg x-show="isLoading" class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="currentColor">
-                            <path d="M6.306 28.014c1.72 10.174 11.362 17.027 21.536 15.307C38.016 41.6 44.87 31.958 43.15 21.784l-4.011.678c1.345 7.958-4.015 15.502-11.974 16.847-7.959 1.346-15.501-4.014-16.847-11.973l-4.011.678z" />
+                <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <x-heroicon-s-selector x-cloak class="w-5 h-5 text-gray-400" />
+                </span>
+            </div>
 
-                            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur=".7s" repeatCount="indefinite" /></path>
-                        </svg>
-                    </span>
-                </div>
-
-                <div
-                    x-ref="listbox"
-                    x-show="isOpen"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    role="listbox"
-                    x-bind:aria-activedescendant="focusedOptionIndex ? '{{ $getStatePath() }}' + 'Option' + focusedOptionIndex : null"
-                    tabindex="-1"
-                    x-cloak
-                    class="absolute z-10 w-full my-1 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none"
+            <div
+                x-ref="listbox"
+                x-show="open"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                role="listbox"
+                x-bind:aria-activedescendant="focusedOptionIndex ? '{{ $formComponent->getName() }}' + 'Option' + focusedOptionIndex : null"
+                tabindex="-1"
+                x-cloak
+                class="absolute z-10 w-full my-1 bg-white rounded shadow-sm border border-gray-300"
+            >
+                <ul
+                    x-ref="listboxOptionsList"
+                    class="py-1 overflow-auto text-base leading-6 rounded shadow-sm max-h-60 focus:outline-none"
                 >
-                    <ul
-                        x-ref="listboxOptionsList"
-                        class="py-1 overflow-auto text-base leading-6 max-h-60 focus:outline-none"
-                    >
-                        <template x-for="(key, index) in Object.keys(options)" :key="key">
-                            <li
-                                x-bind:id="'{{ $getName() }}' + 'Option' + focusedOptionIndex"
-                                x-on:click="selectOption(index)"
-                                x-on:mouseenter="focusedOptionIndex = index"
-                                x-on:mouseleave="focusedOptionIndex = null"
-                                role="option"
-                                x-bind:aria-selected="focusedOptionIndex === index"
+                    <template x-for="(key, index) in Object.keys(options)" :key="index">
+                        <li
+                            x-bind:id="'{{ $formComponent->getName() }}' + 'Option' + focusedOptionIndex"
+                            x-on:click="selectOption(index)"
+                            x-on:mouseenter="focusedOptionIndex = index"
+                            x-on:mouseleave="focusedOptionIndex = null"
+                            role="option"
+                            x-bind:aria-selected="focusedOptionIndex === index"
+                            x-bind:class="{
+                                'text-white bg-blue-600': index === focusedOptionIndex,
+                                'text-gray-900': index !== focusedOptionIndex,
+                            }"
+                            class="relative py-2 pl-3 text-gray-900 cursor-default select-none pr-9"
+                        >
+                            <span
+                                x-text="Object.values(options)[index]"
                                 x-bind:class="{
-                                    'text-white bg-primary-500': index === focusedOptionIndex,
-                                    'text-gray-900': index !== focusedOptionIndex,
+                                    'font-medium': index === focusedOptionIndex,
+                                    'font-normal': index !== focusedOptionIndex,
                                 }"
-                                class="relative py-2 pl-3 h-10 flex items-center text-gray-900 cursor-default select-none pr-9"
-                            >
-                                <span
-                                    x-text="Object.values(options)[index]"
-                                    x-bind:class="{
-                                        'font-medium': index === focusedOptionIndex,
-                                        'font-normal': index !== focusedOptionIndex,
-                                    }"
-                                    class="block font-normal truncate"
-                                ></span>
+                                class="block font-normal truncate"
+                            ></span>
+                        </li>
+                    </template>
 
-                                <span
-                                    x-show="state.indexOf(key) >= 0"
-                                    x-bind:class="{
-                                        'text-white': index === focusedOptionIndex,
-                                        'text-primary-500': index !== focusedOptionIndex,
-                                    }"
-                                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-primary-500"
-                                >
-                                    <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                              clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                            </li>
-                        </template>
-
-                        <div
-                            x-show="! Object.keys(options).length"
-                            x-text="! search || isLoading ? '{{ $getNoOptionsMessage() }}' : '{{ $getNoSearchResultsMessage() }}'"
-                            class="px-3 py-2 text-sm text-gray-900 cursor-default select-none"
-                        ></div>
-                    </ul>
-                </div>
+                    <div
+                        x-show="! Object.keys(options).length"
+                        x-text="! search ? emptyOptionsMessage : noSearchResultsMessage"
+                        class="px-3 py-2 text-gray-900 cursor-default select-none text-sm"
+                    ></div>
+                </ul>
             </div>
         @endunless
 
-        <div
-            x-show="state.length"
-            class="overflow-hidden space-x-1 rtl:space-x-reverse relative w-full px-2 py-1"
-        >
-            <div class="-ml-1">
-                <template class="inline" x-for="option in state" x-bind:key="option">
-                    <button
-                        @unless ($isDisabled())
-                            x-on:click="deselectOption(option)"
-                        @endunless
-                        type="button"
-                        @class([
-                            'inline-flex items-center justify-center h-6 px-2 my-1 text-sm font-semibold tracking-tight text-primary-700 rounded-full bg-primary-500/10 space-x-1',
-                            'cursor-default' => $isDisabled(),
-                        ])
-                    >
-                        <span x-text="labels[option]"></span>
+        <div>
+            <template x-for="key in value">
+                <button
+                    @unless($formComponent->isDisabled())
+                        x-on:click="unselectOption(key)"
+                    @endunless
+                    type="button"
+                    class="my-1 w-full flex justify-between space-x-2 rtl:space-x-reverse items-center font-mono text-xs py-2 px-3 border border-gray-300 bg-gray-100 text-gray-800 rounded shadow-sm relative @unless($formComponent->isDisabled()) cursor-pointer transition duration-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 hover:bg-gray-200 transition-colors duration-200 @else cursor-default @endunless"
+                >
+                    <span x-text="initialOptions[key] ?? key"></span>
 
-                        @unless ($isDisabled())
-                            <x-heroicon-s-x class="w-3 h-3" />
-                        @endunless
-                    </button>
-                </template>
-            </div>
+                    @unless($formComponent->isDisabled())
+                        <x-heroicon-s-x class="h-3 w-3 text-gray-500" />
+                    @endunless
+                </button>
+            </template>
         </div>
     </div>
-</x-forms::field-wrapper>
+</x-forms::field-group>

@@ -2,134 +2,113 @@
 
 namespace Filament\Forms\Components;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Str;
 
 class Select extends Field
 {
+    use Concerns\CanBeAutofocused;
+    use Concerns\CanBeCompared;
+    use Concerns\CanBeUnique;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms::components.select';
+    protected $emptyOptionsMessage = 'forms::fields.select.emptyOptionsMessage';
 
-    protected $getOptionLabelUsing = null;
+    protected $getDisplayValue;
 
-    protected $getSearchResultsUsing = null;
+    protected $getOptionSearchResults;
 
-    protected $isSearchable = false;
-
-    protected $noOptionsMessage = null;
-
-    protected $noSearchResultsMessage = null;
+    protected $noSearchResultsMessage = 'forms::fields.select.noSearchResultsMessage';
 
     protected $options = [];
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        parent::setUp();
+        $this->placeholder('forms::fields.select.placeholder');
 
-        $this->getOptionLabelUsing(function (Select $component, $value): ?string {
-            if (array_key_exists($value, $options = $component->getOptions())) {
-                return $options[$value];
-            }
-
-            return $value;
+        $this->getDisplayValueUsing(function ($value) {
+            return $this->getOptions()[(string) $value] ?? null;
         });
 
-        $this->noOptionsMessage(__('forms::components.select.noOptionsMessage'));
-
-        $this->noSearchResultsMessage(__('forms::components.select.noSearchResultsMessage'));
-
-        $this->placeholder(__('forms::components.select.placeholder'));
+        $this->getOptionSearchResultsUsing(function ($search) {
+            return collect($this->getOptions())
+                ->filter(fn ($option) => Str::of($option)->lower()->contains($search))
+                ->toArray();
+        });
     }
 
-    public function getOptionLabelUsing(callable $callback): static
+    public function emptyOptionsMessage($message)
     {
-        $this->getOptionLabelUsing = $callback;
+        $this->configure(function () use ($message) {
+            $this->emptyOptionsMessage = $message;
+        });
 
         return $this;
     }
 
-    public function getSearchResultsUsing(callable $callback): static
+    public function getDisplayValue($value)
     {
-        $this->getSearchResultsUsing = $callback;
+        $callback = $this->getDisplayValue;
+
+        return $callback($value);
+    }
+
+    public function getDisplayValueUsing($callback)
+    {
+        $this->configure(function () use ($callback) {
+            $this->getDisplayValue = $callback;
+        });
 
         return $this;
     }
 
-    public function noOptionsMessage(string | callable $message): static
+    public function getEmptyOptionsMessage()
     {
-        $this->noOptionsMessage = $message;
+        return $this->emptyOptionsMessage;
+    }
+
+    public function getNoSearchResultsMessage()
+    {
+        return $this->noSearchResultsMessage;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function getOptionSearchResults($search)
+    {
+        $search = (string) Str::of($search)->trim()->lower();
+
+        $callback = $this->getOptionSearchResults;
+
+        return $callback($search);
+    }
+
+    public function getOptionSearchResultsUsing($callback)
+    {
+        $this->configure(function () use ($callback) {
+            $this->getOptionSearchResults = $callback;
+        });
 
         return $this;
     }
 
-    public function noSearchResultsMessage(string | callable $message): static
+    public function noSearchResultsMessage($message)
     {
-        $this->noSearchResultsMessage = $message;
+        $this->configure(function () use ($message) {
+            $this->noSearchResultsMessage = $message;
+        });
 
         return $this;
     }
 
-    public function options(array | callable $options): static
+    public function options($options)
     {
-        $this->options = $options;
+        $this->configure(function () use ($options) {
+            $this->options = $options;
+        });
 
         return $this;
-    }
-
-    public function searchable(bool | callable $condition = true): static
-    {
-        $this->isSearchable = $condition;
-
-        return $this;
-    }
-
-    public function getNoOptionsMessage(): string
-    {
-        return $this->evaluate($this->noOptionsMessage);
-    }
-
-    public function getNoSearchResultsMessage(): string
-    {
-        return $this->evaluate($this->noSearchResultsMessage);
-    }
-
-    public function getOptionLabel()
-    {
-        return $this->evaluate($this->getOptionLabelUsing, [
-            'value' => $this->getState(),
-        ]);
-    }
-
-    public function getOptions(): array
-    {
-        $options = $this->evaluate($this->options);
-
-        if ($options instanceof Arrayable) {
-            $options = $options->toArray();
-        }
-
-        return $options;
-    }
-
-    public function getSearchResults(string $query): array
-    {
-        if (! $this->getSearchResultsUsing) {
-            return [];
-        }
-
-        $results = $this->evaluate($this->getSearchResultsUsing, [
-            'query' => $query,
-        ]);
-
-        if ($results instanceof Arrayable) {
-            $results = $results->toArray();
-        }
-
-        return $results;
-    }
-
-    public function isSearchable(): bool
-    {
-        return (bool) $this->evaluate($this->isSearchable);
     }
 }

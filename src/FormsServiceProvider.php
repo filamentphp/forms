@@ -2,57 +2,133 @@
 
 namespace Filament\Forms;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\Livewire;
+use ReflectionClass;
+use Symfony\Component\Finder\SplFileInfo;
 
-class FormsServiceProvider extends PackageServiceProvider
+class FormsServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function boot()
     {
-        $package
-            ->name('forms')
-            ->hasConfigFile()
-            ->hasTranslations()
-            ->hasViews();
+        $this->bootDirectives();
+        $this->bootLoaders();
+        $this->bootLivewireComponents();
+        $this->bootPublishing();
     }
 
-    public function packageBooted(): void
+    public function register()
     {
-        Arr::macro('moveElementAfter', function (array $array, $keyToMoveAfter): array {
-            $keys = array_keys($array);
+        $this->mergeConfigFrom(__DIR__ . '/../config/forms.php', 'forms');
+    }
 
-            $indexToMoveAfter = array_search($keyToMoveAfter, $keys);
-            $keyToMoveBefore = $keys[$indexToMoveAfter + 1];
+    protected function bootDirectives()
+    {
+        Blade::directive('pushonce', function ($expression) {
+            [$pushName, $pushSub] = explode(':', trim(substr($expression, 1, -1)));
+            $key = '__pushonce_' . str_replace('-', '_', $pushName) . '_' . str_replace('-', '_', $pushSub);
 
-            $keys[$indexToMoveAfter + 1] = $keyToMoveAfter;
-            $keys[$indexToMoveAfter] = $keyToMoveBefore;
-
-            $newArray = [];
-
-            foreach ($keys as $key) {
-                $newArray[$key] = $array[$key];
-            }
-
-            return $newArray;
+            return "<?php if(! isset(\$__env->{$key})): \$__env->{$key} = 1; \$__env->startPush('{$pushName}'); ?>";
         });
 
-        Arr::macro('moveElementBefore', function (array $array, $keyToMoveBefore): array {
-            $keys = array_keys($array);
+        Blade::directive('endpushonce', function () {
+            return '<?php $__env->stopPush(); endif; ?>';
+        });
+    }
 
-            $indexToMoveBefore = array_search($keyToMoveBefore, $keys);
-            $keyToMoveAfter = $keys[$indexToMoveBefore - 1];
+    protected function bootLivewireComponents()
+    {
+        $this->registerLivewireComponentDirectory(__DIR__ . '/Http/Livewire', 'Filament\\Forms\\Http\\Livewire', 'forms.');
+    }
 
-            $keys[$indexToMoveBefore - 1] = $keyToMoveBefore;
-            $keys[$indexToMoveBefore] = $keyToMoveAfter;
+    protected function bootLoaders()
+    {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'forms');
 
-            $newArray = [];
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'forms');
+    }
 
-            foreach ($keys as $key) {
-                $newArray[$key] = $array[$key];
+    protected function bootPublishing()
+    {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        $this->publishes([
+            __DIR__ . '/../config/forms.php' => config_path('forms.php'),
+        ], 'forms-config');
+
+        $this->publishes([
+            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/forms'),
+        ], 'forms-lang');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/forms'),
+        ], 'forms-views');
+    }
+
+    protected function mergeConfig(array $original, array $merging)
+    {
+        $array = array_merge($original, $merging);
+
+        foreach ($original as $key => $value) {
+            if (! is_array($value)) {
+                continue;
             }
 
-            return $newArray;
-        });
+            if (! Arr::exists($merging, $key)) {
+                continue;
+            }
+
+            if (is_numeric($key)) {
+                continue;
+            }
+
+            $array[$key] = $this->mergeConfig($value, $merging[$key]);
+        }
+
+        return $array;
+    }
+
+    protected function mergeConfigFrom($path, $key)
+    {
+        $config = $this->app['config']->get($key, []);
+
+        $this->app['config']->set($key, $this->mergeConfig(require $path, $config));
+    }
+
+    protected function registerLivewireComponentDirectory($directory, $namespace, $aliasPrefix = '')
+    {
+        $filesystem = new Filesystem();
+
+        if (! $filesystem->isDirectory($directory)) {
+            return;
+        }
+
+        collect($filesystem->allFiles($directory))
+            ->map(function (SplFileInfo $file) use ($namespace) {
+                return (string) Str::of($namespace)
+                    ->append('\\', $file->getRelativePathname())
+                    ->replace(['/', '.php'], ['\\', '']);
+            })
+            ->filter(function ($class) {
+                return is_subclass_of($class, Component::class) && ! (new ReflectionClass($class))->isAbstract();
+            })
+            ->each(function ($class) use ($namespace, $aliasPrefix) {
+                $alias = Str::of($class)
+                    ->after($namespace . '\\')
+                    ->replace(['/', '\\'], '.')
+                    ->prepend($aliasPrefix)
+                    ->explode('.')
+                    ->map([Str::class, 'kebab'])
+                    ->implode('.');
+
+                Livewire::component($alias, $class);
+            });
     }
 }

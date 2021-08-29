@@ -4,23 +4,29 @@ namespace Filament\Forms\Components;
 
 class Grid extends Component
 {
-    protected string $view = 'forms::components.grid';
+    protected $columns = 2;
 
-    final public function __construct(array | int | null $columns)
+    public function columns($columns)
     {
-        $this->columns($columns);
+        $this->configure(function () use ($columns) {
+            $this->columns = $columns;
+        });
+
+        return $this;
     }
 
-    public static function make(array | int | null $columns = 2): static
+    public function getColumns()
     {
-        $static = new static($columns);
-        $static->setUp();
-
-        return $static;
+        return value($this->columns);
     }
 
-    protected function setUp(): void
+    public function getSubform()
     {
-        $this->columnSpan('full');
+        return parent::getSubform()->columns($this->columns);
+    }
+
+    public static function make($schema = [])
+    {
+        return (new static())->schema($schema);
     }
 }

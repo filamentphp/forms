@@ -2,137 +2,61 @@
 
 namespace Filament\Forms\Components;
 
-use Illuminate\Contracts\Support\Arrayable;
-
 class MultiSelect extends Field
 {
+    use Concerns\CanBeAutofocused;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms::components.multi-select';
+    protected $emptyOptionsMessage = 'forms::fields.multiSelect.emptyOptionsMessage';
 
-    protected $getOptionLabelsUsing = null;
-
-    protected $getSearchResultsUsing = null;
-
-    protected $noOptionsMessage = null;
-
-    protected $noSearchResultsMessage = null;
+    protected $noSearchResultsMessage = 'forms::fields.multiSelect.noSearchResultsMessage';
 
     protected $options = [];
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        parent::setUp();
+        $this->placeholder('forms::fields.multiSelect.placeholder');
+    }
 
-        $this->getOptionLabelsUsing(function (MultiSelect $component, array $values): array {
-            $options = $component->getOptions();
-
-            return collect($values)
-                ->mapWithKeys(fn ($value) => [$value => $options[$value] ?? $value])
-                ->toArray();
+    public function emptyOptionsMessage($message)
+    {
+        $this->configure(function () use ($message) {
+            $this->emptyOptionsMessage = $message;
         });
 
-        $this->noOptionsMessage(__('forms::components.multiSelect.noOptionsMessage'));
-
-        $this->noSearchResultsMessage(__('forms::components.multiSelect.noSearchResultsMessage'));
-
-        $this->placeholder(__('forms::components.multiSelect.placeholder'));
+        return $this;
     }
 
-    public function getOptionLabelsUsing(callable $callback): static
+    public function getEmptyOptionsMessage()
     {
-        $this->getOptionLabelsUsing = $callback;
+        return $this->emptyOptionsMessage;
+    }
+
+    public function getNoSearchResultsMessage()
+    {
+        return $this->noSearchResultsMessage;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function noSearchResultsMessage($message)
+    {
+        $this->configure(function () use ($message) {
+            $this->noSearchResultsMessage = $message;
+        });
 
         return $this;
     }
 
-    public function getSearchResultsUsing(callable $callback): static
+    public function options($options)
     {
-        $this->getSearchResultsUsing = $callback;
+        $this->configure(function () use ($options) {
+            $this->options = $options;
+        });
 
         return $this;
-    }
-
-    public function noOptionsMessage(string | callable $message): static
-    {
-        $this->noOptionsMessage = $message;
-
-        return $this;
-    }
-
-    public function noSearchResultsMessage(string | callable $message): static
-    {
-        $this->noSearchResultsMessage = $message;
-
-        return $this;
-    }
-
-    public function options(array | callable $options): static
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
-    public function getNoOptionsMessage(): string
-    {
-        return $this->evaluate($this->noOptionsMessage);
-    }
-
-    public function getNoSearchResultsMessage(): string
-    {
-        return $this->evaluate($this->noSearchResultsMessage);
-    }
-
-    public function getOptionLabels(): array
-    {
-        $labels = $this->evaluate($this->getOptionLabelsUsing, [
-            'values' => $this->getState(),
-        ]);
-
-        if ($labels instanceof Arrayable) {
-            $labels = $labels->toArray();
-        }
-
-        return $labels;
-    }
-
-    public function getOptions(): array
-    {
-        $options = $this->evaluate($this->options);
-
-        if ($options instanceof Arrayable) {
-            $options = $options->toArray();
-        }
-
-        return $options;
-    }
-
-    public function getSearchResults(string $query): array
-    {
-        if (! $this->getSearchResultsUsing) {
-            return [];
-        }
-
-        $results = $this->evaluate($this->getSearchResultsUsing, [
-            'query' => $query,
-        ]);
-
-        if ($results instanceof Arrayable) {
-            $results = $results->toArray();
-        }
-
-        return $results;
-    }
-
-    public function getState(): array
-    {
-        $state = parent::getState();
-
-        if (! is_array($state)) {
-            return [];
-        }
-
-        return $state;
     }
 }

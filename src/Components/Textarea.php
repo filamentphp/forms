@@ -5,36 +5,41 @@ namespace Filament\Forms\Components;
 class Textarea extends Field
 {
     use Concerns\CanBeAutocompleted;
+    use Concerns\CanBeAutofocused;
+    use Concerns\CanBeCompared;
+    use Concerns\CanBeUnique;
     use Concerns\CanBeLengthConstrained;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'forms::components.textarea';
+    protected $cols;
 
-    protected $cols = null;
+    protected $rows;
 
-    protected $rows = null;
-
-    public function cols(int | callable $cols): static
+    public function cols($cols)
     {
-        $this->cols = $cols;
+        $this->configure(function () use ($cols) {
+            $this->cols = $cols;
+        });
 
         return $this;
     }
 
-    public function rows(int | callable $rows): static
+    public function getCols()
     {
-        $this->rows = $rows;
+        return $this->cols;
+    }
+
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
+    public function rows($rows)
+    {
+        $this->configure(function () use ($rows) {
+            $this->rows = $rows;
+        });
 
         return $this;
-    }
-
-    public function getCols(): ?int
-    {
-        return $this->evaluate($this->cols);
-    }
-
-    public function getRows(): ?int
-    {
-        return $this->evaluate($this->rows);
     }
 }
