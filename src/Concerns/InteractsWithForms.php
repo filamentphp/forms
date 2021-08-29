@@ -114,21 +114,18 @@ trait InteractsWithForms
         try {
             return parent::validate($rules, $messages, $attributes);
         } catch (ValidationException $exception) {
-            $invalidComponentStatePaths = array_keys($exception->validator->failed());
+            $this->focusConcealedComponents(array_keys($exception->validator->failed()));
 
-            $componentToFocus = null;
+            throw $exception;
+        }
+    }
 
-            foreach ($this->getCachedForms() as $form) {
-                if ($componentToFocus = $form->getInvalidComponentToFocus($invalidComponentStatePaths)) {
-                    break;
-                }
-            }
-
-            if ($concealingComponent = $componentToFocus?->getConcealingComponent()) {
-                $this->dispatchBrowserEvent('expand-concealing-component', [
-                    'id' => $concealingComponent->getId(),
-                ]);
-            }
+    public function validateOnly($field, $rules = null, $messages = [], $attributes = [])
+    {
+        try {
+            return parent::validateOnly($field, $rules, $messages, $attributes);
+        } catch (ValidationException $exception) {
+            $this->focusConcealedComponents(array_keys($exception->validator->failed()));
 
             throw $exception;
         }
@@ -146,6 +143,23 @@ trait InteractsWithForms
     protected function cacheForms(): array
     {
         return $this->cachedForms = $this->getForms();
+    }
+
+    protected function focusConcealedComponents(array $statePaths): void
+    {
+        $componentToFocus = null;
+
+        foreach ($this->getCachedForms() as $form) {
+            if ($componentToFocus = $form->getInvalidComponentToFocus($statePaths)) {
+                break;
+            }
+        }
+
+        if ($concealingComponent = $componentToFocus?->getConcealingComponent()) {
+            $this->dispatchBrowserEvent('expand-concealing-component', [
+                'id' => $concealingComponent->getId(),
+            ]);
+        }
     }
 
     protected function getCachedForm($name): ?ComponentContainer
@@ -172,6 +186,28 @@ trait InteractsWithForms
         return [
             'form' => $this->makeForm()->schema($this->getFormSchema()),
         ];
+    }
+
+    protected function getRules(): array
+    {
+        $rules = [];
+
+        foreach ($this->getCachedForms() as $form) {
+            $rules = array_merge($rules, $form->getValidationRules());
+        }
+
+        return $rules;
+    }
+
+    protected function getValidationAttributes(): array
+    {
+        $attributes = [];
+
+        foreach ($this->getCachedForms() as $form) {
+            $attributes = array_merge($attributes, $form->getValidationAttributes());
+        }
+
+        return $attributes;
     }
 
     protected function makeForm(): ComponentContainer
