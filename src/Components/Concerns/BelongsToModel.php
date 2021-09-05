@@ -8,7 +8,7 @@ trait BelongsToModel
 {
     protected $model = null;
 
-    public function model(Model | string | callable $model): static
+    public function model(Model | string | callable | null $model = null): static
     {
         $this->model = $model;
 
@@ -26,5 +26,20 @@ trait BelongsToModel
         }
 
         return $this->getContainer()->getModel();
+    }
+
+    public function getModelClass(): string | null
+    {
+        $model = $this->getModel();
+
+        if (! $model) {
+            return null;
+        }
+
+        if (is_string($model)) {
+            return $model;
+        }
+
+        return $model::class;
     }
 }

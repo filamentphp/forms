@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
 
@@ -13,27 +14,13 @@ trait CanBeValidated
 
     protected $validationAttribute = null;
 
-    public function addValidationRule(string | object | callable $rule, bool | callable $condition = true): static
+    public function exists(string | callable | null $table = null, string | callable | null $column = null): static
     {
-        $this->addValidationRules([[$rule, $condition]]);
+        $this->rule(function () use ($column, $table) {
+            $table = $this->evaluate($table) ?? $this->getModelClass();
+            $column = $this->evaluate($column) ?? $this->getName();
 
-        return $this;
-    }
-
-    public function addValidationRules(array $rules): static
-    {
-        $this->rules = array_merge($this->rules, $rules);
-
-        return $this;
-    }
-
-    public function exists(string | callable $table, string | callable | null $columnName = null): static
-    {
-        $this->addValidationRule(function () use ($columnName, $table) {
-            $table = $this->evaluate($table);
-            $columnName = $this->evaluate($columnName) ?? $this->getName();
-
-            return Rule::exists($table, $columnName);
+            return Rule::exists($table, $column);
         }, fn (): bool => (bool) $this->evaluate($table));
 
         return $this;
@@ -55,13 +42,37 @@ trait CanBeValidated
         return $this;
     }
 
-    public function same(string | callable $statePath): static
+    public function rule(string | object | callable $rule, bool | callable $condition = true): static
     {
-        $this->addValidationRule(function () use ($statePath): string {
+        $this->rules = array_merge(
+            $this->rules,
+            [[$rule, $condition]],
+        );
+
+        return $this;
+    }
+
+    public function rules(array $rules, bool | callable $condition = true): static
+    {
+        $this->rules = array_merge(
+            $this->rules,
+            array_map(fn (string | object | callable $rule) => [$rule, $condition], $rules),
+        );
+
+        return $this;
+    }
+
+    public function same(string | callable $statePath, bool $isStatePathAbsolute = false): static
+    {
+        $this->rule(function () use ($isStatePathAbsolute, $statePath): string {
             $statePath = $this->evaluate($statePath);
 
-            if ($containerStatePath = $this->getContainer()->getStatePath()) {
-                $statePath = "{$containerStatePath}.{$statePath}";
+            if (! $isStatePathAbsolute) {
+                $containerStatePath = $this->getContainer()->getStatePath();
+
+                if ($containerStatePath) {
+                    $statePath = "{$containerStatePath}.{$statePath}";
+                }
             }
 
             return "same:{$statePath}";
@@ -70,14 +81,14 @@ trait CanBeValidated
         return $this;
     }
 
-    public function unique(string | callable $table, string | callable | null $columnName = null, $ignorable = null): static
+    public function unique(string | callable | null $table = null, string | callable | null $column = null, Model | callable $ignorable = null): static
     {
-        $this->addValidationRule(function () use ($columnName, $ignorable, $table) {
-            $table = $this->evaluate($table);
-            $columnName = $this->evaluate($columnName) ?? $this->getName();
+        $this->rule(function () use ($column, $ignorable, $table) {
+            $table = $this->evaluate($table) ?? $this->getModelClass();
+            $column = $this->evaluate($column) ?? $this->getName();
             $ignorable = $this->evaluate($ignorable);
 
-            return Rule::unique($table, $columnName)
+            return Rule::unique($table, $column)
                 ->when(
                     $ignorable,
                     fn (Unique $rule) => $rule->ignore(
