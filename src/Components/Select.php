@@ -41,6 +41,16 @@ class Select extends Field
         $this->placeholder(__('forms::components.select.placeholder'));
     }
 
+    public function boolean(string $trueLabel = 'Yes', string $falseLabel = 'No'): static
+    {
+        $this->options([
+            1 => $trueLabel,
+            0 => $falseLabel,
+        ]);
+
+        return $this;
+    }
+
     public function getOptionLabelUsing(callable $callback): static
     {
         $this->getOptionLabelUsing = $callback;
