@@ -7,7 +7,7 @@
     :state-path="$getStatePath()"
 >
     <div
-        x-data="markdownEditorFormComponent({
+        x-data="MarkdownEditorFormComponent({
             state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
             tab: '{{ $isDisabled() ? 'preview' : 'edit' }}',
         })"
@@ -32,7 +32,7 @@
                             <div class="flex items-stretch space-x-1 rtl:space-x-reverse">
                                 @if ($hasToolbarButton('bold'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.bold') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.bold') }}"
                                         class="text-base"
                                     >
                                         <md-bold>
@@ -43,7 +43,7 @@
 
                                 @if ($hasToolbarButton('italic'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.italic') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.italic') }}"
                                         class="text-base"
                                     >
                                         <md-italic>
@@ -54,7 +54,7 @@
 
                                 @if ($hasToolbarButton('strike'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.strike') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.strike') }}"
                                         class="text-base"
                                     >
                                         <md-strikethrough>
@@ -69,7 +69,7 @@
                             <div class="flex items-stretch space-x-1 rtl:space-x-reverse">
                                 @if ($hasToolbarButton('link'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.link') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.link') }}"
                                         class="text-base"
                                     >
                                         <md-link class="w-full h-full">
@@ -80,7 +80,7 @@
 
                                 @if ($hasToolbarButton('attachFiles'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.attachFiles') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.attach_files') }}"
                                         class="text-base"
                                     >
                                         <md-image class="w-full h-full" x-ref="imageTrigger">
@@ -91,7 +91,7 @@
 
                                 @if ($hasToolbarButton('codeBlock'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.codeBlock') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.code_block') }}"
                                         class="text-base"
                                     >
                                         <md-code class="w-full h-full">
@@ -106,7 +106,7 @@
                             <div class="flex items-stretch space-x-1 rtl:space-x-reverse">
                                 @if ($hasToolbarButton('bulletList'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.bulletList') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.bullet_list') }}"
                                         class="text-base"
                                     >
                                         <md-unordered-list class="w-full h-full">
@@ -117,7 +117,7 @@
 
                                 @if ($hasToolbarButton('orderedList'))
                                     <x-forms::markdown-editor.toolbar-button
-                                        title="{{ __('forms::components.markdownEditor.toolbarButtons.orderedList') }}"
+                                        title="{{ __('forms::components.markdown_editor.toolbar_buttons.ordered_list') }}"
                                         class="text-base"
                                     >
                                         <md-ordered-list class="w-full h-full">
@@ -135,9 +135,9 @@
                                 <button
                                     x-on:click.prevent="tab = 'edit'"
                                     x-bind:class="{ 'text-gray-400': tab !== 'edit' }"
-                                    class="font-mono text-sm hover:underline"
+                                    class="text-sm hover:underline"
                                 >
-                                    {{ __('forms::components.markdownEditor.toolbarButtons.edit') }}
+                                    {{ __('forms::components.markdown_editor.toolbar_buttons.edit') }}
                                 </button>
                             @endif
 
@@ -145,9 +145,9 @@
                                 <button
                                     x-on:click.prevent="tab = 'preview'"
                                     x-bind:class="{ 'text-gray-400': tab !== 'preview' }"
-                                    class="font-mono text-sm hover:underline"
+                                    class="text-sm hover:underline"
                                 >
-                                    {{ __('forms::components.markdownEditor.toolbarButtons.preview') }}
+                                    {{ __('forms::components.markdown_editor.toolbar_buttons.preview') }}
                                 </button>
                             @endif
                         </div>
@@ -210,7 +210,7 @@
                 ></div>
             </div>
 
-            <div class="block w-full h-full min-h-full px-6 py-4 border border-gray-300 rounded shadow-sm focus:border-blue-300" x-show="tab === 'preview'" style="min-height: 150px;">
+            <div class="block w-full h-full min-h-full px-6 py-4 border border-gray-300 rounded shadow-sm focus:border-primary-300" x-show="tab === 'preview'" style="min-height: 150px;">
                 <div class="prose" x-html="preview"></div>
             </div>
         </div>

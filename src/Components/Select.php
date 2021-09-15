@@ -16,11 +16,11 @@ class Select extends Field
 
     protected $isSearchable = false;
 
-    protected $noOptionsMessage = null;
-
-    protected $noSearchResultsMessage = null;
+    protected $searchPrompt = null;
 
     protected $options = [];
+
+    protected $noSearchResultsMessage = null;
 
     protected function setUp(): void
     {
@@ -34,11 +34,11 @@ class Select extends Field
             return $value;
         });
 
-        $this->noOptionsMessage(__('forms::components.select.noOptionsMessage'));
-
-        $this->noSearchResultsMessage(__('forms::components.select.noSearchResultsMessage'));
+        $this->noSearchResultsMessage(__('forms::components.select.no_search_results_message'));
 
         $this->placeholder(__('forms::components.select.placeholder'));
+
+        $this->searchPrompt(__('forms::components.select.search_prompt'));
     }
 
     public function boolean(string $trueLabel = 'Yes', string $falseLabel = 'No'): static
@@ -65,16 +65,9 @@ class Select extends Field
         return $this;
     }
 
-    public function noOptionsMessage(string | callable $message): static
+    public function searchPrompt(string | callable $message): static
     {
-        $this->noOptionsMessage = $message;
-
-        return $this;
-    }
-
-    public function noSearchResultsMessage(string | callable $message): static
-    {
-        $this->noSearchResultsMessage = $message;
+        $this->searchPrompt = $message;
 
         return $this;
     }
@@ -93,17 +86,19 @@ class Select extends Field
         return $this;
     }
 
-    public function getNoOptionsMessage(): string
+    public function noSearchResultsMessage(string | callable $message): static
     {
-        return $this->evaluate($this->noOptionsMessage);
+        $this->noSearchResultsMessage = $message;
+
+        return $this;
     }
 
-    public function getNoSearchResultsMessage(): string
+    public function getSearchPrompt(): string
     {
-        return $this->evaluate($this->noSearchResultsMessage);
+        return $this->evaluate($this->searchPrompt);
     }
 
-    public function getOptionLabel()
+    public function getOptionLabel(): ?string
     {
         return $this->evaluate($this->getOptionLabelUsing, [
             'value' => $this->getState(),
@@ -119,6 +114,11 @@ class Select extends Field
         }
 
         return $options;
+    }
+
+    public function getNoSearchResultsMessage(): string
+    {
+        return $this->evaluate($this->noSearchResultsMessage);
     }
 
     public function getSearchResults(string $query): array
