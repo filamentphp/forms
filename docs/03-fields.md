@@ -540,7 +540,7 @@ When the toggle is stacked, its label is above it:
 ```php
 use Filament\Forms\Components\Toggle;
 
-Toggle::make('is_admin')->stacked()
+Toggle::make('is_admin')->inline(false)
 ```
 
 Toggles may also use an "on icon" and an "off icon". These are displayed on its handle and could provide a greater indication to what your field represents. The parameter to each method must contain the name of a Blade icon component:
@@ -769,6 +769,16 @@ MultipleFileUpload::make('attachments')
     )
 ```
 
+You may customise the number of files that may be uploaded, using the `minFiles()` and `maxFiles()` methods:
+
+```php
+use Filament\Forms\Components\MultipleFileUpload;
+
+MultipleFileUpload::make('attachments')
+    ->minFiles(2)
+    ->maxFiles(5)
+```
+
 > Filament also supports [`spatie/laravel-medialibrary`](https://github.com/spatie/laravel-medialibrary). See our [plugin documentation](/docs/spatie-laravel-media-library-plugin) for more information.
 
 ## Rich editor
@@ -945,8 +955,7 @@ Repeater::make('members')
     ->defaultItems(1)
 ```
 
-You may set a label to customize the text that should be displayed in the button for adding a repeater row:
-
+You may set a label to customize the text that should be displayed in the button for adding a repeater item:
 
 ```php
 use Filament\Forms\Components\Repeater;
@@ -955,7 +964,20 @@ Repeater::make('members')
     ->schema([
         // ...
     ])
-    ->createItemButtonLabel('Add new row')
+    ->createItemButtonLabel('Add member')
+```
+
+You may customise the number of items that may be created, using the `minItems()` and `maxItems()` methods:
+
+```php
+use Filament\Forms\Components\Repeater;
+
+Repeater::make('members')
+    ->schema([
+        // ...
+    ])
+    ->minItems(1)
+    ->maxItems(10)
 ```
 
 ### Populating automatically from a `hasMany` relationship
@@ -1053,6 +1075,20 @@ Blocks may also have an icon, which is displayed next to the label. The `icon()`
 use Filament\Forms\Components\Builder;
 
 Builder\Block::make('heading')->icon('heroicon-o-archive')
+```
+
+You may customise the number of items that may be created, using the `minItems()` and `maxItems()` methods:
+
+```php
+use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\TextInput;
+
+Builder::make('content')
+    ->blocks([
+        // ...
+    ])
+    ->minItems(1)
+    ->maxItems(10)
 ```
 
 ## Tags input

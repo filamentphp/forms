@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class Repeater extends Field
 {
+    use Concerns\CanLimitItemsLength;
+
     protected string $view = 'forms::components.repeater';
 
     protected $createItemButtonLabel = null;

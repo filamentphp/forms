@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 
 class Builder extends Field
 {
+    use Concerns\CanLimitItemsLength;
+
     protected string $view = 'forms::components.builder';
 
     protected $createItemBetweenButtonLabel = null;
