@@ -17,6 +17,8 @@ trait HasState
 
     protected ?Closure $dehydrateStateUsing = null;
 
+    protected ?Closure $mutateDehydratedStateUsing = null;
+
     protected bool $hasDefaultState = false;
 
     protected bool | Closure $isDehydrated = true;
@@ -120,6 +122,26 @@ trait HasState
         return $this;
     }
 
+    public function mutateDehydratedState($state)
+    {
+        return $this->evaluate(
+            $this->mutateDehydratedStateUsing,
+            ['state' => $state],
+        );
+    }
+
+    public function mutatesDehydratedState(): bool
+    {
+        return $this->mutateDehydratedStateUsing instanceof Closure;
+    }
+
+    public function mutateDehydratedStateUsing(?Closure $callback): static
+    {
+        $this->mutateDehydratedStateUsing = $callback;
+
+        return $this;
+    }
+
     public function state($state): static
     {
         $livewire = $this->getLivewire();
@@ -129,7 +151,7 @@ trait HasState
         return $this;
     }
 
-    public function statePath(string $path): static
+    public function statePath(?string $path): static
     {
         $this->statePath = $path;
 
@@ -154,7 +176,7 @@ trait HasState
             $pathComponents[] = $containerStatePath;
         }
 
-        if (($statePath = $this->statePath) !== null) {
+        if (filled($statePath = $this->statePath)) {
             $pathComponents[] = $statePath;
         }
 
