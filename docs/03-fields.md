@@ -395,6 +395,21 @@ Select::make('authorId')
     ->getOptionLabelUsing(fn ($value): ?string => User::find($value)?->name),
 ```
 
+You can prevent the placeholder from being selected using the `disablePlaceholderSelection()` method:
+
+```php
+use Filament\Forms\Components\Select;
+
+Select::make('status')
+    ->options([
+        'draft' => 'Draft',
+        'review' => 'In review',
+        'published' => 'Published',
+    ])
+    ->default('draft')
+    ->disablePlaceholderSelection()
+```
+
 ### Dependant selects
 
 Commonly, you may desire "dependant" select inputs, which populate their options based on the state of another.
@@ -643,6 +658,17 @@ Radio::make('feedback')
 ```
 
 <img src="https://user-images.githubusercontent.com/41773797/147613274-04745624-3ddd-46bb-b25c-1e756d6f4958.png">
+
+You may wish to display the options `inline()` with the label:
+
+```php
+Radio::make('feedback')
+    ->label('Do you like this post?')
+    ->boolean()
+    ->inline()
+```
+
+<img src="https://user-images.githubusercontent.com/41773797/147709853-198d54fb-1bb1-4e82-87d0-3034b9152f0e.png">
 
 ## Date-time picker
 
