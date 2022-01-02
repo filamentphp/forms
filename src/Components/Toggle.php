@@ -22,6 +22,10 @@ class Toggle extends Field
 
         $this->default(false);
 
+        $this->afterStateHydrated(function (Toggle $component, $state): void {
+            $component->state((bool) $state);
+        });
+
         $this->rule('boolean');
     }
 

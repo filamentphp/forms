@@ -31,17 +31,24 @@ class HasManyRepeater extends Repeater
 
             $relationship = $component->getRelationship();
 
-            foreach ($relationship->pluck($relationship->getLocalKeyName()) as $keyToCheckForDeletion) {
+            $recordsToDelete = [];
+            $localKeyName = $relationship->getLocalKeyName();
+
+            foreach ($relationship->pluck($localKeyName) as $keyToCheckForDeletion) {
                 if (array_key_exists($keyToCheckForDeletion, $state)) {
                     continue;
                 }
 
-                $relationship->find($keyToCheckForDeletion)?->delete();
+                $recordsToDelete[] = $keyToCheckForDeletion;
             }
+
+            $relationship->whereIn($localKeyName, $recordsToDelete)->delete();
 
             $childComponentContainers = $component->getChildComponentContainers();
 
-            foreach ($state as $itemKey => $itemData) {
+            foreach ($childComponentContainers as $itemKey => $item) {
+                $itemData = $item->getState();
+
                 if ($record = $component->getRecordForItemKey($itemKey)) {
                     $record->update($itemData);
 
@@ -49,7 +56,7 @@ class HasManyRepeater extends Repeater
                 }
 
                 $record = $relationship->create($itemData);
-                $childComponentContainers[$itemKey]->model($record)->saveRelationships();
+                $item->model($record)->saveRelationships();
             }
 
             $component->fillFromRelationship();
@@ -110,13 +117,7 @@ class HasManyRepeater extends Repeater
 
     public function getRelationship(): HasMany
     {
-        $model = $this->getModel();
-
-        if (is_string($model)) {
-            $model = new $model();
-        }
-
-        return $model->{$this->getRelationshipName()}();
+        return $this->getModelInstance()->{$this->getRelationshipName()}();
     }
 
     public function getRelationshipName(): string

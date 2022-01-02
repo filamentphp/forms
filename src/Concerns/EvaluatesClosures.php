@@ -3,7 +3,6 @@
 namespace Filament\Forms\Concerns;
 
 use Closure;
-use Illuminate\Database\Eloquent\Model;
 
 trait EvaluatesClosures
 {
@@ -21,13 +20,11 @@ trait EvaluatesClosures
 
     protected function getDefaultEvaluationParameters(): array
     {
-        $model = $this->getModel();
-
         return [
             'container' => $this,
             'livewire' => $this->getLivewire(),
-            'model' => $model,
-            'record' => $model instanceof Model ? $model : null,
+            'model' => $this->getModel(),
+            'record' => $this->getRecord(),
         ];
     }
 }

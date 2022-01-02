@@ -2,7 +2,6 @@
 
 namespace Filament\Forms\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 trait HasState
@@ -48,9 +47,7 @@ trait HasState
 
             $component->callBeforeStateDehydrated();
 
-            $componentModel = $component->getModel();
-
-            if ($componentModel instanceof Model && $componentModel->exists) {
+            if ($component->getRecord()?->exists) {
                 $component->saveRelationships();
             }
 

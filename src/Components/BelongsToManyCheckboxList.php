@@ -31,9 +31,14 @@ class BelongsToManyCheckboxList extends CheckboxList
             }
 
             $component->state(
-                $relatedModels->pluck(
-                    $relationship->getRelatedKeyName(),
-                )->toArray(),
+                // Cast the related keys to a string, otherwise Livewire does not
+                // know how to handle deselection.
+                //
+                // https://github.com/laravel-filament/filament/issues/1111
+                $relatedModels
+                    ->pluck($relationship->getRelatedKeyName())
+                    ->map(fn ($key): string => strval($key))
+                    ->toArray(),
             );
         });
 
@@ -88,13 +93,7 @@ class BelongsToManyCheckboxList extends CheckboxList
 
     public function getRelationship(): BelongsToMany
     {
-        $model = $this->getModel();
-
-        if (is_string($model)) {
-            $model = new $model();
-        }
-
-        return $model->{$this->getRelationshipName()}();
+        return $this->getModelInstance()->{$this->getRelationshipName()}();
     }
 
     public function getRelationshipName(): string
