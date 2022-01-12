@@ -65,11 +65,7 @@ trait HasState
     {
         $this->callBeforeStateDehydrated();
 
-        foreach ($this->getComponents() as $component) {
-            if ($component->isHidden()) {
-                continue;
-            }
-
+        foreach ($this->getComponents(withHidden: true) as $component) {
             $componentStatePath = $component->getStatePath();
 
             if ($component->isDehydrated()) {
@@ -78,10 +74,6 @@ trait HasState
                 }
 
                 foreach ($component->getChildComponentContainers() as $container) {
-                    if ($container->isHidden()) {
-                        continue;
-                    }
-
                     $container->dehydrateState($state);
                 }
             } else {
