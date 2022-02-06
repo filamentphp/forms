@@ -11,6 +11,7 @@
     <div
         x-data="fileUploadFormComponent({
             acceptedFileTypes: {{ json_encode($getAcceptedFileTypes()) }},
+            canReorder: {{ $canReorder() ? 'true' : 'false' }},
             deleteUploadedFileUsing: async (fileKey) => {
                 return await $wire.deleteUploadedFile('{{ $getStatePath() }}', fileKey)
             },
@@ -31,6 +32,10 @@
                 return await $wire.removeUploadedFile('{{ $getStatePath() }}', fileKey)
             },
             removeUploadedFileButtonPosition: '{{ $getRemoveUploadedFileButtonPosition() }}',
+            reorderUploadedFilesUsing: async (files) => {
+                return await $wire.reorderUploadedFiles('{{ $getStatePath() }}', files)
+            },
+            shouldAppendFiles: {{ $shouldAppendFiles() ? 'true' : 'false' }},
             state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
             uploadButtonPosition: '{{ $getUploadButtonPosition() }}',
             uploadProgressIndicatorPosition: '{{ $getUploadProgressIndicatorPosition() }}',
@@ -42,8 +47,8 @@
         })"
         wire:ignore
         {{ $attributes->merge($getExtraAttributes())->class([
+            'filament-forms-file-upload-component',
             'w-32 mx-auto' => $isAvatar(),
-            'filament-forms-file-upload-component'
         ]) }}
         {{ $getExtraAlpineAttributeBag() }}
     >

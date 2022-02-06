@@ -22,7 +22,7 @@ FilePond.registerPlugin(FilePondPluginImageTransform)
 export default (Alpine) => {
     Alpine.data('fileUploadFormComponent', ({
         acceptedFileTypes,
-        acceptedFileExtensions,
+        canReorder,
         deleteUploadedFileUsing,
         getUploadedFileUrlUsing,
         imageCropAspectRatio,
@@ -37,6 +37,8 @@ export default (Alpine) => {
         minSize,
         removeUploadedFileButtonPosition,
         removeUploadedFileUsing,
+        reorderUploadedFilesUsing,
+        shouldAppendFiles,
         state,
         uploadButtonPosition,
         uploadProgressIndicatorPosition,
@@ -77,12 +79,14 @@ export default (Alpine) => {
 
                 this.pond = FilePond.create(this.$refs.input, {
                     acceptedFileTypes,
+                    allowReorder: canReorder,
                     credits: false,
-                    files: this.files,
+                    files: shouldAppendFiles ? this.files : this.files.reverse(),
                     imageCropAspectRatio,
                     imagePreviewHeight,
                     imageResizeTargetHeight,
                     imageResizeTargetWidth,
+                    itemInsertLocation: shouldAppendFiles ? 'after' : 'before',
                     ...(placeholder && {labelIdle: placeholder}),
                     maxFileSize: maxSize,
                     minFileSize: minSize,
@@ -129,17 +133,6 @@ export default (Alpine) => {
                             load()
                         },
                     },
-                    fileValidateTypeDetectType: (source, type) => {
-                        return new Promise((resolve, reject) => {
-                            // Detect valid file extensions and return an accepted type if matching
-                            let fileName = source.name
-                            let acceptedExtensions = acceptedFileTypes.filter((type) => type.startsWith('.'))
-                            let extension = fileName.substr(fileName.lastIndexOf('.'))
-
-                            let isValid = acceptedExtensions.indexOf(extension) >= 0
-                            resolve(isValid ? acceptedFileTypes[0] : '')
-                        })
-                    },
                 })
 
                 this.$watch('state', async () => {
@@ -169,7 +162,15 @@ export default (Alpine) => {
                         })
                     }
 
-                    this.pond.files = files
+                    this.pond.files = shouldAppendFiles ? files : files.reverse()
+                })
+                
+                this.pond.on('reorderfiles', async (files) => {
+                    const orderedFileKeys = files
+                        .map(file => file.source instanceof File ? file.serverId : this.uploadedFileUrlIndex[file.source] ?? null) // file.serverId is null for a file that is not yet uploaded
+                        .filter(fileKey => fileKey)
+
+                    await reorderUploadedFilesUsing(shouldAppendFiles ? orderedFileKeys : orderedFileKeys.reverse())
                 })
             },
 

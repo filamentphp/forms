@@ -17,6 +17,8 @@ class BaseFileUpload extends Field
 {
     protected array | Arrayable | Closure | null $acceptedFileTypes = null;
 
+    protected bool | Closure $canReorder = false;
+
     protected string | Closure | null $directory = null;
 
     protected string | Closure | null $diskName = null;
@@ -38,6 +40,8 @@ class BaseFileUpload extends Field
     protected ?Closure $deleteUploadedFileUsing = null;
 
     protected ?Closure $getUploadedFileUrlUsing = null;
+
+    protected ?Closure $reorderUploadedFilesUsing = null;
 
     protected ?Closure $saveUploadedFileUsing = null;
 
@@ -141,6 +145,13 @@ class BaseFileUpload extends Field
         return $this;
     }
 
+    public function enableReordering(bool | Closure $condition = true): static
+    {
+        $this->canReorder = $condition;
+
+        return $this;
+    }
+
     public function preserveFilenames(bool | Closure $condition = true): static
     {
         $this->shouldPreserveFilenames = $condition;
@@ -216,11 +227,23 @@ class BaseFileUpload extends Field
         return $this;
     }
 
+    public function reorderUploadedFilesUsing(?Closure $callback): static
+    {
+        $this->reorderUploadedFilesUsing = $callback;
+
+        return $this;
+    }
+
     public function saveUploadedFileUsing(?Closure $callback): static
     {
         $this->saveUploadedFileUsing = $callback;
 
         return $this;
+    }
+
+    public function canReorder(): bool
+    {
+        return $this->evaluate($this->canReorder);
     }
 
     public function getAcceptedFileTypes(): ?array
@@ -346,6 +369,21 @@ class BaseFileUpload extends Field
         return $file;
     }
 
+    public function reorderUploadedFiles(array $fileKeys): void
+    {
+        if (! $this->canReorder) {
+            return;
+        }
+
+        $fileKeys = array_flip($fileKeys);
+
+        $state = collect($this->getState())
+            ->sortBy(fn ($file, $fileKey) => $fileKeys[$fileKey] ?? null) // $fileKey may not be present in $fileKeys if it was added to the state during the reorder call
+            ->toArray();
+
+        $this->state($state);
+    }
+
     public function getUploadedFileUrl(string $fileKey): ?string
     {
         $files = $this->getState();
@@ -396,6 +434,12 @@ class BaseFileUpload extends Field
 
             return $storedFile;
         }, $this->getState());
+
+        if ($this->canReorder && ($callback = $this->reorderUploadedFilesUsing)) {
+            $state = $this->evaluate($callback, [
+                'state' => $state,
+            ]);
+        }
 
         $this->state($state);
     }

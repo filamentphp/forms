@@ -30,9 +30,18 @@ class FileUpload extends BaseFileUpload
 
     protected string | Closure $removeUploadedFileButtonPosition = 'left';
 
+    protected bool | Closure $shouldAppendFiles = false;
+
     protected string | Closure $uploadButtonPosition = 'right';
 
     protected string | Closure $uploadProgressIndicatorPosition = 'right';
+
+    public function appendFiles(bool | Closure $condition = true): static
+    {
+        $this->shouldAppendFiles = $condition;
+
+        return $this;
+    }
 
     public function avatar(): static
     {
@@ -190,5 +199,10 @@ class FileUpload extends BaseFileUpload
     public function isAvatar(): bool
     {
         return (bool) $this->evaluate($this->isAvatar);
+    }
+
+    public function shouldAppendFiles(): bool
+    {
+        return $this->evaluate($this->shouldAppendFiles);
     }
 }
