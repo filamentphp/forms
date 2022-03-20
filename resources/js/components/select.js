@@ -1,13 +1,17 @@
 export default (Alpine) => {
     Alpine.data('selectFormComponent', ({
         getOptionLabelUsing,
+        getOptionsUsing,
         getSearchResultsUsing,
         isAutofocused,
+        hasDynamicOptions,
         options,
         state,
     }) => {
         return {
             focusedOptionIndex: null,
+
+            hasNoSearchResults: false,
 
             index: {},
 
@@ -25,14 +29,16 @@ export default (Alpine) => {
 
             init: async function () {
                 if (isAutofocused) {
-                    this.openListbox()
+                    this.openListbox(false)
                 }
 
                 this.addOptionsToIndex(this.options)
 
                 this.label = await this.getOptionLabel()
 
-                this.$watch('search', async () => {
+                this.$watch('search', Alpine.debounce(async () => {
+                    this.hasNoSearchResults = false
+
                     if (! this.isOpen || this.search === '' || this.search === null) {
                         this.options = options
                         this.focusedOptionIndex = 0
@@ -59,7 +65,11 @@ export default (Alpine) => {
                         this.focusedOptionIndex = 0
                         this.isLoading = false
                     }
-                })
+
+                    if (! Object.keys(this.options).length) {
+                        this.hasNoSearchResults = true
+                    }
+                }, 500))
 
                 this.$watch('state', async () => {
                     this.label = await this.getOptionLabel()
@@ -148,7 +158,15 @@ export default (Alpine) => {
                 })
             },
 
-            openListbox: function () {
+            openListbox: async function (shouldLoadDynamicOptions = true) {
+                if (hasDynamicOptions && shouldLoadDynamicOptions) {
+                    this.isLoading = true
+
+                    this.options = await getOptionsUsing()
+
+                    this.isLoading = false
+                }
+
                 this.focusedOptionIndex = Object.keys(this.options).indexOf(this.state)
 
                 if (this.focusedOptionIndex < 0) {

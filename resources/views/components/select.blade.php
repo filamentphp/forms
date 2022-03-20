@@ -60,10 +60,14 @@
                         getOptionLabelUsing: async (value) => {
                             return await $wire.getSelectOptionLabel('{{ $getStatePath() }}')
                         },
+                        getOptionsUsing: async (query) => {
+                            return await $wire.getSelectOptions('{{ $getStatePath() }}')
+                        },
                         getSearchResultsUsing: async (query) => {
                             return await $wire.getSelectSearchResults('{{ $getStatePath() }}', query)
                         },
                         isAutofocused: {{ $isAutofocused() ? 'true' : 'false' }},
+                        hasDynamicOptions: {{ $hasDynamicOptions() ? 'true' : 'false' }},
                         options: {{ json_encode($getOptions()) }},
                         state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }},
                     })"
@@ -107,7 +111,7 @@
                         @unless ($isDisabled())
                             <input
                                 x-ref="search"
-                                x-model.debounce.500ms="search"
+                                x-model="search"
                                 x-on:keydown="if (! isOpen) openListbox()"
                                 x-on:keydown.enter.stop.prevent="selectOption()"
                                 x-on:keydown.arrow-up.stop.prevent="focusPreviousOption()"
@@ -199,14 +203,12 @@
                                         'dark:text-gray-300 dark:text-gray-200' => config('forms.dark_mode'),
                                     ])
                                 >
-                                    <span x-show="(! search) || isLoading">
+                                    <span x-show="! hasNoSearchResults">
                                         {{ $getSearchPrompt() }}
                                     </span>
 
-                                    <span x-show="search">
-                                        <span x-show="! isLoading">
-                                            {{ $getNoSearchResultsMessage() }}
-                                        </span>
+                                    <span x-show="hasNoSearchResults">
+                                        {{ $getNoSearchResultsMessage() }}
                                     </span>
                                 </div>
                             </ul>

@@ -1,13 +1,17 @@
 export default (Alpine) => {
     Alpine.data('multiSelectFormComponent', ({
         getOptionLabelsUsing,
+        getOptionsUsing,
         getSearchResultsUsing,
         isAutofocused,
+        hasDynamicOptions,
         options,
         state,
     }) => {
         return {
             focusedOptionIndex: null,
+
+            hasNoSearchResults: false,
 
             index: {},
 
@@ -25,7 +29,7 @@ export default (Alpine) => {
 
             init: async function () {
                 if (isAutofocused) {
-                    this.openListbox()
+                    this.openListbox(false)
                 }
 
                 if (! this.state) {
@@ -36,7 +40,9 @@ export default (Alpine) => {
 
                 this.labels = await this.getOptionLabels()
 
-                this.$watch('search', async () => {
+                this.$watch('search', Alpine.debounce(async () => {
+                    this.hasNoSearchResults = false
+
                     if (! this.isOpen || this.search === '' || this.search === null) {
                         this.options = options
                         this.focusedOptionIndex = 0
@@ -63,7 +69,11 @@ export default (Alpine) => {
                         this.focusedOptionIndex = 0
                         this.isLoading = false
                     }
-                })
+
+                    if (! Object.keys(this.options).length) {
+                        this.hasNoSearchResults = true
+                    }
+                }, 500))
 
                 this.$watch('state', async () => {
                     this.labels = await this.getOptionLabels()
@@ -148,7 +158,15 @@ export default (Alpine) => {
                 })
             },
 
-            openListbox: function () {
+            openListbox: async function (shouldLoadDynamicOptions = true) {
+                if (hasDynamicOptions && shouldLoadDynamicOptions) {
+                    this.isLoading = true
+
+                    this.options = await getOptionsUsing()
+
+                    this.isLoading = false
+                }
+
                 this.focusedOptionIndex = 0
 
                 this.isOpen = true
