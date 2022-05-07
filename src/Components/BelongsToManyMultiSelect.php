@@ -37,29 +37,10 @@ class BelongsToManyMultiSelect extends MultiSelect
                 // https://github.com/laravel-filament/filament/issues/1111
                 $relatedModels
                     ->pluck($relationship->getRelatedKeyName())
-                    ->map(fn ($key): string => strval($key))
+                    ->map(static fn ($key): string => strval($key))
                     ->toArray(),
             );
         });
-
-        $this->saveRelationshipsUsing(static function (BelongsToManyMultiSelect $component, ?array $state) {
-            $component->getRelationship()->sync($state ?? []);
-        });
-
-        $this->dehydrated(false);
-    }
-
-    public function preload(bool | Closure $condition = true): static
-    {
-        $this->isPreloaded = $condition;
-
-        return $this;
-    }
-
-    public function relationship(string | Closure $relationshipName, string | Closure $displayColumnName, ?Closure $callback = null): static
-    {
-        $this->displayColumnName = $displayColumnName;
-        $this->relationship = $relationshipName;
 
         $this->getOptionLabelsUsing(static function (BelongsToManyMultiSelect $component, array $values): array {
             $relationship = $component->getRelationship();
@@ -81,6 +62,25 @@ class BelongsToManyMultiSelect extends MultiSelect
                 ->pluck($component->getDisplayColumnName(), $relatedKeyName)
                 ->toArray();
         });
+
+        $this->saveRelationshipsUsing(static function (BelongsToManyMultiSelect $component, ?array $state) {
+            $component->getRelationship()->sync($state ?? []);
+        });
+
+        $this->dehydrated(false);
+    }
+
+    public function preload(bool | Closure $condition = true): static
+    {
+        $this->isPreloaded = $condition;
+
+        return $this;
+    }
+
+    public function relationship(string | Closure $relationshipName, string | Closure $displayColumnName, ?Closure $callback = null): static
+    {
+        $this->displayColumnName = $displayColumnName;
+        $this->relationship = $relationshipName;
 
         $this->getSearchResultsUsing(static function (BelongsToManyMultiSelect $component, ?string $searchQuery) use ($callback): array {
             $relationship = $component->getRelationship();
@@ -110,7 +110,7 @@ class BelongsToManyMultiSelect extends MultiSelect
             if ($component->hasOptionLabelFromRecordUsingCallback()) {
                 return $relationshipQuery
                     ->get()
-                    ->mapWithKeys(fn (Model $record) => [
+                    ->mapWithKeys(static fn (Model $record) => [
                         $record->{$relationship->getRelatedKeyName()} => $component->getOptionLabelFromRecord($record),
                     ])
                     ->toArray();
@@ -139,7 +139,7 @@ class BelongsToManyMultiSelect extends MultiSelect
             if ($component->hasOptionLabelFromRecordUsingCallback()) {
                 return $relationshipQuery
                     ->get()
-                    ->mapWithKeys(fn (Model $record) => [
+                    ->mapWithKeys(static fn (Model $record) => [
                         $record->{$relationship->getRelatedKeyName()} => $component->getOptionLabelFromRecord($record),
                     ])
                     ->toArray();
