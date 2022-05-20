@@ -12104,7 +12104,7 @@ var date_time_picker_default = (Alpine) => {
         return date;
       },
       openPicker: function() {
-        this.focusedDate = this.getSelectedDate() ?? esm_default().tz(timezone2);
+        this.focusedDate = this.getSelectedDate() ?? this.getMinDate() ?? esm_default().tz(timezone2);
         this.setupDaysGrid();
         this.open = true;
         this.$nextTick(() => {
@@ -21874,6 +21874,7 @@ var file_upload_default = (Alpine) => {
     removeUploadedFileUsing,
     reorderUploadedFilesUsing,
     shouldAppendFiles,
+    shouldTransformImage,
     state: state2,
     uploadButtonPosition,
     uploadProgressIndicatorPosition,
@@ -21892,6 +21893,7 @@ var file_upload_default = (Alpine) => {
           allowImagePreview: canPreview,
           allowVideoPreview: canPreview,
           allowAudioPreview: canPreview,
+          allowImageTransform: shouldTransformImage,
           credits: false,
           files: await this.getFiles(),
           imageCropAspectRatio,
@@ -25105,7 +25107,7 @@ var select_default = (Alpine) => {
             return;
           }
           this.isStateBeingUpdated = true;
-          this.state = this.select.getValue(true);
+          this.state = this.select.getValue(true) ?? null;
           this.$nextTick(() => this.isStateBeingUpdated = false);
         });
         if (hasDynamicOptions) {
