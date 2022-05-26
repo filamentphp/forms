@@ -34,6 +34,8 @@ class DateTimePicker extends Field
 
     protected DateTime | string | Closure | null $minDate = null;
 
+    protected string | Closure | null $timezone = null;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +53,8 @@ class DateTimePicker extends Field
                 }
             }
 
+            $state->setTimezone($component->getTimezone());
+
             $component->state((string) $state);
         });
 
@@ -62,6 +66,9 @@ class DateTimePicker extends Field
             if (! $state instanceof DateTime) {
                 $state = Carbon::parse($state);
             }
+
+            $state->shiftTimezone($component->getTimezone());
+            $state->setTimezone(config('app.timezone'));
 
             return $state->format($component->getFormat());
         });
@@ -133,6 +140,13 @@ class DateTimePicker extends Field
         return $this;
     }
 
+    public function timezone(string | Closure | null $timezone): static
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
     public function weekStartsOnMonday(): static
     {
         $this->firstDayOfWeek(1);
@@ -176,19 +190,19 @@ class DateTimePicker extends Field
             return $format;
         }
 
-        $format = $this->hasDate() ? 'M j, Y' : '';
-
         if (! $this->hasTime()) {
-            return $format;
+            return config('forms.components.date_time_picker.display_formats.date');
         }
 
-        $format = $format ? "{$format} H:i" : 'H:i';
-
-        if (! $this->hasSeconds()) {
-            return $format;
+        if (! $this->hasDate()) {
+            return $this->hasSeconds() ?
+                config('forms.components.date_time_picker.display_formats.time_with_seconds') :
+                config('forms.components.date_time_picker.display_formats.time');
         }
 
-        return "{$format}:s";
+        return $this->hasSeconds() ?
+            config('forms.components.date_time_picker.display_formats.date_time_with_seconds') :
+            config('forms.components.date_time_picker.display_formats.date_time');
     }
 
     public function getExtraTriggerAttributes(): array
@@ -237,6 +251,11 @@ class DateTimePicker extends Field
     public function getMinDate(): ?string
     {
         return $this->evaluate($this->minDate);
+    }
+
+    public function getTimezone(): string
+    {
+        return $this->evaluate($this->timezone) ?? config('app.timezone');
     }
 
     public function hasDate(): bool
