@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components;
 
+use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use DateTime;
@@ -30,9 +31,9 @@ class DateTimePicker extends Field
 
     protected bool | Closure $isWithoutTime = false;
 
-    protected DateTime | string | Closure | null $maxDate = null;
+    protected CarbonInterface | string | Closure | null $maxDate = null;
 
-    protected DateTime | string | Closure | null $minDate = null;
+    protected CarbonInterface | string | Closure | null $minDate = null;
 
     protected string | Closure | null $timezone = null;
 
@@ -45,7 +46,7 @@ class DateTimePicker extends Field
                 return;
             }
 
-            if (! $state instanceof DateTime) {
+            if (! $state instanceof CarbonInterface) {
                 try {
                     $state = Carbon::createFromFormat($component->getFormat(), $state);
                 } catch (InvalidFormatException $exception) {
@@ -63,7 +64,7 @@ class DateTimePicker extends Field
                 return null;
             }
 
-            if (! $state instanceof DateTime) {
+            if (! $state instanceof CarbonInterface) {
                 $state = Carbon::parse($state);
             }
 
@@ -111,7 +112,7 @@ class DateTimePicker extends Field
         return $this;
     }
 
-    public function maxDate(DateTime | string | Closure | null $date): static
+    public function maxDate(CarbonInterface | string | Closure | null $date): static
     {
         $this->maxDate = $date;
 
@@ -122,7 +123,7 @@ class DateTimePicker extends Field
         return $this;
     }
 
-    public function minDate(DateTime | string | Closure | null $date): static
+    public function minDate(CarbonInterface | string | Closure | null $date): static
     {
         $this->minDate = $date;
 
