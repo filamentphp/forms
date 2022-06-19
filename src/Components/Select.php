@@ -433,12 +433,6 @@ class Select extends Field
 
             $relationshipQuery = $relationship->getRelated()->query()->orderBy($component->getRelationshipTitleColumnName());
 
-            if ($callback) {
-                $relationshipQuery = $component->evaluate($callback, [
-                    'query' => $relationshipQuery,
-                ]);
-            }
-
             $search = strtolower($search);
 
             /** @var Connection $databaseConnection */
@@ -449,9 +443,17 @@ class Select extends Field
                 default => 'like',
             };
 
-            $relationshipQuery = $relationshipQuery
-                ->where($component->getRelationshipTitleColumnName(), $searchOperator, "%{$search}%")
-                ->limit(50);
+            if ($callback) {
+                $relationshipQuery = $component->evaluate($callback, [
+                    'query' => $relationshipQuery,
+                    'search' => $search,
+                    'searchOperator' => $searchOperator
+                ]);
+            } else {
+                $relationshipQuery = $relationshipQuery
+                    ->where($component->getRelationshipTitleColumnName(), $searchOperator, "%{$search}%")
+                    ->limit(50);
+            }
 
             $keyName = $component->isMultiple() ? $relationship->getRelatedKeyName() : $relationship->getOwnerKeyName();
 
@@ -465,7 +467,9 @@ class Select extends Field
             }
 
             return $relationshipQuery
+                ->get()
                 ->pluck($component->getRelationshipTitleColumnName(), $keyName)
+                ->sortBy($component->getRelationshipTitleColumnName())
                 ->toArray();
         });
 
@@ -476,7 +480,7 @@ class Select extends Field
 
             $relationship = $component->getRelationship();
 
-            $relationshipQuery = $relationship->getRelated()->query()->orderBy($component->getRelationshipTitleColumnName());
+            $relationshipQuery = $relationship->getRelated()->query();
 
             if ($callback) {
                 $relationshipQuery = $component->evaluate($callback, [
@@ -496,7 +500,9 @@ class Select extends Field
             }
 
             return $relationshipQuery
+                ->get()
                 ->pluck($component->getRelationshipTitleColumnName(), $keyName)
+                ->sortBy($component->getRelationshipTitleColumnName())
                 ->toArray();
         });
 
