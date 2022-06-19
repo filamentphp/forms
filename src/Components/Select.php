@@ -545,10 +545,18 @@ class Select extends Field
             );
         });
 
-        $this->getOptionLabelUsing(static function (Select $component, $value) {
+        $this->getOptionLabelUsing(static function (Select $component, $value) use ($callback) {
             $relationship = $component->getRelationship();
 
-            $record = $relationship->getRelated()->query()->where($relationship->getOwnerKeyName(), $value)->first();
+            $relationshipQuery = $relationship->getRelated()->query();
+
+            if ($callback) {
+                $relationshipQuery = $component->evaluate($callback, [
+                    'query' => $relationshipQuery,
+                ]);
+            }
+
+            $record = $relationshipQuery->where($relationship->getOwnerKeyName(), $value)->first();
 
             if (! $record) {
                 return null;
@@ -558,15 +566,21 @@ class Select extends Field
                 return $component->getOptionLabelFromRecord($record);
             }
 
-            return $record->getAttributeValue($component->getRelationshipTitleColumnName());
+            return data_get($record, $component->getRelationshipTitleColumnName());
         });
 
-        $this->getOptionLabelsUsing(static function (Select $component, array $values): array {
+        $this->getOptionLabelsUsing(static function (Select $component, array $values) use ($callback): array {
             $relationship = $component->getRelationship();
             $relatedKeyName = $relationship->getRelatedKeyName();
+            $relationshipQuery = $relationship->getRelated()->query();
 
-            $relationshipQuery = $relationship->getRelated()->query()
-                ->whereIn($relatedKeyName, $values);
+            if ($callback) {
+                $relationshipQuery = $component->evaluate($callback, [
+                    'query' => $relationshipQuery,
+                ]);
+            } else {
+                $relationshipQuery = $relationshipQuery->whereIn($relatedKeyName, $values);
+            }
 
             if ($component->hasOptionLabelFromRecordUsingCallback()) {
                 return $relationshipQuery
@@ -578,6 +592,7 @@ class Select extends Field
             }
 
             return $relationshipQuery
+                ->get()
                 ->pluck($component->getRelationshipTitleColumnName(), $relatedKeyName)
                 ->toArray();
         });
