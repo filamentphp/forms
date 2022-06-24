@@ -433,7 +433,7 @@ class Repeater extends Field
         $localKeyName = $relationship->getLocalKeyName();
 
         return $this->cachedExistingRecords = $relationshipQuery->get()->mapWithKeys(
-            fn (Model $item): array => ["record-{$item[$localKeyName]}" => $item],
+            fn (Model $item): array => ["record-".Str::uuid()."-{$item[$localKeyName]}" => $item],
         );
     }
 
