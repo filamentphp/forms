@@ -1503,6 +1503,24 @@ Repeater::make('members')
 
 This method accepts the same options as the `columns()` method of the [grid](layout#grid). This allows you to responsively customize the number of grid columns at various breakpoints.
 
+### Item labels
+
+You may add a label for repeater items using the `itemLabel()` method:
+
+```php
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\TextInput;
+
+Repeater::make('members')
+    ->schema([
+        TextInput::make('name')
+            ->lazy(),
+    ])
+    ->itemLabel(fn (array $state): ?string => $state['name'] ?? null),
+```
+
+Any fields that you use from `$state` should be `reactive()` or `lazy()` if you wish to see the item label update live as you use the form.
+
 ## Builder
 
 Similar to a [repeater](#repeater), the builder component allows you to output a JSON array of repeated form components. Unlike the repeater, which only defines one form schema to repeat, the builder allows you to define different schema "blocks", which you can repeat in any order. This makes it useful for building more advanced array structures.
