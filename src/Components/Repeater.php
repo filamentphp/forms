@@ -5,7 +5,6 @@ namespace Filament\Forms\Components;
 use Closure;
 use function Filament\Forms\array_move_after;
 use function Filament\Forms\array_move_before;
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -246,7 +245,7 @@ class Repeater extends Field
 
         $containers = [];
 
-        foreach ($this->getState() as $itemKey => $itemData) {
+        foreach ($this->getState() ?? [] as $itemKey => $itemData) {
             $containers[$itemKey] = $this
                 ->getChildComponentContainer()
                 ->getClone()
