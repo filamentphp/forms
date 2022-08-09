@@ -568,7 +568,7 @@ Since HTML does not support nested `<form>` elements, you must also render the m
 ```blade
 <form wire:submit.prevent="submit">
     {{ $this->form }}
-    
+
     <button type="submit">
         Submit
     </button>
@@ -1076,6 +1076,18 @@ FileUpload::make('attachment')
     })
 ```
 
+You can keep the randomly generated file names, while still storing the original file name, using the `storeFileNamesIn()` method:
+
+```php
+use Filament\Forms\Components\FileUpload;
+
+FileUpload::make('attachments')
+    ->multiple()
+    ->storeFileNamesIn('attachment_file_names')
+```
+
+`attachment_file_names` will now store the original file name/s of your uploaded files.
+
 You may restrict the types of files that may be uploaded using the `acceptedFileTypes()` method, and passing an array of MIME types. You may also use the `image()` method as shorthand to allow all image MIME types.
 
 ```php
@@ -1534,6 +1546,34 @@ Repeater::make('members')
 ```
 
 Any fields that you use from `$state` should be `reactive()` or `lazy()` if you wish to see the item label update live as you use the form.
+
+### Using `$get()` to access parent field values
+
+All form components are able to [use `$get()` and `$set()`](advanced) to access another field's value. However, you might experience unexpected behaviour when using this inside the repeater's schema.
+
+This is because `$get()` and `$set()`, by default, are scoped to the current repeater item. This means that you are able to interact with another field inside that repeater item easily without knowing which repeater item the current form component belongs to.
+
+The consequence of this, is that you may be confused when you are unable to interact with a field outside the repeater. We use `../` syntax to solve this problem - `$get('../../parent_field_name')`.
+
+Consider your form has this data structure:
+
+```php
+[
+    'client_id' => 1,
+
+    'repeater' => [
+        'item1' => [
+            'service_id' => 2,
+        ],
+    ],
+]
+```
+
+You are trying to retrieve the value of `client_id` from inside the repeater item.
+
+`$get()` is relative to the current repeater item, so `$get('client_id')` is looking for `$get('repeater.item1.client_id')`.
+
+You can use `../` to go up a level in the data structure, so `$get('../client_id')` is $get('repeater.client_id') and `$get('../../client_id')` is `$get('client_id')`.
 
 ## Builder
 
