@@ -3,6 +3,7 @@
 namespace Filament\Forms\Concerns;
 
 use Filament\Forms\Components\BaseFileUpload;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -204,7 +205,7 @@ trait HasState
         if ($shouldCallHooksBefore) {
             $this->callBeforeStateDehydrated();
             $this->saveRelationships();
-            $this->loadStateFromRelationships();
+            $this->loadStateFromRelationships(andHydrate: true);
         }
 
         $this->dehydrateState($state);
@@ -217,7 +218,7 @@ trait HasState
         return $state;
     }
 
-    public function getRawState(): array
+    public function getRawState(): array | Arrayable
     {
         return data_get($this->getLivewire(), $this->getStatePath()) ?? [];
     }
