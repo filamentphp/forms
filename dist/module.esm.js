@@ -12824,6 +12824,10 @@ var date_time_picker_default = (Alpine) => {
             return;
           }
           let date2 = this.getSelectedDate();
+          if (date2 === null) {
+            this.clearState();
+            return;
+          }
           if (this.getMaxDate() !== null && date2?.isAfter(this.getMaxDate())) {
             date2 = null;
           }
@@ -12912,6 +12916,9 @@ var date_time_picker_default = (Alpine) => {
       },
       getSelectedDate: function() {
         if (this.state === void 0) {
+          return null;
+        }
+        if (this.state === null) {
           return null;
         }
         let date = esm_default(this.state);
@@ -27972,17 +27979,25 @@ var select_default = (Alpine) => {
         this.select.setChoices(choices, "value", "label", true);
       },
       getChoices: async function(config = {}) {
-        const options3 = await this.getOptions(config);
-        return options3.concat(await this.getMissingOptions(options3));
+        const existingOptions = await this.getOptions(config);
+        return existingOptions.concat(await this.getMissingOptions(existingOptions));
       },
       getOptions: async function({search, withInitialOptions}) {
         if (withInitialOptions) {
           return options2;
         }
+        let results = [];
         if (search !== "" && search !== null && search !== void 0) {
-          return await getSearchResultsUsing(search);
+          results = await getSearchResultsUsing(search);
+        } else {
+          results = await getOptionsUsing();
         }
-        return await getOptionsUsing();
+        const selectOption = (option3) => {
+          option3.selected = true;
+          return option3;
+        };
+        this.select.clearStore();
+        return isMultiple ? results.map((option3) => this.state.includes(option3.value) ? selectOption(option3) : option3) : results.map((option3) => this.state === option3.value ? selectOption(option3) : option3);
       },
       refreshPlaceholder: function() {
         if (isMultiple) {
@@ -28000,22 +28015,20 @@ var select_default = (Alpine) => {
         }
         return state3?.toString();
       },
-      getMissingOptions: async function(options3) {
+      getMissingOptions: async function(existingOptions) {
         let state3 = this.formatState(this.state);
         if ([null, void 0, "", [], {}].includes(state3)) {
           return {};
         }
-        if (!options3.length) {
-          options3 = {};
-        }
+        const existingOptionValues = new Set(existingOptions.length ? existingOptions.map((option3) => option3.value) : []);
         if (isMultiple) {
-          if (state3.every((value) => value in options3)) {
+          if (state3.every((value) => existingOptionValues.has(value))) {
             return {};
           }
           return await getOptionLabelsUsing();
         }
-        if (state3 in options3) {
-          return options3;
+        if (existingOptionValues.has(state3)) {
+          return existingOptionValues;
         }
         return [
           {
