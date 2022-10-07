@@ -1,10 +1,11 @@
 @props([
+    'action' => null,
     'color' => null,
     'icon' => null,
 ])
 
-<div {{ $attributes->class([
-    'filament-forms-field-wrapper-hint flex space-x-2 rtl:space-x-reverse',
+<div {{ $attributes->class(array_merge(
+    ['filament-forms-field-wrapper-hint flex items-center space-x-2 rtl:space-x-reverse'],
     match ($color) {
         'danger' => [
             'text-danger-500',
@@ -27,7 +28,7 @@
             'dark:text-gray-300' => config('tables.dark_mode'),
         ],
     },
-]) }}>
+)) }}>
     @if ($slot->isNotEmpty())
         <span class="text-xs leading-tight">
             {{ $slot }}
@@ -36,5 +37,11 @@
 
     @if ($icon)
         <x-dynamic-component :component="$icon" class="h-4 w-4" />
+    @endif
+
+    @if ($action && (! $action->isHidden()))
+        <div class="filament-forms-field-wrapper-hint-action">
+            {{ $action }}
+        </div>
     @endif
 </div>
