@@ -517,6 +517,8 @@ Select::make('status')
     ])
 ```
 
+In the `options()` array, the array keys are saved, and the array values will be the label of each option in the dropdown.
+
 ![](https://user-images.githubusercontent.com/41773797/147612885-888dfd64-6256-482d-b4bc-840191306d2d.png)
 
 You may enable a search input to allow easier access to many options, using the `searchable()` method:
@@ -1393,7 +1395,7 @@ RichEditor::make('content')
 
 ## Markdown editor
 
-The markdown editor allows you to edit and preview markdown content, as well as upload images.
+The markdown editor allows you to edit and preview markdown content, as well as upload images using drag and drop.
 
 ```php
 use Filament\Forms\Components\MarkdownEditor;
