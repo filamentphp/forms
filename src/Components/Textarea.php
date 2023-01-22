@@ -10,11 +10,15 @@ class Textarea extends Field implements Contracts\CanBeLengthConstrained
     use Concerns\CanBeAutocapitalized;
     use Concerns\CanBeAutocompleted;
     use Concerns\CanBeLengthConstrained;
+    use Concerns\CanBeReadOnly;
     use Concerns\HasExtraInputAttributes;
     use Concerns\HasPlaceholder;
     use HasExtraAlpineAttributes;
 
-    protected string $view = 'forms::components.textarea';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.textarea';
 
     protected int | Closure | null $cols = null;
 

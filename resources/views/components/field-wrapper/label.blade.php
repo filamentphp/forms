@@ -1,5 +1,7 @@
 @props([
     'error' => false,
+    'isDisabled' => false,
+    'isMarkedAsRequired' => true,
     'prefix' => null,
     'required' => false,
     'suffix' => null,
@@ -10,18 +12,13 @@
 
     <span @class([
         'text-sm font-medium leading-4',
-        'text-gray-700' => ! $error,
-        'dark:text-gray-300' => (! $error) && config('forms.dark_mode'),
-        'text-danger-700' => $error,
-        'dark:text-danger-400' => $error && config('forms.dark_mode'),
+        'text-gray-700 dark:text-gray-300' => ! $error,
+        'text-danger-700 dark:text-danger-400' => $error,
     ])>
         {{ $slot }}
 
-        @if ($required)
-            <sup @class([
-                'font-medium text-danger-700',
-                'dark:text-danger-400' => config('forms.dark_mode'),
-            ])>*</sup>
+        @if ($required && $isMarkedAsRequired && ! $isDisabled)
+            <sup class="font-medium text-danger-700 dark:text-danger-400">*</sup>
         @endif
     </span>
 

@@ -3,11 +3,13 @@
 namespace Filament\Forms\Concerns;
 
 use Filament\Forms\Components\Component;
-use Illuminate\Support\Str;
 
 trait HasStateBindingModifiers
 {
-    protected $stateBindingModifiers = null;
+    /**
+     * @var array<string> | null
+     */
+    protected ?array $stateBindingModifiers = null;
 
     protected string | int | null $debounce = null;
 
@@ -32,6 +34,9 @@ trait HasStateBindingModifiers
         return $this;
     }
 
+    /**
+     * @param  array<string> | null  $modifiers
+     */
     public function stateBindingModifiers(?array $modifiers): static
     {
         $this->stateBindingModifiers = $modifiers;
@@ -39,17 +44,23 @@ trait HasStateBindingModifiers
         return $this;
     }
 
+    /**
+     * @param  array<string>  $lazilyEntangledModifiers
+     */
     public function applyStateBindingModifiers(string $expression, array $lazilyEntangledModifiers = []): string
     {
         $modifiers = $this->getStateBindingModifiers();
 
-        if (Str::of($expression)->contains('entangle') && ($this->isLazy() || $this->getDebounce())) {
+        if (str($expression)->contains('entangle') && ($this->isLazy() || $this->getDebounce())) {
             $modifiers = $lazilyEntangledModifiers;
         }
 
         return implode('.', array_merge([$expression], $modifiers));
     }
 
+    /**
+     * @return array<string>
+     */
     public function getStateBindingModifiers(): array
     {
         if ($this->stateBindingModifiers !== null) {

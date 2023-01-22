@@ -1,10 +1,10 @@
+@php
+    $id = $getId();
+@endphp
+
 <div
-    aria-labelledby="{{ $getId() }}"
-    id="{{ $getId() }}"
-    x-ref="step-{{ $getId() }}"
-    role="tabpanel"
-    tabindex="0"
-    x-bind:class="{ 'invisible h-0 overflow-y-hidden': step !== @js($getId()) }"
+    x-ref="step-{{ $id }}"
+    x-bind:class="{ 'invisible h-0 overflow-y-hidden': step !== @js($id) }"
     x-on:expand-concealing-component.window="
         error = $el.querySelector('[data-validation-error]')
 
@@ -12,11 +12,11 @@
             return
         }
 
-        if (! isStepAccessible(step, @js($getId()))) {
+        if (! isStepAccessible(step, @js($id))) {
             return
         }
 
-        step = @js($getId())
+        step = @js($id)
 
         if (document.body.querySelector('[data-validation-error]') !== error) {
             return
@@ -24,7 +24,17 @@
 
         setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
     "
-    {{ $attributes->merge($getExtraAttributes())->class(['focus:outline-none filament-forms-wizard-component-step']) }}
+    {{
+        $attributes
+            ->merge([
+                'aria-labelledby' => $id,
+                'id' => $id,
+                'role' => 'tabpanel',
+                'tabindex' => '0',
+            ], escape: false)
+            ->merge($getExtraAttributes(), escape: false)
+            ->class(['focus:outline-none filament-forms-wizard-component-step'])
+    }}
 >
     {{ $getChildComponentContainer() }}
 </div>

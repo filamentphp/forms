@@ -3,18 +3,21 @@
 namespace Filament\Forms\Components;
 
 use Closure;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 
 class CheckboxList extends Field implements Contracts\HasNestedRecursiveValidationRules
 {
     use Concerns\HasNestedRecursiveValidationRules;
     use Concerns\HasOptions;
 
-    protected string $view = 'forms::components.checkbox-list';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.checkbox-list';
 
-    protected string | Closure | null $relationshipTitleColumnName = null;
+    protected string | Closure | null $relationshipTitleAttribute = null;
 
     protected ?Closure $getOptionLabelFromRecordUsing = null;
 
@@ -37,9 +40,9 @@ class CheckboxList extends Field implements Contracts\HasNestedRecursiveValidati
         });
     }
 
-    public function relationship(string | Closure $relationshipName, string | Closure $titleColumnName, ?Closure $callback = null): static
+    public function relationship(string | Closure $relationshipName, string | Closure $titleAttribute, ?Closure $callback = null): static
     {
-        $this->relationshipTitleColumnName = $titleColumnName;
+        $this->relationshipTitleAttribute = $titleAttribute;
         $this->relationship = $relationshipName;
 
         $this->options(static function (CheckboxList $component) use ($callback): array {
@@ -54,7 +57,7 @@ class CheckboxList extends Field implements Contracts\HasNestedRecursiveValidati
             }
 
             if (empty($relationshipQuery->getQuery()->orders)) {
-                $relationshipQuery->orderBy($component->getRelationshipTitleColumnName());
+                $relationshipQuery->orderBy($component->getRelationshipTitleAttribute());
             }
 
             if ($component->hasOptionLabelFromRecordUsingCallback()) {
@@ -67,12 +70,14 @@ class CheckboxList extends Field implements Contracts\HasNestedRecursiveValidati
             }
 
             return $relationshipQuery
-                ->pluck($component->getRelationshipTitleColumnName(), $relationship->getRelatedKeyName())
+                ->pluck($component->getRelationshipTitleAttribute(), $relationship->getRelatedKeyName())
                 ->toArray();
         });
 
         $this->loadStateFromRelationshipsUsing(static function (CheckboxList $component, ?array $state): void {
             $relationship = $component->getRelationship();
+
+            /** @var Collection $relatedModels */
             $relatedModels = $relationship->getResults();
 
             $component->state(
@@ -120,15 +125,15 @@ class CheckboxList extends Field implements Contracts\HasNestedRecursiveValidati
         return $this->evaluate($this->getOptionLabelFromRecordUsing, ['record' => $record]);
     }
 
-    public function getRelationshipTitleColumnName(): string
+    public function getRelationshipTitleAttribute(): string
     {
-        return $this->evaluate($this->relationshipTitleColumnName);
+        return $this->evaluate($this->relationshipTitleAttribute);
     }
 
     public function getLabel(): string
     {
         if ($this->label === null && $this->getRelationship()) {
-            return (string) Str::of($this->getRelationshipName())
+            return (string) str($this->getRelationshipName())
                 ->before('.')
                 ->kebab()
                 ->replace(['-', '_'], ' ')

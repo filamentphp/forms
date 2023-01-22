@@ -11,7 +11,10 @@ class FileUpload extends BaseFileUpload
     use Concerns\HasPlaceholder;
     use HasExtraAlpineAttributes;
 
-    protected string $view = 'forms::components.file-upload';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.file-upload';
 
     protected string | Closure | null $imageCropAspectRatio = null;
 
@@ -204,7 +207,7 @@ class FileUpload extends BaseFileUpload
 
     public function getImageResizeUpscale(): bool
     {
-        return $this->evaluate($this->imageResizeUpscale);
+        return (bool) $this->evaluate($this->imageResizeUpscale);
     }
 
     public function getLoadingIndicatorPosition(): string
@@ -244,7 +247,7 @@ class FileUpload extends BaseFileUpload
 
     public function shouldAppendFiles(): bool
     {
-        return $this->evaluate($this->shouldAppendFiles);
+        return (bool) $this->evaluate($this->shouldAppendFiles);
     }
 
     public function shouldOrientImageFromExif(): bool

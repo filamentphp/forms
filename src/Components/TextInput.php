@@ -6,25 +6,27 @@ use Closure;
 use Filament\Forms\Components\Contracts\CanHaveNumericState;
 use Filament\Forms\Components\TextInput\Mask;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
-use Illuminate\Contracts\Support\Arrayable;
 
 class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHaveNumericState
 {
     use Concerns\CanBeAutocapitalized;
     use Concerns\CanBeAutocompleted;
     use Concerns\CanBeLengthConstrained;
+    use Concerns\CanBeReadOnly;
     use Concerns\HasAffixes;
+    use Concerns\HasDatalistOptions;
     use Concerns\HasExtraInputAttributes;
     use Concerns\HasInputMode;
     use Concerns\HasPlaceholder;
     use Concerns\HasStep;
     use HasExtraAlpineAttributes;
 
-    protected string $view = 'forms::components.text-input';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.text-input';
 
     protected ?Closure $configureMaskUsing = null;
-
-    protected array | Arrayable | Closure | null $datalistOptions = null;
 
     protected bool | Closure $isEmail = false;
 
@@ -36,8 +38,14 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHa
 
     protected bool | Closure $isUrl = false;
 
+    /**
+     * @var scalar
+     */
     protected $maxValue = null;
 
+    /**
+     * @var scalar
+     */
     protected $minValue = null;
 
     protected string | Closure | null $telRegex = null;
@@ -47,13 +55,6 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHa
     public function currentPassword(bool | Closure $condition = true): static
     {
         $this->rule('current_password', $condition);
-
-        return $this;
-    }
-
-    public function datalist(array | Arrayable | Closure | null $options): static
-    {
-        $this->datalistOptions = $options;
 
         return $this;
     }
@@ -83,6 +84,9 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHa
         return $this;
     }
 
+    /**
+     * @param  scalar  $value
+     */
     public function maxValue($value): static
     {
         $this->maxValue = $value;
@@ -96,6 +100,9 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHa
         return $this;
     }
 
+    /**
+     * @param  scalar  $value
+     */
     public function minValue($value): static
     {
         $this->minValue = $value;
@@ -159,17 +166,6 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHa
         return $this;
     }
 
-    public function getDatalistOptions(): ?array
-    {
-        $options = $this->evaluate($this->datalistOptions);
-
-        if ($options instanceof Arrayable) {
-            $options = $options->toArray();
-        }
-
-        return $options;
-    }
-
     public function getMask(): ?Mask
     {
         if (! $this->hasMask()) {
@@ -186,11 +182,17 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained, CanHa
         return $this->getMask()?->toJson();
     }
 
+    /**
+     * @return scalar
+     */
     public function getMaxValue()
     {
         return $this->evaluate($this->maxValue);
     }
 
+    /**
+     * @return scalar
+     */
     public function getMinValue()
     {
         return $this->evaluate($this->minValue);

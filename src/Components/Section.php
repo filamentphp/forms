@@ -14,7 +14,10 @@ class Section extends Component implements Contracts\CanConcealComponents, Contr
     use Concerns\EntanglesStateWithSingularRelationship;
     use HasExtraAlpineAttributes;
 
-    protected string $view = 'forms::components.section';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.section';
 
     protected string | Htmlable | Closure | null $description = null;
 

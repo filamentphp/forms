@@ -2,46 +2,47 @@
 
 namespace Filament\Forms\Components\Actions;
 
-use Filament\Forms\Components\Actions\Modal\Actions\Action as ModalAction;
-use Filament\Support\Actions\Action as BaseAction;
-use Filament\Support\Actions\Concerns\CanBeDisabled;
-use Filament\Support\Actions\Concerns\CanOpenUrl;
-use Filament\Support\Actions\Concerns\HasTooltip;
+use Filament\Actions\Concerns\HasMountableArguments;
+use Filament\Actions\MountableAction;
+use Illuminate\Support\Js;
 
-class Action extends BaseAction
+class Action extends MountableAction
 {
     use Concerns\BelongsToComponent;
-    use CanBeDisabled;
-    use CanOpenUrl;
-    use HasTooltip;
+    use HasMountableArguments;
 
-    protected string $view = 'forms::components.actions.icon-button-action';
-
-    public function iconButton(): static
+    protected function setUp(): void
     {
-        $this->view('forms::components.actions.icon-button-action');
+        parent::setUp();
 
-        return $this;
+        $this->iconButton();
     }
 
-    protected function getLivewireCallActionName(): string
+    public function getLivewireCallActionName(): string
     {
         return 'callMountedFormComponentAction';
     }
 
-    protected static function getModalActionClass(): string
+    public function getLivewireMountAction(): ?string
     {
-        return ModalAction::class;
+        if ($this->getUrl()) {
+            return null;
+        }
+
+        $argumentsParameter = '';
+
+        if (count($arguments = $this->getArguments())) {
+            $argumentsParameter .= ', ';
+            $argumentsParameter .= Js::from($arguments);
+            $argumentsParameter .= '';
+        }
+
+        return "mountFormComponentAction('{$this->getComponent()->getStatePath()}', '{$this->getName()}'{$argumentsParameter})";
     }
 
-    public static function makeModalAction(string $name): ModalAction
-    {
-        /** @var ModalAction $action */
-        $action = parent::makeModalAction($name);
-
-        return $action;
-    }
-
+    /**
+     * @return array<string, mixed>
+     */
     protected function getDefaultEvaluationParameters(): array
     {
         return array_merge(parent::getDefaultEvaluationParameters(), [

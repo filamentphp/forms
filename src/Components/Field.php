@@ -3,11 +3,11 @@
 namespace Filament\Forms\Components;
 
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Str;
 
 class Field extends Component implements Contracts\HasValidationRules
 {
     use Concerns\CanBeAutofocused;
+    use Concerns\CanBeMarkedAsRequired;
     use Concerns\CanBeValidated;
     use Concerns\HasHelperText;
     use Concerns\HasHint;
@@ -36,7 +36,7 @@ class Field extends Component implements Contracts\HasValidationRules
 
     public function getLabel(): string | Htmlable | null
     {
-        $label = parent::getLabel() ?? (string) Str::of($this->getName())
+        $label = parent::getLabel() ?? (string) str($this->getName())
             ->afterLast('.')
             ->kebab()
             ->replace(['-', '_'], ' ')

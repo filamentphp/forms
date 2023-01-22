@@ -64,13 +64,16 @@ trait HasHint
         return $this->evaluate($this->hintAction)?->component($this);
     }
 
+    /**
+     * @return array<string, Action>
+     */
     public function getActions(): array
     {
         $hintAction = $this->getHintAction();
 
         return array_merge(
             parent::getActions(),
-            $hintAction ? [$hintAction->getName() => $hintAction->component($this)] : [],
+            $hintAction ? [$hintAction->getName() => $hintAction] : [],
         );
     }
 }

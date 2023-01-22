@@ -16,9 +16,9 @@ class ComponentContainer extends ViewComponent
     use Concerns\Cloneable;
     use Concerns\HasColumns;
     use Concerns\HasComponents;
-    use Concerns\HasContext;
     use Concerns\HasFieldWrapper;
     use Concerns\HasInlineLabels;
+    use Concerns\HasOperation;
     use Concerns\HasState;
     use Concerns\HasStateBindingModifiers;
     use Concerns\ListensToEvents;
@@ -26,9 +26,7 @@ class ComponentContainer extends ViewComponent
     use Concerns\SupportsFileUploadFields;
     use Concerns\SupportsSelectFields;
 
-    protected array $meta = [];
-
-    protected string $view = 'forms::component-container';
+    protected string $view = 'filament-forms::component-container';
 
     protected string $evaluationIdentifier = 'container';
 
@@ -44,6 +42,9 @@ class ComponentContainer extends ViewComponent
         return app(static::class, ['livewire' => $livewire]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getDefaultEvaluationParameters(): array
     {
         return array_merge(parent::getDefaultEvaluationParameters(), [

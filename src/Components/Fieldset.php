@@ -8,7 +8,10 @@ class Fieldset extends Component implements CanEntangleWithSingularRelationships
 {
     use Concerns\EntanglesStateWithSingularRelationship;
 
-    protected string $view = 'forms::components.fieldset';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.fieldset';
 
     final public function __construct(string $label)
     {

@@ -1,105 +1,83 @@
 @php
     $datalistOptions = $getDatalistOptions();
-
-    $affixLabelClasses = [
-        'whitespace-nowrap group-focus-within:text-primary-500',
-        'text-gray-400' => ! $errors->has($getStatePath()),
-        'text-danger-400' => $errors->has($getStatePath()),
-    ];
+    $hasMask = $hasMask();
+    $id = $getId();
+    $isConcealed = $isConcealed();
+    $statePath = $getStatePath();
+    $prefixIcon = $getPrefixIcon();
+    $prefixLabel = $getPrefixLabel();
+    $suffixIcon = $getSuffixIcon();
+    $suffixLabel = $getSuffixLabel();
 @endphp
 
 <x-dynamic-component
     :component="$getFieldWrapperView()"
-    :id="$getId()"
-    :label="$getLabel()"
-    :label-sr-only="$isLabelHidden()"
-    :helper-text="$getHelperText()"
-    :hint="$getHint()"
-    :hint-action="$getHintAction()"
-    :hint-color="$getHintColor()"
-    :hint-icon="$getHintIcon()"
-    :required="$isRequired()"
-    :state-path="$getStatePath()"
+    :field="$field"
 >
-    <div {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group']) }}>
-        @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))
-            {{ $prefixAction }}
-        @endif
-
-        @if ($icon = $getPrefixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
-        @endif
-
-        @if ($label = $getPrefixLabel())
-            <span @class($affixLabelClasses)>
-                {{ $label }}
-            </span>
-        @endif
-
-        <div class="flex-1">
-            <input
-                @unless ($hasMask())
-                    x-data="{}"
-                    {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-                    type="{{ $getType() }}"
-                @else
-                    x-data="textInputFormComponent({
-                        {{ $hasMask() ? "getMaskOptionsUsing: (IMask) => ({$getJsonMaskConfiguration()})," : null }}
-                        state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')', lazilyEntangledModifiers: ['defer']) }},
-                    })"
-                    type="text"
-                    wire:ignore
-                    {!! $isLazy() ? "x-on:blur=\"\$wire.\$refresh\"" : null !!}
-                    {!! $isDebounced() ? "x-on:input.debounce.{$getDebounce()}=\"\$wire.\$refresh\"" : null !!}
-                    {{ $getExtraAlpineAttributeBag() }}
-                @endunless
-                dusk="filament.forms.{{ $getStatePath() }}"
-                {!! ($autocapitalize = $getAutocapitalize()) ? "autocapitalize=\"{$autocapitalize}\"" : null !!}
-                {!! ($autocomplete = $getAutocomplete()) ? "autocomplete=\"{$autocomplete}\"" : null !!}
-                {!! $isAutofocused() ? 'autofocus' : null !!}
-                {!! $isDisabled() ? 'disabled' : null !!}
-                id="{{ $getId() }}"
-                {!! ($inputMode = $getInputMode()) ? "inputmode=\"{$inputMode}\"" : null !!}
-                {!! $datalistOptions ? "list=\"{$getId()}-list\"" : null !!}
-                {!! ($placeholder = $getPlaceholder()) ? "placeholder=\"{$placeholder}\"" : null !!}
-                {!! ($interval = $getStep()) ? "step=\"{$interval}\"" : null !!}
-                @if (! $isConcealed())
-                    {!! filled($length = $getMaxLength()) ? "maxlength=\"{$length}\"" : null !!}
-                    {!! filled($value = $getMaxValue()) ? "max=\"{$value}\"" : null !!}
-                    {!! filled($length = $getMinLength()) ? "minlength=\"{$length}\"" : null !!}
-                    {!! filled($value = $getMinValue()) ? "min=\"{$value}\"" : null !!}
-                    {!! $isRequired() ? 'required' : null !!}
-                @endif
-                {{ $getExtraInputAttributeBag()->class([
-                    'block w-full transition duration-75 rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70',
-                    'dark:bg-gray-700 dark:text-white dark:focus:border-primary-500' => config('forms.dark_mode'),
-                ]) }}
-                x-bind:class="{
-                    'border-gray-300': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
-                    'dark:border-gray-600': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors) && @js(config('forms.dark_mode')),
-                    'border-danger-600 ring-danger-600': (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
-                    'dark:border-danger-400 dark:ring-danger-400': (@js($getStatePath()) in $wire.__instance.serverMemo.errors) && @js(config('forms.dark_mode')),
-                }"
-            />
-        </div>
-
-        @if ($label = $getSuffixLabel())
-            <span @class($affixLabelClasses)>
-                {{ $label }}
-            </span>
-        @endif
-
-        @if ($icon = $getSuffixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
-        @endif
-
-        @if (($suffixAction = $getSuffixAction()) && (! $suffixAction->isHidden()))
-            {{ $suffixAction }}
-        @endif
-    </div>
+    <x-filament::input.affixes
+        :state-path="$statePath"
+        :prefix="$prefixLabel"
+        :prefix-action="$getPrefixAction()"
+        :prefix-icon="$prefixIcon"
+        :suffix="$suffixLabel"
+        :suffix-action="$getSuffixAction()"
+        :suffix-icon="$suffixIcon"
+        class="filament-forms-text-input-component"
+        :attributes="$getExtraAttributeBag()"
+    >
+        <input
+            @if ($hasMask)
+                x-ignore
+                ax-load
+                ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('text-input', 'filament/forms') }}"
+                x-data="textInputFormComponent({
+                    getMaskOptionsUsing: (IMask) => ({{ $getJsonMaskConfiguration() }}),
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')', lazilyEntangledModifiers: ['defer']) }},
+                })"
+                wire:ignore
+                @if ($isDebounced()) x-on:input.debounce.{{ $getDebounce() }}="$wire.$refresh" @endif
+                @if ($isLazy()) x-on:blur="$wire.$refresh" @endif
+                {{ $getExtraAlpineAttributeBag() }}
+            @else
+                x-data="{}"
+            @endif
+            x-bind:class="{
+                'border-gray-300 dark:border-gray-600': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+                'border-danger-600 ring-danger-600': (@js($statePath) in $wire.__instance.serverMemo.errors),
+            }"
+            {{
+                $getExtraInputAttributeBag()
+                    ->merge([
+                        'autocapitalize' => $getAutocapitalize(),
+                        'autocomplete' => $getAutocomplete(),
+                        'autofocus' => $isAutofocused(),
+                        'disabled' => $isDisabled(),
+                        'dusk' => "filament.forms.{$statePath}",
+                        'id' => $id,
+                        'inputmode' => $getInputMode(),
+                        'list' => $datalistOptions ? "{$id}-list" : null,
+                        'max' => (! $isConcealed) ? $getMaxValue() : null,
+                        'maxlength' => (! $isConcealed) ? $getMaxLength() : null,
+                        'min' => (! $isConcealed) ? $getMinValue() : null,
+                        'minlength' => (! $isConcealed) ? $getMinLength() : null,
+                        'placeholder' => $getPlaceholder(),
+                        'readonly' => $isReadOnly(),
+                        'required' => $isRequired() && (! $isConcealed),
+                        'step' => $getStep(),
+                        'type' => $hasMask ? 'text' : $getType(),
+                        $applyStateBindingModifiers('wire:model') => (! $hasMask) ? $statePath : null,
+                    ], escape: false)
+                    ->class([
+                        'block w-full transition duration-75 shadow-sm sm:text-sm focus:border-primary-500 focus:relative focus:z-[1] focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500',
+                        'rounded-l-lg' => ! ($prefixLabel || $prefixIcon),
+                        'rounded-r-lg' => ! ($suffixLabel || $suffixIcon),
+                    ])
+            }}
+        />
+    </x-filament::input.affixes>
 
     @if ($datalistOptions)
-        <datalist id="{{ $getId() }}-list">
+        <datalist id="{{ $id }}-list">
             @foreach ($datalistOptions as $option)
                 <option value="{{ $option }}" />
             @endforeach

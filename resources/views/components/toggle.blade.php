@@ -1,51 +1,59 @@
 <x-dynamic-component
     :component="$getFieldWrapperView()"
-    :id="$getId()"
-    :label="$getLabel()"
-    :label-sr-only="$isLabelHidden()"
-    :helper-text="$getHelperText()"
-    :hint="$getHint()"
-    :hint-action="$getHintAction()"
-    :hint-color="$getHintColor()"
-    :hint-icon="$getHintIcon()"
-    :required="$isRequired()"
-    :state-path="$getStatePath()"
+    :field="$field"
 >
-    @if ($isInline())
+    @php
+        $isInline = $isInline();
+        $offColor = $getOffColor();
+        $onColor = $getOnColor();
+        $statePath = $getStatePath();
+    @endphp
+
+    @if ($isInline)
         <x-slot name="labelPrefix">
     @endif
             <button
-                x-data="{ state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')') }} }"
-                role="switch"
-                aria-checked="false"
+                x-data="{ state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')') }} }"
                 x-bind:aria-checked="state?.toString()"
                 x-on:click="state = ! state"
-                x-bind:class="{
-                    '{{ match ($getOnColor()) {
-                        'danger' => 'bg-danger-500',
-                        'secondary' => 'bg-gray-500',
-                        'success' => 'bg-success-500',
-                        'warning' => 'bg-warning-500',
-                        default => 'bg-primary-600',
-                    } }}': state,
-                    '{{ match ($getOffColor()) {
-                        'danger' => 'bg-danger-500',
-                        'primary' => 'bg-primary-500',
-                        'success' => 'bg-success-500',
-                        'warning' => 'bg-warning-500',
-                        default => 'bg-gray-200',
-                    } }} @if (config('forms.dark_mode')) dark:bg-white/10 @endif': ! state,
-                }"
-                {!! $isAutofocused() ? 'autofocus' : null !!}
-                {!! $isDisabled() ? 'disabled' : null !!}
-                wire:loading.attr="disabled"
-                id="{{ $getId() }}"
-                dusk="filament.forms.{{ $getStatePath() }}"
-                type="button"
-                {{ $attributes->merge($getExtraAttributes())->class([
-                    'filament-forms-toggle-component relative inline-flex border-2 border-transparent shrink-0 h-6 w-11 rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed disabled:pointer-events-none',
-                ]) }}
-                {{ $getExtraAlpineAttributeBag() }}
+                x-bind:class="
+                    state
+                        ? '{{ match ($onColor) {
+                            'danger' => 'bg-danger-600',
+                            'gray' => 'bg-gray-600',
+                            'primary', null => 'bg-primary-600',
+                            'secondary' => 'bg-secondary-600',
+                            'success' => 'bg-success-600',
+                            'warning' => 'bg-warning-600',
+                            default => $onColor,
+                        } }}'
+                        : '{{ match ($offColor) {
+                            'danger' => 'bg-danger-600',
+                            'gray' => 'bg-gray-600',
+                            'primary' => 'bg-primary-600',
+                            'secondary' => 'bg-secondary-600',
+                            'success' => 'bg-success-600',
+                            'warning' => 'bg-warning-600',
+                            null => 'bg-gray-200 dark:bg-gray-700',
+                            default => $offColor,
+                        } }}'
+                "
+                {{
+                    $attributes
+                        ->merge([
+                            'aria-checked' => 'false',
+                            'autofocus' => $isAutofocused(),
+                            'disabled' => $isDisabled(),
+                            'dusk' => "filament.forms.{$statePath}",
+                            'id' => $getId(),
+                            'role' => 'switch',
+                            'type' => 'button',
+                            'wire:loading.attr' => 'disabled',
+                        ], escape: false)
+                        ->merge($getExtraAttributes(), escape: false)
+                        ->merge($getExtraAlpineAttributes(), escape: false)
+                        ->class(['filament-forms-toggle-component relative inline-flex border-2 border-transparent shrink-0 h-6 w-11 rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none disabled:opacity-70 disabled:pointer-events-none'])
+                }}
             >
                 <span
                     class="pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 ease-in-out transition duration-200"
@@ -63,18 +71,20 @@
                         }"
                     >
                         @if ($hasOffIcon())
-                            <x-dynamic-component
-                                :component="$getOffIcon()"
-                                :class="\Illuminate\Support\Arr::toCssClasses([
-                                    'h-3 w-3',
-                                    match ($getOffColor()) {
-                                        'danger' => 'text-danger-500',
-                                        'primary' => 'text-primary-500',
-                                        'success' => 'text-success-500',
-                                        'warning' => 'text-warning-500',
-                                        default => 'text-gray-400',
-                                    },
-                                ])"
+                            <x-filament::icon
+                                :name="$getOffIcon()"
+                                alias="filament-forms::components.toggle.off"
+                                :color="match ($offColor) {
+                                    'danger' => 'text-danger-600',
+                                    'gray' => 'text-gray-600',
+                                    'primary' => 'text-primary-600',
+                                    'secondary' => 'text-secondary-600',
+                                    'success' => 'text-success-600',
+                                    'warning' => 'text-warning-600',
+                                    null => 'text-gray-400 dark:text-gray-700',
+                                    default => $offColor,
+                                }"
+                                size="h-3 w-3"
                             />
                         @endif
                     </span>
@@ -88,25 +98,26 @@
                         }"
                     >
                         @if ($hasOnIcon())
-                            <x-dynamic-component
-                                :component="$getOnIcon()"
-                                x-cloak
-                                :class="\Illuminate\Support\Arr::toCssClasses([
-                                    'h-3 w-3',
-                                    match ($getOnColor()) {
-                                        'danger' => 'text-danger-500',
-                                        'secondary' => 'text-gray-400',
-                                        'success' => 'text-success-500',
-                                        'warning' => 'text-warning-500',
-                                        default => 'text-primary-500',
-                                    },
-                                ])"
+                            <x-filament::icon
+                                :name="$getOnIcon()"
+                                alias="filament-forms::components.toggle.on"
+                                :color="match ($onColor) {
+                                    'danger' => 'text-danger-600',
+                                    'gray' => 'text-gray-600',
+                                    'primary', null => 'text-primary-600',
+                                    'secondary' => 'text-secondary-600',
+                                    'success' => 'text-success-600',
+                                    'warning' => 'text-warning-600',
+                                    default => $onColor,
+                                }"
+                                size="h-3 w-3"
+                                x-cloak=""
                             />
                         @endif
                     </span>
                 </span>
             </button>
-    @if ($isInline())
+    @if ($isInline)
         </x-slot>
     @endif
 </x-dynamic-component>

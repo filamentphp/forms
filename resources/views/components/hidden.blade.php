@@ -1,8 +1,17 @@
+@php
+    $statePath = $getStatePath();
+@endphp
+
 <input
-    id="{{ $getId() }}"
-    {!! $isRequired() ? 'required' : null !!}
-    type="hidden"
-    {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-    {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-hidden-component']) }}
-    dusk="filament.forms.{{ $getStatePath() }}"
+    {{
+        $attributes
+            ->merge([
+                'dusk' => "filament.forms.{$statePath}",
+                'id' => $getId(),
+                'type' => 'hidden',
+                $applyStateBindingModifiers('wire:model') => $statePath,
+            ], escape: false)
+            ->merge($getExtraAttributes(), escape: false)
+            ->class(['filament-forms-hidden-component'])
+    }}
 />

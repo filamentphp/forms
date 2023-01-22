@@ -5,6 +5,7 @@ namespace Filament\Forms\Concerns;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
+use Filament\Forms\Form;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 
@@ -13,18 +14,26 @@ use Filament\Support\Exceptions\Halt;
  */
 trait HasFormComponentActions
 {
-    public $mountedFormComponentAction = null;
+    public ?string $mountedFormComponentAction = null;
 
-    public $mountedFormComponentActionData = [];
+    /**
+     * @var array<string, mixed> | null
+     */
+    public ?array $mountedFormComponentActionArguments = [];
 
-    public $mountedFormComponentActionComponent = null;
+    /**
+     * @var array<string, mixed> | null
+     */
+    public ?array $mountedFormComponentActionData = [];
+
+    public ?string $mountedFormComponentActionComponent = null;
 
     protected function hasMountedFormComponentAction(): bool
     {
         return $this->mountedFormComponentActionComponent !== null;
     }
 
-    protected function getMountedFormComponentActionForm(): ?ComponentContainer
+    protected function getMountedFormComponentActionForm(): ?Form
     {
         $action = $this->getMountedFormComponentAction();
 
@@ -36,33 +45,40 @@ trait HasFormComponentActions
             return $this->getCachedForm('mountedFormComponentActionForm');
         }
 
-        return $this->makeForm()
-            ->schema($action->getFormSchema())
-            ->model($this->getMountedFormComponentActionComponent()->getActionFormModel())
-            ->statePath('mountedFormComponentActionData')
-            ->context($this->mountedFormComponentAction);
+        return $action->getForm(
+            $this->makeForm()
+                ->model($this->getMountedFormComponentActionComponent()->getActionFormModel())
+                ->statePath('mountedFormComponentActionData')
+                ->operation($this->mountedFormComponentAction),
+        );
     }
 
-    public function callMountedFormComponentAction(?string $arguments = null)
+    /**
+     * @param  array<string, mixed>  $arguments
+     */
+    public function callMountedFormComponentAction(array $arguments = []): mixed
     {
         $action = $this->getMountedFormComponentAction();
 
         if (! $action) {
-            return;
+            return null;
         }
 
         if ($action->isDisabled()) {
-            return;
+            return null;
         }
 
-        $action->arguments($arguments ? json_decode($arguments, associative: true) : []);
+        $action->arguments(array_merge(
+            $this->mountedFormComponentActionArguments ?? [],
+            $arguments,
+        ));
 
         $form = $this->getMountedFormComponentActionForm();
 
         $result = null;
 
         try {
-            if ($action->hasForm()) {
+            if ($this->mountedFormComponentActionHasForm()) {
                 $action->callBeforeFormValidated();
 
                 $action->formData($form->getState());
@@ -78,7 +94,7 @@ trait HasFormComponentActions
 
             $result = $action->callAfter() ?? $result;
         } catch (Halt $exception) {
-            return;
+            return null;
         } catch (Cancel $exception) {
         }
 
@@ -103,20 +119,26 @@ trait HasFormComponentActions
         return $this->getMountedFormComponentActionComponent()?->getAction($this->mountedFormComponentAction);
     }
 
-    public function mountFormComponentAction(string $component, string $name)
+    /**
+     * @param  array<string, mixed>  $arguments
+     */
+    public function mountFormComponentAction(string $component, string $name, array $arguments = []): mixed
     {
-        $this->mountedFormComponentActionComponent = $component;
         $this->mountedFormComponentAction = $name;
+        $this->mountedFormComponentActionArguments = $arguments;
+        $this->mountedFormComponentActionComponent = $component;
 
         $action = $this->getMountedFormComponentAction();
 
         if (! $action) {
-            return;
+            return null;
         }
 
         if ($action->isDisabled()) {
-            return;
+            return null;
         }
+
+        $action->arguments($this->mountedFormComponentActionArguments);
 
         $this->cacheForm(
             'mountedFormComponentActionForm',
@@ -124,7 +146,9 @@ trait HasFormComponentActions
         );
 
         try {
-            if ($action->hasForm()) {
+            $hasForm = $this->mountedFormComponentActionHasForm();
+
+            if ($hasForm) {
                 $action->callBeforeFormFilled();
             }
 
@@ -132,19 +156,19 @@ trait HasFormComponentActions
                 'form' => $this->getMountedFormComponentActionForm(),
             ]);
 
-            if ($action->hasForm()) {
+            if ($hasForm) {
                 $action->callAfterFormFilled();
             }
         } catch (Halt $exception) {
-            return;
+            return null;
         } catch (Cancel $exception) {
             $this->mountedFormComponentActionComponent = null;
             $this->mountedFormComponentAction = null;
 
-            return;
+            return null;
         }
 
-        if (! $action->shouldOpenModal()) {
+        if (! $this->mountedFormComponentActionShouldOpenModal()) {
             return $this->callMountedFormComponentAction();
         }
 
@@ -153,6 +177,28 @@ trait HasFormComponentActions
         $this->dispatchBrowserEvent('open-modal', [
             'id' => "{$this->id}-form-component-action",
         ]);
+
+        return null;
+    }
+
+    public function mountedFormComponentActionShouldOpenModal(): bool
+    {
+        $action = $this->getMountedFormComponentAction();
+
+        if ($action->isModalHidden()) {
+            return false;
+        }
+
+        return $action->getModalSubheading() ||
+            $action->getModalContent() ||
+            $action->getModalFooter() ||
+            $action->getInfolist() ||
+            $this->mountedFormComponentActionHasForm();
+    }
+
+    public function mountedFormComponentActionHasForm(): bool
+    {
+        return (bool) count($this->getMountedFormComponentActionForm()?->getComponents() ?? []);
     }
 
     public function getMountedFormComponentActionComponent(): ?Component
@@ -172,10 +218,5 @@ trait HasFormComponentActions
         }
 
         return null;
-    }
-
-    protected function getFormComponentActions(): array
-    {
-        return [];
     }
 }

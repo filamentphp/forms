@@ -32,21 +32,25 @@ class Component extends ViewComponent
 
     protected string $evaluationIdentifier = 'component';
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getDefaultEvaluationParameters(): array
     {
+        $operation = $this->getContainer()->getOperation();
+
         return array_merge(parent::getDefaultEvaluationParameters(), [
-            'context' => $this->getContainer()->getContext(),
+            'context' => $operation,
             'get' => $this->getGetCallback(),
             'livewire' => $this->getLivewire(),
             'model' => $this->getModel(),
+            'operation' => $operation,
             'record' => $this->getRecord(),
             'set' => $this->getSetCallback(),
-            'state' => $this->shouldEvaluateWithState() ? $this->getState() : null,
+            'state' => $this->resolveEvaluationParameter(
+                'state',
+                fn (): mixed => $this->getState(),
+            ),
         ]);
-    }
-
-    protected function shouldEvaluateWithState(): bool
-    {
-        return true;
     }
 }

@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 
@@ -23,7 +22,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
     use Concerns\CanBePreloaded;
     use Concerns\CanBeSearchable;
     use Concerns\CanDisableOptions;
-    use Concerns\CanDisablePlaceholderSelection;
+    use Concerns\CanSelectPlaceholder;
     use Concerns\CanLimitItemsLength;
     use Concerns\HasAffixes {
         getActions as getBaseActions;
@@ -36,8 +35,14 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
     use Concerns\HasPlaceholder;
     use HasExtraAlpineAttributes;
 
-    protected string $view = 'forms::components.select';
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.select';
 
+    /**
+     * @var array<Component> | Closure | null
+     */
     protected array | Closure | null $createOptionActionFormSchema = null;
 
     protected ?Closure $createOptionUsing = null;
@@ -52,13 +57,16 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
 
     protected ?Closure $getSearchResultsUsing = null;
 
+    /**
+     * @var array<string> | null
+     */
     protected ?array $searchColumns = null;
 
     protected string | Closure | null $maxItemsMessage = null;
 
-    protected string | Closure | null $position = null;
+    protected string | Closure | null $relationshipTitleAttribute = null;
 
-    protected string | Closure | null $relationshipTitleColumnName = null;
+    protected string | Closure | null $position = null;
 
     protected ?Closure $getOptionLabelFromRecordUsing = null;
 
@@ -104,14 +112,14 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             return $labels;
         });
 
-        $this->placeholder(__('forms::components.select.placeholder'));
+        $this->placeholder(__('filament-forms::components.select.placeholder'));
     }
 
     public function boolean(?string $trueLabel = null, ?string $falseLabel = null, ?string $placeholder = null): static
     {
         $this->options([
-            1 => $trueLabel ?? __('forms::components.select.boolean.true'),
-            0 => $falseLabel ?? __('forms::components.select.boolean.false'),
+            1 => $trueLabel ?? __('filament-forms::components.select.boolean.true'),
+            0 => $falseLabel ?? __('filament-forms::components.select.boolean.false'),
         ]);
 
         $this->placeholder($placeholder ?? '-');
@@ -126,6 +134,9 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $this;
     }
 
+    /**
+     * @param  array<Component> | Closure | null  $schema
+     */
     public function createOptionForm(array | Closure | null $schema): static
     {
         $this->createOptionActionFormSchema = $schema;
@@ -150,6 +161,9 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $createOptionAction;
     }
 
+    /**
+     * @return array<string, Action>
+     */
     public function getActions(): array
     {
         $actions = $this->getBaseActions();
@@ -181,7 +195,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $this->createOptionUsing;
     }
 
-    protected function getCreateOptionActionName(): string
+    public function getCreateOptionActionName(): string
     {
         return 'createOption';
     }
@@ -214,10 +228,10 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
                 $component->state($state);
                 $component->callAfterStateUpdated();
             })
-            ->icon('heroicon-o-plus')
+            ->icon('heroicon-m-plus')
             ->iconButton()
-            ->modalHeading(__('forms::components.select.actions.create_option.modal.heading'))
-            ->modalButton(__('forms::components.select.actions.create_option.modal.actions.create.label'))
+            ->modalHeading(__('filament-forms::components.select.actions.create_option.modal.heading'))
+            ->modalButton(__('filament-forms::components.select.actions.create_option.modal.actions.create.label'))
             ->hidden(fn (Component $component): bool => $component->isDisabled());
 
         if ($this->modifyCreateOptionActionUsing) {
@@ -229,6 +243,9 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $action;
     }
 
+    /**
+     * @return array<Component> | null
+     */
     public function getCreateOptionActionFormSchema(): ?array
     {
         return $this->evaluate($this->createOptionActionFormSchema);
@@ -255,6 +272,9 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $this;
     }
 
+    /**
+     * @param  bool | array<string> | Closure  $condition
+     */
     public function searchable(bool | array | Closure $condition = true): static
     {
         if (is_array($condition)) {
@@ -308,6 +328,9 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         ]);
     }
 
+    /**
+     * @return array<string>
+     */
     public function getOptionLabels(): array
     {
         $labels = $this->evaluate($this->getOptionLabelsUsing, [
@@ -321,17 +344,23 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $labels;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getSearchColumns(): ?array
     {
         $columns = $this->searchColumns;
 
         if ($this->hasRelationship()) {
-            $columns ??= [$this->getRelationshipTitleColumnName()];
+            $columns ??= [$this->getRelationshipTitleAttribute()];
         }
 
         return $columns;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getSearchResults(string $search): array
     {
         if (! $this->getSearchResultsUsing) {
@@ -351,21 +380,34 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $results;
     }
 
+    /**
+     * @return array<array{'label': string, 'value': string}>
+     */
     public function getSearchResultsForJs(string $search): array
     {
         return $this->transformOptionsForJs($this->getSearchResults($search));
     }
 
+    /**
+     * @return array<array{'label': string, 'value': string}>
+     */
     public function getOptionsForJs(): array
     {
         return $this->transformOptionsForJs($this->getOptions());
     }
 
+    /**
+     * @return array<array{'label': string, 'value': string}>
+     */
     public function getOptionLabelsForJs(): array
     {
         return $this->transformOptionsForJs($this->getOptionLabels());
     }
 
+    /**
+     * @param  array<string>  $options
+     * @return array<array{'label': string, 'value': string}>
+     */
     protected function transformOptionsForJs(array $options): array
     {
         return collect($options)
@@ -376,7 +418,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
 
     public function isMultiple(): bool
     {
-        return $this->evaluate($this->isMultiple);
+        return (bool) $this->evaluate($this->isMultiple);
     }
 
     public function isSearchable(): bool
@@ -384,10 +426,10 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $this->evaluate($this->isSearchable) || $this->isMultiple();
     }
 
-    public function relationship(string | Closure $relationshipName, string | Closure $titleColumnName, ?Closure $callback = null): static
+    public function relationship(string | Closure $relationshipName, string | Closure $titleAttribute, ?Closure $callback = null): static
     {
         $this->relationship = $relationshipName;
-        $this->relationshipTitleColumnName = $titleColumnName;
+        $this->relationshipTitleAttribute = $titleAttribute;
 
         $this->getSearchResultsUsing(static function (Select $component, ?string $search) use ($callback): array {
             $relationship = $component->getRelationship();
@@ -401,7 +443,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             }
 
             if (empty($relationshipQuery->getQuery()->orders)) {
-                $relationshipQuery->orderBy($component->getRelationshipTitleColumnName());
+                $relationshipQuery->orderBy($component->getRelationshipTitleAttribute());
             }
 
             $component->applySearchConstraint(
@@ -433,7 +475,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             }
 
             return $relationshipQuery
-                ->pluck($component->getRelationshipTitleColumnName(), $keyName)
+                ->pluck($component->getRelationshipTitleAttribute(), $keyName)
                 ->toArray();
         });
 
@@ -453,7 +495,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             }
 
             if (empty($relationshipQuery->getQuery()->orders)) {
-                $relationshipQuery->orderBy($component->getRelationshipTitleColumnName());
+                $relationshipQuery->orderBy($component->getRelationshipTitleAttribute());
             }
 
             if ($relationship instanceof \Znck\Eloquent\Relations\BelongsToThrough) {
@@ -472,7 +514,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             }
 
             return $relationshipQuery
-                ->pluck($component->getRelationshipTitleColumnName(), $keyName)
+                ->pluck($component->getRelationshipTitleAttribute(), $keyName)
                 ->toArray();
         });
 
@@ -535,7 +577,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
                 return $component->getOptionLabelFromRecord($record);
             }
 
-            return $record->getAttributeValue($component->getRelationshipTitleColumnName());
+            return $record->getAttributeValue($component->getRelationshipTitleAttribute());
         });
 
         $this->getOptionLabelsUsing(static function (Select $component, array $values) use ($callback): array {
@@ -561,7 +603,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             }
 
             return $relationshipQuery
-                ->pluck($component->getRelationshipTitleColumnName(), $relatedKeyName)
+                ->pluck($component->getRelationshipTitleAttribute(), $relatedKeyName)
                 ->toArray();
         });
 
@@ -620,11 +662,11 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         $isFirst = true;
 
         $query->where(function (Builder $query) use ($isFirst, $searchOperator, $search): Builder {
-            foreach ($this->getSearchColumns() as $searchColumnName) {
+            foreach ($this->getSearchColumns() as $searchColumn) {
                 $whereClause = $isFirst ? 'where' : 'orWhere';
 
                 $query->{$whereClause}(
-                    $searchColumnName,
+                    $searchColumn,
                     $searchOperator,
                     "%{$search}%",
                 );
@@ -655,15 +697,15 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $this->evaluate($this->getOptionLabelFromRecordUsing, ['record' => $record]);
     }
 
-    public function getRelationshipTitleColumnName(): string
+    public function getRelationshipTitleAttribute(): string
     {
-        return $this->evaluate($this->relationshipTitleColumnName);
+        return $this->evaluate($this->relationshipTitleAttribute);
     }
 
     public function getLabel(): string
     {
         if ($this->label === null && $this->hasRelationship()) {
-            return (string) Str::of($this->getRelationshipName())
+            return (string) str($this->getRelationshipName())
                 ->before('.')
                 ->kebab()
                 ->replace(['-', '_'], ' ')
@@ -730,7 +772,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
     {
         $maxItems = $this->getMaxItems();
 
-        return $this->evaluate($this->maxItemsMessage) ?? trans_choice('forms::components.select.max_items_message', $maxItems, [
+        return $this->evaluate($this->maxItemsMessage) ?? trans_choice('filament-forms::components.select.max_items_message', $maxItems, [
             ':count' => $maxItems,
         ]);
     }
