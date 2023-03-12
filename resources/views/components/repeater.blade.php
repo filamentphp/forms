@@ -65,11 +65,11 @@
                     @foreach ($containers as $uuid => $item)
                         <li
                             x-data="{
-                                isCollapsed: @js($isCollapsed()),
+                                isCollapsed: @js($isCollapsed($item)),
                             }"
                             x-on:repeater-collapse.window="$event.detail === '{{ $statePath }}' && (isCollapsed = true)"
                             x-on:repeater-expand.window="$event.detail === '{{ $statePath }}' && (isCollapsed = false)"
-                            wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.item"
+                            wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.{{ $field::class }}.item"
                             x-sortable-item="{{ $uuid }}"
                             x-on:expand-concealing-component.window="
                                 error = $el.querySelector('[data-validation-error]')
@@ -306,7 +306,7 @@
                 <x-filament::button
                     :wire:click="'dispatchFormEvent(\'repeater::add\', \'' . $statePath . '\')'"
                     size="sm"
-                    type="button"
+                    outlined
                 >
                     {{ $getAddButtonLabel() }}
                 </x-filament::button>
