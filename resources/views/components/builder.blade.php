@@ -67,7 +67,7 @@
                     <li
                         x-data="{
                             isCreateButtonVisible: false,
-                            isCollapsed: @js($isCollapsed()),
+                            isCollapsed: @js($isCollapsed($item)),
                         }"
                         x-on:builder-collapse.window="$event.detail === '{{ $getStatePath() }}' && (isCollapsed = true)"
                         x-on:builder-expand.window="$event.detail === '{{ $getStatePath() }}' && (isCollapsed = false)"
@@ -75,7 +75,7 @@
                         x-on:mouseenter="isCreateButtonVisible = true"
                         x-on:click.away="isCreateButtonVisible = false"
                         x-on:mouseleave="isCreateButtonVisible = false"
-                        wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.item"
+                        wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.{{ $field::class }}.item"
                         wire:sortable.item="{{ $uuid }}"
                         x-on:expand-concealing-component.window="
                             error = $el.querySelector('[data-validation-error]')
@@ -352,7 +352,7 @@
                 class="flex justify-center"
             >
                 <x-slot name="trigger">
-                    <x-forms::button size="sm">
+                    <x-forms::button size="sm" outlined>
                         {{ $getCreateItemButtonLabel() }}
                     </x-forms::button>
                 </x-slot>

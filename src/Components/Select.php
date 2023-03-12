@@ -8,6 +8,7 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,8 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
     protected array | Closure | null $createOptionActionFormSchema = null;
 
     protected ?Closure $createOptionUsing = null;
+
+    protected string | Closure | null $createOptionModalHeading = null;
 
     protected ?Closure $modifyCreateOptionActionUsing = null;
 
@@ -216,7 +219,7 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
             })
             ->icon('heroicon-o-plus')
             ->iconButton()
-            ->modalHeading(__('forms::components.select.actions.create_option.modal.heading'))
+            ->modalHeading($this->getCreateOptionModalHeading() ?? __('forms::components.select.actions.create_option.modal.heading'))
             ->modalButton(__('forms::components.select.actions.create_option.modal.actions.create.label'))
             ->hidden(fn (Component $component): bool => $component->isDisabled());
 
@@ -232,6 +235,18 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
     public function getCreateOptionActionFormSchema(): ?array
     {
         return $this->evaluate($this->createOptionActionFormSchema);
+    }
+
+    public function createOptionModalHeading(string | Closure | null $heading): static
+    {
+        $this->createOptionModalHeading = $heading;
+
+        return $this;
+    }
+
+    public function getCreateOptionModalHeading(): ?string
+    {
+        return $this->evaluate($this->createOptionModalHeading);
     }
 
     public function getOptionLabelUsing(?Closure $callback): static
@@ -687,14 +702,16 @@ class Select extends Field implements Contracts\HasNestedRecursiveValidationRule
         return $this->evaluate($this->relationshipTitleColumnName);
     }
 
-    public function getLabel(): string
+    public function getLabel(): string | Htmlable | null
     {
         if ($this->label === null && $this->hasRelationship()) {
-            return (string) Str::of($this->getRelationshipName())
+            $label = (string) Str::of($this->getRelationshipName())
                 ->before('.')
                 ->kebab()
                 ->replace(['-', '_'], ' ')
                 ->ucfirst();
+
+            return ($this->shouldTranslateLabel) ? __($label) : $label;
         }
 
         return parent::getLabel();
