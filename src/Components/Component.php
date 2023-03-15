@@ -53,4 +53,9 @@ class Component extends ViewComponent
             ),
         ]);
     }
+
+    public function getKey(): ?string
+    {
+        return null;
+    }
 }
