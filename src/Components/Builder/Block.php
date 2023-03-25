@@ -5,11 +5,12 @@ namespace Filament\Forms\Components\Builder;
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Concerns;
-use Illuminate\Support\Str;
 
 class Block extends Component
 {
-    use Concerns\HasName;
+    use Concerns\HasName {
+        getLabel as getDefaultLabel;
+    }
 
     protected string $view = 'forms::components.builder.block';
 
@@ -51,13 +52,9 @@ class Block extends Component
 
     public function getLabel(): string
     {
-        $label = $this->evaluate($this->label, array_merge(
+        return $this->evaluate(
+            $this->label,
             $this->labelState ? ['state' => $this->labelState] : [],
-        ));
-
-        return $label ?? (string) Str::of($this->getName())
-            ->kebab()
-            ->replace(['-', '_'], ' ')
-            ->ucfirst();
+        ) ?? $this->getDefaultLabel();
     }
 }
