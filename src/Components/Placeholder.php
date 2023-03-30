@@ -2,8 +2,6 @@
 
 namespace Filament\Forms\Components;
 
-use Illuminate\Contracts\Support\Htmlable;
-
 class Placeholder extends Component implements Contracts\HasHintActions
 {
     use Concerns\HasHelperText;
@@ -54,7 +52,6 @@ class Placeholder extends Component implements Contracts\HasHintActions
     {
         return $this->evaluate(
             $this->content,
-            exceptParameters: ['state'],
         );
     }
 }

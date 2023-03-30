@@ -6,6 +6,7 @@ use Filament\Forms\Concerns\HasColumns;
 use Filament\Forms\Concerns\HasStateBindingModifiers;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasExtraAttributes;
+use ReflectionParameter;
 
 class Component extends ViewComponent
 {
@@ -32,26 +33,18 @@ class Component extends ViewComponent
 
     protected string $evaluationIdentifier = 'component';
 
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getDefaultEvaluationParameters(): array
+    protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter): mixed
     {
-        $operation = $this->getContainer()->getOperation();
-
-        return array_merge(parent::getDefaultEvaluationParameters(), [
-            'context' => $operation,
+        return match ($parameter->getName()) {
+            'context', 'operation' => $this->getContainer()->getOperation(),
             'get' => $this->getGetCallback(),
             'livewire' => $this->getLivewire(),
             'model' => $this->getModel(),
-            'operation' => $operation,
             'record' => $this->getRecord(),
             'set' => $this->getSetCallback(),
-            'state' => $this->resolveEvaluationParameter(
-                'state',
-                fn (): mixed => $this->getState(),
-            ),
-        ]);
+            'state' => $this->getState(),
+            default => parent::resolveClosureDependencyForEvaluation($parameter),
+        };
     }
 
     public function getKey(): ?string

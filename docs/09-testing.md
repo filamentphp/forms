@@ -2,6 +2,8 @@
 title: Testing
 ---
 
+## Overview
+
 All examples in this guide will be written using [Pest](https://pestphp.com). However, you can easily adapt this to PHPUnit.
 
 Since the form builder works on Livewire components, you can use the [Livewire testing helpers](https://laravel-livewire.com/docs/testing). However, we have custom testing helpers that you can use with forms:
@@ -100,6 +102,19 @@ use function Pest\Livewire\livewire;
 it('has a title field', function () {
     livewire(CreatePost::class)
         ->assertFormFieldExists('title');
+});
+```
+
+You may pass a function as an additional argument in order to assert that a field passes a given "truth test". This is useful for asserting that a field has a specific configuration:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('has a title field', function () {
+    livewire(CreatePost::class)
+        ->assertFormFieldExists('title', function (TextInput $field): bool {
+            return $input->isDisabled();
+        });
 });
 ```
 

@@ -4,6 +4,7 @@ namespace Filament\Forms;
 
 use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Components\ViewComponent;
+use ReflectionParameter;
 
 class ComponentContainer extends ViewComponent
 {
@@ -42,15 +43,13 @@ class ComponentContainer extends ViewComponent
         return app(static::class, ['livewire' => $livewire]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getDefaultEvaluationParameters(): array
+    protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter): mixed
     {
-        return array_merge(parent::getDefaultEvaluationParameters(), [
+        return match ($parameter->getName()) {
             'livewire' => $this->getLivewire(),
             'model' => $this->getModel(),
             'record' => $this->getRecord(),
-        ]);
+            default => parent::resolveClosureDependencyForEvaluation($parameter),
+        };
     }
 }
