@@ -31,7 +31,7 @@ trait HasState
 
     protected ?string $statePath = null;
 
-    protected string $cachedFullStatePath;
+    protected string $cachedAbsoluteStatePath;
 
     public function afterStateHydrated(?Closure $callback): static
     {
@@ -295,13 +295,17 @@ trait HasState
 
     public function getStatePath(bool $isAbsolute = true): string
     {
-        if (isset($this->cachedFullStatePath)) {
-            return $this->cachedFullStatePath;
+        if (! $isAbsolute) {
+            return $this->statePath ?? '';
+        }
+
+        if (isset($this->cachedAbsoluteStatePath)) {
+            return $this->cachedAbsoluteStatePath;
         }
 
         $pathComponents = [];
 
-        if ($isAbsolute && ($containerStatePath = $this->getContainer()->getStatePath())) {
+        if ($containerStatePath = $this->getContainer()->getStatePath()) {
             $pathComponents[] = $containerStatePath;
         }
 
@@ -309,7 +313,7 @@ trait HasState
             $pathComponents[] = $this->statePath;
         }
 
-        return $this->cachedFullStatePath = implode('.', $pathComponents);
+        return $this->cachedAbsoluteStatePath = implode('.', $pathComponents);
     }
 
     public function hasStatePath(): bool
@@ -364,8 +368,8 @@ trait HasState
         return "{$containerPath}.{$path}";
     }
 
-    protected function flushCachedStatePath(): void
+    protected function flushCachedAbsoluteStatePath(): void
     {
-        unset($this->cachedFullStatePath);
+        unset($this->cachedAbsoluteStatePath);
     }
 }
