@@ -23,9 +23,11 @@ export default (Alpine) => {
             optionsLimit,
             placeholder,
             position,
+            isPlaceholderSelectionDisabled,
             searchDebounce,
             searchingMessage,
             searchPrompt,
+            searchableOptionFields,
             state,
         }) => {
             return {
@@ -54,12 +56,13 @@ export default (Alpine) => {
                         noResultsText: noSearchResultsMessage,
                         placeholderValue: placeholder,
                         position: position ?? 'auto',
-                        removeItemButton: true,
+                        removeItemButton: !isPlaceholderSelectionDisabled,
                         renderChoiceLimit: optionsLimit,
-                        searchFields: ['label'],
+                        searchFields: searchableOptionFields ?? ['label'],
                         searchPlaceholderValue: searchPrompt,
                         searchResultLimit: optionsLimit,
                         shouldSort: false,
+                        searchFloor: hasDynamicSearchResults ? 0 : 1,
                     })
 
                     await this.refreshChoices({ withInitialOptions: true })
@@ -112,16 +115,18 @@ export default (Alpine) => {
                             async (event) => {
                                 let search = event.detail.value?.trim()
 
-                                if ([null, undefined, ''].includes(search)) {
-                                    return
-                                }
+                                let label = [null, undefined, ''].includes(
+                                    search,
+                                )
+                                    ? loadingMessage
+                                    : searchingMessage
 
                                 this.isSearching = true
 
                                 this.select.clearChoices()
                                 await this.select.setChoices([
                                     {
-                                        label: searchingMessage,
+                                        label: label,
                                         value: '',
                                         disabled: true,
                                     },
