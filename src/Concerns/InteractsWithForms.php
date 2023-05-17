@@ -6,10 +6,10 @@ use Closure;
 use Exception;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
+use Filament\Support\Concerns\ResolvesDynamicLivewireProperties;
 use Filament\Support\Contracts\TranslatableContentDriver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
-use Livewire\Exceptions\PropertyNotFoundException;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
@@ -17,6 +17,7 @@ trait InteractsWithForms
 {
     use WithFileUploads;
     use HasFormComponentActions;
+    use ResolvesDynamicLivewireProperties;
 
     /**
      * @var array <string, TemporaryUploadedFile | null>
@@ -33,22 +34,6 @@ trait InteractsWithForms
     protected bool $isCachingForms = false;
 
     protected bool $hasFormsModalRendered = false;
-
-    /**
-     * @param  string  $property
-     */
-    public function __get($property): mixed
-    {
-        try {
-            return parent::__get($property);
-        } catch (PropertyNotFoundException $exception) {
-            if ((! $this->isCachingForms) && $form = $this->getCachedForm($property)) {
-                return $form;
-            }
-
-            throw $exception;
-        }
-    }
 
     public function dispatchFormEvent(mixed ...$args): void
     {
@@ -338,7 +323,7 @@ trait InteractsWithForms
         return array_key_exists($name, $this->getCachedForms());
     }
 
-    public function getCachedForm(string $name): ?Form
+    public function getForm(string $name): ?Form
     {
         return $this->getCachedForms()[$name] ?? null;
     }
@@ -445,5 +430,10 @@ trait InteractsWithForms
     protected function makeForm(): Form
     {
         return Form::make($this);
+    }
+
+    public function isCachingForms(): bool
+    {
+        return $this->isCachingForms;
     }
 }
