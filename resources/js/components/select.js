@@ -1,7 +1,6 @@
 import Choices from 'choices.js'
 
 export default function selectFormComponent({
-    canSelectPlaceholder,
     isHtmlAllowed,
     getOptionLabelUsing,
     getOptionLabelsUsing,
@@ -24,7 +23,6 @@ export default function selectFormComponent({
     searchDebounce,
     searchingMessage,
     searchPrompt,
-    searchableOptionFields,
     state,
     statePath,
 }) {
@@ -54,13 +52,12 @@ export default function selectFormComponent({
                 noResultsText: noSearchResultsMessage,
                 placeholderValue: placeholder,
                 position: position ?? 'auto',
-                removeItemButton: canSelectPlaceholder,
+                removeItemButton: true,
                 renderChoiceLimit: optionsLimit,
-                searchFields: searchableOptionFields ?? ['label'],
+                searchFields: ['label'],
                 searchPlaceholderValue: searchPrompt,
                 searchResultLimit: optionsLimit,
                 shouldSort: false,
-                searchFloor: hasDynamicSearchResults ? 0 : 1,
             })
 
             await this.refreshChoices({ withInitialOptions: true })
@@ -106,14 +103,16 @@ export default function selectFormComponent({
                 this.$refs.input.addEventListener('search', async (event) => {
                     let search = event.detail.value?.trim()
 
+                    if ([null, undefined, ''].includes(search)) {
+                        return
+                    }
+
                     this.isSearching = true
 
                     this.select.clearChoices()
                     await this.select.setChoices([
                         {
-                            label: [null, undefined, ''].includes(search)
-                                ? loadingMessage
-                                : searchingMessage,
+                            label: searchingMessage,
                             value: '',
                             disabled: true,
                         },

@@ -13,7 +13,7 @@ export default function textInputFormComponent({ getMaskOptionsUsing, state }) {
                 return
             }
 
-            if (typeof this.state !== 'undefined') {
+            if (this.state) {
                 this.$el.value = this.state?.valueOf()
             }
 

@@ -16,7 +16,7 @@
     :component="$getFieldWrapperView()"
     :field="$field"
 >
-    <x-filament-forms::affixes
+    <x-filament::input.affixes
         :state-path="$statePath"
         :prefix="$prefixLabel"
         :prefix-actions="$getPrefixActions()"
@@ -69,19 +69,18 @@
                 ax-load
                 ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('select', 'filament/forms') }}"
                 x-data="selectFormComponent({
-                    canSelectPlaceholder: @js($canSelectPlaceholder()),
                     isHtmlAllowed: @js($isHtmlAllowed()),
                     getOptionLabelUsing: async () => {
-                        return await $wire.getFormSelectOptionLabel(@js($statePath))
+                        return await $wire.getSelectOptionLabel(@js($statePath))
                     },
                     getOptionLabelsUsing: async () => {
-                        return await $wire.getFormSelectOptionLabels(@js($statePath))
+                        return await $wire.getSelectOptionLabels(@js($statePath))
                     },
                     getOptionsUsing: async () => {
-                        return await $wire.getFormSelectOptions(@js($statePath))
+                        return await $wire.getSelectOptions(@js($statePath))
                     },
                     getSearchResultsUsing: async (search) => {
-                        return await $wire.getFormSelectSearchResults(@js($statePath), search)
+                        return await $wire.getSelectSearchResults(@js($statePath), search)
                     },
                     isAutofocused: @js($isAutofocused()),
                     isDisabled: @js($isDisabled),
@@ -100,8 +99,7 @@
                     searchDebounce: @js($getSearchDebounce()),
                     searchingMessage: @js($getSearchingMessage()),
                     searchPrompt: @js($getSearchPrompt()),
-                    searchableOptionFields: @js($getSearchableOptionFields()),
-                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')') }},
                     statePath: @js($statePath),
                 })"
                 x-on:keydown.esc="select.dropdown.isActive && $event.stopPropagation()"
@@ -133,5 +131,5 @@
                 ></select>
             </div>
         @endif
-    </x-filament-forms::affixes>
+    </x-filament::input.affixes>
 </x-dynamic-component>

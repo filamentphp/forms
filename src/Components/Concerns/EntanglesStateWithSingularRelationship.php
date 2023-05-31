@@ -24,7 +24,7 @@ trait EntanglesStateWithSingularRelationship
 
     protected ?Closure $mutateRelationshipDataBeforeSaveUsing = null;
 
-    public function relationship(string $relationshipName, bool | Closure $condition = true): static
+    public function relationship(string $relationshipName): static
     {
         $this->relationship = $relationshipName;
         $this->statePath($relationshipName);
@@ -35,22 +35,16 @@ trait EntanglesStateWithSingularRelationship
             $component->fillFromRelationship();
         });
 
-        $this->saveRelationshipsBeforeChildrenUsing(static function (Component | CanEntangleWithSingularRelationships $component, HasForms $livewire) use ($condition): void {
-            $record = $component->getCachedExistingRecord();
-
-            if (! $component->evaluate($condition)) {
-                $record?->delete();
-
-                return;
-            }
-
-            if ($record) {
-                return;
-            }
-
+        $this->saveRelationshipsBeforeChildrenUsing(static function (Component | CanEntangleWithSingularRelationships $component, HasForms $livewire): void {
             $relationship = $component->getRelationship();
 
             if ($relationship instanceof BelongsTo) {
+                return;
+            }
+
+            $record = $component->getCachedExistingRecord();
+
+            if ($record) {
                 return;
             }
 
@@ -73,11 +67,7 @@ trait EntanglesStateWithSingularRelationship
             $component->cachedExistingRecord($record);
         });
 
-        $this->saveRelationshipsUsing(static function (Component | CanEntangleWithSingularRelationships $component, HasForms $livewire) use ($condition): void {
-            if (! $component->evaluate($condition)) {
-                return;
-            }
-
+        $this->saveRelationshipsUsing(static function (Component | CanEntangleWithSingularRelationships $component, HasForms $livewire): void {
             $data = $component->getChildComponentContainer()->getState(shouldCallHooksBefore: false);
 
             $record = $component->getCachedExistingRecord();

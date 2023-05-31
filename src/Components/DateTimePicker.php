@@ -38,8 +38,6 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
 
     protected bool | Closure $isNative = true;
 
-    protected string | bool | Closure | null $icon = null;
-
     protected bool | Closure $hasDate = true;
 
     protected bool | Closure $hasSeconds = true;
@@ -173,13 +171,6 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
     public function format(string | Closure | null $format): static
     {
         $this->format = $format;
-
-        return $this;
-    }
-
-    public function icon(string | bool | Closure | null $icon): static
-    {
-        $this->icon = $icon;
 
         return $this;
     }
@@ -511,10 +502,5 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
         }
 
         return 'datetime-local';
-    }
-
-    public function getIcon(): string | bool | null
-    {
-        return $this->evaluate($this->icon);
     }
 }

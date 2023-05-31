@@ -60,10 +60,7 @@ trait HasAffixes
      */
     public function prefixActions(array $actions): static
     {
-        $this->prefixActions = [
-            ...$this->prefixActions,
-            ...$actions,
-        ];
+        $this->prefixActions = array_merge($this->prefixActions, $actions);
 
         return $this;
     }
@@ -80,10 +77,7 @@ trait HasAffixes
      */
     public function suffixActions(array $actions): static
     {
-        $this->suffixActions = [
-            ...$this->suffixActions,
-            ...$actions,
-        ];
+        $this->suffixActions = array_merge($this->suffixActions, $actions);
 
         return $this;
     }
@@ -160,6 +154,11 @@ trait HasAffixes
     public function getPrefixLabel(): ?string
     {
         return $this->evaluate($this->prefixLabel);
+    }
+
+    public function getPostfixLabel(): ?string
+    {
+        return $this->getSuffixLabel();
     }
 
     public function getSuffixLabel(): ?string

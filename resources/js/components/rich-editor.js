@@ -18,16 +18,6 @@ Trix.config.blockAttributes.subHeading = {
     group: false,
 }
 
-Trix.config.textAttributes.underline = {
-    style: { textDecoration: 'underline' },
-    inheritable: true,
-    parser: (element) => {
-        const style = window.getComputedStyle(element)
-
-        return style.textDecoration.includes('underline')
-    },
-}
-
 Trix.Block.prototype.breaksOnReturn = function () {
     const lastAttribute = this.getLastAttribute()
     const blockConfig = Trix.getBlockConfig(

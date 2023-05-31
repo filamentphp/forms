@@ -28,10 +28,7 @@ trait HasActions
      */
     public function registerActions(array $actions): static
     {
-        $this->actions = [
-            ...$this->actions,
-            ...$actions,
-        ];
+        $this->actions = array_merge($this->actions, $actions);
 
         return $this;
     }
@@ -57,18 +54,18 @@ trait HasActions
         $this->cachedActions = [];
 
         if ($this instanceof HasAffixActions) {
-            $this->cachedActions = [
-                ...$this->cachedActions,
-                ...$this->getPrefixActions(),
-                ...$this->getSuffixActions(),
-            ];
+            $this->cachedActions = array_merge(
+                $this->cachedActions,
+                $this->getPrefixActions(),
+                $this->getSuffixActions(),
+            );
         }
 
         if ($this instanceof HasHintActions) {
-            $this->cachedActions = [
-                ...$this->cachedActions,
-                ...$this->getHintActions(),
-            ];
+            $this->cachedActions = array_merge(
+                $this->cachedActions,
+                $this->getHintActions(),
+            );
         }
 
         foreach ($this->actions as $registeredAction) {

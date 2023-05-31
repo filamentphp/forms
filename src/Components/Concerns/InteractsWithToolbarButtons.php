@@ -33,10 +33,7 @@ trait InteractsWithToolbarButtons
      */
     public function enableToolbarButtons(array $buttonsToEnable = []): static
     {
-        $this->toolbarButtons = [
-            ...$this->getToolbarButtons(),
-            ...$buttonsToEnable,
-        ];
+        $this->toolbarButtons = array_merge($this->getToolbarButtons(), $buttonsToEnable);
 
         return $this;
     }

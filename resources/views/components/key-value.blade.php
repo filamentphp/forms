@@ -17,9 +17,8 @@
         ax-load
         ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
         x-data="keyValueFormComponent({
-            state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+            state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')') }},
         })"
-        wire:ignore
         {{
             $attributes
                 ->merge($getExtraAttributes(), escape: false)

@@ -53,13 +53,6 @@ trait CanBeValidated
         return $this;
     }
 
-    public function ascii(bool | Closure $condition = true): static
-    {
-        $this->rule('ascii', $condition);
-
-        return $this;
-    }
-
     public function confirmed(bool | Closure $condition = true): static
     {
         $this->rule('confirmed', $condition);
@@ -416,10 +409,10 @@ trait CanBeValidated
 
     public function rule(mixed $rule, bool | Closure $condition = true): static
     {
-        $this->rules = [
-            ...$this->rules,
-            [$rule, $condition],
-        ];
+        $this->rules = array_merge(
+            $this->rules,
+            [[$rule, $condition]],
+        );
 
         return $this;
     }
@@ -433,10 +426,10 @@ trait CanBeValidated
             $rules = explode('|', $rules);
         }
 
-        $this->rules = [
-            ...$this->rules,
-            ...array_map(static fn (string | object $rule): array => [$rule, $condition], $rules),
-        ];
+        $this->rules = array_merge(
+            $this->rules,
+            array_map(static fn (string | object $rule) => [$rule, $condition], $rules),
+        );
 
         return $this;
     }

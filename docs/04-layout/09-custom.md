@@ -12,7 +12,13 @@ use Filament\Forms\Components\View;
 View::make('filament.forms.components.wizard')
 ```
 
-This assumes that you have a `resources/views/filament/forms/components/wizard.blade.php` file.
+Inside your view, you may render the component's `schema()` using the `$getChildComponentContainer()` closure:
+
+```blade
+<div>
+    {{ $getChildComponentContainer() }}
+</div>
+```
 
 ## Custom layout classes
 
@@ -37,29 +43,15 @@ class Wizard extends Component
 
     public static function make(): static
     {
-        return app(static::class);
+        return new static();
     }
 }
 ```
 
-It will also create a view file at `resources/views/filament/forms/components/wizard.blade.php`.
-
-## Rendering the component's schema
-
-Inside your view, you may render the component's `schema()` using the `$getChildComponentContainer()` function:
+Inside your view, you may render the component's `schema()` using the `$getChildComponentContainer()` closure:
 
 ```blade
 <div>
     {{ $getChildComponentContainer() }}
-</div>
-```
-
-## Accessing the Eloquent record
-
-Inside your view, you may access the Eloquent record using the `$getRecord()` function:
-
-```blade
-<div>
-    {{ $getRecord()->name }}
 </div>
 ```

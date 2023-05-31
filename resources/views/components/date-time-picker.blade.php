@@ -1,6 +1,5 @@
 @php
     $datalistOptions = $getDatalistOptions();
-    $icon = $getIcon();
     $id = $getId();
     $isDisabled = $isDisabled();
     $statePath = $getStatePath();
@@ -14,7 +13,7 @@
     :component="$getFieldWrapperView()"
     :field="$field"
 >
-    <x-filament-forms::affixes
+    <x-filament::input.affixes
         :state-path="$statePath"
         :prefix="$prefixLabel"
         :prefix-actions="$getPrefixActions()"
@@ -67,7 +66,7 @@
                     isAutofocused: @js($isAutofocused()),
                     locale: @js(app()->getLocale()),
                     shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
-                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')') }},
                 })"
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"
                 {{
@@ -98,15 +97,13 @@
                     tabindex="-1"
                     @disabled($isDisabled)
                     {{ $getExtraTriggerAttributeBag()->class([
-                        'bg-white relative w-full border py-2 text-start cursor-default shadow-sm outline-none sm:text-sm dark:bg-gray-700',
+                        'bg-white relative w-full border py-2 ps-3 pe-10 text-start cursor-default shadow-sm outline-none sm:text-sm dark:bg-gray-700',
                         'focus-within:ring-1 focus-within:ring-inset' => ! $isDisabled,
                         'border-gray-300 focus-within:border-primary-500 focus-within:ring-primary-500 dark:border-gray-600 dark:focus-within:border-primary-500' => ! $errors->has($statePath),
                         'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400' => $errors->has($statePath),
                         'opacity-70 dark:text-gray-300' => $isDisabled,
                         'rounded-s-lg' => ! ($prefixLabel || $prefixIcon),
                         'rounded-e-lg' => ! ($suffixLabel || $suffixIcon),
-                        'px-3' => $icon === false,
-                        'ps-3 pe-10' => $icon !== false,
                     ]) }}
                 >
                     <input
@@ -116,21 +113,19 @@
                         x-model="displayText"
                         @if ($id = $getId()) id="{{ $id }}" @endif
                         @class([
-                            'w-full h-full p-0 placeholder-gray-400 bg-transparent border-0 outline-none focus:outline-none focus:placeholder-gray-500 focus:ring-0 dark:bg-gray-700 dark:placeholder-gray-400',
+                            'w-full h-full p-0 placeholder-gray-400 bg-transparent border-0 outline-none focus:placeholder-gray-500 focus:ring-0 dark:bg-gray-700 dark:placeholder-gray-400',
                             'cursor-default' => $isDisabled,
                         ])
                     />
 
-                    @if ($icon !== false)
-                        <span class="absolute inset-y-0 end-0 flex items-center pe-2 pointer-events-none">
-                            <x-filament::icon
-                                name="heroicon-m-calendar"
-                                alias="filament-forms::components.date-time-picker.suffix"
-                                color="text-gray-400 dark:text-gray-400"
-                                size="h-5 w-5"
-                            />
-                        </span>
-                    @endif
+                    <span class="absolute inset-y-0 end-0 flex items-center pe-2 pointer-events-none">
+                        <x-filament::icon
+                            name="heroicon-m-calendar"
+                            alias="filament-forms::components.date-time-picker.suffix"
+                            color="text-gray-400 dark:text-gray-400"
+                            size="h-5 w-5"
+                        />
+                    </span>
                 </button>
 
                 <div
@@ -249,7 +244,7 @@
                 </div>
             </div>
         @endif
-    </x-filament-forms::affixes>
+    </x-filament::input.affixes>
 
     @if ($datalistOptions)
         <datalist id="{{ $id }}-list">

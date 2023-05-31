@@ -58,10 +58,7 @@ trait HasHint
      */
     public function hintActions(array $actions): static
     {
-        $this->hintActions = [
-            ...$this->hintActions,
-            ...$actions,
-        ];
+        $this->hintActions = array_merge($this->hintActions, $actions);
 
         return $this;
     }

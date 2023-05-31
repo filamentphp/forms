@@ -82,7 +82,7 @@ TextInput::make('name')
     ->default('John')
 ```
 
-Note that these defaults are only used when the form is loaded without existing data. Inside [panel resources](../../panels/resources#resource-forms) this only works on Create Pages, as Edit Pages will always fill the data from the model.
+Note that these defaults are only used when the form is loaded without existing data. Inside that inside [app framework resources](../../app/resources#forms) this only works on Create Pages, as Edit Pages will always fill the data from the model.
 
 ## Adding helper text below the field
 
@@ -112,7 +112,7 @@ TextInput::make('password')
 
 ### Changing the text color of the hint
 
-You can change the text color of the hint. By default it's gray, but you may use `danger`, `gray`, `info`, `primary`, `secondary`, `success` and `warning`:
+You can change the text color of the hint. By default it's gray, but you may use `primary`, `secondary`, `success`, `warning`, or `danger`:
 
 ```php
 use Filament\Forms\Components\RichEditor;
