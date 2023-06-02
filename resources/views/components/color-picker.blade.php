@@ -12,7 +12,7 @@
     :component="$getFieldWrapperView()"
     :field="$field"
 >
-    <x-filament::input.affixes
+    <x-filament-forms::affixes
         :state-path="$statePath"
         :prefix="$prefixLabel"
         :prefix-actions="$getPrefixActions()"
@@ -31,7 +31,7 @@
                 x-data="colorPickerFormComponent({
                     isAutofocused: @js($isAutofocused()),
                     isDisabled: @js($isDisabled),
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')') }}
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }}
                 })"
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"
                 {{ $getExtraAlpineAttributeBag()->class(['relative flex-1']) }}
@@ -67,7 +67,7 @@
                     class="absolute inset-y-0 end-0 flex items-center pe-2 pointer-events-none"
                 >
                     <span
-                        x-bind:style="{ 'background-color': state }"
+                        x-bind:style="{ 'background-color': state, ...(state ? { 'background-image': 'none' } : {}) }"
                         class="filament-forms-color-picker-component-preview relative overflow-hidden rounded-md w-7 h-7"
                     ></span>
                 </span>
@@ -97,5 +97,5 @@
             </div>
 
         </div>
-    </x-filament::input.affixes>
+    </x-filament-forms::affixes>
 </x-dynamic-component>

@@ -14,12 +14,12 @@
             ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('markdown-editor', 'filament/forms') }}"
             x-data="markdownEditorFormComponent({
                 placeholder: @js($getPlaceholder()),
-                state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')') }},
+                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
                 toolbarButtons: @js($getToolbarButtons()),
                 translations: @js(__('filament-forms::components.markdown_editor')),
                 uploadFileAttachmentUsing: async (file, onSuccess, onError) => {
                     $wire.upload(`componentFileAttachments.{{ $statePath }}`, file, () => {
-                        $wire.getComponentFileAttachmentUrl('{{ $statePath }}').then((url) => {
+                        $wire.getFormComponentFileAttachmentUrl('{{ $statePath }}').then((url) => {
                             if (! url) {
                                 return onError()
                             }

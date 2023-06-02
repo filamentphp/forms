@@ -50,10 +50,10 @@ trait HasFormComponentActions
             return null;
         }
 
-        $action->arguments(array_merge(
-            Arr::last($this->mountedFormComponentActionsArguments ?? []),
-            $arguments,
-        ));
+        $action->arguments([
+            ...Arr::last($this->mountedFormComponentActionsArguments ?? []),
+            ...$arguments,
+        ]);
 
         $form = $this->getMountedFormComponentActionForm();
 
@@ -105,10 +105,14 @@ trait HasFormComponentActions
         $action = $this->getMountedFormComponentAction();
 
         if (! $action) {
+            $this->unmountFormComponentAction();
+
             return null;
         }
 
         if ($action->isDisabled()) {
+            $this->unmountFormComponentAction();
+
             return null;
         }
 
@@ -201,7 +205,7 @@ trait HasFormComponentActions
         }
 
         if ((! $this->isCachingForms) && $this->hasCachedForm("mountedFormComponentActionForm{$actionNestingIndex}")) {
-            return $this->getCachedForm("mountedFormComponentActionForm{$actionNestingIndex}");
+            return $this->getForm("mountedFormComponentActionForm{$actionNestingIndex}");
         }
 
         return $action->getForm(
@@ -215,24 +219,14 @@ trait HasFormComponentActions
     public function getMountedFormComponentActionComponent(?int $actionNestingIndex = null): ?Component
     {
         $actionNestingIndex ??= array_key_last($this->mountedFormComponentActions);
-        $componentStatePath = $this->mountedFormComponentActionsComponents[$actionNestingIndex] ?? null;
+        $componentKey = $this->mountedFormComponentActionsComponents[$actionNestingIndex] ?? null;
 
-        if (blank($componentStatePath)) {
+        if (blank($componentKey)) {
             return null;
         }
 
         foreach ($this->getCachedForms() as $form) {
-            $formStatePath = $form->getStatePath();
-
-            if (blank($formStatePath)) {
-                continue;
-            }
-
-            if (! str($componentStatePath)->startsWith($formStatePath)) {
-                continue;
-            }
-
-            $component = $form->getComponent($componentStatePath);
+            $component = $form->getComponent($componentKey);
 
             if (! $component) {
                 continue;

@@ -2,14 +2,14 @@
 title: Installation
 ---
 
-**Using forms inside the [app framework](../app)**? You can skip this installation. This guide is for people who want to use the package inside their custom TALL-stack app.
+**Using forms inside a [panel](../panels)**? You can skip this installation. This guide is for people who want to use the package inside their custom TALL-stack app.
 
 ## Requirements
 
 Filament has a few requirements to run:
 
-- PHP 8.0+
-- Laravel v8.0+
+- PHP 8.1+
+- Laravel v9.0+
 - Livewire v2.0+
 
 First, require the actions package using Composer:
@@ -60,11 +60,12 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                danger: colors.rose,
-                primary: colors.blue,
+                danger: colors.red,
+                info: colors.blue,
+                primary: colors.amber,
                 secondary: colors.gray,
                 success: colors.green,
-                warning: colors.yellow,
+                warning: colors.amber,
             },
         },
     },
@@ -75,7 +76,7 @@ module.exports = {
 }
 ```
 
-Of course, you may specify your own custom `primary`, `secondary`, `success`, `warning` and `danger` colors, which will be used instead. But each color needs to be a [Tailwind CSS color](https://tailwindcss.com/docs/customizing-colors#color-palette-reference), or have all 50 - 950 variants specified - a single hex code or RGB value won't work here.
+Of course, you may specify your own custom `danger`, `gray`, `info`, `primary`, `secondary`, `success` and `warning` colors, which will be used instead. But each color needs to be a [Tailwind CSS color](https://tailwindcss.com/docs/customizing-colors#color-palette-reference), or have all 50 - 950 variants specified - a single hex code or RGB value won't work here.
 
 ### Configuring styles
 
@@ -93,7 +94,7 @@ Most Laravel projects use Vite for bundling assets by default. However, your pro
 
 #### Vite
 
-Create a `postcss.config.js` file in the root of your project, and register Tailwind CSS and Autoprefixer as plugins:
+Create a `postcss.config.cjs` file in the root of your project, and register Tailwind CSS and Autoprefixer as plugins:
 
 ```js
 module.exports = {

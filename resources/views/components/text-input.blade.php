@@ -14,7 +14,7 @@
     :component="$getFieldWrapperView()"
     :field="$field"
 >
-    <x-filament::input.affixes
+    <x-filament-forms::affixes
         :state-path="$statePath"
         :prefix="$prefixLabel"
         :prefix-actions="$getPrefixActions()"
@@ -32,7 +32,7 @@
                 ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('text-input', 'filament/forms') }}"
                 x-data="textInputFormComponent({
                     getMaskOptionsUsing: (IMask) => ({{ $getJsonMaskConfiguration() }}),
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $statePath . '\')', lazilyEntangledModifiers: ['defer']) }},
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')", lazilyEntangledModifiers: ['defer']) }},
                 })"
                 wire:ignore
                 @if ($isDebounced()) x-on:input.debounce.{{ $getDebounce() }}="$wire.$refresh" @endif
@@ -74,7 +74,7 @@
                     ])
             }}
         />
-    </x-filament::input.affixes>
+    </x-filament-forms::affixes>
 
     @if ($datalistOptions)
         <datalist id="{{ $id }}-list">
