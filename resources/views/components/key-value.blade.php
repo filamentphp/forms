@@ -4,7 +4,7 @@
         $deleteAction = $getAction('delete');
         $reorderAction = $getAction('reorder');
 
-        $debounce = $getDebounce();
+        $debounce = $getLiveDebounce();
         $isDisabled = $isDisabled();
         $statePath = $getStatePath();
     @endphp
@@ -21,7 +21,7 @@
             $attributes
                 ->merge($getExtraAttributes(), escape: false)
                 ->merge($getExtraAlpineAttributes(), escape: false)
-                ->class(['filament-forms-key-value-component'])
+                ->class(['fi-fo-key-value'])
         }}
     >
         <div

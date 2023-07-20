@@ -9,12 +9,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\Assert;
-use Livewire\Testing\TestableLivewire;
+use Livewire\Features\SupportTesting\Testable;
 
 /**
  * @method HasForms instance()
  *
- * @mixin TestableLivewire
+ * @mixin Testable
  */
 class TestsForms
 {

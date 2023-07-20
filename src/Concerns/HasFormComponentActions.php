@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Arr;
+use function Livewire\store;
 
 /**
  * @property ComponentContainer $mountedFormComponentActionForm
@@ -83,7 +84,7 @@ trait HasFormComponentActions
         $action->resetArguments();
         $action->resetFormData();
 
-        if (filled($this->redirectTo)) {
+        if (store($this)->has('redirect')) {
             return $result;
         }
 
@@ -292,23 +293,15 @@ trait HasFormComponentActions
 
     protected function closeFormComponentActionModal(): void
     {
-        $this->dispatchBrowserEvent('close-modal', [
-            'id' => "{$this->id}-form-component-action",
-        ]);
+        $this->dispatch('close-modal', id: "{$this->getId()}-form-component-action");
 
-        $this->dispatchBrowserEvent('closed-form-component-action-modal', [
-            'id' => $this->id,
-        ]);
+        $this->dispatch('closed-form-component-action-modal', id: $this->getId());
     }
 
     protected function openFormComponentActionModal(): void
     {
-        $this->dispatchBrowserEvent('open-modal', [
-            'id' => "{$this->id}-form-component-action",
-        ]);
+        $this->dispatch('open-modal', id: "{$this->getId()}-form-component-action");
 
-        $this->dispatchBrowserEvent('opened-form-component-action-modal', [
-            'id' => $this->id,
-        ]);
+        $this->dispatch('opened-form-component-action-modal', id: $this->getId());
     }
 }

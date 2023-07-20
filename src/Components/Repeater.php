@@ -115,6 +115,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getAddActionName())
             ->label(fn (Repeater $component) => $component->getAddActionLabel())
+            ->color('gray')
             ->action(function (Repeater $component): void {
                 $newUuid = (string) Str::uuid();
 
@@ -128,7 +129,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
             })
             ->button()
-            ->outlined()
             ->size('sm')
             ->visible(fn (): bool => $this->isAddable());
 
@@ -170,7 +170,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
             })
             ->iconButton()
-            ->inline()
             ->size('sm')
             ->visible(fn (): bool => $this->isCloneable());
 
@@ -208,7 +207,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
                 $component->state($items);
             })
             ->iconButton()
-            ->inline()
             ->size('sm')
             ->visible(fn (): bool => $this->isDeletable());
 
@@ -237,7 +235,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getMoveDownActionName())
             ->label(__('filament-forms::components.repeater.actions.move_down.label'))
-            ->icon('heroicon-m-chevron-down')
+            ->icon('heroicon-m-arrow-down')
             ->color('gray')
             ->action(function (array $arguments, Repeater $component): void {
                 $items = array_move_after($component->getState(), $arguments['item']);
@@ -245,7 +243,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
                 $component->state($items);
             })
             ->iconButton()
-            ->inline()
             ->size('sm')
             ->visible(fn (): bool => $this->isReorderable());
 
@@ -274,7 +271,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getMoveUpActionName())
             ->label(__('filament-forms::components.repeater.actions.move_up.label'))
-            ->icon('heroicon-m-chevron-up')
+            ->icon('heroicon-m-arrow-up')
             ->color('gray')
             ->action(function (array $arguments, Repeater $component): void {
                 $items = array_move_before($component->getState(), $arguments['item']);
@@ -282,7 +279,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
                 $component->state($items);
             })
             ->iconButton()
-            ->inline()
             ->size('sm')
             ->visible(fn (): bool => $this->isReorderable());
 
@@ -323,7 +319,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
             })
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->inline()
             ->size('sm')
             ->visible(fn (): bool => $this->isReorderableWithDragAndDrop());
 
@@ -352,11 +347,10 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getCollapseActionName())
             ->label(__('filament-forms::components.repeater.actions.collapse.label'))
-            ->icon('heroicon-m-minus')
+            ->icon('heroicon-m-chevron-up')
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->inline()
             ->size('sm');
 
         if ($this->modifyCollapseActionUsing) {
@@ -384,11 +378,10 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getExpandActionName())
             ->label(__('filament-forms::components.repeater.actions.expand.label'))
-            ->icon('heroicon-m-plus')
+            ->icon('heroicon-m-chevron-down')
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->inline()
             ->size('sm');
 
         if ($this->modifyExpandActionUsing) {
@@ -416,6 +409,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getCollapseAllActionName())
             ->label(__('filament-forms::components.repeater.actions.collapse_all.label'))
+            ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->link()
             ->size('sm');
@@ -445,6 +439,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getExpandAllActionName())
             ->label(__('filament-forms::components.repeater.actions.expand_all.label'))
+            ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->link()
             ->size('sm');
@@ -573,10 +568,11 @@ class Repeater extends Field implements Contracts\CanConcealComponents
         return $this;
     }
 
+    /**
+     * @deprecated No longer part of the design system.
+     */
     public function inset(bool | Closure $condition = true): static
     {
-        $this->isInset = $condition;
-
         return $this;
     }
 
@@ -651,11 +647,6 @@ class Repeater extends Field implements Contracts\CanConcealComponents
         return (bool) $this->evaluate($this->isDeletable);
     }
 
-    public function isInset(): bool
-    {
-        return (bool) $this->evaluate($this->isInset);
-    }
-
     public function orderColumn(string | Closure | null $column = 'sort'): static
     {
         $this->orderColumn = $column;
@@ -716,7 +707,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
             $itemOrder = 1;
             $orderColumn = $component->getOrderColumn();
 
-            $translatableContentDriver = $livewire->makeFormTranslatableContentDriver();
+            $translatableContentDriver = $livewire->makeFilamentTranslatableContentDriver();
 
             foreach ($childComponentContainers as $itemKey => $item) {
                 $itemData = $item->getState(shouldCallHooksBefore: false);
@@ -783,7 +774,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents
             return [];
         }
 
-        $translatableContentDriver = $this->getLivewire()->makeFormTranslatableContentDriver();
+        $translatableContentDriver = $this->getLivewire()->makeFilamentTranslatableContentDriver();
 
         return $records
             ->map(function (Model $record) use ($translatableContentDriver): array {

@@ -97,7 +97,7 @@ use Filament\Forms\Components\TextInput;
 Builder\Block::make('heading')
     ->schema([
         TextInput::make('content')
-            ->lazy()
+            ->live(onBlur: true)
             ->required(),
         // ...
     ]),
@@ -110,7 +110,7 @@ Builder\Block::make('heading')
     })
 ```
 
-Any fields that you use from `$state` should be `reactive()` or `lazy()` if you wish to see the item label update live as you use the form.
+Any fields that you use from `$state` should be `live()` if you wish to see the item label update live as you use the form.
 
 <AutoScreenshot name="forms/fields/builder/labelled" alt="Builder with labelled blocks based on the content" version="3.x" />
 
@@ -282,22 +282,6 @@ Builder::make('content')
 ```
 
 <AutoScreenshot name="forms/fields/builder/cloneable" alt="Builder repeater" version="3.x" />
-
-## Enabling the "inset" design
-
-As part of Filament's design system, you can enable "inset" mode for a builder with the `inset()`. This will give the builder extra padding around the outside of the items, with a background color:
-
-```php
-use Filament\Forms\Components\Builder;
-
-Builder::make('content')
-    ->blocks([
-        // ...
-    ])
-    ->inset()
-```
-
-<AutoScreenshot name="forms/fields/builder/inset" alt="Builder with inset design" version="3.x" />
 
 ## Builder validation
 

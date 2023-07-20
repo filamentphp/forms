@@ -137,7 +137,7 @@ class Select extends Field implements Contracts\HasAffixActions, Contracts\HasNe
             return $labels;
         });
 
-        $this->placeholder(__('filament-forms::components.select.placeholder'));
+        $this->placeholder(fn (Select $component): ?string => $component->isDisabled() ? null : __('filament-forms::components.select.placeholder'));
 
         $this->suffixActions([
             fn (Select $component): ?Action => $component->getCreateOptionAction(),
@@ -255,6 +255,7 @@ class Select extends Field implements Contracts\HasAffixActions, Contracts\HasNe
 
                 $action->halt();
             })
+            ->color('gray')
             ->icon('heroicon-m-plus')
             ->iconButton()
             ->modalHeading($this->getCreateOptionModalHeading() ?? __('filament-forms::components.select.actions.create_option.modal.heading'))
@@ -332,7 +333,7 @@ class Select extends Field implements Contracts\HasAffixActions, Contracts\HasNe
     public function editOptionForm(array | Closure | null $schema): static
     {
         $this->editOptionActionForm = $schema;
-        $this->reactive();
+        $this->live();
 
         return $this;
     }
@@ -393,11 +394,9 @@ class Select extends Field implements Contracts\HasAffixActions, Contracts\HasNe
 
                 /** @var LivewireComponent $livewire */
                 $livewire = $component->getLivewire();
-                $livewire->dispatchBrowserEvent('filament-forms::select.refreshSelectedOptionLabel', [
-                    'livewireId' => $livewire->id,
-                    'statePath' => $statePath,
-                ]);
+                $livewire->dispatch('filament-forms::select.refreshSelectedOptionLabel', livewireId: $livewire->getId(), statePath: $statePath);
             })
+            ->color('gray')
             ->icon('heroicon-m-pencil-square')
             ->iconButton()
             ->modalHeading($this->getEditOptionModalHeading() ?? __('filament-forms::components.select.actions.edit_option.modal.heading'))
