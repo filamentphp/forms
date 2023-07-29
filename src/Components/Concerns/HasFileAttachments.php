@@ -116,7 +116,7 @@ trait HasFileAttachments
             return null;
         }
 
-        if ($storage->getVisibility($file) === 'private') {
+        if ($storage->getVisibility($file) === 'private' && config('forms.temporary_signed_url')) {
             try {
                 return $storage->temporaryUrl(
                     $file,
