@@ -4,11 +4,11 @@ title: Advanced forms
 
 ## Overview
 
-Filament forms are designed to be flexible and customizable. Many existing form builders allow users to define a form schema, but don't provide a great interface for defining inter-field interactions, or custom logic. Since all Filament forms are built on top of [Livewire](https://laravel-livewire.com), the form can adapt dynamically to user input, even after it has been initially rendered. Developers can use [parameter injection](#form-component-utility-injection) to access many utilities in real time and build dynamic forms based on user input. The [lifecycle](#field-lifecycle) of fields is open to extension using hook functions to define custom functionality for each field. This allows developers to build complex forms with ease.
+Filament forms are designed to be flexible and customizable. Many existing form builders allow users to define a form schema, but don't provide a great interface for defining inter-field interactions, or custom logic. Since all Filament forms are built on top of [Livewire](https://livewire.laravel.com), the form can adapt dynamically to user input, even after it has been initially rendered. Developers can use [parameter injection](#form-component-utility-injection) to access many utilities in real time and build dynamic forms based on user input. The [lifecycle](#field-lifecycle) of fields is open to extension using hook functions to define custom functionality for each field. This allows developers to build complex forms with ease.
 
 ## The basics of reactivity
 
-[Livewire](https://laravel-livewire.com) is a tool that allows Blade-rendered HTML to dynamically re-render without requiring a full page reload. Filament forms are built on top of Livewire, so they are able to re-render dynamically, allowing their layout to adapt after they are initially rendered.
+[Livewire](https://livewire.laravel.com) is a tool that allows Blade-rendered HTML to dynamically re-render without requiring a full page reload. Filament forms are built on top of Livewire, so they are able to re-render dynamically, allowing their layout to adapt after they are initially rendered.
 
 By default, when a user uses a field, the form will not re-render. Since rendering requires a round-trip to the server, this is a performance optimization. However, if you wish to re-render the form after a field is interacted with by the user, you can use the `live()` method:
 
@@ -52,7 +52,7 @@ In this example, `500` is the number of milliseconds to wait before sending a ne
 
 ## Form component utility injection
 
-The vast majority of methods used to configure [fields](fields) and [layout components](layout) accept functions as parameters instead of hardcoded values:
+The vast majority of methods used to configure [fields](fields/getting-started) and [layout components](layout/getting-started) accept functions as parameters instead of hardcoded values:
 
 ```php
 use App\Models\User;
@@ -271,7 +271,7 @@ TextInput::make('password_confirmation')
     ->dehydrated(false)
 ```
 
-If your form auto-saves data to the database, like in a [resource](../panels/resources) or [table action](../tables/actions), this is useful to prevent a field from being saved to the database if it is purely used for presentational purposes.
+If your form auto-saves data to the database, like in a [resource](../panels/resources/getting-started) or [table action](../tables/actions), this is useful to prevent a field from being saved to the database if it is purely used for presentational purposes.
 
 ## Reactive forms cookbook
 
@@ -422,7 +422,7 @@ Select::make('sub_category')
 
 ### Dynamic fields based on a select option
 
-You may wish to render a different set of fields based on the value of a field, like a select. To do this, you can pass a function to the `schema()` method of any [layout component](layout), which checks the value of the field and returns a different schema based on that value. Also, you will need a way to initialise the new fields in the dynamic schema when they are first loaded.
+You may wish to render a different set of fields based on the value of a field, like a select. To do this, you can pass a function to the `schema()` method of any [layout component](layout/getting-started), which checks the value of the field and returns a different schema based on that value. Also, you will need a way to initialise the new fields in the dynamic schema when they are first loaded.
 
 ```php
 use Filament\Forms\Components\FileUpload;

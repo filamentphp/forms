@@ -20,6 +20,24 @@ Select::make('status')
 
 <AutoScreenshot name="forms/fields/select/simple" alt="Select" version="3.x" />
 
+## Enabling the JavaScript select
+
+By default, Filament uses the native HTML5 select. You may enable a more customizable JavaScript select using the `native(false)` method:
+
+```php
+use Filament\Forms\Components\Select;
+
+Select::make('status')
+    ->options([
+        'draft' => 'Draft',
+        'reviewing' => 'Reviewing',
+        'published' => 'Published',
+    ])
+    ->native(false)
+```
+
+<AutoScreenshot name="forms/fields/select/javascript" alt="JavaScript select" version="3.x" />
+
 ## Searching options
 
 You may enable a search input to allow easier access to many options, using the `searchable()` method:
@@ -95,6 +113,29 @@ Select::make('technologies')
     ->getSearchResultsUsing(fn (string $search): array => Technology::where('name', 'like', "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
     ->getOptionLabelsUsing(fn (array $values): array => Technology::whereIn('id', $values)->pluck('name', 'id')->toArray()),
 ```
+
+## Grouping options
+
+You can group options together under a label, to organize them better. To do this, you can pass an array of groups to `options()` or wherever you would normally pass an array of options. The keys of the array are used as group labels, and the values are arrays of options in that group:
+
+```php
+use Filament\Forms\Components\Select;
+
+Select::make('status')
+    ->searchable()
+    ->options([
+        'In Process' => [
+            'draft' => 'Draft',
+            'reviewing' => 'Reviewing',
+        ],
+        'Reviewed' => [
+            'published' => 'Published',
+            'rejected' => 'Rejected',
+        ],
+    ])
+```
+
+<AutoScreenshot name="forms/fields/select/grouped" alt="Grouped select" version="3.x" />
 
 ## Integrating with an Eloquent relationship
 
