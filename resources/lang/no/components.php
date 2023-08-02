@@ -7,47 +7,47 @@ return [
         'actions' => [
 
             'clone' => [
-                'label' => 'Clone',
+                'label' => 'Klon',
             ],
 
             'add' => [
-                'label' => 'Add to :label',
+                'label' => 'Legge til i :label',
             ],
 
             'add_between' => [
-                'label' => 'Insert between blocks',
+                'label' => 'Sett inn mellom',
             ],
 
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'Slett',
             ],
 
             'reorder' => [
-                'label' => 'Move',
+                'label' => 'Flytt',
             ],
 
             'move_down' => [
-                'label' => 'Move down',
+                'label' => 'Flytt ned',
             ],
 
             'move_up' => [
-                'label' => 'Move up',
+                'label' => 'Flytt opp',
             ],
 
             'collapse' => [
-                'label' => 'Collapse',
+                'label' => 'Kollaps',
             ],
 
             'expand' => [
-                'label' => 'Expand',
+                'label' => 'Utvid',
             ],
 
             'collapse_all' => [
-                'label' => 'Collapse all',
+                'label' => 'Kollaps alle',
             ],
 
             'expand_all' => [
-                'label' => 'Expand all',
+                'label' => 'Utvid alle',
             ],
 
         ],
@@ -59,11 +59,11 @@ return [
         'actions' => [
 
             'deselect_all' => [
-                'label' => 'Deselect all',
+                'label' => 'Avvelg alle',
             ],
 
             'select_all' => [
-                'label' => 'Select all',
+                'label' => 'Velg alle',
             ],
 
         ],
@@ -77,71 +77,71 @@ return [
             'actions' => [
 
                 'cancel' => [
-                    'label' => 'Cancel',
+                    'label' => 'Avbryt',
                 ],
 
                 'drag_crop' => [
-                    'label' => 'Drag mode "crop"',
+                    'label' => 'Dra-modus "beskjær"',
                 ],
 
                 'drag_move' => [
-                    'label' => 'Drag mode "move"',
+                    'label' => 'Dra-modus "flytt"',
                 ],
 
                 'flip_horizontal' => [
-                    'label' => 'Flip image horizontally',
+                    'label' => 'Vend bildet horisontalt',
                 ],
 
                 'flip_vertical' => [
-                    'label' => 'Flip image vertically',
+                    'label' => 'Vend bildet vertikalt',
                 ],
 
                 'move_down' => [
-                    'label' => 'Move image down',
+                    'label' => 'Flytt bildet ned',
                 ],
 
                 'move_left' => [
-                    'label' => 'Move image to left',
+                    'label' => 'Flytt vildet til venstre',
                 ],
 
                 'move_right' => [
-                    'label' => 'Move image to right',
+                    'label' => 'Flytt bildet til høyre',
                 ],
 
                 'move_up' => [
-                    'label' => 'Move image up',
+                    'label' => 'Flytt bildet opp',
                 ],
 
                 'reset' => [
-                    'label' => 'Reset',
+                    'label' => 'Nullstill',
                 ],
 
                 'rotate_left' => [
-                    'label' => 'Rotate image to left',
+                    'label' => 'Roter bildet til venstre',
                 ],
 
                 'rotate_right' => [
-                    'label' => 'Rotate image to right',
+                    'label' => 'Roter bildet til høyre',
                 ],
 
                 'set_aspect_ratio' => [
-                    'label' => 'Set aspect ratio to :ratio',
+                    'label' => 'Sett sideforhold til :ratio',
                 ],
 
                 'save' => [
-                    'label' => 'Save',
+                    'label' => 'Lagre',
                 ],
 
                 'zoom_100' => [
-                    'label' => 'Zoom image to 100%',
+                    'label' => 'Zoom bildet til 100%',
                 ],
 
                 'zoom_in' => [
-                    'label' => 'Zoom in',
+                    'label' => 'Zoom inn',
                 ],
 
                 'zoom_out' => [
-                    'label' => 'Zoom out',
+                    'label' => 'Zoom ut',
                 ],
 
             ],
@@ -149,17 +149,17 @@ return [
             'fields' => [
 
                 'height' => [
-                    'label' => 'Height',
+                    'label' => 'Høyde',
                     'unit' => 'px',
                 ],
 
                 'rotation' => [
-                    'label' => 'Rotation',
-                    'unit' => 'deg',
+                    'label' => 'Rotasjon',
+                    'unit' => 'grader',
                 ],
 
                 'width' => [
-                    'label' => 'Width',
+                    'label' => 'Bredde',
                     'unit' => 'px',
                 ],
 
@@ -177,10 +177,10 @@ return [
 
             'aspect_ratios' => [
 
-                'label' => 'Aspect ratios',
+                'label' => 'Sideforhold',
 
                 'no_fixed' => [
-                    'label' => 'Free',
+                    'label' => 'Fri',
                 ],
 
             ],
@@ -194,15 +194,15 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Add row',
+                'label' => 'Legg til rad',
             ],
 
             'delete' => [
-                'label' => 'Delete row',
+                'label' => 'Slett rad',
             ],
 
             'reorder' => [
-                'label' => 'Reorder row',
+                'label' => 'Omorganiser rad',
             ],
 
         ],
@@ -210,11 +210,11 @@ return [
         'fields' => [
 
             'key' => [
-                'label' => 'Key',
+                'label' => 'Nøkkel',
             ],
 
             'value' => [
-                'label' => 'Value',
+                'label' => 'Verdi',
             ],
 
         ],
@@ -224,19 +224,19 @@ return [
     'markdown_editor' => [
 
         'toolbar_buttons' => [
-            'attach_files' => 'Attach files',
-            'blockquote' => 'Blockquote',
-            'bold' => 'Bold',
-            'bullet_list' => 'Bullet list',
-            'code_block' => 'Code block',
-            'heading' => 'Heading',
-            'italic' => 'Italic',
-            'link' => 'Link',
-            'ordered_list' => 'Numbered list',
-            'redo' => 'Redo',
-            'strike' => 'Strikethrough',
-            'table' => 'Table',
-            'undo' => 'Undo',
+            'attach_files' => 'Legg til filer',
+            'blockquote' => 'Sitat',
+            'bold' => 'Fet',
+            'bullet_list' => 'Punktliste',
+            'code_block' => 'Kode',
+            'heading' => 'Tittel',
+            'italic' => 'Kursiv',
+            'link' => 'Lenke',
+            'ordered_list' => 'Nummerert liste',
+            'redo' => 'Gjør om',
+            'strike' => 'Gjennomstrekning',
+            'table' => 'Tabell',
+            'undo' => 'Angre',
         ],
 
     ],
@@ -246,43 +246,43 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Add to :label',
+                'label' => 'Legg til i :label',
             ],
 
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'Slett',
             ],
 
             'clone' => [
-                'label' => 'Clone',
+                'label' => 'Klon',
             ],
 
             'reorder' => [
-                'label' => 'Move',
+                'label' => 'Flytt',
             ],
 
             'move_down' => [
-                'label' => 'Move down',
+                'label' => 'Flytt ned',
             ],
 
             'move_up' => [
-                'label' => 'Move up',
+                'label' => 'Flytt opp',
             ],
 
             'collapse' => [
-                'label' => 'Collapse',
+                'label' => 'Kollaps',
             ],
 
             'expand' => [
-                'label' => 'Expand',
+                'label' => 'Utvid',
             ],
 
             'collapse_all' => [
-                'label' => 'Collapse all',
+                'label' => 'Kollaps alle',
             ],
 
             'expand_all' => [
-                'label' => 'Expand all',
+                'label' => 'Utvid alle',
             ],
 
         ],
@@ -296,34 +296,34 @@ return [
             'link' => [
 
                 'actions' => [
-                    'link' => 'Link',
-                    'unlink' => 'Unlink',
+                    'link' => 'Lenke',
+                    'unlink' => 'Fjern lenke',
                 ],
 
                 'label' => 'URL',
 
-                'placeholder' => 'Enter a URL',
+                'placeholder' => 'Skriv inn URL',
 
             ],
 
         ],
 
         'toolbar_buttons' => [
-            'attach_files' => 'Attach files',
-            'blockquote' => 'Blockquote',
-            'bold' => 'Bold',
-            'bullet_list' => 'Bullet list',
-            'code_block' => 'Code block',
-            'h1' => 'Title',
-            'h2' => 'Heading',
-            'h3' => 'Subheading',
-            'italic' => 'Italic',
-            'link' => 'Link',
-            'ordered_list' => 'Numbered list',
-            'redo' => 'Redo',
-            'strike' => 'Strikethrough',
-            'underline' => 'Underline',
-            'undo' => 'Undo',
+            'attach_files' => 'Legg til filer',
+            'blockquote' => 'Sitat',
+            'bold' => 'Fet',
+            'bullet_list' => 'Punktliste',
+            'code_block' => 'Kode',
+            'h1' => 'Tittel',
+            'h2' => 'Overskrift',
+            'h3' => 'Undertittel',
+            'italic' => 'Kursiv',
+            'link' => 'Lenke',
+            'ordered_list' => 'Nummerert liste',
+            'redo' => 'Gjør om',
+            'strike' => 'Gjennomstrekning',
+            'underline' => 'Understrekning',
+            'undo' => 'Angre',
         ],
 
     ],
@@ -336,16 +336,16 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Create',
+                    'heading' => 'Opprett',
 
                     'actions' => [
 
                         'create' => [
-                            'label' => 'Create',
+                            'label' => 'Opprett',
                         ],
 
                         'create_another' => [
-                            'label' => 'Create & create another',
+                            'label' => 'Opprett & opprett en til',
                         ],
 
                     ],
@@ -358,12 +358,12 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Edit',
+                    'heading' => 'Endre',
 
                     'actions' => [
 
                         'save' => [
-                            'label' => 'Save',
+                            'label' => 'Lagre',
                         ],
 
                     ],
@@ -375,26 +375,26 @@ return [
         ],
 
         'boolean' => [
-            'true' => 'Yes',
-            'false' => 'No',
+            'true' => 'Ja',
+            'false' => 'Nei',
         ],
 
-        'loading_message' => 'Loading...',
+        'loading_message' => 'Laster...',
 
-        'max_items_message' => 'Only :count can be selected.',
+        'max_items_message' => 'Bare :count kan velges.',
 
-        'no_search_results_message' => 'No options match your search.',
+        'no_search_results_message' => 'No alternativer matcher ditt søk.',
 
-        'placeholder' => 'Select an option',
+        'placeholder' => 'Velg et alternativ',
 
-        'searching_message' => 'Searching...',
+        'searching_message' => 'Søker...',
 
-        'search_prompt' => 'Start typing to search...',
+        'search_prompt' => 'Skriv for å søke...',
 
     ],
 
     'tags_input' => [
-        'placeholder' => 'New tag',
+        'placeholder' => 'Ny emneknagg',
     ],
 
     'wizard' => [
@@ -402,11 +402,11 @@ return [
         'actions' => [
 
             'previous_step' => [
-                'label' => 'Back',
+                'label' => 'Tilbake',
             ],
 
             'next_step' => [
-                'label' => 'Next',
+                'label' => 'Neste',
             ],
 
         ],
