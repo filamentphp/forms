@@ -6,7 +6,7 @@ title: Testing
 
 All examples in this guide will be written using [Pest](https://pestphp.com). However, you can easily adapt this to PHPUnit.
 
-Since the Form Builder works on Livewire components, you can use the [Livewire testing helpers](https://livewire.laravel.com/docs/testing). However, we have custom testing helpers that you can use with forms:
+Since the form builder works on Livewire components, you can use the [Livewire testing helpers](https://laravel-livewire.com/docs/testing). However, we have custom testing helpers that you can use with forms:
 
 ## Filling a form
 
@@ -22,7 +22,7 @@ livewire(CreatePost::class)
     ]);
 ```
 
-> If you have multiple forms on a Livewire component, you can specify which form you want to fill using `fillForm([...], 'createPostForm')`.
+> Note that if you have multiple forms on a Livewire component, you can specify which form you want to fill using `fillForm([...], 'createPostForm')`.
 
 To check that a form has data, use `assertFormSet()`:
 
@@ -43,7 +43,7 @@ it('can automatically generate a slug from the title', function () {
 });
 ```
 
-> If you have multiple forms on a Livewire component, you can specify which form you want to check using `assertFormSet([...], 'createPostForm')`.
+> Note that if you have multiple forms on a Livewire component, you can specify which form you want to check using `assertFormSet([...], 'createPostForm')`.
 
 ## Validation
 
@@ -75,7 +75,7 @@ livewire(CreatePost::class)
     ->assertHasNoFormErrors();
 ```
 
-> If you have multiple forms on a Livewire component, you can pass the name of a specific form as the second parameter like `assertHasFormErrors(['title' => 'required'], 'createPostForm')` or `assertHasNoFormErrors([], 'createPostForm')`.
+> Note that if you have multiple forms on a Livewire component, you can pass the name of a specific form as the second parameter like `assertHasFormErrors(['title' => 'required'], 'createPostForm')` or `assertHasNoFormErrors([], 'createPostForm')`.
 
 ## Form existence
 
@@ -90,11 +90,11 @@ it('has a form', function () {
 });
 ```
 
-> If you have multiple forms on a Livewire component, you can pass the name of a specific form like `assertFormExists('createPostForm')`.
+> Note that if you have multiple forms on a Livewire component, you can pass the name of a specific form like `assertFormExists('createPostForm')`.
 
 ## Fields
 
-To ensure that a form has a given field, pass the field name to `assertFormFieldExists()`:
+To ensure that a form has a given field pass the field name to `assertFormFieldExists()`:
 
 ```php
 use function Pest\Livewire\livewire;
@@ -118,11 +118,11 @@ it('has a title field', function () {
 });
 ```
 
-> If you have multiple forms on a Livewire component, you can specify which form you want to check for the existence of the field like `assertFormFieldExists('title', 'createPostForm')`.
+> Note that if you have multiple forms on a Livewire component, you can specify which form you want to check for the existence of the field like `assertFormFieldExists('title', 'createPostForm')`.
 
 ### Hidden fields
 
-To ensure that a field is visible, pass the name to `assertFormFieldIsVisible()`:
+To ensure that a field is visible pass the name to `assertFormFieldIsVisible()`:
 
 ```php
 use function Pest\Livewire\livewire;
@@ -144,11 +144,11 @@ test('title is hidden', function () {
 });
 ```
 
-> For both `assertFormFieldIsHidden()` and `assertFormFieldIsVisible()` you can pass the name of a specific form the field belongs to as the second argument like `assertFormFieldIsHidden('title', 'createPostForm')`.
+> Note that for both `assertFormFieldIsHidden()` and `assertFormFieldIsVisible()` you can pass the name of a specific form the field belongs to as the second argument like `assertFormFieldIsHidden('title', 'createPostForm')`.
 
 ### Disabled fields
 
-To ensure that a field is enabled, pass the name to `assertFormFieldIsEnabled()`:
+To ensure that a field is enabled pass the name to `assertFormFieldIsEnabled()`:
 
 ```php
 use function Pest\Livewire\livewire;
@@ -170,4 +170,4 @@ test('title is disabled', function () {
 });
 ```
 
-> For both `assertFormFieldIsEnabled()` and `assertFormFieldIsDisabled()` you can pass the name of a specific form the field belongs to as the second argument like `assertFormFieldIsEnabled('title', 'createPostForm')`.
+> Note that for both `assertFormFieldIsEnabled()` and `assertFormFieldIsDisabled()` you can pass the name of a specific form the field belongs to as the second argument like `assertFormFieldIsEnabled('title', 'createPostForm')`.

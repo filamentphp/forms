@@ -83,9 +83,6 @@ CodeMirror.commands.shiftTabAndUnindentMarkdownList = function (codemirror) {
 }
 
 export default function markdownEditorFormComponent({
-    isLiveDebounced,
-    isLiveOnBlur,
-    liveDebounce,
     placeholder,
     state,
     translations,
@@ -106,7 +103,6 @@ export default function markdownEditorFormComponent({
                 imageAccept: 'image/png, image/jpeg, image/gif, image/avif',
                 imageUploadFunction: uploadFileAttachmentUsing,
                 initialValue: this.state ?? '',
-                minHeight: '11.25rem',
                 placeholder,
                 previewImagesInEditor: true,
                 spellChecker: false,
@@ -167,23 +163,9 @@ export default function markdownEditorFormComponent({
             this.editor.codemirror.on(
                 'change',
                 Alpine.debounce(() => {
-                    if (!this.editor) {
-                        return
-                    }
-
                     this.state = this.editor.value()
-
-                    if (isLiveDebounced) {
-                        this.$wire.call('$refresh')
-                    }
-                }, liveDebounce ?? 300),
+                }, 300),
             )
-
-            if (isLiveOnBlur) {
-                this.editor.codemirror.on('blur', () =>
-                    this.$wire.call('$refresh'),
-                )
-            }
 
             this.$watch('state', () => {
                 if (!this.editor) {
@@ -255,7 +237,7 @@ export default function markdownEditorFormComponent({
                 toolbar.push({
                     name: 'heading',
                     action: EasyMDE.toggleHeadingSmaller,
-                    title: translations.toolbar_buttons?.heading,
+                    text: translations.toolbar_buttons?.heading,
                 })
             }
 

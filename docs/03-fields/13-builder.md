@@ -97,7 +97,7 @@ use Filament\Forms\Components\TextInput;
 Builder\Block::make('heading')
     ->schema([
         TextInput::make('content')
-            ->live(onBlur: true)
+            ->lazy()
             ->required(),
         // ...
     ]),
@@ -110,7 +110,7 @@ Builder\Block::make('heading')
     })
 ```
 
-Any fields that you use from `$state` should be `live()` if you wish to see the item label update live as you use the form.
+Any fields that you use from `$state` should be `reactive()` or `lazy()` if you wish to see the item label update live as you use the form.
 
 <AutoScreenshot name="forms/fields/builder/labelled" alt="Builder with labelled blocks based on the content" version="3.x" />
 
@@ -283,6 +283,22 @@ Builder::make('content')
 
 <AutoScreenshot name="forms/fields/builder/cloneable" alt="Builder repeater" version="3.x" />
 
+## Enabling the "inset" design
+
+As part of Filament's design system, you can enable "inset" mode for a builder with the `inset()`. This will give the builder extra padding around the outside of the items, with a background color:
+
+```php
+use Filament\Forms\Components\Builder;
+
+Builder::make('content')
+    ->blocks([
+        // ...
+    ])
+    ->inset()
+```
+
+<AutoScreenshot name="forms/fields/builder/inset" alt="Builder with inset design" version="3.x" />
+
 ## Builder validation
 
 As well as all rules listed on the [validation](../validation) page, there are additional rules that are specific to builders.
@@ -301,53 +317,3 @@ Builder::make('content')
     ->minItems(1)
     ->maxItems(5)
 ```
-
-## Customizing the builder action objects
-
-This field uses action objects for easy customization of buttons within it. You can customize these buttons by passing a function to an action registration method. The function has access to the `$action` object, which you can use to [customize it](../../actions/trigger-button). The following methods are available to customize the actions:
-
-- `addAction()`
-- `addBetweenAction()`
-- `cloneAction()`
-- `collapseAction()`
-- `collapseAllAction()`
-- `deleteAction()`
-- `expandAction()`
-- `expandAllAction()`
-- `moveDownAction()`
-- `moveUpAction()`
-- `reorderAction()`
-
-Here is an example of how you might customize an action:
-
-```php
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Builder;
-
-Builder::make('content')
-    ->blocks([
-        // ...
-    ])
-    ->collapseAllAction(
-        fn (Action $action) => $action->label('Collapse all content'),
-    )
-```
-
-### Confirming builder actions with a modal
-
-You can confirm actions with a modal by using the `requiresConfirmation()` method on the action object. You may use any [modal customization method](../../actions/modals) to change its content and behaviour:
-
-```php
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Builder;
-
-Builder::make('content')
-    ->blocks([
-        // ...
-    ])
-    ->deleteAction(
-        fn (Action $action) => $action->requiresConfirmation(),
-    )
-```
-
-> The `addAction()`, `addBetweenAction()`, `collapseAction()`, `collapseAllAction()`, `expandAction()`, `expandAllAction()` and `reorderAction()` methods do not support confirmation modals, as clicking their buttons does not make the network request that is required to show the modal.

@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Arr;
-use function Livewire\store;
 
 /**
  * @property ComponentContainer $mountedFormComponentActionForm
@@ -84,7 +83,7 @@ trait HasFormComponentActions
         $action->resetArguments();
         $action->resetFormData();
 
-        if (store($this)->has('redirect')) {
+        if (filled($this->redirectTo)) {
             return $result;
         }
 
@@ -138,7 +137,7 @@ trait HasFormComponentActions
         } catch (Halt $exception) {
             return null;
         } catch (Cancel $exception) {
-            $this->unmountFormComponentAction(shouldCancelParentActions: false);
+            $this->unmountFormComponentAction(shouldCloseParentActions: false);
 
             return null;
         }
@@ -257,23 +256,23 @@ trait HasFormComponentActions
         }
     }
 
-    public function unmountFormComponentAction(bool $shouldCancelParentActions = true): void
+    public function unmountFormComponentAction(bool $shouldCloseParentActions = true): void
     {
         $action = $this->getMountedFormComponentAction();
 
-        if (! ($shouldCancelParentActions && $action)) {
+        if (! ($shouldCloseParentActions && $action)) {
             $this->popMountedFormComponentAction();
-        } elseif ($action->shouldCancelAllParentActions()) {
+        } elseif ($action->shouldCloseAllParentActions()) {
             $this->resetMountedFormComponentActionProperties();
         } else {
-            $parentActionToCancelTo = $action->getParentActionToCancelTo();
+            $parentActionToCloseTo = $action->getParentActionToCloseTo();
 
             while (true) {
                 $recentlyClosedParentAction = $this->popMountedFormComponentAction();
 
                 if (
-                    blank($parentActionToCancelTo) ||
-                    ($recentlyClosedParentAction === $parentActionToCancelTo)
+                    blank($parentActionToCloseTo) ||
+                    ($recentlyClosedParentAction === $parentActionToCloseTo)
                 ) {
                     break;
                 }
@@ -293,15 +292,23 @@ trait HasFormComponentActions
 
     protected function closeFormComponentActionModal(): void
     {
-        $this->dispatch('close-modal', id: "{$this->getId()}-form-component-action");
+        $this->dispatchBrowserEvent('close-modal', [
+            'id' => "{$this->id}-form-component-action",
+        ]);
 
-        $this->dispatch('closed-form-component-action-modal', id: $this->getId());
+        $this->dispatchBrowserEvent('closed-form-component-action-modal', [
+            'id' => $this->id,
+        ]);
     }
 
     protected function openFormComponentActionModal(): void
     {
-        $this->dispatch('open-modal', id: "{$this->getId()}-form-component-action");
+        $this->dispatchBrowserEvent('open-modal', [
+            'id' => "{$this->id}-form-component-action",
+        ]);
 
-        $this->dispatch('opened-form-component-action-modal', id: $this->getId());
+        $this->dispatchBrowserEvent('opened-form-component-action-modal', [
+            'id' => $this->id,
+        ]);
     }
 }

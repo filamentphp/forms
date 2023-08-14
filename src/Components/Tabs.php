@@ -4,12 +4,11 @@ namespace Filament\Forms\Components;
 
 use Closure;
 use Filament\Forms\Components\Tabs\Tab;
-use Filament\Support\Concerns;
+use Filament\Support\Concerns\HasExtraAlpineAttributes;
 
 class Tabs extends Component
 {
-    use Concerns\CanBeContained;
-    use Concerns\HasExtraAlpineAttributes;
+    use HasExtraAlpineAttributes;
 
     /**
      * @var view-string

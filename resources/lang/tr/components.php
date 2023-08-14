@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'İçerik daraltıldı',
+
         'actions' => [
 
             'add' => [
@@ -88,6 +90,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'İçerik daraltıldı',
 
         'actions' => [
 

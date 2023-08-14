@@ -247,57 +247,6 @@ Repeater::make('qualifications')
     ->orderColumn('order_column')
 ```
 
-### Integrating with a `BelongsToMany` Eloquent relationship
-
-There is a common misconception that using a `BelongsToMany` relationship with a repeater is as simple as using a `HasMany` relationship. This is not the case, as a `BelongsToMany` relationship requires a pivot table to store the relationship data. The repeater saves its data to the related model, not the pivot table. Therefore, if you want to map each repeater item to a row in the pivot table, you must use a `HasMany` relationship with a pivot model to use a repeater with a `BelongsToMany` relationship.
-
-Imagine you have a form to create a new `Order` model. Each order belongs to many `Product` models, and each product belongs to many orders. You have a `order_product` pivot table to store the relationship data. Instead of using the `products` relationship with the repeater, you should create a new relationship called `orderProducts` on the `Order` model, and use that with the repeater:
-
-```php
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-public function orderProducts(): HasMany
-{
-    return $this->hasMany(OrderProduct::class);
-}
-```
-
-If you don't already have an `OrderProduct` pivot model, you should create that, with inverse relationships to `Order` and `Product`:
-
-```php
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\Pivot;
-
-class OrderProduct extends Pivot
-{
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class);
-    }
-    
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
-}
-```
-
-Now you can use the `orderProducts` relationship with the repeater, and it will save the data to the `order_product` pivot table:
-
-```php
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-
-Repeater::make('orderProducts')
-    ->relationship()
-    ->schema([
-        Select::make('product_id')
-            ->relationship('product', 'name')
-            ->required(),
-        // ...
-    ])
-```
-
 ### Mutating related item data before filling the field
 
 You may mutate the data for a related item before it is filled into the field using the `mutateRelationshipDataBeforeFillUsing()` method. This method accepts a closure that receives the current item's data in a `$data` variable. You must return the modified array of data:
@@ -310,7 +259,7 @@ Repeater::make('qualifications')
     ->schema([
         // ...
     ])
-    ->mutateRelationshipDataBeforeFillUsing(function (array $data): array {
+    ->mutateRelationshipDataBeforeFillUsing(fn (array $data): array {
         $data['user_id'] = auth()->id();
 
         return $data;
@@ -386,7 +335,7 @@ Repeater::make('members')
     ->schema([
         TextInput::make('name')
             ->required()
-            ->blur(),
+            ->lazy(),
         Select::make('role')
             ->options([
                 'member' => 'Member',
@@ -399,9 +348,9 @@ Repeater::make('members')
     ->itemLabel(fn (array $state): ?string => $state['name'] ?? null),
 ```
 
-Any fields that you use from `$state` should be `live()` if you wish to see the item label update live as you use the form.
-
 <AutoScreenshot name="forms/fields/repeater/labelled" alt="Repeater with item labels" version="3.x" />
+
+Any fields that you use from `$state` should be `reactive()` or `lazy()` if you wish to see the item label update live as you use the form.
 
 ## Using `$get()` to access parent field values
 
@@ -409,7 +358,7 @@ All form components are able to [use `$get()` and `$set()`](../advanced) to acce
 
 This is because `$get()` and `$set()`, by default, are scoped to the current repeater item. This means that you are able to interact with another field inside that repeater item easily without knowing which repeater item the current form component belongs to.
 
-The consequence of this is that you may be confused when you are unable to interact with a field outside the repeater. We use `../` syntax to solve this problem - `$get('../../parent_field_name')`.
+The consequence of this, is that you may be confused when you are unable to interact with a field outside the repeater. We use `../` syntax to solve this problem - `$get('../../parent_field_name')`.
 
 Consider your form has this data structure:
 
@@ -431,6 +380,21 @@ You are trying to retrieve the value of `client_id` from inside the repeater ite
 
 You can use `../` to go up a level in the data structure, so `$get('../client_id')` is `$get('repeater.client_id')` and `$get('../../client_id')` is `$get('client_id')`.
 
+## Enabling the "inset" design
+
+As part of Filament's design system, you can enable "inset" mode for a repeater with the `inset()`. This will give the repeater extra padding around the outside of the items, with a background color:
+
+```php
+use Filament\Forms\Components\Repeater;
+
+Repeater::make('members')
+    ->schema([
+        // ...
+    ])
+    ->inset()
+```
+
+<AutoScreenshot name="forms/fields/repeater/inset" alt="Repeater with inset design" version="3.x" />
 
 ## Repeater validation
 
@@ -450,52 +414,3 @@ Repeater::make('members')
     ->minItems(2)
     ->maxItems(5)
 ```
-
-## Customizing the repeater action objects
-
-This field uses action objects for easy customization of buttons within it. You can customize these buttons by passing a function to an action registration method. The function has access to the `$action` object, which you can use to [customize it](../../actions/trigger-button). The following methods are available to customize the actions:
-
-- `addAction()`
-- `cloneAction()`
-- `collapseAction()`
-- `collapseAllAction()`
-- `deleteAction()`
-- `expandAction()`
-- `expandAllAction()`
-- `moveDownAction()`
-- `moveUpAction()`
-- `reorderAction()`
-
-Here is an example of how you might customize an action:
-
-```php
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Repeater;
-
-Repeater::make('members')
-    ->schema([
-        // ...
-    ])
-    ->collapseAllAction(
-        fn (Action $action) => $action->label('Collapse all members'),
-    )
-```
-
-### Confirming repeater actions with a modal
-
-You can confirm actions with a modal by using the `requiresConfirmation()` method on the action object. You may use any [modal customization method](../../actions/modals) to change its content and behaviour:
-
-```php
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Repeater;
-
-Repeater::make('members')
-    ->schema([
-        // ...
-    ])
-    ->deleteAction(
-        fn (Action $action) => $action->requiresConfirmation(),
-    )
-```
-
-> The `collapseAction()`, `collapseAllAction()`, `expandAction()`, `expandAllAction()` and `reorderAction()` methods do not support confirmation modals, as clicking their buttons does not make the network request that is required to show the modal.

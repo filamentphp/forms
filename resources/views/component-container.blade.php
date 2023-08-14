@@ -5,7 +5,7 @@
     :lg="$getColumns('lg')"
     :xl="$getColumns('xl')"
     :two-xl="$getColumns('2xl')"
-    class="fi-fo-component-ctn gap-6"
+    class="filament-forms-component-container gap-6"
 >
     @foreach ($getComponents(withHidden: true) as $formComponent)
         @php
@@ -23,7 +23,7 @@
         @endphp
 
         <x-filament::grid.column
-            :wire:key="$formComponent instanceof \Filament\Forms\Components\Field ? $this->getId() . '.' . $formComponent->getStatePath() . '.' . $formComponent::class : null"
+            :wire:key="$formComponent instanceof \Filament\Forms\Components\Field ? $this->id . '.' . $formComponent->getStatePath() . '.' . $formComponent::class : null"
             :hidden="$isHidden"
             :default="$formComponent->getColumnSpan('default')"
             :sm="$formComponent->getColumnSpan('sm')"

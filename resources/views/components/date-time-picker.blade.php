@@ -1,45 +1,43 @@
 @php
     $datalistOptions = $getDatalistOptions();
-    $extraAlpineAttributes = $getExtraAlpineAttributes();
+    $icon = $getIcon();
     $id = $getId();
     $isDisabled = $isDisabled();
-    $isPrefixInline = $isPrefixInline();
-    $isSuffixInline = $isSuffixInline();
-    $prefixActions = $getPrefixActions();
+    $statePath = $getStatePath();
     $prefixIcon = $getPrefixIcon();
     $prefixLabel = $getPrefixLabel();
-    $suffixActions = $getSuffixActions();
     $suffixIcon = $getSuffixIcon();
     $suffixLabel = $getSuffixLabel();
-    $statePath = $getStatePath();
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
-    <x-filament::input.wrapper
-        :disabled="$isDisabled"
-        :inline-prefix="$isPrefixInline"
-        :inline-suffix="$isSuffixInline"
+    <x-filament-forms::affixes
+        :state-path="$statePath"
         :prefix="$prefixLabel"
-        :prefix-actions="$prefixActions"
+        :prefix-actions="$getPrefixActions()"
         :prefix-icon="$prefixIcon"
         :suffix="$suffixLabel"
-        :suffix-actions="$suffixActions"
+        :suffix-actions="$getSuffixActions()"
         :suffix-icon="$suffixIcon"
-        :valid="! $errors->has($statePath)"
+        class="filament-forms-text-input-component"
         :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
     >
         @if ($isNative())
-            <x-filament::input
-                :attributes="
-                    \Filament\Support\prepare_inherited_attributes($getExtraInputAttributeBag())
-                        ->merge($extraAlpineAttributes, escape: false)
+            <input
+                x-data="{}"
+                x-bind:class="{
+                    'border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500':
+                        ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400':
+                        @js($statePath) in $wire.__instance.serverMemo.errors,
+                }"
+                {{
+                    $getExtraInputAttributeBag()
                         ->merge([
                             'autofocus' => $isAutofocused(),
                             'disabled' => $isDisabled,
                             'id' => $id,
-                            'inlinePrefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
-                            'inlineSuffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
-                            'list' => $datalistOptions ? $id . '-list' : null,
+                            'list' => $datalistOptions ? "{$id}-list" : null,
                             'max' => (! $isConcealed) ? $getMaxDate() : null,
                             'min' => (! $isConcealed) ? $getMinDate() : null,
                             'placeholder' => $getPlaceholder(),
@@ -48,9 +46,13 @@
                             'step' => $getStep(),
                             'type' => $getType(),
                             $applyStateBindingModifiers('wire:model') => $statePath,
-                            'x-data' => count($extraAlpineAttributes) ? '{}' : null,
                         ], escape: false)
-                "
+                        ->class([
+                            'block w-full shadow-sm outline-none transition duration-75 focus:relative focus:z-[1] focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white sm:text-sm',
+                            'rounded-s-lg' => ! ($prefixLabel || $prefixIcon),
+                            'rounded-e-lg' => ! ($suffixLabel || $suffixIcon),
+                        ])
+                }}
             />
         @else
             <div
@@ -71,7 +73,7 @@
                     $attributes
                         ->merge($getExtraAttributes(), escape: false)
                         ->merge($getExtraAlpineAttributes(), escape: false)
-                        ->class(['fi-fo-date-time-picker'])
+                        ->class(['filament-forms-date-time-picker-component relative'])
                 }}
             >
                 <input
@@ -79,13 +81,11 @@
                     type="hidden"
                     value="{{ $getMaxDate() }}"
                 />
-
                 <input
                     x-ref="minDate"
                     type="hidden"
                     value="{{ $getMinDate() }}"
                 />
-
                 <input
                     x-ref="disabledDates"
                     type="hidden"
@@ -113,21 +113,42 @@
                     @disabled($isDisabled)
                     {{
                         $getExtraTriggerAttributeBag()->class([
-                            'w-full',
+                            'relative w-full cursor-default border bg-white py-2 text-start shadow-sm outline-none dark:bg-gray-700 sm:text-sm',
+                            'focus-within:ring-1 focus-within:ring-inset' => ! $isDisabled,
+                            'border-gray-300 focus-within:border-primary-500 focus-within:ring-primary-500 dark:border-gray-600 dark:focus-within:border-primary-500' => ! $errors->has($statePath),
+                            'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400' => $errors->has($statePath),
+                            'opacity-70 dark:text-gray-300' => $isDisabled,
+                            'rounded-s-lg' => ! ($prefixLabel || $prefixIcon),
+                            'rounded-e-lg' => ! ($suffixLabel || $suffixIcon),
+                            'px-3' => $icon === false,
+                            'pe-10 ps-3' => $icon !== false,
                         ])
                     }}
                 >
                     <input
-                        @disabled($isDisabled)
                         readonly
                         placeholder="{{ $getPlaceholder() }}"
-                        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.display-text"
+                        wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.display-text"
                         x-model="displayText"
                         @if ($id = $getId()) id="{{ $id }}" @endif
                         @class([
-                            'w-full border-none bg-transparent px-3 py-1.5 text-base text-gray-950 outline-none transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] sm:text-sm sm:leading-6',
+                            'h-full w-full border-0 bg-transparent p-0 placeholder-gray-400 outline-none focus:placeholder-gray-500 focus:outline-none focus:ring-0 dark:bg-gray-700 dark:placeholder-gray-400',
+                            'cursor-default' => $isDisabled,
                         ])
                     />
+
+                    @if ($icon !== false)
+                        <span
+                            class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2"
+                        >
+                            <x-filament::icon
+                                :name="$icon"
+                                alias="forms::components.date-time-picker.suffix"
+                                color="text-gray-400 dark:text-gray-400"
+                                size="h-5 w-5"
+                            />
+                        </span>
+                    @endif
                 </button>
 
                 <div
@@ -135,17 +156,20 @@
                     x-cloak
                     x-float.placement.bottom-start.offset.flip.shift="{ offset: 8 }"
                     wire:ignore
-                    wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.panel"
+                    wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.panel"
                     @class([
-                        'absolute z-10 rounded-lg bg-white p-4 shadow-lg ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10',
+                        'absolute z-10 my-1 hidden rounded-lg border border-gray-300 bg-white shadow-md dark:border-gray-600 dark:bg-gray-700',
+                        'w-fit min-w-[16rem] p-4' => $hasDate(),
                     ])
                 >
-                    <div class="grid gap-y-3">
+                    <div class="space-y-3">
                         @if ($hasDate())
-                            <div class="flex items-center justify-between">
+                            <div
+                                class="flex items-center justify-between space-x-1 rtl:space-x-reverse"
+                            >
                                 <select
                                     x-model="focusedMonth"
-                                    class="grow cursor-pointer border-none bg-transparent p-0 text-sm font-medium text-gray-950 focus:ring-0 dark:text-white"
+                                    class="grow cursor-pointer border-0 px-1 py-0 text-lg font-medium text-gray-800 outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
                                 >
                                     <template
                                         x-for="(month, index) in months"
@@ -161,7 +185,7 @@
                                     type="number"
                                     inputmode="numeric"
                                     x-model.debounce="focusedYear"
-                                    class="w-16 border-none bg-transparent p-0 text-right text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                    class="w-20 border-0 p-0 text-end text-lg outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
                                 />
                             </div>
 
@@ -172,20 +196,19 @@
                                 >
                                     <div
                                         x-text="day"
-                                        class="text-center text-xs font-medium text-gray-500 dark:text-gray-400"
+                                        class="text-center text-xs font-medium text-gray-800 dark:text-gray-200"
                                     ></div>
                                 </template>
                             </div>
 
-                            <div
-                                role="grid"
-                                class="grid grid-cols-[repeat(7,_theme(spacing.7))] gap-1"
-                            >
+                            <div role="grid" class="grid grid-cols-7 gap-1">
                                 <template
                                     x-for="day in emptyDaysInFocusedMonth"
                                     x-bind:key="day"
                                 >
-                                    <div></div>
+                                    <div
+                                        class="border border-transparent text-center text-sm"
+                                    ></div>
                                 </template>
 
                                 <template
@@ -199,21 +222,20 @@
                                         role="option"
                                         x-bind:aria-selected="focusedDate.date() === day"
                                         x-bind:class="{
-                                            'text-gray-950 dark:text-white': ! dayIsToday(day) && ! dayIsSelected(day),
+                                            'text-gray-700 dark:text-gray-300': ! dayIsSelected(day),
                                             'cursor-pointer': ! dayIsDisabled(day),
-                                            'text-primary-600 dark:text-primary-400':
+                                            'bg-primary-50 dark:bg-primary-100 dark:text-gray-600':
                                                 dayIsToday(day) &&
                                                 ! dayIsSelected(day) &&
                                                 focusedDate.date() !== day &&
                                                 ! dayIsDisabled(day),
-                                            'bg-gray-50 dark:bg-white/5':
+                                            'bg-primary-200 dark:text-gray-600':
                                                 focusedDate.date() === day && ! dayIsSelected(day),
-                                            'text-primary-600 bg-gray-50 dark:bg-white/5 dark:text-primary-400':
-                                                dayIsSelected(day),
+                                            'bg-primary-500 text-white': dayIsSelected(day),
                                             'pointer-events-none': dayIsDisabled(day),
                                             'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
                                         }"
-                                        class="rounded-full text-center text-sm leading-loose transition duration-75"
+                                        class="rounded-full text-center text-sm leading-loose transition duration-100 ease-in-out"
                                     ></div>
                                 </template>
                             </div>
@@ -221,7 +243,7 @@
 
                         @if ($hasTime())
                             <div
-                                class="flex items-center justify-center rtl:flex-row-reverse"
+                                class="flex items-center justify-center rounded-lg bg-gray-50 py-2 rtl:flex-row-reverse dark:bg-gray-800"
                             >
                                 <input
                                     max="23"
@@ -230,11 +252,11 @@
                                     type="number"
                                     inputmode="numeric"
                                     x-model.debounce="hour"
-                                    class="me-1 w-10 border-none bg-transparent p-0 text-center text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                    class="w-16 border-0 bg-gray-50 p-0 pe-1 text-center text-xl text-gray-700 outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-200"
                                 />
 
                                 <span
-                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                 >
                                     :
                                 </span>
@@ -246,12 +268,12 @@
                                     type="number"
                                     inputmode="numeric"
                                     x-model.debounce="minute"
-                                    class="me-1 w-10 border-none bg-transparent p-0 text-center text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                    class="w-16 border-0 bg-gray-50 p-0 pe-1 text-center text-xl text-gray-700 outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-200"
                                 />
 
                                 @if ($hasSeconds())
                                     <span
-                                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                        class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                     >
                                         :
                                     </span>
@@ -263,7 +285,7 @@
                                         type="number"
                                         inputmode="numeric"
                                         x-model.debounce="second"
-                                        class="me-1 w-10 border-none bg-transparent p-0 text-center text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                        class="w-16 border-0 bg-gray-50 p-0 pe-1 text-center text-xl text-gray-700 outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-200"
                                     />
                                 @endif
                             </div>
@@ -272,7 +294,7 @@
                 </div>
             </div>
         @endif
-    </x-filament::input.wrapper>
+    </x-filament-forms::affixes>
 
     @if ($datalistOptions)
         <datalist id="{{ $id }}-list">

@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => '折り畳まれたコンテンツ',
+
         'actions' => [
 
             'clone' => [
@@ -96,6 +98,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => '折り畳まれたコンテンツ',
 
         'actions' => [
 

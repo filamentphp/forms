@@ -1,142 +1,126 @@
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     @php
-        $debounce = $getLiveDebounce();
-        $isAddable = $isAddable();
-        $isDeletable = $isDeletable();
+        $addAction = $getAction('add');
+        $deleteAction = $getAction('delete');
+        $reorderAction = $getAction('reorder');
+
+        $debounce = $getDebounce();
         $isDisabled = $isDisabled();
-        $isReorderable = $isReorderable();
         $statePath = $getStatePath();
     @endphp
 
     <div
+        x-ignore
+        ax-load
+        ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
+        x-data="keyValueFormComponent({
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                })"
+        wire:ignore
         {{
             $attributes
                 ->merge($getExtraAttributes(), escape: false)
-                ->class([
-                    'fi-fo-key-value rounded-lg shadow-sm ring-1 transition duration-75 focus-within:ring-2',
-                    'bg-white dark:bg-white/5' => ! $isDisabled,
-                    'bg-gray-50 dark:bg-transparent' => $isDisabled,
-                    'ring-gray-950/10 focus-within:ring-primary-600 dark:focus-within:ring-primary-500' => ! $errors->has($statePath),
-                    'dark:ring-white/20' => (! $errors->has($statePath)) && (! $isDisabled),
-                    'dark:ring-white/10' => (! $errors->has($statePath)) && $isDisabled,
-                    'ring-danger-600 focus-within:ring-danger-600 dark:ring-danger-500 dark:focus-within:ring-danger-500' => $errors->has($statePath),
-                ])
+                ->merge($getExtraAlpineAttributes(), escape: false)
+                ->class(['filament-forms-key-value-component'])
         }}
     >
         <div
-            ax-load
-            ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
-            wire:ignore
-            x-data="keyValueFormComponent({
-                        state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-                    })"
-            x-ignore
-            {{
-                $attributes
-                    ->merge($getExtraAlpineAttributes(), escape: false)
-                    ->class(['divide-y divide-gray-200 dark:divide-white/10'])
-            }}
+            class="divide-y overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-700"
         >
             <table
-                class="w-full table-auto divide-y divide-gray-200 dark:divide-white/5"
+                class="w-full table-auto divide-y text-start dark:divide-gray-700"
             >
                 <thead>
-                    <tr>
-                        @if ($isReorderable && (! $isDisabled))
-                            <th
-                                scope="col"
-                                x-show="rows.length"
-                                class="w-9"
-                            ></th>
-                        @endif
-
+                    <tr class="bg-gray-50 dark:bg-gray-800/60">
                         <th
+                            class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
                             scope="col"
-                            class="px-3 py-2 text-start text-sm font-medium text-gray-700 dark:text-gray-200"
                         >
                             {{ $getKeyLabel() }}
                         </th>
 
                         <th
+                            class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
                             scope="col"
-                            class="px-3 py-2 text-start text-sm font-medium text-gray-700 dark:text-gray-200"
                         >
                             {{ $getValueLabel() }}
                         </th>
 
-                        @if ($isDeletable && (! $isDisabled))
+                        @if (($deleteAction->isVisible() || $reorderAction->isVisible()) && (! $isDisabled))
                             <th
                                 scope="col"
                                 x-show="rows.length"
-                                class="w-9"
-                            ></th>
+                                class="{{ ($deleteAction->isVisible() && $reorderAction->isVisible()) ? 'w-16' : 'w-12' }}"
+                            >
+                                <span class="sr-only"></span>
+                            </th>
                         @endif
                     </tr>
                 </thead>
 
                 <tbody
-                    @if ($isReorderable)
-                        x-on:end="reorderRows($event)"
+                    @if ($reorderAction->isVisible())
                         x-sortable
+                        x-on:end="reorderRows($event)"
                     @endif
-                    class="divide-y divide-gray-200 dark:divide-white/5"
+                    x-ref="tableBody"
+                    class="divide-y whitespace-nowrap dark:divide-gray-600"
                 >
                     <template
-                        x-bind:key="index"
                         x-for="(row, index) in rows"
+                        x-bind:key="index"
+                        x-ref="rowTemplate"
                     >
                         <tr
-                            @if ($isReorderable)
+                            @if ($reorderAction->isVisible())
                                 x-bind:x-sortable-item="row.key"
                             @endif
-                            class="divide-x divide-gray-200 rtl:divide-x-reverse dark:divide-white/5"
+                            class="divide-x rtl:divide-x-reverse dark:divide-gray-600"
                         >
-                            @if ($isReorderable && (! $isDisabled))
-                                <td class="p-0.5">
-                                    <div x-sortable-handle class="flex">
-                                        {{ $getAction('reorder') }}
-                                    </div>
-                                </td>
-                            @endif
-
-                            <td class="w-1/2 p-0">
-                                <x-filament::input
-                                    :disabled="(! $canEditKeys()) || $isDisabled"
-                                    :placeholder="filled($placeholder = $getKeyPlaceholder()) ? $placeholder : null"
+                            <td>
+                                <input
                                     type="text"
                                     x-model="row.key"
-                                    :attributes="
-                                        \Filament\Support\prepare_inherited_attributes(
-                                            new \Illuminate\View\ComponentAttributeBag([
-                                                'x-on:input.debounce.' . ($debounce ?? '500ms') => 'updateState',
-                                            ])
-                                        )
-                                    "
-                                    class="font-mono"
+                                    x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
+                                    @if ($placeholder = $getKeyPlaceholder()) placeholder="{{ $placeholder }}" @endif
+                                    @if ((! $canEditKeys()) || $isDisabled)
+                                        disabled
+                                    @endif
+                                    class="w-full border-0 bg-transparent px-4 py-3 font-mono text-sm focus:ring-0"
                                 />
                             </td>
 
-                            <td class="w-1/2 p-0">
-                                <x-filament::input
-                                    :disabled="(! $canEditValues()) || $isDisabled"
-                                    :placeholder="filled($placeholder = $getValuePlaceholder()) ? $placeholder : null"
+                            <td class="whitespace-nowrap">
+                                <input
                                     type="text"
                                     x-model="row.value"
-                                    :attributes="
-                                        \Filament\Support\prepare_inherited_attributes(
-                                            new \Illuminate\View\ComponentAttributeBag([
-                                                'x-on:input.debounce.' . ($debounce ?? '500ms') => 'updateState',
-                                            ])
-                                        )
-                                    "
-                                    class="font-mono"
+                                    x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
+                                    @if ($placeholder = $getValuePlaceholder()) placeholder="{{ $placeholder }}" @endif
+                                    @if ((! $canEditValues()) || $isDisabled)
+                                        disabled
+                                    @endif
+                                    class="w-full border-0 bg-transparent px-4 py-3 font-mono text-sm focus:ring-0"
                                 />
                             </td>
 
-                            @if ($isDeletable && (! $isDisabled))
-                                <td class="p-0.5">
-                                    <div x-on:click="deleteRow(index)">
-                                        {{ $getAction('delete') }}
+                            @if (($deleteAction->isVisible() || $reorderAction->isVisible()) && (! $isDisabled))
+                                <td class="whitespace-nowrap">
+                                    <div
+                                        class="flex items-center justify-center px-2"
+                                    >
+                                        @if ($reorderAction->isVisible())
+                                            <div x-sortable-handle>
+                                                {{ $reorderAction }}
+                                            </div>
+                                        @endif
+
+                                        @if ($deleteAction->isVisible())
+                                            <div
+                                                x-on:click="deleteRow(index)"
+                                            >
+                                                {{ $deleteAction }}
+                                            </div>
+                                        @endif
                                     </div>
                                 </td>
                             @endif
@@ -145,11 +129,9 @@
                 </tbody>
             </table>
 
-            @if ($isAddable && (! $isDisabled))
-                <div class="flex justify-center px-3 py-2">
-                    <span x-on:click="addRow" class="flex">
-                        {{ $getAction('add') }}
-                    </span>
+            @if ($addAction->isVisible() && (! $isDisabled))
+                <div x-on:click="addRow" class="px-4 py-3">
+                    {{ $addAction }}
                 </div>
             @endif
         </div>

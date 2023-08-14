@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Contenu plié',
+
         'actions' => [
 
             'clone' => [
@@ -70,125 +72,6 @@ return [
 
     ],
 
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Annuler',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Mode glisser "recadrer"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Mode glisser "déplacer"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => "Retourner l'image horizontalement",
-                ],
-
-                'flip_vertical' => [
-                    'label' => "Retourner l'image verticalement",
-                ],
-
-                'move_down' => [
-                    'label' => "Déplacer l'image vers le bas",
-                ],
-
-                'move_left' => [
-                    'label' => "Déplacer l'image vers la gauche",
-                ],
-
-                'move_right' => [
-                    'label' => "Déplacer l'image vers la droite",
-                ],
-
-                'move_up' => [
-                    'label' => "Déplacer l'image vers le haut",
-                ],
-
-                'reset' => [
-                    'label' => 'Réinitialiser',
-                ],
-
-                'rotate_left' => [
-                    'label' => "Faire pivoter l'image vers la gauche",
-                ],
-
-                'rotate_right' => [
-                    'label' => "Faire pivoter l'image vers la droite",
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Régler les proportions sur :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'Sauvegarder',
-                ],
-
-                'zoom_100' => [
-                    'label' => "Agrandir l'image à 100%",
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Zoomer',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Dézoomer',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Hauteur',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Rotation',
-                    'unit' => 'deg',
-                ],
-
-                'width' => [
-                    'label' => 'Largeur',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Proportions',
-
-                'no_fixed' => [
-                    'label' => 'Libre',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -225,23 +108,21 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Joindre des fichiers',
-            'blockquote' => 'Citation',
             'bold' => 'Gras',
             'bullet_list' => 'Liste à puces',
             'code_block' => 'Bloc de code',
-            'heading' => 'Titre',
+            'edit' => 'Modifier',
             'italic' => 'Italique',
             'link' => 'Lien',
             'ordered_list' => 'Liste numérotée',
-            'redo' => 'Refaire',
+            'preview' => 'Aperçu',
             'strike' => 'Barré',
-            'table' => 'Table',
-            'undo' => 'Annuler',
         ],
 
     ],
 
     'repeater' => [
+        'collapsed' => 'Contenu plié',
 
         'actions' => [
 
@@ -284,7 +165,6 @@ return [
             'expand_all' => [
                 'label' => 'Tout déplier',
             ],
-
         ],
 
     ],
@@ -312,14 +192,14 @@ return [
             'attach_files' => 'Joindre fichiers',
             'blockquote' => 'Citation',
             'bold' => 'Gras',
-            'bullet_list' => 'Liste à puces',
-            'code_block' => 'Code',
+            'bullet_list' => 'Points',
+            'code_block' => 'codeBlock',
             'h1' => 'Titre',
             'h2' => 'Titre',
             'h3' => 'Sous-titre',
             'italic' => 'Italique',
             'link' => 'Lien',
-            'ordered_list' => 'Liste numérotée',
+            'ordered_list' => 'Nombres',
             'redo' => 'Refaire',
             'strike' => 'Barré',
             'underline' => 'Souligné',
@@ -329,7 +209,6 @@ return [
     ],
 
     'select' => [
-
         'actions' => [
 
             'create_option' => [
@@ -342,28 +221,6 @@ return [
 
                         'create' => [
                             'label' => 'Créer',
-                        ],
-
-                        'create_another' => [
-                            'label' => 'Créer & Ajouter un autre',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Modifier',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Sauvegarder',
                         ],
 
                     ],
@@ -412,5 +269,4 @@ return [
         ],
 
     ],
-
 ];

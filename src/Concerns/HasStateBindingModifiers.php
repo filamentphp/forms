@@ -11,38 +11,25 @@ trait HasStateBindingModifiers
      */
     protected ?array $stateBindingModifiers = null;
 
-    protected int | string | null $liveDebounce = null;
-
-    protected bool $isLive = false;
-
-    protected bool $isLiveOnBlur = false;
-
-    public function live(bool $onBlur = false, int | string | null $debounce = null): static
-    {
-        $this->isLive = true;
-        $this->isLiveOnBlur = $onBlur;
-        $this->liveDebounce = $debounce;
-
-        return $this;
-    }
+    protected string | int | null $debounce = null;
 
     public function reactive(): static
     {
-        $this->live();
+        $this->stateBindingModifiers([]);
 
         return $this;
     }
 
     public function lazy(): static
     {
-        $this->live(onBlur: true);
+        $this->stateBindingModifiers(['lazy']);
 
         return $this;
     }
 
-    public function debounce(int | string | null $delay = 500): static
+    public function debounce(string | int | null $delay = '500ms'): static
     {
-        $this->live(debounce: $delay);
+        $this->debounce = $delay;
 
         return $this;
     }
@@ -57,11 +44,16 @@ trait HasStateBindingModifiers
         return $this;
     }
 
-    public function applyStateBindingModifiers(string $expression, bool $isOptimisticallyLive = true): string
+    /**
+     * @param  array<string>  $lazilyEntangledModifiers
+     */
+    public function applyStateBindingModifiers(string $expression, array $lazilyEntangledModifiers = []): string
     {
-        $entangled = str($expression)->contains('entangle');
+        $modifiers = $this->getStateBindingModifiers();
 
-        $modifiers = $this->getStateBindingModifiers(withBlur: ! $entangled, withDebounce: ! $entangled, isOptimisticallyLive: $isOptimisticallyLive);
+        if (str($expression)->contains('entangle') && ($this->isLazy() || $this->getDebounce())) {
+            $modifiers = $lazilyEntangledModifiers;
+        }
 
         return implode('.', [
             $expression,
@@ -72,30 +64,14 @@ trait HasStateBindingModifiers
     /**
      * @return array<string>
      */
-    public function getStateBindingModifiers(bool $withBlur = true, bool $withDebounce = true, bool $isOptimisticallyLive = true): array
+    public function getStateBindingModifiers(): array
     {
         if ($this->stateBindingModifiers !== null) {
             return $this->stateBindingModifiers;
         }
 
-        if ($this->isLiveOnBlur()) {
-            if (! $withBlur) {
-                return $isOptimisticallyLive ? ['live'] : [];
-            }
-
-            return ['blur'];
-        }
-
-        if ($this->isLiveDebounced()) {
-            if (! $withDebounce) {
-                return $isOptimisticallyLive ? ['live'] : [];
-            }
-
-            return ['live', 'debounce', $this->getLiveDebounce()];
-        }
-
-        if ($this->isLive()) {
-            return ['live'];
+        if ($debounce = $this->getDebounce()) {
+            return ['debounce', $debounce];
         }
 
         if ($this instanceof Component) {
@@ -106,58 +82,26 @@ trait HasStateBindingModifiers
             return $this->getParentComponent()->getStateBindingModifiers();
         }
 
-        return [];
+        return ['defer'];
     }
 
-    public function isLive(): bool
+    public function isReactive(): bool
     {
-        return $this->isLive;
-    }
-
-    public function isLiveOnBlur(): bool
-    {
-        return $this->isLiveOnBlur;
+        return empty($this->getStateBindingModifiers());
     }
 
     public function isLazy(): bool
     {
-        return $this->isLiveOnBlur();
+        return in_array('lazy', $this->getStateBindingModifiers());
     }
 
-    public function isLiveDebounced(): bool
+    public function isDebounced(): bool
     {
-        if ($this->isLiveOnBlur()) {
-            return false;
-        }
-
-        return filled($this->liveDebounce);
+        return in_array('debounce', $this->getStateBindingModifiers());
     }
 
-    public function getLiveDebounce(): int | string | null
+    public function getDebounce(): string | int | null
     {
-        return $this->liveDebounce;
-    }
-
-    public function getNormalizedLiveDebounce(): ?int
-    {
-        $debounce = $this->getLiveDebounce();
-
-        if (! $debounce) {
-            return null;
-        }
-
-        if (is_numeric($debounce)) {
-            return (int) $debounce;
-        }
-
-        if (str($debounce)->endsWith('ms')) {
-            return (int) (string) str($debounce)->beforeLast('ms');
-        }
-
-        if (str($debounce)->endsWith('s')) {
-            return ((int) (string) str($debounce)->beforeLast('s')) * 1000;
-        }
-
-        return preg_replace('/[^0-9]/', '', $debounce) ?: 0;
+        return $this->debounce;
     }
 }

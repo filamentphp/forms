@@ -97,9 +97,7 @@ trait CanGenerateForms
                 Types\IntegerType::class,
                 Types\SmallIntType::class,
             ])) {
-                if ($componentData['type'] === Forms\Components\TextInput::class) {
-                    $componentData['numeric'] = [];
-                }
+                $componentData['numeric'] = [];
 
                 if (filled($column->getDefault())) {
                     $componentData['default'] = [$column->getDefault()];

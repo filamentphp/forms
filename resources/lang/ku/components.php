@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'بابەت بچووک کرایەوە',
+
         'actions' => [
 
             'clone_item' => [
@@ -120,6 +122,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'بابەت بچووک کرایەوە',
 
         'actions' => [
 

@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'طيّ المحتوى',
+
         'actions' => [
 
             'clone' => [
@@ -70,125 +72,6 @@ return [
 
     ],
 
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'إلغاء',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'وضع السحب "قص"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'وضع السحب "تحريك"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'قلب الصورة أفقياً',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'قلب الصورة عمودياً',
-                ],
-
-                'move_down' => [
-                    'label' => 'تحريك الصورة لأسفل',
-                ],
-
-                'move_left' => [
-                    'label' => 'تحريك الصورة لليسار',
-                ],
-
-                'move_right' => [
-                    'label' => 'تحريك الصورة لليمين',
-                ],
-
-                'move_up' => [
-                    'label' => 'تحريك الصورة لأعلى',
-                ],
-
-                'reset' => [
-                    'label' => 'استعادة',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'تدوير الصورة لليسار',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'تدوير الصورة لليمين',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'تعيين نسبة العرض للإرتفاع إلى :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'حفظ',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'تحجيم الصورة إلى 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'تكبير',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'تصغير',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'الارتفاع',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'الدوران',
-                    'unit' => 'deg',
-                ],
-
-                'width' => [
-                    'label' => 'العرض',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'نسبة الأبعاد',
-
-                'no_fixed' => [
-                    'label' => 'حر',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -225,23 +108,22 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'إضافة ملفات',
-            'blockquote' => 'اقتباس',
             'bold' => 'عريض',
             'bullet_list' => 'قائمة نقطية',
             'code_block' => 'نص برمجي',
-            'heading' => 'العناوين',
+            'edit' => 'تحرير',
             'italic' => 'مائل',
             'link' => 'رابط تشعبي',
             'ordered_list' => 'قائمة رقمية',
-            'redo' => 'إعادة',
-            'strike' => 'يتوسطه خط',
-            'table' => 'جدول',
-            'undo' => 'تراجع',
+            'preview' => 'استعراض',
+            'strike' => 'خط في المنتصف',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'المحتوى مطوي',
 
         'actions' => [
 
@@ -322,7 +204,6 @@ return [
             'ordered_list' => 'قائمة رقمية',
             'redo' => 'إعادة',
             'strike' => 'خط في المنتصف',
-            'underline' => 'خط اسفل النص',
             'undo' => 'تراجع',
         ],
 
@@ -342,28 +223,6 @@ return [
 
                         'create' => [
                             'label' => 'إضافة',
-                        ],
-
-                        'create_another' => [
-                            'label' => 'إضافة وبدء إضافة المزيد',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'تحرير',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'حفظ',
                         ],
 
                     ],

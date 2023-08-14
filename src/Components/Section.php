@@ -7,7 +7,6 @@ use Filament\Support\Concerns\HasDescription;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Concerns\HasHeading;
 use Filament\Support\Concerns\HasIcon;
-use Filament\Support\Concerns\HasIconColor;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Str;
 
@@ -20,7 +19,6 @@ class Section extends Component implements Contracts\CanConcealComponents, Contr
     use HasExtraAlpineAttributes;
     use HasHeading;
     use HasIcon;
-    use HasIconColor;
 
     /**
      * @var view-string
@@ -31,20 +29,12 @@ class Section extends Component implements Contracts\CanConcealComponents, Contr
 
     protected bool | Closure $isFormBefore = false;
 
-    /**
-     * @param  string | array<Component> | Htmlable | Closure | null  $heading
-     */
-    final public function __construct(string | array | Htmlable | Closure | null $heading = null)
+    final public function __construct(string | Htmlable | Closure $heading)
     {
-        is_array($heading)
-            ? $this->childComponents($heading)
-            : $this->heading($heading);
+        $this->heading($heading);
     }
 
-    /**
-     * @param  string | array<Component> | Htmlable | Closure | null  $heading
-     */
-    public static function make(string | array | Htmlable | Closure | null $heading = null): static
+    public static function make(string | Htmlable | Closure $heading): static
     {
         $static = app(static::class, ['heading' => $heading]);
         $static->configure();
@@ -70,20 +60,12 @@ class Section extends Component implements Contracts\CanConcealComponents, Contr
     {
         $id = parent::getId();
 
-        if (filled($id)) {
-            return $id;
-        }
+        if (! $id) {
+            $id = Str::slug($this->getHeading());
 
-        $heading = $this->getHeading();
-
-        if (blank($heading)) {
-            return null;
-        }
-
-        $id = Str::slug($heading);
-
-        if ($statePath = $this->getStatePath()) {
-            $id = "{$statePath}.{$id}";
+            if ($statePath = $this->getStatePath()) {
+                $id = "{$statePath}.{$id}";
+            }
         }
 
         return $id;

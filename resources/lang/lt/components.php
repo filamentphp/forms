@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Turinys suskleistas',
+
         'actions' => [
 
             'clone' => [
@@ -96,6 +98,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Turinys suskleistas',
 
         'actions' => [
 

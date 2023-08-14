@@ -5,7 +5,6 @@ namespace Filament\Forms\Components;
 use Closure;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
-use Filament\Support\Enums\ActionSize;
 
 class KeyValue extends Field
 {
@@ -70,9 +69,9 @@ class KeyValue extends Field
     {
         $action = Action::make($this->getAddActionName())
             ->label(fn (KeyValue $component) => $component->getAddActionLabel())
-            ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->link()
+            ->size('sm')
             ->visible(fn (): bool => $this->isAddable());
 
         if ($this->modifyAddActionUsing) {
@@ -104,7 +103,8 @@ class KeyValue extends Field
             ->color('danger')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->size(ActionSize::Small)
+            ->inline()
+            ->size('sm')
             ->visible(fn (): bool => $this->isDeletable());
 
         if ($this->modifyDeleteActionUsing) {
@@ -136,7 +136,8 @@ class KeyValue extends Field
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->size(ActionSize::Small)
+            ->inline()
+            ->size('sm')
             ->visible(fn (): bool => $this->isReorderable());
 
         if ($this->modifyReorderActionUsing) {
