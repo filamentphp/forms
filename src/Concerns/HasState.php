@@ -3,6 +3,8 @@
 namespace Filament\Forms\Concerns;
 
 use Filament\Forms\Components\BaseFileUpload;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 
@@ -32,7 +34,29 @@ trait HasState
                 return true;
             }
 
-            if ($component instanceof BaseFileUpload && str($path)->startsWith("{$component->getStatePath()}.")) {
+            if (
+                $component instanceof BaseFileUpload &&
+                str($path)->startsWith("{$component->getStatePath()}.")
+            ) {
+                $component->callAfterStateUpdated();
+
+                return true;
+            }
+
+            if (
+                $component instanceof Select &&
+                $component->isMultiple() &&
+                str($path)->startsWith("{$component->getStatePath()}.")
+            ) {
+                $component->callAfterStateUpdated();
+
+                return true;
+            }
+
+            if (
+                $component instanceof CheckboxList &&
+                str($path)->startsWith("{$component->getStatePath()}.")
+            ) {
                 $component->callAfterStateUpdated();
 
                 return true;

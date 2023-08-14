@@ -7,7 +7,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToCheckFileExistence;
-use Livewire\TemporaryUploadedFile;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use SplFileInfo;
 use Throwable;
 
@@ -63,14 +63,14 @@ trait HasFileAttachments
         return $this;
     }
 
-    public function getUploadedAttachmentUrlUsing(Closure | null $callback): static
+    public function getUploadedAttachmentUrlUsing(?Closure $callback): static
     {
         $this->getUploadedAttachmentUrlUsing = $callback;
 
         return $this;
     }
 
-    public function saveUploadedFileAttachmentsUsing(Closure | null $callback): static
+    public function saveUploadedFileAttachmentsUsing(?Closure $callback): static
     {
         $this->saveUploadedFileAttachmentsUsing = $callback;
 

@@ -4,8 +4,6 @@ return [
 
     'builder' => [
 
-        'collapsed' => 'Treść zwinięta',
-
         'actions' => [
 
             'clone' => [
@@ -58,7 +56,7 @@ return [
 
     'checkbox_list' => [
 
-        'buttons' => [
+        'actions' => [
 
             'deselect_all' => [
                 'label' => 'Odznacz wszystkie',
@@ -66,6 +64,125 @@ return [
 
             'select_all' => [
                 'label' => 'Zaznacz wszystkie',
+            ],
+
+        ],
+
+    ],
+
+    'file_upload' => [
+
+        'editor' => [
+
+            'actions' => [
+
+                'cancel' => [
+                    'label' => 'Anuluj',
+                ],
+
+                'drag_crop' => [
+                    'label' => 'Tryb przeciągania "przytnij"',
+                ],
+
+                'drag_move' => [
+                    'label' => 'Tryb przeciągania "przenieś"',
+                ],
+
+                'flip_horizontal' => [
+                    'label' => 'Odwróć obraz poziomo',
+                ],
+
+                'flip_vertical' => [
+                    'label' => 'Odwróć obraz pionowp',
+                ],
+
+                'move_down' => [
+                    'label' => 'Przenieś obraz w dół',
+                ],
+
+                'move_left' => [
+                    'label' => 'Przenieś obraz w lewo',
+                ],
+
+                'move_right' => [
+                    'label' => 'Przenieś obraz w prawo',
+                ],
+
+                'move_up' => [
+                    'label' => 'Przenieś obraz w górę',
+                ],
+
+                'reset' => [
+                    'label' => 'Zresetuj',
+                ],
+
+                'rotate_left' => [
+                    'label' => 'Obróć obraz w lewo',
+                ],
+
+                'rotate_right' => [
+                    'label' => 'Obróć obraz w prawo',
+                ],
+
+                'set_aspect_ratio' => [
+                    'label' => 'Zmień proporcje na :ratio',
+                ],
+
+                'save' => [
+                    'label' => 'Zapisz',
+                ],
+
+                'zoom_100' => [
+                    'label' => 'Przybliż obraz do 100%',
+                ],
+
+                'zoom_in' => [
+                    'label' => 'Przybliż',
+                ],
+
+                'zoom_out' => [
+                    'label' => 'Oddal',
+                ],
+
+            ],
+
+            'fields' => [
+
+                'height' => [
+                    'label' => 'Wysokość',
+                    'unit' => 'px',
+                ],
+
+                'rotation' => [
+                    'label' => 'Obrót',
+                    'unit' => 'deg',
+                ],
+
+                'width' => [
+                    'label' => 'Szerokość',
+                    'unit' => 'px',
+                ],
+
+                'x_position' => [
+                    'label' => 'X',
+                    'unit' => 'px',
+                ],
+
+                'y_position' => [
+                    'label' => 'Y',
+                    'unit' => 'px',
+                ],
+
+            ],
+
+            'aspect_ratios' => [
+
+                'label' => 'Proporcje',
+
+                'no_fixed' => [
+                    'label' => 'Dowolnie',
+                ],
+
             ],
 
         ],
@@ -108,22 +225,23 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Dołącz pliki',
+            'blockquote' => 'Cytat blokowy',
             'bold' => 'Pogrubienie',
             'bullet_list' => 'Lista punktowana',
             'code_block' => 'Blok kodu',
-            'edit' => 'Edycja',
+            'heading' => 'Nagłówek',
             'italic' => 'Kursywa',
             'link' => 'Adres',
             'ordered_list' => 'Lista numerowana',
-            'preview' => 'Podgląd',
+            'redo' => 'Ponów',
             'strike' => 'Przekreślenie',
+            'table' => 'Tabela',
+            'undo' => 'Cofnij',
         ],
 
     ],
 
     'repeater' => [
-
-        'collapsed' => 'Treść zwinięta',
 
         'actions' => [
 
@@ -204,6 +322,7 @@ return [
             'ordered_list' => 'Lista numerowana',
             'redo' => 'Ponów',
             'strike' => 'Przekreślenie',
+            'underline' => 'Podkreślenie',
             'undo' => 'Cofnij',
         ],
 
@@ -223,6 +342,28 @@ return [
 
                         'create' => [
                             'label' => 'Utwórz',
+                        ],
+
+                        'create_another' => [
+                            'label' => 'Utwórz i utwórz kolejny',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'edit_option' => [
+
+                'modal' => [
+
+                    'heading' => 'Edytuj',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Zapisz',
                         ],
 
                     ],
