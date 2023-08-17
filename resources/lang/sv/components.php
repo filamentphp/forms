@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Innehåll komprimerat',
+
         'actions' => [
 
             'clone' => [
@@ -70,108 +72,6 @@ return [
 
     ],
 
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Ångra',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Dragläge "beskär"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Dragläge "flytta"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'Vänd bilden horisontellt',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'Vänd bilden vertikalt',
-                ],
-
-                'move_down' => [
-                    'label' => 'Flytta bilden nedåt',
-                ],
-
-                'move_left' => [
-                    'label' => 'Flytta bilden åt vänster',
-                ],
-
-                'move_right' => [
-                    'label' => 'Flytta bilden åt höger',
-                ],
-
-                'move_up' => [
-                    'label' => 'Flytta bilden uppåt',
-                ],
-
-                'reset' => [
-                    'label' => 'Reset',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Rotera bilden åt vänster',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Rotera bilden åt höger',
-                ],
-
-                'save' => [
-                    'label' => 'Spara',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Zooma bilden till 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Zooma in',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Zooma ut',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Höjd',
-                ],
-
-                'rotation' => [
-                    'label' => 'Rotera',
-                ],
-
-                'width' => [
-                    'label' => 'Bredd',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Aspect ratios',
-
-                'no_fixed' => [
-                    'label' => 'Fritt',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -222,6 +122,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Innehåll komprimerat',
 
         'actions' => [
 

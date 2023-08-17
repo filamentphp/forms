@@ -6,10 +6,9 @@ use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Support\Commands\Concerns\CanIndentStrings;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
+use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
 
 class MakeFormCommand extends Command
 {
@@ -17,6 +16,7 @@ class MakeFormCommand extends Command
     use CanIndentStrings;
     use CanManipulateFiles;
     use CanReadModelSchemas;
+    use CanValidateInput;
 
     protected $description = 'Create a new Livewire component containing a Filament form';
 
@@ -24,11 +24,7 @@ class MakeFormCommand extends Command
 
     public function handle(): int
     {
-        $component = (string) str($this->argument('name') ?? text(
-            label: 'What is the form name?',
-            placeholder: 'Products/CreateProduct',
-            required: true,
-        ))
+        $component = (string) str($this->argument('name') ?? $this->askRequired('Name (e.g. `Products/CreateProduct`)', 'name'))
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
@@ -45,31 +41,27 @@ class MakeFormCommand extends Command
             ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
             ->implode('.');
 
-        $model = (string) str($this->argument('model') ??
-                text(
-                    label: 'What is the model name?',
-                    placeholder: 'Product',
-                    required: $this->option('edit')
-                ))->replace('/', '\\');
+        $model = (string) str($this->argument('model') ?? (
+            $this->option('edit') ?
+            $this->askRequired('Model (e.g. `Product`)', 'model') :
+            $this->ask('(Optional) Model (e.g. `Product`)')
+        ))->replace('/', '\\');
         $modelClass = (string) str($model)->afterLast('\\');
 
         if ($this->option('edit')) {
             $isEditForm = true;
         } elseif (filled($model)) {
-            $isEditForm = select(
-                label: 'Which namespace would you like to create this in?',
-                options: [
-                    'Create',
-                    'Edit',
-                ]
-            ) === 'Edit';
+            $isEditForm = $this->choice('Operation', [
+                'Create',
+                'Edit',
+            ]) === 'Edit';
         } else {
             $isEditForm = false;
         }
 
         $path = (string) str($component)
             ->prepend('/')
-            ->prepend(app_path('Livewire/'))
+            ->prepend(app_path('Http/Livewire/'))
             ->replace('\\', '/')
             ->replace('//', '/')
             ->append('.php');
@@ -89,7 +81,7 @@ class MakeFormCommand extends Command
             'class' => $componentClass,
             'model' => $model,
             'modelClass' => $modelClass,
-            'namespace' => 'App\\Livewire' . ($componentNamespace !== '' ? "\\{$componentNamespace}" : ''),
+            'namespace' => 'App\\Http\\Livewire' . ($componentNamespace !== '' ? "\\{$componentNamespace}" : ''),
             'schema' => $this->indentString((filled($model) && $this->option('generate')) ? $this->getResourceFormSchema(
                 'App\\Models\\' . $model,
             ) : '//', 4),

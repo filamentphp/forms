@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Sadržaj je sažet',
+
         'actions' => [
 
             'clone' => [
@@ -120,6 +122,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Sadržaj je sažet',
 
         'actions' => [
 

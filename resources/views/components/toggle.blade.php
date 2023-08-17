@@ -8,7 +8,7 @@
     @capture($content)
         <button
             x-data="{
-                state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
+                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
             }"
             x-bind:aria-checked="state?.toString()"
             x-on:click="state = ! state"
@@ -45,7 +45,7 @@
                     ], escape: false)
                     ->merge($getExtraAttributes(), escape: false)
                     ->merge($getExtraAlpineAttributes(), escape: false)
-                    ->class(['fi-fo-toggle relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent outline-none transition-colors duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-70'])
+                    ->class(['filament-forms-toggle-component relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent outline-none transition-colors duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-70'])
             }}
         >
             <span
@@ -65,14 +65,15 @@
                 >
                     @if ($hasOffIcon())
                         <x-filament::icon
-                            :icon="$getOffIcon()"
-                            @class([
-                                'fi-fo-toggle-off-icon h-3 w-3',
+                            :name="$getOffIcon()"
+                            alias="forms::components.toggle.off"
+                            :color="
                                 match ($offColor) {
                                     'gray' => 'text-gray-400 dark:text-gray-700',
                                     default => 'text-custom-600',
-                                },
-                            ])
+                                }
+                            "
+                            size="h-3 w-3"
                         />
                     @endif
                 </span>
@@ -87,15 +88,16 @@
                 >
                     @if ($hasOnIcon())
                         <x-filament::icon
-                            :icon="$getOnIcon()"
-                            x-cloak="x-cloak"
-                            @class([
-                                'fi-fo-toggle-on-icon h-3 w-3',
+                            :name="$getOnIcon()"
+                            alias="forms::components.toggle.on"
+                            :color="
                                 match ($onColor) {
                                     'gray' => 'text-gray-400 dark:text-gray-700',
                                     default => 'text-custom-600',
-                                },
-                            ])
+                                }
+                            "
+                            size="h-3 w-3"
+                            x-cloak="x-cloak"
                         />
                     @endif
                 </span>

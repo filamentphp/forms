@@ -1,47 +1,56 @@
-@import 'cropperjs/dist/cropper.min.css';
-@import 'filepond/dist/filepond.min.css';
-@import 'filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css';
-@import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-@import 'filepond-plugin-media-preview/dist/filepond-plugin-media-preview.css';
-
 .filepond--root {
-    @apply mb-0 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-950/10 dark:bg-white/5 dark:ring-white/20;
-}
-
-.filepond--root[data-disabled='disabled'] {
-    @apply bg-gray-50 dark:bg-transparent dark:ring-white/10;
+    @apply mb-0 overflow-hidden;
 }
 
 .filepond--panel-root {
-    @apply bg-transparent;
-}
-
-.filepond--root .filepond--drop-label {
-    min-height: theme(spacing.24);
-}
-
-.filepond--drop-label label {
-    @apply !p-3 text-sm text-gray-600 dark:text-gray-400;
-}
-
-.filepond--label-action {
-    @apply font-medium text-primary-600 no-underline transition duration-75 hover:text-primary-500 dark:text-white dark:hover:text-primary-500;
+    @apply rounded-lg border border-gray-300 bg-white shadow-sm;
 }
 
 .filepond--drip-blob {
-    @apply bg-gray-400 dark:bg-gray-500;
+    @apply bg-gray-900;
 }
 
+.filepond--drop-label label {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+}
+
+.filepond--panel-root {
+    @apply dark:border-gray-600 dark:bg-gray-700 dark:text-white;
+}
+
+.filepond--drip-blob {
+    @apply dark:bg-gray-100;
+}
+
+/* Compact-only styles, excluding compact circle layouts */
+
+.filepond--root[data-style-panel-layout='compact'] .filepond--item {
+    @apply mb-0.5;
+}
+
+.filepond--root[data-style-panel-layout='compact'] .filepond--drop-label {
+    min-height: 2.625em;
+}
+
+.filepond--root[data-style-panel-layout='compact'] .filepond--file {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+/* Grid styles */
+
 .filepond--root[data-style-panel-layout='grid'] .filepond--item {
-    @apply inline;
-    width: calc(50% - 0.5rem);
+    width: calc(50% - 0.5em);
+    display: inline;
 }
 
 @media screen(lg) {
     .filepond--root[data-style-panel-layout='grid'] .filepond--item {
-        width: calc(33.33% - 0.5rem);
+        width: calc(33.33% - 0.5em);
     }
 }
+
+/* Download button styles */
 
 .filepond--download-icon {
     @apply pointer-events-auto me-1 inline-block h-4 w-4 bg-white align-bottom hover:bg-white/70;
@@ -61,12 +70,4 @@
     mask-repeat: no-repeat;
     -webkit-mask-size: 100%;
     mask-size: 100%;
-}
-
-.filepond--file-action-button.filepond--action-edit-item {
-    @apply bg-black/50;
-}
-
-.cropper-drag-box.cropper-crop.cropper-modal {
-    @apply bg-gray-100/50 opacity-100 dark:bg-gray-900/80;
 }

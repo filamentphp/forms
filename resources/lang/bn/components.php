@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'কন্টেন্ট ছোট হয়েছে',
+
         'actions' => [
 
             'clone' => [
@@ -120,6 +122,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'কন্টেন্ট ছোট হয়েছে',
 
         'actions' => [
 

@@ -1,6 +1,5 @@
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     @php
-        $gridDirection = $getGridDirection() ?? 'column';
         $id = $getId();
         $isDisabled = $isDisabled();
         $isInline = $isInline();
@@ -16,15 +15,12 @@
             :xl="$getColumns('xl')"
             :two-xl="$getColumns('2xl')"
             :is-grid="! $isInline"
-            :direction="$gridDirection"
+            direction="column"
             :attributes="
-                \Filament\Support\prepare_inherited_attributes($attributes)
-                    ->merge($getExtraAttributes(), escape: false)
-                    ->class([
-                        'fi-fo-radio gap-4',
-                        '-mt-4' => (! $isInline) && $gridDirection === 'column',
-                        'flex flex-wrap' => $isInline,
-                    ])
+                \Filament\Support\prepare_inherited_attributes($attributes->merge($getExtraAttributes(), escape: false)->class([
+                    'filament-forms-radio-component flex flex-wrap gap-3',
+                    'flex-col' => ! $isInline,
+                ]))
             "
         >
             @foreach ($getOptions() as $value => $label)
@@ -34,42 +30,49 @@
 
                 <div
                     @class([
-                        'break-inside-avoid pt-4' => (! $isInline) && $gridDirection === 'column',
+                        'flex items-start',
+                        'gap-3' => ! $isInline,
+                        'gap-2' => $isInline,
                     ])
                 >
-                    <label class="flex gap-x-3">
+                    <div class="flex h-5 items-center">
                         <input
-                            @disabled($shouldOptionBeDisabled)
-                            id="{{ $id }}-{{ $value }}"
                             name="{{ $id }}"
+                            id="{{ $id }}-{{ $value }}"
                             type="radio"
                             value="{{ $value }}"
-                            wire:loading.attr="disabled"
+                            @disabled($shouldOptionBeDisabled)
                             {{ $applyStateBindingModifiers('wire:model') }}="{{ $statePath }}"
                             {{
-                                $getExtraInputAttributeBag()
-                                    ->class([
-                                        'mt-1 border-none bg-white shadow-sm ring-1 transition duration-75 checked:ring-0 focus:ring-2 focus:ring-offset-0 disabled:bg-gray-50 disabled:text-gray-50 disabled:checked:bg-current disabled:checked:text-gray-400 dark:bg-white/5 dark:disabled:bg-transparent dark:disabled:checked:bg-gray-600',
-                                        'text-primary-600 ring-gray-950/10 focus:ring-primary-600 checked:focus:ring-primary-500/50 dark:ring-white/20 dark:checked:bg-primary-500 dark:focus:ring-primary-500 dark:checked:focus:ring-primary-400/50 dark:disabled:ring-white/10' => ! $errors->has($statePath),
-                                        'text-danger-600 ring-danger-600 focus:ring-danger-600 checked:focus:ring-danger-500/50 dark:ring-danger-500 dark:checked:bg-danger-500 dark:focus:ring-danger-500 dark:checked:focus:ring-danger-400/50' => $errors->has($statePath),
-                                    ])
+                                $getExtraInputAttributeBag()->class([
+                                    'h-4 w-4 text-primary-600 outline-none ring-1 ring-inset disabled:opacity-70 dark:bg-gray-700 dark:checked:bg-primary-500',
+                                    'border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500' => ! $errors->has($statePath),
+                                    'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400' => $errors->has($statePath),
+                                ])
                             }}
+                            wire:loading.attr="disabled"
                         />
+                    </div>
 
-                        <div class="grid text-sm leading-6">
-                            <span
-                                class="font-medium text-gray-950 dark:text-white"
-                            >
-                                {{ $label }}
-                            </span>
+                    <div class="text-sm">
+                        <label
+                            for="{{ $id }}-{{ $value }}"
+                            @class([
+                                'font-medium',
+                                'text-gray-700 dark:text-gray-200' => ! $errors->has($statePath),
+                                'text-danger-600 dark:text-danger-400' => $errors->has($statePath),
+                                'opacity-50' => $shouldOptionBeDisabled,
+                            ])
+                        >
+                            {{ $label }}
+                        </label>
 
-                            @if ($hasDescription($value))
-                                <p class="text-gray-500 dark:text-gray-400">
-                                    {{ $getDescription($value) }}
-                                </p>
-                            @endif
-                        </div>
-                    </label>
+                        @if ($hasDescription($value))
+                            <p class="text-gray-500 dark:text-gray-400">
+                                {{ $getDescription($value) }}
+                            </p>
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </x-filament::grid>

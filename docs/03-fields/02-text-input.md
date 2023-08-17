@@ -75,14 +75,14 @@ TextInput::make('password')
     ->autocomplete('new-password')
 ```
 
-As a shortcut for `autocomplete="off"`, you may use `autocomplete(false)`:
+As a shortcut for `autocomplete="off"`, you may `disableAutocomplete()`:
 
 ```php
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('password')
     ->password()
-    ->autocomplete(false)
+    ->disableAutocomplete()
 ```
 
 For more complex autocomplete options, text inputs also support [datalists](#autocompleting-text-with-a-datalist).
@@ -125,6 +125,7 @@ You may place text before and after the input using the `prefix()` and `suffix()
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('domain')
+    ->url()
     ->prefix('https://')
     ->suffix('.com')
 ```
@@ -166,7 +167,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Support\RawJs;
 
 TextInput::make('cardNumber')
-    ->mask(RawJs::make(<<<'JS'
+    ->mask(RawJs::make(<<<JS
         $input.startsWith('34') || $input.startsWith('37') ? '9999 999999 99999' : '9999 9999 9999 9999'
     JS))
 ```
