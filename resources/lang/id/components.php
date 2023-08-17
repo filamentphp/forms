@@ -4,8 +4,6 @@ return [
 
     'builder' => [
 
-        'collapsed' => 'Tampilkan semua',
-
         'actions' => [
 
             'clone' => [
@@ -72,6 +70,125 @@ return [
 
     ],
 
+    'file_upload' => [
+
+        'editor' => [
+
+            'actions' => [
+
+                'cancel' => [
+                    'label' => 'Batal',
+                ],
+
+                'drag_crop' => [
+                    'label' => 'Mode "potong"',
+                ],
+
+                'drag_move' => [
+                    'label' => 'Mode "geser"',
+                ],
+
+                'flip_horizontal' => [
+                    'label' => 'Balik gambar secara horizontal',
+                ],
+
+                'flip_vertical' => [
+                    'label' => 'Balik gambar vertical',
+                ],
+
+                'move_down' => [
+                    'label' => 'Geser gambar ke bawah',
+                ],
+
+                'move_left' => [
+                    'label' => 'Geser gambar ke kiri',
+                ],
+
+                'move_right' => [
+                    'label' => 'Geser gambar ke kanan',
+                ],
+
+                'move_up' => [
+                    'label' => 'Geser gambar ke atas',
+                ],
+
+                'reset' => [
+                    'label' => 'Kembalikan',
+                ],
+
+                'rotate_left' => [
+                    'label' => 'Putar gambar ke kiri',
+                ],
+
+                'rotate_right' => [
+                    'label' => 'Putar gambar ke kanan',
+                ],
+
+                'set_aspect_ratio' => [
+                    'label' => 'Tentukan aspek rasio ke :ratio',
+                ],
+
+                'save' => [
+                    'label' => 'Simpan',
+                ],
+
+                'zoom_100' => [
+                    'label' => 'Perbesar ke 100%',
+                ],
+
+                'zoom_in' => [
+                    'label' => 'Perbesar',
+                ],
+
+                'zoom_out' => [
+                    'label' => 'Perkecil',
+                ],
+
+            ],
+
+            'fields' => [
+
+                'height' => [
+                    'label' => 'Tinggi',
+                    'unit' => 'px',
+                ],
+
+                'rotation' => [
+                    'label' => 'Putar',
+                    'unit' => 'derajat',
+                ],
+
+                'width' => [
+                    'label' => 'Lebar',
+                    'unit' => 'px',
+                ],
+
+                'x_position' => [
+                    'label' => 'X',
+                    'unit' => 'px',
+                ],
+
+                'y_position' => [
+                    'label' => 'Y',
+                    'unit' => 'px',
+                ],
+
+            ],
+
+            'aspect_ratios' => [
+
+                'label' => 'Aspek rasio',
+
+                'no_fixed' => [
+                    'label' => 'Bebas',
+                ],
+
+            ],
+
+        ],
+
+    ],
+
     'key_value' => [
 
         'actions' => [
@@ -108,22 +225,23 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Lampirkan berkas',
+            'blockquote' => 'Kutipan',
             'bold' => 'Tebal',
             'bullet_list' => 'Daftar',
             'code_block' => 'Kode',
-            'edit' => 'Ubah',
+            'heading' => 'Judul',
             'italic' => 'Miring',
             'link' => 'Tautan',
             'ordered_list' => 'Daftar berurut',
-            'preview' => 'Pratinjau',
+            'redo' => 'Kembalikan',
             'strike' => 'Coret',
+            'table' => 'Table',
+            'undo' => 'Batalkan',
         ],
 
     ],
 
     'repeater' => [
-
-        'collapsed' => 'Tampilkan semua',
 
         'actions' => [
 
@@ -204,6 +322,7 @@ return [
             'ordered_list' => 'Daftar berurut',
             'redo' => 'Kembalikan',
             'strike' => 'Coret',
+            'underline' => 'Garis bawah',
             'undo' => 'Batalkan',
         ],
 
@@ -223,6 +342,28 @@ return [
 
                         'create' => [
                             'label' => 'Buat',
+                        ],
+
+                        'create_another' => [
+                            'label' => 'Buat & buat lainnya',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'edit_option' => [
+
+                'modal' => [
+
+                    'heading' => 'Ubah',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Simpan',
                         ],
 
                     ],

@@ -9,12 +9,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\Assert;
-use Livewire\Testing\TestableLivewire;
+use Livewire\Features\SupportTesting\Testable;
 
 /**
  * @method HasForms instance()
  *
- * @mixin TestableLivewire
+ * @mixin Testable
  */
 class TestsForms
 {
@@ -138,7 +138,7 @@ class TestsForms
 
     public function assertFormFieldExists(): Closure
     {
-        return function (string $fieldName, string | Closure $formName = 'form', Closure $checkFieldUsing = null): static {
+        return function (string $fieldName, string | Closure $formName = 'form', ?Closure $checkFieldUsing = null): static {
             if ($formName instanceof Closure) {
                 $checkFieldUsing = $formName;
                 $formName = 'form';

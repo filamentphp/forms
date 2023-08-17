@@ -1,12 +1,17 @@
 @php
     $id = $getId();
+    $isContained = $getContainer()->getParentComponent()->isContained();
+
+    $visibleTabClasses = \Illuminate\Support\Arr::toCssClasses([
+        'p-6' => $isContained,
+        'mt-6' => ! $isContained,
+    ]);
+
+    $invisibleTabClasses = 'invisible h-0 overflow-y-hidden p-0';
 @endphp
 
 <div
-    x-bind:class="{
-        'invisible h-0 p-0 overflow-y-hidden': tab !== '{{ $id }}',
-        'p-6': tab === '{{ $id }}',
-    }"
+    x-bind:class="tab === @js($id) ? @js($visibleTabClasses) : @js($invisibleTabClasses)"
     x-on:expand-concealing-component.window="
         error = $el.querySelector('[data-validation-error]')
 
@@ -37,10 +42,10 @@
                 'id' => $id,
                 'role' => 'tabpanel',
                 'tabindex' => '0',
-                'wire:key' => "{$this->id}.{$getStatePath()}." . \Filament\Forms\Components\Tab::class . ".tabs.{$id}",
+                'wire:key' => "{$this->getId()}.{$getStatePath()}." . \Filament\Forms\Components\Tab::class . ".tabs.{$id}",
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
-            ->class(['filament-forms-tabs-component-tab outline-none'])
+            ->class(['fi-fo-tabs-tab outline-none'])
     }}
 >
     {{ $getChildComponentContainer() }}

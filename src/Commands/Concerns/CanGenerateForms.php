@@ -4,6 +4,7 @@ namespace Filament\Forms\Commands\Concerns;
 
 use Doctrine\DBAL\Types;
 use Filament\Forms;
+use Illuminate\Support\Str;
 
 trait CanGenerateForms
 {
@@ -65,7 +66,7 @@ trait CanGenerateForms
                 'sku',
                 'uuid',
             ])) {
-                $componentData['label'] = [strtoupper($columnName)];
+                $componentData['label'] = [Str::upper($columnName)];
             }
 
             if ($componentData['type'] === Forms\Components\TextInput::class) {
@@ -97,7 +98,9 @@ trait CanGenerateForms
                 Types\IntegerType::class,
                 Types\SmallIntType::class,
             ])) {
-                $componentData['numeric'] = [];
+                if ($componentData['type'] === Forms\Components\TextInput::class) {
+                    $componentData['numeric'] = [];
+                }
 
                 if (filled($column->getDefault())) {
                     $componentData['default'] = [$column->getDefault()];

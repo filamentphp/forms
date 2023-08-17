@@ -8,26 +8,19 @@
     :collapsible="$isCollapsible() && (! $isAside)"
     :compact="$isCompact()"
     :content-before="$isFormBefore()"
+    :description="$getDescription()"
+    :heading="$getHeading()"
     :icon="$getIcon()"
     :icon-color="$getIconColor()"
     :icon-size="$getIconSize()"
-    {{
-    $attributes
-        ->merge([
-            'id' => $getId(),
-        ], escape: false)
-        ->merge($getExtraAttributes(), escape: false)
-        ->merge($getExtraAlpineAttributes(), escape: false)
-        ->class(['filament-forms-section-component'])
-}}
+    :attributes="
+        \Filament\Support\prepare_inherited_attributes($attributes)
+            ->merge([
+                'id' => $getId(),
+            ], escape: false)
+            ->merge($getExtraAttributes(), escape: false)
+            ->merge($getExtraAlpineAttributes(), escape: false)
+    "
 >
-    <x-slot name="heading">
-        {{ $getHeading() }}
-    </x-slot>
-
-    <x-slot name="description">
-        {{ $getDescription() }}
-    </x-slot>
-
     {{ $getChildComponentContainer() }}
 </x-filament::section>

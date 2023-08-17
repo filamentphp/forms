@@ -21,14 +21,14 @@ class MorphToSelect extends Component
      */
     protected string $view = 'filament-forms::components.fieldset';
 
-    public bool | Closure $isRequired = false;
+    protected bool | Closure $isRequired = false;
 
     protected int | Closure $optionsLimit = 50;
 
     /**
      * @var array<Type> | Closure
      */
-    public array | Closure $types = [];
+    protected array | Closure $types = [];
 
     final public function __construct(string $name)
     {
@@ -67,7 +67,7 @@ class MorphToSelect extends Component
                     $types,
                 ))
                 ->required($isRequired)
-                ->reactive()
+                ->live()
                 ->afterStateUpdated(fn (Set $set) => $set($keyColumn, null)),
             Select::make($keyColumn)
                 ->label($selectedType?->getLabel())

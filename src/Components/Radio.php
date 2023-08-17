@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 class Radio extends Field
 {
     use Concerns\HasExtraInputAttributes;
+    use Concerns\HasGridDirection;
     use Concerns\HasOptions;
 
     /**
@@ -111,5 +112,16 @@ class Radio extends Field
             'label' => $label,
             'value' => $value,
         ]);
+    }
+
+    public function getDefaultState(): mixed
+    {
+        $state = parent::getDefaultState();
+
+        if (is_bool($state)) {
+            return $state ? 1 : 0;
+        }
+
+        return $state;
     }
 }

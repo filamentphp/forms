@@ -11,43 +11,43 @@ return [
             ],
 
             'add' => [
-                'label' => 'Tambah ke :label',
+                'label' => 'Legge til i :label',
             ],
 
             'add_between' => [
-                'label' => 'Masukkan',
+                'label' => 'Sett inn mellom',
             ],
 
             'delete' => [
-                'label' => 'Padam',
+                'label' => 'Slett',
             ],
 
             'reorder' => [
-                'label' => 'Pindah',
+                'label' => 'Flytt',
             ],
 
             'move_down' => [
-                'label' => 'Pindah ke bawah',
+                'label' => 'Flytt ned',
             ],
 
             'move_up' => [
-                'label' => 'Pindah ke atas',
+                'label' => 'Flytt opp',
             ],
 
             'collapse' => [
-                'label' => 'Tutup',
+                'label' => 'Kollaps',
             ],
 
             'expand' => [
-                'label' => 'Buka',
+                'label' => 'Utvid',
             ],
 
             'collapse_all' => [
-                'label' => 'Tutup semua',
+                'label' => 'Kollaps alle',
             ],
 
             'expand_all' => [
-                'label' => 'Buka semua',
+                'label' => 'Utvid alle',
             ],
 
         ],
@@ -59,11 +59,11 @@ return [
         'actions' => [
 
             'deselect_all' => [
-                'label' => 'Nyahpilih semua',
+                'label' => 'Avvelg alle',
             ],
 
             'select_all' => [
-                'label' => 'Pilih semua',
+                'label' => 'Velg alle',
             ],
 
         ],
@@ -77,71 +77,71 @@ return [
             'actions' => [
 
                 'cancel' => [
-                    'label' => 'Batal',
+                    'label' => 'Avbryt',
                 ],
 
                 'drag_crop' => [
-                    'label' => 'Mod seret "crop"',
+                    'label' => 'Dra-modus "beskjær"',
                 ],
 
                 'drag_move' => [
-                    'label' => 'Mod seret "move"',
+                    'label' => 'Dra-modus "flytt"',
                 ],
 
                 'flip_horizontal' => [
-                    'label' => 'Balikkan imej mendatar',
+                    'label' => 'Vend bildet horisontalt',
                 ],
 
                 'flip_vertical' => [
-                    'label' => 'Balikkan imej menegak',
+                    'label' => 'Vend bildet vertikalt',
                 ],
 
                 'move_down' => [
-                    'label' => 'Gerakkan imej ke bawah',
+                    'label' => 'Flytt bildet ned',
                 ],
 
                 'move_left' => [
-                    'label' => 'Alihkan imej ke kiri',
+                    'label' => 'Flytt vildet til venstre',
                 ],
 
                 'move_right' => [
-                    'label' => 'Alihkan imej ke kanan',
+                    'label' => 'Flytt bildet til høyre',
                 ],
 
                 'move_up' => [
-                    'label' => 'Alihkan imej ke atas',
+                    'label' => 'Flytt bildet opp',
                 ],
 
                 'reset' => [
-                    'label' => 'Tetapkan semula',
+                    'label' => 'Nullstill',
                 ],
 
                 'rotate_left' => [
-                    'label' => 'Putar imej ke kiri',
+                    'label' => 'Roter bildet til venstre',
                 ],
 
                 'rotate_right' => [
-                    'label' => 'Putar imej ke kanan',
+                    'label' => 'Roter bildet til høyre',
                 ],
 
                 'set_aspect_ratio' => [
-                    'label' => 'Tetapkan nisbah bidang kepada :ratio',
+                    'label' => 'Sett sideforhold til :ratio',
                 ],
 
                 'save' => [
-                    'label' => 'Simpan',
+                    'label' => 'Lagre',
                 ],
 
                 'zoom_100' => [
-                    'label' => 'Zum imej kepada 100%',
+                    'label' => 'Zoom bildet til 100%',
                 ],
 
                 'zoom_in' => [
-                    'label' => 'Zum masuk',
+                    'label' => 'Zoom inn',
                 ],
 
                 'zoom_out' => [
-                    'label' => 'Zum keluar',
+                    'label' => 'Zoom ut',
                 ],
 
             ],
@@ -149,17 +149,17 @@ return [
             'fields' => [
 
                 'height' => [
-                    'label' => 'Ketinggian',
+                    'label' => 'Høyde',
                     'unit' => 'px',
                 ],
 
                 'rotation' => [
-                    'label' => 'Putaran',
-                    'unit' => 'deg',
+                    'label' => 'Rotasjon',
+                    'unit' => 'grader',
                 ],
 
                 'width' => [
-                    'label' => 'Lebar',
+                    'label' => 'Bredde',
                     'unit' => 'px',
                 ],
 
@@ -177,10 +177,10 @@ return [
 
             'aspect_ratios' => [
 
-                'label' => 'Nisbah aspek',
+                'label' => 'Sideforhold',
 
                 'no_fixed' => [
-                    'label' => 'Bebas',
+                    'label' => 'Fri',
                 ],
 
             ],
@@ -194,15 +194,15 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Tambah Baris',
+                'label' => 'Legg til rad',
             ],
 
             'delete' => [
-                'label' => 'Padam Baris',
+                'label' => 'Slett rad',
             ],
 
             'reorder' => [
-                'label' => 'Susun Baris',
+                'label' => 'Omorganiser rad',
             ],
 
         ],
@@ -210,11 +210,11 @@ return [
         'fields' => [
 
             'key' => [
-                'label' => 'Kunci',
+                'label' => 'Nøkkel',
             ],
 
             'value' => [
-                'label' => 'Nilai',
+                'label' => 'Verdi',
             ],
 
         ],
@@ -224,19 +224,19 @@ return [
     'markdown_editor' => [
 
         'toolbar_buttons' => [
-            'attach_files' => 'Lampirkan fail',
-            'blockquote' => 'Blok petikan',
-            'bold' => 'Bold',
-            'bullet_list' => 'Bullet list',
-            'code_block' => 'Blok kod',
-            'heading' => 'Tajuk',
-            'italic' => 'Italic',
-            'link' => 'Pautan',
-            'ordered_list' => 'Senarai bernombor',
-            'redo' => 'Buat semula',
-            'strike' => 'Strikethrough',
-            'table' => 'Jadual',
-            'undo' => 'Buat asal',
+            'attach_files' => 'Legg til filer',
+            'blockquote' => 'Sitat',
+            'bold' => 'Fet',
+            'bullet_list' => 'Punktliste',
+            'code_block' => 'Kode',
+            'heading' => 'Tittel',
+            'italic' => 'Kursiv',
+            'link' => 'Lenke',
+            'ordered_list' => 'Nummerert liste',
+            'redo' => 'Gjør om',
+            'strike' => 'Gjennomstrekning',
+            'table' => 'Tabell',
+            'undo' => 'Angre',
         ],
 
     ],
@@ -246,43 +246,43 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Tambah ke :label',
+                'label' => 'Legg til i :label',
             ],
 
             'delete' => [
-                'label' => 'Padam',
-            ],
-
-            'reorder' => [
-                'label' => 'Pindah',
+                'label' => 'Slett',
             ],
 
             'clone' => [
                 'label' => 'Klon',
             ],
 
+            'reorder' => [
+                'label' => 'Flytt',
+            ],
+
             'move_down' => [
-                'label' => 'Pindah ke atas',
+                'label' => 'Flytt ned',
             ],
 
             'move_up' => [
-                'label' => 'Pindah ke bawah',
+                'label' => 'Flytt opp',
             ],
 
             'collapse' => [
-                'label' => 'Tutup',
+                'label' => 'Kollaps',
             ],
 
             'expand' => [
-                'label' => 'Buka',
+                'label' => 'Utvid',
             ],
 
             'collapse_all' => [
-                'label' => 'Tutup semua',
+                'label' => 'Kollaps alle',
             ],
 
             'expand_all' => [
-                'label' => 'Buka semua',
+                'label' => 'Utvid alle',
             ],
 
         ],
@@ -296,34 +296,34 @@ return [
             'link' => [
 
                 'actions' => [
-                    'link' => 'Pautkan',
-                    'unlink' => 'Nyahpaut',
+                    'link' => 'Lenke',
+                    'unlink' => 'Fjern lenke',
                 ],
 
                 'label' => 'URL',
 
-                'placeholder' => 'Masukkan URL',
+                'placeholder' => 'Skriv inn URL',
 
             ],
 
         ],
 
         'toolbar_buttons' => [
-            'attach_files' => 'Lampirkan fail',
-            'blockquote' => 'Blockquote',
-            'bold' => 'Bold',
-            'bullet_list' => 'Bullet list',
-            'code_block' => 'Blok kod',
-            'h1' => 'Title',
-            'h2' => 'Heading',
-            'h3' => 'Subheading',
-            'italic' => 'Italic',
-            'link' => 'Pautan',
-            'ordered_list' => 'Senarai bernombor',
-            'redo' => 'Buat semula',
-            'strike' => 'Strikethrough',
-            'underline' => 'Garis bawah',
-            'undo' => 'Buat asal',
+            'attach_files' => 'Legg til filer',
+            'blockquote' => 'Sitat',
+            'bold' => 'Fet',
+            'bullet_list' => 'Punktliste',
+            'code_block' => 'Kode',
+            'h1' => 'Tittel',
+            'h2' => 'Overskrift',
+            'h3' => 'Undertittel',
+            'italic' => 'Kursiv',
+            'link' => 'Lenke',
+            'ordered_list' => 'Nummerert liste',
+            'redo' => 'Gjør om',
+            'strike' => 'Gjennomstrekning',
+            'underline' => 'Understrekning',
+            'undo' => 'Angre',
         ],
 
     ],
@@ -336,16 +336,16 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Cipta',
+                    'heading' => 'Opprett',
 
                     'actions' => [
 
                         'create' => [
-                            'label' => 'Cipta',
+                            'label' => 'Opprett',
                         ],
 
                         'create_another' => [
-                            'label' => 'Cipta dan cipta yang lain',
+                            'label' => 'Opprett & opprett en til',
                         ],
 
                     ],
@@ -358,12 +358,12 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Sunting',
+                    'heading' => 'Endre',
 
                     'actions' => [
 
                         'save' => [
-                            'label' => 'Simpan',
+                            'label' => 'Lagre',
                         ],
 
                     ],
@@ -375,26 +375,26 @@ return [
         ],
 
         'boolean' => [
-            'true' => 'Ya',
-            'false' => 'Tidak',
+            'true' => 'Ja',
+            'false' => 'Nei',
         ],
 
-        'loading_message' => 'Memuatkan...',
+        'loading_message' => 'Laster...',
 
-        'max_items_message' => 'Hanya :count boleh dipilih.',
+        'max_items_message' => 'Bare :count kan velges.',
 
-        'no_search_results_message' => 'Tiada pilihan yang sepadan dengan carian anda.',
+        'no_search_results_message' => 'No alternativer matcher ditt søk.',
 
-        'placeholder' => 'Pilih satu pilihan',
+        'placeholder' => 'Velg et alternativ',
 
-        'searching_message' => 'Mencari...',
+        'searching_message' => 'Søker...',
 
-        'search_prompt' => 'Mula menaip untuk mencari...',
+        'search_prompt' => 'Skriv for å søke...',
 
     ],
 
     'tags_input' => [
-        'placeholder' => 'Tag baru',
+        'placeholder' => 'Ny emneknagg',
     ],
 
     'wizard' => [
@@ -402,11 +402,11 @@ return [
         'actions' => [
 
             'previous_step' => [
-                'label' => 'Sebelum',
+                'label' => 'Tilbake',
             ],
 
             'next_step' => [
-                'label' => 'Seterus',
+                'label' => 'Neste',
             ],
 
         ],
