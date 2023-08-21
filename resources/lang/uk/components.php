@@ -4,18 +4,12 @@ return [
 
     'builder' => [
 
-        'actions' => [
+        'collapsed' => 'Вміст згорнутий',
 
-            'clone' => [
-                'label' => 'Дублювати',
-            ],
+        'actions' => [
 
             'add' => [
                 'label' => 'Додати до :label',
-            ],
-
-            'add_between' => [
-                'label' => 'Вставити між',
             ],
 
             'delete' => [
@@ -54,141 +48,6 @@ return [
 
     ],
 
-    'checkbox_list' => [
-
-        'actions' => [
-
-            'deselect_all' => [
-                'label' => 'Снять выделение',
-            ],
-
-            'select_all' => [
-                'label' => 'Выделить все',
-            ],
-
-        ],
-
-    ],
-
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Скасувати',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Режим "кадрування"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Режим "переміщення"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'Відобразити по горизонталі',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'Відобразити по вертикалі',
-                ],
-
-                'move_down' => [
-                    'label' => 'Перемістити вниз',
-                ],
-
-                'move_left' => [
-                    'label' => 'Перемістити вліво',
-                ],
-
-                'move_right' => [
-                    'label' => 'Перемістити вправо',
-                ],
-
-                'move_up' => [
-                    'label' => 'Перемістити у верх',
-                ],
-
-                'reset' => [
-                    'label' => 'Скинути',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Повернути вліво',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Повернути вправо',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Відношення сторін :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'Зберегти',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Збільшити до 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Збільшити',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Зменшити',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Висота',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Обертання',
-                    'unit' => 'град',
-                ],
-
-                'width' => [
-                    'label' => 'Ширина',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Відношення сторін',
-
-                'no_fixed' => [
-                    'label' => 'Вільне',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -199,9 +58,6 @@ return [
 
             'delete' => [
                 'label' => 'Видалити рядок',
-            ],
-            'reorder' => [
-                'label' => 'Перемістити рядок',
             ],
 
         ],
@@ -224,23 +80,22 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Прикріпити файли',
-            'blockquote' => 'Цитата',
             'bold' => 'Жирний',
             'bullet_list' => 'Маркувальний список',
             'code_block' => 'Код',
-            'heading' => 'Заголовок',
+            'edit' => 'Редагувати',
             'italic' => 'Курсив',
             'link' => 'Посилання',
             'ordered_list' => 'Нумерований список',
-            'redo' => 'Повернути',
+            'preview' => 'Перегляд',
             'strike' => 'Закреслений',
-            'table' => 'Таблиця',
-            'undo' => 'Скасувати',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Вміст згорнутий',
 
         'actions' => [
 
@@ -252,12 +107,12 @@ return [
                 'label' => 'Видалити',
             ],
 
-            'clone' => [
-                'label' => 'Дублювати',
-            ],
-
             'reorder' => [
                 'label' => 'Перемістити',
+            ],
+
+            'clone' => [
+                'label' => 'Клонувати',
             ],
 
             'move_down' => [
@@ -265,23 +120,23 @@ return [
             ],
 
             'move_up' => [
-                'label' => 'Перемістити у верх',
+                'label' => 'Перемістити вгору',
             ],
 
             'collapse' => [
-                'label' => 'Звернути',
+                'label' => 'Згорнути',
             ],
 
             'expand' => [
-                'label' => 'Розвернути',
+                'label' => 'Розгорнути',
             ],
 
             'collapse_all' => [
-                'label' => 'Звернути все',
+                'label' => 'Згорнути все',
             ],
 
             'expand_all' => [
-                'label' => 'Розвернути все',
+                'label' => 'Розгорнути все',
             ],
 
         ],
@@ -313,9 +168,9 @@ return [
             'bold' => 'Жирний',
             'bullet_list' => 'Маркувальний список',
             'code_block' => 'Код',
-            'h1' => 'Назва',
-            'h2' => 'Заголовок',
-            'h3' => 'Підзаголовок',
+            'h1' => 'H1',
+            'h2' => 'H2',
+            'h3' => 'H3',
             'italic' => 'Курсів',
             'link' => 'Посилання',
             'ordered_list' => 'Нумерований список',
@@ -341,27 +196,6 @@ return [
                         'create' => [
                             'label' => 'Створити',
                         ],
-                        'create_another' => [
-                            'label' => 'Створити ще один',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Змінити',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Зберегти',
-                        ],
 
                     ],
 
@@ -378,11 +212,9 @@ return [
 
         'loading_message' => 'Завантаження...',
 
-        'max_items_message' => 'Тільки :count можна вибрати.',
-
         'no_search_results_message' => 'Немає варіантів, які відповідають вашому запиту.',
 
-        'placeholder' => 'Обрати варіант',
+        'placeholder' => 'Виберіть варіант',
 
         'searching_message' => 'Пошук...',
 

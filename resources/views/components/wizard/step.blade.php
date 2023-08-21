@@ -1,17 +1,10 @@
 @php
     $id = $getId();
-    $isContained = $getContainer()->getParentComponent()->isContained();
-
-    $visibleStepClasses = \Illuminate\Support\Arr::toCssClasses([
-        'p-6' => $isContained,
-        'mt-6' => ! $isContained,
-    ]);
-
-    $invisibleStepClasses = 'invisible h-0 overflow-y-hidden p-0';
 @endphp
 
 <div
-    x-bind:class="step === @js($id) ? @js($visibleStepClasses) : @js($invisibleStepClasses)"
+    x-ref="step-{{ $id }}"
+    x-bind:class="{ 'invisible h-0 overflow-y-hidden': step !== @js($id) }"
     x-on:expand-concealing-component.window="
         error = $el.querySelector('[data-validation-error]')
 
@@ -39,7 +32,6 @@
             200,
         )
     "
-    x-ref="step-{{ $id }}"
     {{
         $attributes
             ->merge([
@@ -49,7 +41,7 @@
                 'tabindex' => '0',
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
-            ->class(['fi-fo-wizard-step outline-none'])
+            ->class(['filament-forms-wizard-component-step outline-none'])
     }}
 >
     {{ $getChildComponentContainer() }}

@@ -12,6 +12,13 @@ class Action extends MountableAction
     use Concerns\BelongsToComponent;
     use HasMountableArguments;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->iconButton();
+    }
+
     public function getLivewireCallMountedActionName(): string
     {
         return 'callMountedFormComponentAction';
@@ -40,11 +47,7 @@ class Action extends MountableAction
 
     public function toFormComponent(): ActionContainer
     {
-        $component = ActionContainer::make($this);
-
-        $this->component($component);
-
-        return $component;
+        return ActionContainer::make($this);
     }
 
     /**

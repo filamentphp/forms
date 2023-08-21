@@ -5,15 +5,13 @@ namespace Filament\Forms\Components;
 use Closure;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Wizard\Step;
-use Filament\Support\Concerns;
-use Filament\Support\Enums\IconPosition;
+use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Illuminate\Contracts\Support\Htmlable;
 use Livewire\Component as LivewireComponent;
 
 class Wizard extends Component
 {
-    use Concerns\CanBeContained;
-    use Concerns\HasExtraAlpineAttributes;
+    use HasExtraAlpineAttributes;
 
     protected string | Htmlable | null $cancelAction = null;
 
@@ -27,7 +25,7 @@ class Wizard extends Component
 
     protected ?Closure $modifyPreviousActionUsing = null;
 
-    protected int | Closure $startStep = 1;
+    public int | Closure $startStep = 1;
 
     /**
      * @var view-string
@@ -80,7 +78,9 @@ class Wizard extends Component
 
                     /** @var LivewireComponent $livewire */
                     $livewire = $component->getLivewire();
-                    $livewire->dispatch('next-wizard-step', statePath: $statePath);
+                    $livewire->dispatchBrowserEvent('next-wizard-step', [
+                        'statePath' => $statePath,
+                    ]);
                 },
             ],
         ]);
@@ -90,9 +90,12 @@ class Wizard extends Component
     {
         $action = Action::make($this->getNextActionName())
             ->label(__('filament-forms::components.wizard.actions.next_step.label'))
-            ->iconPosition(IconPosition::After)
+            ->icon((__('filament::layout.direction') === 'rtl') ? 'heroicon-m-chevron-left' : 'heroicon-m-chevron-right')
+            ->iconPosition('after')
             ->livewireClickHandlerEnabled(false)
-            ->button();
+            ->button()
+            ->outlined()
+            ->size('sm');
 
         if ($this->modifyNextActionUsing) {
             $action = $this->evaluate($this->modifyNextActionUsing, [
@@ -119,9 +122,11 @@ class Wizard extends Component
     {
         $action = Action::make($this->getPreviousActionName())
             ->label(__('filament-forms::components.wizard.actions.previous_step.label'))
+            ->icon((__('filament::layout.direction') === 'rtl') ? 'heroicon-m-chevron-right' : 'heroicon-m-chevron-left')
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
-            ->button();
+            ->button()
+            ->size('sm');
 
         if ($this->modifyPreviousActionUsing) {
             $action = $this->evaluate($this->modifyPreviousActionUsing, [

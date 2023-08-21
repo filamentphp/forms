@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Thu gọn nội dung',
+
         'actions' => [
 
             'clone' => [
@@ -70,125 +72,6 @@ return [
 
     ],
 
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Huỷ bỏ',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Chế độ kéo "cắt"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Chế độ kéo "di chuyển"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'Lật ảnh theo chiều ngang',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'Lật ảnh theo chiều dọc',
-                ],
-
-                'move_down' => [
-                    'label' => 'Di chuyển hình ảnh xuống',
-                ],
-
-                'move_left' => [
-                    'label' => 'Di chuyển hình ảnh sang trái',
-                ],
-
-                'move_right' => [
-                    'label' => 'Di chuyển hình ảnh sang phải',
-                ],
-
-                'move_up' => [
-                    'label' => 'Di chuyển hình ảnh lên trên',
-                ],
-
-                'reset' => [
-                    'label' => 'Đặt lại',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Xoay ảnh sang trái',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Xoay ảnh sang phải',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Đặt tỷ lệ khung hình thành :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'Lưu',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Thu phóng hình ảnh đến 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Phóng to',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Thu nhỏ',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Chiều cao',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Độ xoay',
-                    'unit' => 'deg',
-                ],
-
-                'width' => [
-                    'label' => 'Chiều rộng',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Tỷ lệ khung hình',
-
-                'no_fixed' => [
-                    'label' => 'Tự do',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -225,23 +108,22 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Đính kèm tệp',
-            'blockquote' => 'Trích dẫn',
             'bold' => 'In đậm',
             'bullet_list' => 'Danh sách đánh dấu',
             'code_block' => 'Code block',
-            'heading' => 'Tiêu đề',
+            'edit' => 'Sửa',
             'italic' => 'In nghiêng',
             'link' => 'Liên kết',
             'ordered_list' => 'Danh sách đánh số',
-            'redo' => 'Làm lại',
+            'preview' => 'Xem trước',
             'strike' => 'Gạch ngang',
-            'table' => 'Bảng',
-            'undo' => 'Hoàn tác',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Thu gọn nội dung',
 
         'actions' => [
 
@@ -322,7 +204,6 @@ return [
             'ordered_list' => 'Danh sách đánh số',
             'redo' => 'Làm lại',
             'strike' => 'Gạch ngang',
-            'underline' => 'Gạch chân',
             'undo' => 'Hoàn tác',
         ],
 
@@ -342,28 +223,6 @@ return [
 
                         'create' => [
                             'label' => 'Tạo',
-                        ],
-
-                        'create_another' => [
-                            'label' => 'Tạo và thêm một mục khác',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Chỉnh sửa',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Lưu lại',
                         ],
 
                     ],

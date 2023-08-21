@@ -4,34 +4,24 @@ return [
 
     'builder' => [
 
-        'actions' => [
+        'collapsed' => 'Contenuto compresso',
 
-            'clone' => [
-                'label' => 'Clona',
-            ],
+        'actions' => [
 
             'add' => [
                 'label' => 'Aggiungi a :label',
-            ],
-
-            'add_between' => [
-                'label' => 'Inserisci tra i blocchi',
             ],
 
             'delete' => [
                 'label' => 'Elimina',
             ],
 
-            'reorder' => [
-                'label' => 'Sposta',
-            ],
-
             'move_down' => [
-                'label' => 'Sposta in basso',
+                'label' => 'Muovi giù',
             ],
 
             'move_up' => [
-                'label' => 'Sposta in alto',
+                'label' => 'Muovi su',
             ],
 
             'collapse' => [
@@ -43,146 +33,11 @@ return [
             ],
 
             'collapse_all' => [
-                'label' => 'Comprimi tutti',
+                'label' => 'Comprimi tutto',
             ],
 
             'expand_all' => [
-                'label' => 'Espandi tutti',
-            ],
-
-        ],
-
-    ],
-
-    'checkbox_list' => [
-
-        'actions' => [
-
-            'deselect_all' => [
-                'label' => 'Deseleziona tutti',
-            ],
-
-            'select_all' => [
-                'label' => 'Seleziona tutti',
-            ],
-
-        ],
-
-    ],
-
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Annulla',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Modalità trascinamento "ritaglio"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Modalità trascinamento "sposta"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'Capovolgi immagine orizzontalmente',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'Capovolgi immagine verticalmente',
-                ],
-
-                'move_down' => [
-                    'label' => 'Sposta immagine in basso',
-                ],
-
-                'move_left' => [
-                    'label' => 'Sposta immagine a sinistra',
-                ],
-
-                'move_right' => [
-                    'label' => 'Sposta immagine a destra',
-                ],
-
-                'move_up' => [
-                    'label' => 'Sposta immagine in alto',
-                ],
-
-                'reset' => [
-                    'label' => 'Reimposta',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Ruota immagine a sinistra',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Ruota immagine a destra',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Imposta rapporto a :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'Salva',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Zoom immagine al 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Zoom avanti',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Zoom indietro',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Altezza',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Rotazione',
-                    'unit' => 'gradi',
-                ],
-
-                'width' => [
-                    'label' => 'Larghezza',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Rapporti',
-
-                'no_fixed' => [
-                    'label' => 'Libero',
-                ],
-
+                'label' => 'Espandi tutto',
             ],
 
         ],
@@ -198,11 +53,7 @@ return [
             ],
 
             'delete' => [
-                'label' => 'Elimina riga',
-            ],
-
-            'reorder' => [
-                'label' => 'Riordina riga',
+                'label' => 'Elimina Riga',
             ],
 
         ],
@@ -224,24 +75,23 @@ return [
     'markdown_editor' => [
 
         'toolbar_buttons' => [
-            'attach_files' => 'Allega file',
-            'blockquote' => 'Citazione',
+            'attach_files' => 'Allega files',
             'bold' => 'Grassetto',
             'bullet_list' => 'Elenco puntato',
-            'code_block' => 'Blocco di codice',
-            'heading' => 'Intestazione',
-            'italic' => 'Corsivo',
+            'code_block' => 'Blocco codice',
+            'edit' => 'Modifica',
+            'italic' => 'Italico',
             'link' => 'Link',
             'ordered_list' => 'Elenco numerato',
-            'redo' => 'Ripristina',
+            'preview' => 'Anteprima',
             'strike' => 'Barrato',
-            'table' => 'Tabella',
-            'undo' => 'Annulla',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Contenuto compresso',
 
         'actions' => [
 
@@ -257,16 +107,12 @@ return [
                 'label' => 'Clona',
             ],
 
-            'reorder' => [
-                'label' => 'Sposta',
-            ],
-
             'move_down' => [
-                'label' => 'Sposta in basso',
+                'label' => 'Muovi giù',
             ],
 
             'move_up' => [
-                'label' => 'Sposta in alto',
+                'label' => 'Muovi su',
             ],
 
             'collapse' => [
@@ -278,11 +124,11 @@ return [
             ],
 
             'collapse_all' => [
-                'label' => 'Comprimi tutti',
+                'label' => 'Comprimi tutto',
             ],
 
             'expand_all' => [
-                'label' => 'Espandi tutti',
+                'label' => 'Espandi tutto',
             ],
 
         ],
@@ -297,7 +143,7 @@ return [
 
                 'actions' => [
                     'link' => 'Collega',
-                    'unlink' => 'Scollega',
+                    'unlink' => 'Rimuovi',
                 ],
 
                 'label' => 'URL',
@@ -313,16 +159,15 @@ return [
             'blockquote' => 'Citazione',
             'bold' => 'Grassetto',
             'bullet_list' => 'Elenco puntato',
-            'code_block' => 'Blocco di codice',
+            'code_block' => 'Codice',
             'h1' => 'Titolo',
-            'h2' => 'Intestazione',
-            'h3' => 'Sottotitolo',
+            'h2' => 'Testata',
+            'h3' => 'Sottotestata',
             'italic' => 'Corsivo',
             'link' => 'Link',
-            'ordered_list' => 'Elenco numerato',
-            'redo' => 'Ripristina',
+            'ordered_list' => 'Numeri',
+            'redo' => 'Rifai',
             'strike' => 'Barrato',
-            'underline' => 'Sottolineato',
             'undo' => 'Annulla',
         ],
 
@@ -336,34 +181,12 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Crea',
+                    'heading' => 'Nuovo',
 
                     'actions' => [
 
                         'create' => [
-                            'label' => 'Crea',
-                        ],
-
-                        'create_another' => [
-                            'label' => 'Crea & creane un altro',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Modifica',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Salva',
+                            'label' => 'Nuovo',
                         ],
 
                     ],
@@ -381,9 +204,7 @@ return [
 
         'loading_message' => 'Caricamento...',
 
-        'max_items_message' => 'Solo :count possono essere selezionati.',
-
-        'no_search_results_message' => 'Nessuna opzione corrisponde alla tua ricerca.',
+        'no_search_results_message' => 'Nessuna opzione trovata per la ricerca.',
 
         'placeholder' => "Seleziona un'opzione",
 
@@ -406,7 +227,7 @@ return [
             ],
 
             'next_step' => [
-                'label' => 'Successivo',
+                'label' => 'Prossimo',
             ],
 
         ],

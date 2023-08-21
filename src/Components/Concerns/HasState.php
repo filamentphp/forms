@@ -284,7 +284,7 @@ trait HasState
             return null;
         }
 
-        $state = $this->getLivewire()->getOldFormState($this->getStatePath());
+        $state = request('serverMemo.data.' . $this->getStatePath());
 
         if (blank($state)) {
             return null;

@@ -59,7 +59,7 @@ trait EntanglesStateWithSingularRelationship
 
             $relatedModel = $component->getRelatedModel();
 
-            $translatableContentDriver = $livewire->makeFilamentTranslatableContentDriver();
+            $translatableContentDriver = $livewire->makeFormTranslatableContentDriver();
 
             if ($translatableContentDriver) {
                 $record = $translatableContentDriver->makeRecord($relatedModel, $data);
@@ -82,7 +82,7 @@ trait EntanglesStateWithSingularRelationship
 
             $record = $component->getCachedExistingRecord();
 
-            $translatableContentDriver = $livewire->makeFilamentTranslatableContentDriver();
+            $translatableContentDriver = $livewire->makeFormTranslatableContentDriver();
 
             if ($record) {
                 $data = $component->mutateRelationshipDataBeforeSave($data);
@@ -146,7 +146,7 @@ trait EntanglesStateWithSingularRelationship
      */
     protected function getStateFromRelatedRecord(Model $record): array
     {
-        if ($translatableContentDriver = $this->getLivewire()->makeFilamentTranslatableContentDriver()) {
+        if ($translatableContentDriver = $this->getLivewire()->makeFormTranslatableContentDriver()) {
             return $translatableContentDriver->getRecordAttributesToArray($record);
         }
 

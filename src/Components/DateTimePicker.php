@@ -38,6 +38,8 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
 
     protected bool | Closure $isNative = true;
 
+    protected string | bool | Closure | null $icon = null;
+
     protected bool | Closure $hasDate = true;
 
     protected bool | Closure $hasSeconds = true;
@@ -86,13 +88,7 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
                 try {
                     $state = Carbon::createFromFormat($component->getFormat(), $state);
                 } catch (InvalidFormatException $exception) {
-                    try {
-                        $state = Carbon::parse($state);
-                    } catch (InvalidFormatException $exception) {
-                        $component->state(null);
-
-                        return;
-                    }
+                    $state = Carbon::parse($state);
                 }
             }
 
@@ -181,16 +177,11 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
         return $this;
     }
 
-    /**
-     * @deprecated Use `suffixIcon('heroicon-m-calendar')` instead.
-     */
-    public function icon(string | bool | null $icon = null): static
+    public function icon(string | bool | Closure | null $icon): static
     {
-        if ($icon === false) {
-            return $this;
-        }
+        $this->icon = $icon;
 
-        return $this->suffixIcon($icon ?? 'heroicon-m-calendar', isInline: true);
+        return $this;
     }
 
     public function maxDate(CarbonInterface | string | Closure | null $date): static
@@ -520,5 +511,10 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
         }
 
         return 'datetime-local';
+    }
+
+    public function getIcon(): string | bool | null
+    {
+        return $this->evaluate($this->icon);
     }
 }
