@@ -4,8 +4,6 @@ return [
 
     'builder' => [
 
-        'collapsed' => 'Contenido contraido',
-
         'actions' => [
 
             'clone' => [
@@ -58,7 +56,7 @@ return [
 
     'checkbox_list' => [
 
-        'buttons' => [
+        'actions' => [
 
             'deselect_all' => [
                 'label' => 'Deseleccionar todos',
@@ -108,22 +106,25 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Adjuntar archivos',
+            'blockquote' => 'Cita',
             'bold' => 'Negrita',
             'bullet_list' => 'Viñetas',
             'code_block' => 'Bloque de código',
+            'heading' => 'Encabezado',
             'edit' => 'Escribir',
             'italic' => 'Cursiva',
             'link' => 'Enlace',
             'ordered_list' => 'Lista numerada',
             'preview' => 'Vista previa',
             'strike' => 'Tachado',
+            'redo' => 'Rehacer',
+            'table' => 'Tabla',
+            'undo' => 'Deshacer',
         ],
 
     ],
 
     'repeater' => [
-
-        'collapsed' => 'Contenido contraido',
 
         'actions' => [
 
@@ -204,6 +205,7 @@ return [
             'ordered_list' => 'Lista numerada',
             'redo' => 'Rehacer',
             'strike' => 'Tachar',
+            'underline' => 'Subrayar',
             'undo' => 'Deshacer',
         ],
 
@@ -223,6 +225,27 @@ return [
 
                         'create' => [
                             'label' => 'Crear',
+                        ],
+                        'create_another' => [
+                            'label' => 'Crear y crear otro',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'edit_option' => [
+
+                'modal' => [
+
+                    'heading' => 'Editar',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Guardar',
                         ],
 
                     ],

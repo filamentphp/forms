@@ -3,13 +3,15 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use function Filament\Forms\array_move_after;
-use function Filament\Forms\array_move_before;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Builder\Block;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+
+use function Filament\Forms\array_move_after;
+use function Filament\Forms\array_move_before;
 
 class Builder extends Field implements Contracts\CanConcealComponents
 {
@@ -39,8 +41,6 @@ class Builder extends Field implements Contracts\CanConcealComponents
     protected bool | Closure $hasBlockLabels = true;
 
     protected bool | Closure $hasBlockNumbers = true;
-
-    protected bool | Closure $isInset = false;
 
     protected ?Closure $modifyAddActionUsing = null;
 
@@ -113,6 +113,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getAddActionName())
             ->label(fn (Builder $component) => $component->getAddActionLabel())
+            ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $newUuid = (string) Str::uuid();
 
@@ -130,8 +131,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
             })
             ->livewireClickHandlerEnabled(false)
             ->button()
-            ->outlined()
-            ->size('sm')
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isAddable());
 
         if ($this->modifyAddActionUsing) {
@@ -159,7 +159,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getAddBetweenActionName())
             ->label(fn (Builder $component) => $component->getAddBetweenActionLabel())
-            ->icon('heroicon-m-plus')
+            ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $newUuid = (string) Str::uuid();
 
@@ -183,8 +183,8 @@ class Builder extends Field implements Contracts\CanConcealComponents
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
             })
             ->livewireClickHandlerEnabled(false)
-            ->iconButton()
-            ->size('sm')
+            ->button()
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isAddable());
 
         if ($this->modifyAddBetweenActionUsing) {
@@ -225,8 +225,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
             })
             ->iconButton()
-            ->inline()
-            ->size('sm')
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isCloneable());
 
         if ($this->modifyCloneActionUsing) {
@@ -263,8 +262,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
                 $component->state($items);
             })
             ->iconButton()
-            ->inline()
-            ->size('sm')
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isDeletable());
 
         if ($this->modifyDeleteActionUsing) {
@@ -292,7 +290,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getMoveDownActionName())
             ->label(__('filament-forms::components.builder.actions.move_down.label'))
-            ->icon('heroicon-m-chevron-down')
+            ->icon('heroicon-m-arrow-down')
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $items = array_move_after($component->getState(), $arguments['item']);
@@ -300,8 +298,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
                 $component->state($items);
             })
             ->iconButton()
-            ->inline()
-            ->size('sm')
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isReorderable());
 
         if ($this->modifyMoveDownActionUsing) {
@@ -329,7 +326,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getMoveUpActionName())
             ->label(__('filament-forms::components.builder.actions.move_up.label'))
-            ->icon('heroicon-m-chevron-up')
+            ->icon('heroicon-m-arrow-up')
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $items = array_move_before($component->getState(), $arguments['item']);
@@ -337,8 +334,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
                 $component->state($items);
             })
             ->iconButton()
-            ->inline()
-            ->size('sm')
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isReorderable());
 
         if ($this->modifyMoveUpActionUsing) {
@@ -378,8 +374,7 @@ class Builder extends Field implements Contracts\CanConcealComponents
             })
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->inline()
-            ->size('sm')
+            ->size(ActionSize::Small)
             ->visible(fn (): bool => $this->isReorderableWithDragAndDrop());
 
         if ($this->modifyReorderActionUsing) {
@@ -407,12 +402,11 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getCollapseActionName())
             ->label(__('filament-forms::components.builder.actions.collapse.label'))
-            ->icon('heroicon-m-minus')
+            ->icon('heroicon-m-chevron-up')
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->inline()
-            ->size('sm');
+            ->size(ActionSize::Small);
 
         if ($this->modifyCollapseActionUsing) {
             $action = $this->evaluate($this->modifyCollapseActionUsing, [
@@ -439,12 +433,11 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getExpandActionName())
             ->label(__('filament-forms::components.builder.actions.expand.label'))
-            ->icon('heroicon-m-plus')
+            ->icon('heroicon-m-chevron-down')
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
-            ->inline()
-            ->size('sm');
+            ->size(ActionSize::Small);
 
         if ($this->modifyExpandActionUsing) {
             $action = $this->evaluate($this->modifyExpandActionUsing, [
@@ -471,9 +464,10 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getCollapseAllActionName())
             ->label(__('filament-forms::components.builder.actions.collapse_all.label'))
+            ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->link()
-            ->size('sm');
+            ->size(ActionSize::Small);
 
         if ($this->modifyCollapseAllActionUsing) {
             $action = $this->evaluate($this->modifyCollapseAllActionUsing, [
@@ -500,9 +494,10 @@ class Builder extends Field implements Contracts\CanConcealComponents
     {
         $action = Action::make($this->getExpandAllActionName())
             ->label(__('filament-forms::components.builder.actions.expand_all.label'))
+            ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->link()
-            ->size('sm');
+            ->size(ActionSize::Small);
 
         if ($this->modifyExpandAllActionUsing) {
             $action = $this->evaluate($this->modifyExpandAllActionUsing, [
@@ -610,10 +605,11 @@ class Builder extends Field implements Contracts\CanConcealComponents
         return $this;
     }
 
+    /**
+     * @deprecated No longer part of the design system.
+     */
     public function inset(bool | Closure $condition = true): static
     {
-        $this->isInset = $condition;
-
         return $this;
     }
 
@@ -772,11 +768,6 @@ class Builder extends Field implements Contracts\CanConcealComponents
     public function hasBlockNumbers(): bool
     {
         return (bool) $this->evaluate($this->hasBlockNumbers);
-    }
-
-    public function isInset(): bool
-    {
-        return (bool) $this->evaluate($this->isInset);
     }
 
     public function canConcealComponents(): bool

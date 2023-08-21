@@ -10,15 +10,26 @@
         $moveUpAction = $getAction($getMoveUpActionName());
         $reorderAction = $getAction($getReorderActionName());
 
+        $isAddable = $isAddable();
+        $isCloneable = $isCloneable();
         $isCollapsible = $isCollapsible();
+        $isDeletable = $isDeletable();
         $isReorderableWithButtons = $isReorderableWithButtons();
+        $isReorderableWithDragAndDrop = $isReorderableWithDragAndDrop();
 
         $statePath = $getStatePath();
     @endphp
 
-    <div>
+    <div
+        x-data="{}"
+        {{
+            $attributes
+                ->merge($getExtraAttributes(), escape: false)
+                ->class(['fi-fo-builder grid gap-y-4'])
+        }}
+    >
         @if ((count($containers) > 1) && $isCollapsible)
-            <div class="space-x-2 rtl:space-x-reverse" x-data="{}">
+            <div class="flex gap-x-3">
                 <span
                     x-on:click="$dispatch('builder-collapse', '{{ $statePath }}')"
                 >
@@ -32,27 +43,12 @@
                 </span>
             </div>
         @endif
-    </div>
 
-    <div
-        x-data="{}"
-        {{
-            $attributes
-                ->merge($getExtraAttributes(), escape: false)
-                ->class([
-                    'filament-forms-builder-component space-y-6 rounded-xl',
-                    'bg-gray-50 p-6 dark:bg-gray-500/10' => $isInset(),
-                ])
-        }}
-    >
         @if (count($containers))
             <ul
                 x-sortable
-                :wire:end.stop="'mountFormComponentAction(\'' . $statePath . '\', \'reorder\', { items: $event.target.sortable.toArray() })'"
-                @class([
-                    'space-y-12' => $addAction->isVisible() && $reorderAction->isVisible(),
-                    'space-y-6' => ! ($addAction->isVisible() && $reorderAction->isVisible()),
-                ])
+                wire:end.stop="{{ 'mountFormComponentAction(\'' . $statePath . '\', \'reorder\', { items: $event.target.sortable.toArray() })' }}"
+                class="space-y-4"
             >
                 @php
                     $hasBlockLabels = $hasBlockLabels();
@@ -61,18 +57,13 @@
 
                 @foreach ($containers as $uuid => $item)
                     <li
+                        wire:key="{{ $this->getId() }}.{{ $item->getStatePath() }}.{{ $field::class }}.item"
                         x-data="{
-                            isAddButtonVisible: false,
                             isCollapsed: @js($isCollapsed($item)),
                         }"
-                        x-on:builder-collapse.window="$event.detail === '{{ $statePath }}' && (isCollapsed = true)"
+                        x-bind:class="isCollapsed && 'fi-collapsed'"
                         x-on:builder-expand.window="$event.detail === '{{ $statePath }}' && (isCollapsed = false)"
-                        x-on:click="isAddButtonVisible = true"
-                        x-on:mouseenter="isAddButtonVisible = true"
-                        x-on:click.away="isAddButtonVisible = false"
-                        x-on:mouseleave="isAddButtonVisible = false"
-                        wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.{{ $field::class }}.item"
-                        x-sortable-item="{{ $uuid }}"
+                        x-on:builder-collapse.window="$event.detail === '{{ $statePath }}' && (isCollapsed = true)"
                         x-on:expand-concealing-component.window="
                             error = $el.querySelector('[data-validation-error]')
 
@@ -96,25 +87,38 @@
                                 200,
                             )
                         "
-                        class="filament-forms-builder-component-item relative rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20"
+                        x-sortable-item="{{ $uuid }}"
+                        class="fi-fo-builder-item rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-white/5 dark:ring-white/10"
                     >
-                        @if ($reorderAction->isVisible() || $hasBlockLabels || $isReorderableWithButtons || $cloneAction->isVisible() || $deleteAction->isVisible() || $isCollapsible || $isCloneable)
-                            <header
-                                @if ($isCollapsible) x-on:click.stop="isCollapsed = ! isCollapsed" @endif
-                                @class([
-                                    'flex h-10 items-center overflow-hidden rounded-t-xl border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800',
-                                    'cursor-pointer' => $isCollapsible,
-                                ])
-                            >
-                                @if ($reorderAction->isVisible())
-                                    <div x-sortable-handle>
-                                        {{ $reorderAction }}
-                                    </div>
+                        @if ($isReorderableWithDragAndDrop || $isReorderableWithButtons || $hasBlockLabels || $isCloneable || $isDeletable || $isCollapsible)
+                            <div class="flex items-center gap-x-3 px-4 py-2">
+                                @if ($isReorderableWithDragAndDrop || $isReorderableWithButtons)
+                                    <ul class="-ms-1.5 flex">
+                                        @if ($isReorderableWithDragAndDrop)
+                                            <li x-sortable-handle>
+                                                {{ $reorderAction }}
+                                            </li>
+                                        @endif
+
+                                        @if ($isReorderableWithButtons)
+                                            <li
+                                                class="flex items-center justify-center"
+                                            >
+                                                {{ $moveUpAction(['item' => $uuid])->disabled($loop->first) }}
+                                            </li>
+
+                                            <li
+                                                class="flex items-center justify-center"
+                                            >
+                                                {{ $moveDownAction(['item' => $uuid])->disabled($loop->last) }}
+                                            </li>
+                                        @endif
+                                    </ul>
                                 @endif
 
                                 @if ($hasBlockLabels)
-                                    <p
-                                        class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400"
+                                    <h4
+                                        class="truncate text-sm font-medium text-gray-950 dark:text-white"
                                     >
                                         @php
                                             $block = $item->getParentComponent();
@@ -129,113 +133,86 @@
                                         @endphp
 
                                         @if ($hasBlockNumbers)
-                                            <small class="font-mono">
-                                                {{ $loop->iteration }}
-                                            </small>
+                                            {{ $loop->iteration }}
                                         @endif
-                                    </p>
+                                    </h4>
                                 @endif
 
-                                <div class="flex-1"></div>
-
-                                <ul
-                                    class="flex divide-x rtl:divide-x-reverse dark:divide-gray-700"
-                                >
-                                    @if ($isReorderableWithButtons)
-                                        @if (! $loop->first)
-                                            <li
-                                                class="flex items-center justify-center"
-                                            >
-                                                {{ $moveUpAction(['item' => $uuid]) }}
+                                @if ($isCloneable || $isDeletable || $isCollapsible)
+                                    <ul class="-me-1.5 ms-auto flex">
+                                        @if ($isCloneable)
+                                            <li>
+                                                {{ $cloneAction(['item' => $uuid]) }}
                                             </li>
                                         @endif
 
-                                        @if (! $loop->last)
-                                            <li
-                                                class="flex items-center justify-center"
-                                            >
-                                                {{ $moveDownAction(['item' => $uuid]) }}
+                                        @if ($isDeletable)
+                                            <li>
+                                                {{ $deleteAction(['item' => $uuid]) }}
                                             </li>
                                         @endif
-                                    @endif
 
-                                    @if ($cloneAction->isVisible())
-                                        <li
-                                            class="flex items-center justify-center"
-                                        >
-                                            {{ $cloneAction(['item' => $uuid]) }}
-                                        </li>
-                                    @endif
-
-                                    @if ($deleteAction->isVisible())
-                                        <li
-                                            class="flex items-center justify-center"
-                                        >
-                                            {{ $deleteAction(['item' => $uuid]) }}
-                                        </li>
-                                    @endif
-
-                                    @if ($isCollapsible)
-                                        <li
-                                            x-on:click.stop="isCollapsed = ! isCollapsed"
-                                        >
-                                            <div x-show="! isCollapsed">
-                                                {{ $getAction('collapse') }}
-                                            </div>
-
-                                            <div
-                                                x-show="isCollapsed"
-                                                x-cloak
+                                        @if ($isCollapsible)
+                                            <li
+                                                class="relative transition"
+                                                x-on:click.stop="isCollapsed = !isCollapsed"
+                                                x-bind:class="{ '-rotate-180': isCollapsed }"
                                             >
-                                                {{ $getAction('expand') }}
-                                            </div>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </header>
+                                                <div
+                                                    class="transition"
+                                                    x-bind:class="{ 'opacity-0 pointer-events-none': isCollapsed }"
+                                                >
+                                                    {{ $getAction('collapse') }}
+                                                </div>
+
+                                                <div
+                                                    class="absolute inset-0 rotate-180 transition"
+                                                    x-bind:class="{ 'opacity-0 pointer-events-none': ! isCollapsed }"
+                                                >
+                                                    {{ $getAction('expand') }}
+                                                </div>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                @endif
+                            </div>
                         @endif
 
                         <div
-                            x-bind:class="{
-                                'invisible h-0 !m-0 overflow-y-hidden': isCollapsed,
-                                'p-6': ! isCollapsed,
-                            }"
+                            class="border-t border-gray-100 p-4 dark:border-white/10"
+                            x-show="! isCollapsed"
                         >
                             {{ $item }}
                         </div>
-
-                        <div
-                            class="p-2 text-center text-xs text-gray-400"
-                            x-show="isCollapsed"
-                            x-cloak
-                        >
-                            {{ __('filament-forms::components.builder.collapsed') }}
-                        </div>
-
-                        @if ((! $loop->last) && $addBetweenAction->isVisible() && $reorderAction->isVisible())
-                            <div
-                                x-show="isAddButtonVisible"
-                                x-transition
-                                class="absolute inset-x-0 bottom-0 -mb-12 flex h-12 items-center justify-center"
-                            >
-                                <x-filament-forms::builder.block-picker
-                                    :action="$addBetweenAction"
-                                    :blocks="$getBlocks()"
-                                    :after-item="$uuid"
-                                    :state-path="$statePath"
-                                >
-                                    <x-slot name="trigger">
-                                        {{ $addBetweenAction }}
-                                    </x-slot>
-                                </x-filament-forms::builder.block-picker>
-                            </div>
-                        @endif
                     </li>
+
+                    @if ((! $loop->last) && $isAddable)
+                        <li class="relative -top-2 !mt-0 h-0">
+                            <div
+                                class="flex w-full justify-center opacity-0 transition duration-75 hover:opacity-100"
+                            >
+                                <div
+                                    class="rounded-lg bg-white dark:bg-gray-900"
+                                >
+                                    <x-filament-forms::builder.block-picker
+                                        :action="$addBetweenAction"
+                                        :after-item="$uuid"
+                                        :blocks="$getBlocks()"
+                                        :state-path="$statePath"
+                                    >
+                                        <x-slot name="trigger">
+                                            {{ $addBetweenAction }}
+                                        </x-slot>
+                                    </x-filament-forms::builder.block-picker>
+                                </div>
+                            </div>
+                        </li>
+                    @endif
                 @endforeach
             </ul>
         @endif
 
-        @if ($addAction->isVisible())
+        @if ($isAddable)
             <x-filament-forms::builder.block-picker
                 :action="$addAction"
                 :blocks="$getBlocks()"

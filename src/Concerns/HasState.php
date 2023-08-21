@@ -2,7 +2,6 @@
 
 namespace Filament\Forms\Concerns;
 
-use Filament\Forms\Components\BaseFileUpload;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 
@@ -32,10 +31,8 @@ trait HasState
                 return true;
             }
 
-            if ($component instanceof BaseFileUpload && str($path)->startsWith("{$component->getStatePath()}.")) {
+            if (str($path)->startsWith("{$component->getStatePath()}.")) {
                 $component->callAfterStateUpdated();
-
-                return true;
             }
 
             foreach ($component->getChildComponentContainers() as $container) {
@@ -130,7 +127,7 @@ trait HasState
     /**
      * @param  array<string, mixed> | null  $state
      */
-    public function fill(array $state = null): static
+    public function fill(?array $state = null): static
     {
         $hydratedDefaultState = null;
 

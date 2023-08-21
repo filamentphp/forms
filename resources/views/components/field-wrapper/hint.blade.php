@@ -2,37 +2,45 @@
     'actions' => [],
     'color' => 'gray',
     'icon' => null,
+    'tooltip' => null,
 ])
 
 <div
     {{
         $attributes
             ->class([
-                'filament-forms-field-wrapper-hint flex items-center space-x-2 text-custom-500 rtl:space-x-reverse dark:text-custom-300',
+                'fi-fo-field-wrp-hint flex items-center gap-x-3 text-sm',
+                match ($color) {
+                    'gray' => 'text-gray-500',
+                    default => 'text-custom-600 dark:text-custom-400',
+                },
             ])
             ->style([
-                \Filament\Support\get_color_css_variables($color, shades: [300, 500]),
+                \Filament\Support\get_color_css_variables($color, shades: [400, 500, 600]),
             ])
     }}
 >
-    @if ($slot->isNotEmpty())
-        <span class="text-xs leading-tight">
-            {{ $slot }}
-        </span>
+    @if (! \Filament\Support\is_slot_empty($slot))
+        {{ $slot }}
     @endif
 
     @if ($icon)
         <x-filament::icon
-            :name="$icon"
-            alias="forms::field-wrapper.hint"
-            size="h-5 w-5"
+            x-data="{}"
+            :icon="$icon"
+            :x-tooltip="'{ content: ' . \Illuminate\Support\Js::from($tooltip) . ', theme: $store.theme }'"
+            @class([
+                'fi-fo-field-wrp-hint-icon h-5 w-5',
+                match ($color) {
+                    'gray' => 'text-gray-400 dark:text-gray-500',
+                    default => 'text-custom-500 dark:text-custom-400',
+                },
+            ])
         />
     @endif
 
     @if (count($actions))
-        <div
-            class="filament-forms-field-wrapper-hint-action flex items-center gap-1"
-        >
+        <div class="fi-fo-field-wrp-hint-action -m-1.5 flex items-center">
             @foreach ($actions as $action)
                 {{ $action }}
             @endforeach

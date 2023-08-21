@@ -10,7 +10,8 @@ use Filament\Support\Concerns\ResolvesDynamicLivewireProperties;
 use Filament\Support\Contracts\TranslatableContentDriver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
-use Livewire\TemporaryUploadedFile;
+use Livewire\Attributes\Renderless;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 trait InteractsWithForms
@@ -35,6 +36,11 @@ trait InteractsWithForms
 
     protected bool $hasFormsModalRendered = false;
 
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $oldFormState = [];
+
     public function dispatchFormEvent(mixed ...$args): void
     {
         foreach ($this->getCachedForms() as $form) {
@@ -47,10 +53,9 @@ trait InteractsWithForms
         return data_get($this->componentFileAttachments, $statePath);
     }
 
+    #[Renderless]
     public function getFormComponentFileAttachmentUrl(string $statePath): ?string
     {
-        $this->skipRender();
-
         foreach ($this->getCachedForms() as $form) {
             if ($url = $form->getComponentFileAttachmentUrl($statePath)) {
                 return $url;
@@ -63,10 +68,9 @@ trait InteractsWithForms
     /**
      * @return array<array{'label': string, 'value': string}>
      */
+    #[Renderless]
     public function getFormSelectOptionLabels(string $statePath): array
     {
-        $this->skipRender();
-
         foreach ($this->getCachedForms() as $form) {
             if ($labels = $form->getSelectOptionLabels($statePath)) {
                 return $labels;
@@ -76,10 +80,9 @@ trait InteractsWithForms
         return [];
     }
 
+    #[Renderless]
     public function getFormSelectOptionLabel(string $statePath): ?string
     {
-        $this->skipRender();
-
         foreach ($this->getCachedForms() as $form) {
             if ($label = $form->getSelectOptionLabel($statePath)) {
                 return $label;
@@ -92,10 +95,9 @@ trait InteractsWithForms
     /**
      * @return array<array{'label': string, 'value': string}>
      */
+    #[Renderless]
     public function getFormSelectOptions(string $statePath): array
     {
-        $this->skipRender();
-
         foreach ($this->getCachedForms() as $form) {
             if ($results = $form->getSelectOptions($statePath)) {
                 return $results;
@@ -108,10 +110,9 @@ trait InteractsWithForms
     /**
      * @return array<array{'label': string, 'value': string}>
      */
+    #[Renderless]
     public function getFormSelectSearchResults(string $statePath, string $search): array
     {
-        $this->skipRender();
-
         foreach ($this->getCachedForms() as $form) {
             if ($results = $form->getSelectSearchResults($statePath, $search)) {
                 return $results;
@@ -131,10 +132,9 @@ trait InteractsWithForms
     /**
      * @return array<array{name: string, size: int, type: string, url: string} | null> | null
      */
+    #[Renderless]
     public function getFormUploadedFiles(string $statePath): ?array
     {
-        $this->skipRender();
-
         foreach ($this->getCachedForms() as $form) {
             if ($files = $form->getUploadedFiles($statePath)) {
                 return $files;
@@ -171,7 +171,7 @@ trait InteractsWithForms
         } catch (ValidationException $exception) {
             $this->onValidationError($exception);
 
-            $this->dispatchBrowserEvent('expand-concealing-component');
+            $this->dispatch('expand-concealing-component');
 
             throw $exception;
         }
@@ -186,16 +186,17 @@ trait InteractsWithForms
      * @param  array<string, array<mixed>>  $rules
      * @param  array<string, string>  $messages
      * @param  array<string, string>  $attributes
+     * @param  array<string, string>  $dataOverrides
      * @return array<string, mixed>
      */
-    public function validateOnly($field, $rules = null, $messages = [], $attributes = [])
+    public function validateOnly($field, $rules = null, $messages = [], $attributes = [], $dataOverrides = [])
     {
         try {
-            return parent::validateOnly($field, $rules, $messages, $attributes);
+            return parent::validateOnly($field, $rules, $messages, $attributes, $dataOverrides);
         } catch (ValidationException $exception) {
             $this->onValidationError($exception);
 
-            $this->dispatchBrowserEvent('expand-concealing-component');
+            $this->dispatch('expand-concealing-component');
 
             throw $exception;
         }
@@ -204,38 +205,41 @@ trait InteractsWithForms
     /**
      * @return class-string<TranslatableContentDriver> | null
      */
-    public function getFormTranslatableContentDriver(): ?string
+    public function getFilamentTranslatableContentDriver(): ?string
     {
         return null;
     }
 
-    public function makeFormTranslatableContentDriver(): ?TranslatableContentDriver
+    public function makeFilamentTranslatableContentDriver(): ?TranslatableContentDriver
     {
-        $driver = $this->getFormTranslatableContentDriver();
+        $driver = $this->getFilamentTranslatableContentDriver();
 
         if (! $driver) {
             return null;
         }
 
-        return app($driver, ['locale' => $this->getActiveFormLocale() ?? app()->getLocale()]);
+        return app($driver, ['activeLocale' => $this->getActiveFormsLocale() ?? app()->getLocale()]);
     }
 
-    public function getActiveFormLocale(): ?string
+    public function getActiveFormsLocale(): ?string
     {
         return null;
     }
 
-    /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  Closure  $callback
-     */
-    protected function callBeforeAndAfterSyncHooks($name, $value, $callback): void
+    public function updatingInteractsWithForms(string $statePath): void
     {
-        parent::callBeforeAndAfterSyncHooks($name, $value, $callback);
+        $this->oldFormState[$statePath] = data_get($this, $statePath);
+    }
 
+    public function getOldFormState(string $statePath): mixed
+    {
+        return $this->oldFormState[$statePath] ?? null;
+    }
+
+    public function updatedInteractsWithForms(string $statePath): void
+    {
         foreach ($this->getCachedForms() as $form) {
-            $form->callAfterStateUpdated($name);
+            $form->callAfterStateUpdated($statePath);
         }
     }
 
@@ -396,7 +400,7 @@ trait InteractsWithForms
     /**
      * @return array<string, array<mixed>>
      */
-    protected function getRules(): array
+    public function getRules(): array
     {
         $rules = parent::getRules();
 
