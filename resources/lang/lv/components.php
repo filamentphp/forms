@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Saturs sakļauts',
+
         'actions' => [
 
             'clone' => [
@@ -120,6 +122,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Saturs sakļauts',
 
         'actions' => [
 

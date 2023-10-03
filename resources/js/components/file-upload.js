@@ -24,33 +24,33 @@ window.FilePond = FilePond
 
 export default function fileUploadFormComponent({
     acceptedFileTypes,
+    deleteUploadedFileUsing,
+    getUploadedFilesUsing,
+    imageCropAspectRatio,
     imageEditorEmptyFillColor,
     imageEditorMode,
     imageEditorViewportHeight,
     imageEditorViewportWidth,
-    deleteUploadedFileUsing,
-    isDeletable,
-    isDisabled,
-    getUploadedFilesUsing,
-    imageCropAspectRatio,
     imagePreviewHeight,
     imageResizeMode,
     imageResizeTargetHeight,
     imageResizeTargetWidth,
     imageResizeUpscale,
     isAvatar,
-    hasImageEditor,
+    isDeletable,
+    isDisabled,
     isDownloadable,
     isOpenable,
     isPreviewable,
     isReorderable,
+    hasImageEditor,
     loadingIndicatorPosition,
     locale,
-    maxSize,
-    minSize,
     panelAspectRatio,
     panelLayout,
     placeholder,
+    maxSize,
+    minSize,
     removeUploadedFileButtonPosition,
     removeUploadedFileUsing,
     reorderUploadedFilesUsing,
@@ -90,7 +90,6 @@ export default function fileUploadFormComponent({
                 acceptedFileTypes,
                 allowImageExifOrientation: shouldOrientImageFromExif,
                 allowPaste: false,
-                allowRemove: isDeletable,
                 allowReorder: isReorderable,
                 allowImagePreview: isPreviewable,
                 allowVideoPreview: isPreviewable,
@@ -290,7 +289,8 @@ export default function fileUploadFormComponent({
         },
 
         destroy: function () {
-            this.destroyEditor()
+            this.editor.destroy()
+            this.editor = null
 
             FilePond.destroy(this.$refs.input)
             this.pond = null
@@ -451,7 +451,8 @@ export default function fileUploadFormComponent({
 
             this.isEditorOpen = false
 
-            this.destroyEditor()
+            this.editor.destroy()
+            this.editor = null
         },
 
         loadEditor: function (file) {
@@ -492,7 +493,7 @@ export default function fileUploadFormComponent({
 
             this.editor
                 .getCroppedCanvas({
-                    fillColor: imageEditorEmptyFillColor ?? 'transparent',
+                    fillColor: imageEditorEmptyFillColor,
                     height: imageResizeTargetHeight,
                     imageSmoothingEnabled: true,
                     imageSmoothingQuality: 'high',
@@ -532,14 +533,6 @@ export default function fileUploadFormComponent({
                             })
                     })
                 }, this.editingFile.type)
-        },
-
-        destroyEditor: function () {
-            if (this.editor && typeof this.editor.destroy === 'function') {
-                this.editor.destroy()
-            }
-
-            this.editor = null
         },
     }
 }

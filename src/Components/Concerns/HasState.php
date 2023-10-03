@@ -11,8 +11,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
-use function Livewire\store;
-
 trait HasState
 {
     protected ?Closure $afterStateHydrated = null;
@@ -67,23 +65,11 @@ trait HasState
 
     public function callAfterStateUpdated(): static
     {
-        $callback = $this->afterStateUpdated;
-
-        if (! $callback) {
-            return $this;
+        if ($callback = $this->afterStateUpdated) {
+            $this->evaluate($callback, [
+                'old' => $this->getOldState(),
+            ]);
         }
-
-        $callbackId = spl_object_id($callback);
-
-        if (store($this)->has('executedAfterStateUpdatedCallbacks', iKey: $callbackId)) {
-            return $this;
-        }
-
-        $this->evaluate($callback, [
-            'old' => $this->getOldState(),
-        ]);
-
-        store($this)->push('executedAfterStateUpdatedCallbacks', value: $callbackId, iKey: $callbackId);
 
         return $this;
     }
@@ -298,7 +284,7 @@ trait HasState
             return null;
         }
 
-        $state = $this->getLivewire()->getOldFormState($this->getStatePath());
+        $state = request('serverMemo.data.' . $this->getStatePath());
 
         if (blank($state)) {
             return null;

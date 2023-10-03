@@ -13,6 +13,11 @@ class Block extends Component
         getLabel as getDefaultLabel;
     }
 
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.builder.block';
+
     protected string | Closure | null $icon = null;
 
     /**

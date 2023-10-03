@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Content collapsed',
+
         'actions' => [
 
             'clone' => [
@@ -89,11 +91,11 @@ return [
                 ],
 
                 'flip_horizontal' => [
-                    'label' => 'Flip image horizontally',
+                    'label' => 'Flip image horizontal',
                 ],
 
                 'flip_vertical' => [
-                    'label' => 'Flip image vertically',
+                    'label' => 'Flip image vertical',
                 ],
 
                 'move_down' => [
@@ -242,6 +244,8 @@ return [
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Content collapsed',
 
         'actions' => [
 

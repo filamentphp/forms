@@ -4,12 +4,10 @@ namespace Filament\Forms\Components;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Htmlable;
 
 class Radio extends Field
 {
     use Concerns\HasExtraInputAttributes;
-    use Concerns\HasGridDirection;
     use Concerns\HasOptions;
 
     /**
@@ -20,7 +18,7 @@ class Radio extends Field
     protected bool | Closure $isInline = false;
 
     /**
-     * @var array<string | Htmlable> | Arrayable | Closure
+     * @var array<string> | Arrayable | Closure
      */
     protected array | Arrayable | Closure $descriptions = [];
 
@@ -56,7 +54,7 @@ class Radio extends Field
     }
 
     /**
-     * @param  array<string | Htmlable> | Arrayable | Closure  $descriptions
+     * @param  array<string> | Arrayable | Closure  $descriptions
      */
     public function descriptions(array | Arrayable | Closure $descriptions): static
     {
@@ -76,13 +74,13 @@ class Radio extends Field
     /**
      * @param  array-key  $value
      */
-    public function getDescription($value): string | Htmlable | null
+    public function getDescription($value): ?string
     {
         return $this->getDescriptions()[$value] ?? null;
     }
 
     /**
-     * @return array<string | Htmlable>
+     * @return array<string>
      */
     public function getDescriptions(): array
     {
@@ -113,16 +111,5 @@ class Radio extends Field
             'label' => $label,
             'value' => $value,
         ]);
-    }
-
-    public function getDefaultState(): mixed
-    {
-        $state = parent::getDefaultState();
-
-        if (is_bool($state)) {
-            return $state ? 1 : 0;
-        }
-
-        return $state;
     }
 }

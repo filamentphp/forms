@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use League\Flysystem\UnableToCheckFileExistence;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\TemporaryUploadedFile;
 use Throwable;
 
 class BaseFileUpload extends Field
@@ -22,8 +22,6 @@ class BaseFileUpload extends Field
      * @var array<string> | Arrayable | Closure | null
      */
     protected array | Arrayable | Closure | null $acceptedFileTypes = null;
-
-    protected bool | Closure $isDeletable = true;
 
     protected bool | Closure $isDownloadable = false;
 
@@ -170,7 +168,8 @@ class BaseFileUpload extends Field
                 return null;
             }
 
-            if ($component->shouldMoveFiles() && ($component->getDiskName() == invade($file)->disk)) {
+            /** @phpstan-ignore-next-line */
+            if ($component->shouldMoveFiles() && ($component->getDiskName() == $file->disk)) {
                 $newPath = trim($component->getDirectory() . '/' . $component->getUploadedFileNameForStorage($file), '/');
 
                 $component->getDisk()->move($file->path(), $newPath);
@@ -213,13 +212,6 @@ class BaseFileUpload extends Field
 
             return "mimetypes:{$types}";
         });
-
-        return $this;
-    }
-
-    public function deletable(bool | Closure $condition = true): static
-    {
-        $this->isDeletable = $condition;
 
         return $this;
     }
@@ -436,11 +428,6 @@ class BaseFileUpload extends Field
         return $this;
     }
 
-    public function isDeletable(): bool
-    {
-        return (bool) $this->evaluate($this->isDeletable);
-    }
-
     public function isDownloadable(): bool
     {
         return (bool) $this->evaluate($this->isDownloadable);
@@ -488,16 +475,6 @@ class BaseFileUpload extends Field
     public function getDiskName(): string
     {
         return $this->evaluate($this->diskName) ?? config('filament.default_filesystem_disk');
-    }
-
-    public function getMaxFiles(): ?int
-    {
-        return $this->evaluate($this->maxFiles);
-    }
-
-    public function getMinFiles(): ?int
-    {
-        return $this->evaluate($this->minFiles);
     }
 
     public function getMaxSize(): ?int
@@ -549,11 +526,11 @@ class BaseFileUpload extends Field
             'array',
         ];
 
-        if (filled($count = $this->getMaxFiles())) {
+        if (filled($count = $this->maxFiles)) {
             $rules[] = "max:{$count}";
         }
 
-        if (filled($count = $this->getMinFiles())) {
+        if (filled($count = $this->minFiles)) {
             $rules[] = "min:{$count}";
         }
 

@@ -4,10 +4,10 @@ namespace Filament\Forms;
 
 use Filament\Forms\Testing\TestsForms;
 use Filament\Support\Assets\AlpineComponent;
-use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
+use Livewire\Testing\TestableLivewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -34,7 +34,7 @@ class FormsServiceProvider extends PackageServiceProvider
             AlpineComponent::make('select', __DIR__ . '/../dist/components/select.js'),
             AlpineComponent::make('tags-input', __DIR__ . '/../dist/components/tags-input.js'),
             AlpineComponent::make('textarea', __DIR__ . '/../dist/components/textarea.js'),
-            Css::make('forms', __DIR__ . '/../dist/index.css'),
+            Js::make('forms', __DIR__ . '/../dist/index.js'),
         ], 'filament/forms');
 
         if ($this->app->runningInConsole()) {
@@ -45,7 +45,7 @@ class FormsServiceProvider extends PackageServiceProvider
             }
         }
 
-        Testable::mixin(new TestsForms());
+        TestableLivewire::mixin(new TestsForms());
     }
 
     /**

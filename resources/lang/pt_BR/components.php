@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Conteúdo recolhido',
+
         'actions' => [
 
             'clone' => [
@@ -70,125 +72,6 @@ return [
 
     ],
 
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Cancelar',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Modo de arrastar "cortar"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Modo de arrastar "mover"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'Inverter imagem horizontalmente',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'Inverter imagem verticalmente',
-                ],
-
-                'move_down' => [
-                    'label' => 'Mover imagem para baixo',
-                ],
-
-                'move_left' => [
-                    'label' => 'Mover imagem para esquerda',
-                ],
-
-                'move_right' => [
-                    'label' => 'Mover imagem para direita',
-                ],
-
-                'move_up' => [
-                    'label' => 'Mover imagem para cima',
-                ],
-
-                'reset' => [
-                    'label' => 'Limpar',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Rotacionar imagem para esquerda',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Rotacionar imagem para direita',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Definir proporção para :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'Salvar',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Ampliar imagem para 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Mais zoom',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Menos zoom',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Altura',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Rotação',
-                    'unit' => 'deg',
-                ],
-
-                'width' => [
-                    'label' => 'Largura',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Proporções',
-
-                'no_fixed' => [
-                    'label' => 'Livre',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -224,25 +107,23 @@ return [
     'markdown_editor' => [
 
         'toolbar_buttons' => [
-            'attach_files' => 'Anexar arquivos',
-            'blockquote' => 'Bloco de citação',
+            'attach_files' => 'Anexar arquivo',
             'bold' => 'Negrito',
-            'bullet_list' => 'Lista com marcadores',
+            'bullet_list' => 'Lista',
             'code_block' => 'Bloco de código',
-            'heading' => 'Título',
+            'edit' => 'Editar',
             'italic' => 'Itálico',
             'link' => 'Link',
             'ordered_list' => 'Lista ordenada',
-            'redo' => 'Refazer',
+            'preview' => 'Visualizar',
             'strike' => 'Tachado',
-            'underline' => 'Sublinhado',
-            'table' => 'Tabela',
-            'undo' => 'Desfazer',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Conteúdo recolhido',
 
         'actions' => [
 
@@ -298,7 +179,7 @@ return [
 
                 'actions' => [
                     'link' => 'Link',
-                    'unlink' => 'Remover link',
+                    'unlink' => 'Unlink',
                 ],
 
                 'label' => 'URL',
@@ -311,16 +192,16 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Anexar arquivos',
-            'blockquote' => 'Bloco de citação',
+            'blockquote' => 'Citar',
             'bold' => 'Negrito',
-            'bullet_list' => 'Lista com marcadores',
-            'code_block' => 'Bloco de código',
+            'bullet_list' => 'Marcadores',
+            'code_block' => 'codeBlock',
             'h1' => 'Título',
             'h2' => 'Cabeçalho',
             'h3' => 'Subtítulo',
             'italic' => 'Itálico',
             'link' => 'Link',
-            'ordered_list' => 'Lista ordenada',
+            'ordered_list' => 'Números',
             'redo' => 'Refazer',
             'strike' => 'Tachado',
             'undo' => 'Desfazer',
@@ -344,28 +225,6 @@ return [
                             'label' => 'Criar',
                         ],
 
-                        'create_another' => [
-                            'label' => 'Salvar e criar outro',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Editar',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Salvar',
-                        ],
-
                     ],
 
                 ],
@@ -387,14 +246,14 @@ return [
 
         'placeholder' => 'Selecione uma opção',
 
-        'searching_message' => 'Pesquisando...',
+        'searching_message' => 'Buscando...',
 
         'search_prompt' => 'Comece a digitar para pesquisar...',
 
     ],
 
     'tags_input' => [
-        'placeholder' => 'Nova tag',
+        'placeholder' => 'Novo rótulo',
     ],
 
     'wizard' => [

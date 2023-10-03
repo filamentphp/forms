@@ -4,10 +4,12 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Содержимое свернуто',
+
         'actions' => [
 
             'clone' => [
-                'label' => 'Дублировать',
+                'label' => 'Клонировать',
             ],
 
             'add' => [
@@ -15,7 +17,7 @@ return [
             ],
 
             'add_between' => [
-                'label' => 'Вставить между',
+                'label' => 'Вставить',
             ],
 
             'delete' => [
@@ -70,125 +72,6 @@ return [
 
     ],
 
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Отмена',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Режим "кадрирование"',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Режим "перемещение"',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'Отразить по горизонтали',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'Отразить по вертикали',
-                ],
-
-                'move_down' => [
-                    'label' => 'Переместить вниз',
-                ],
-
-                'move_left' => [
-                    'label' => 'Переместить влево',
-                ],
-
-                'move_right' => [
-                    'label' => 'Переместить вправо',
-                ],
-
-                'move_up' => [
-                    'label' => 'Переместить вверх',
-                ],
-
-                'reset' => [
-                    'label' => 'Сбросить',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Повернуть влево',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Повернуть вправо',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Соотношение сторон :ratio',
-                ],
-
-                'save' => [
-                    'label' => 'Сохранить',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Увеличить до 100%',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Увеличить',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Уменьшить',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Высота',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Вращение',
-                    'unit' => 'град',
-                ],
-
-                'width' => [
-                    'label' => 'Ширина',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Соотношения сторон',
-
-                'no_fixed' => [
-                    'label' => 'Свободное',
-                ],
-
-            ],
-
-        ],
-
-    ],
-
     'key_value' => [
 
         'actions' => [
@@ -224,23 +107,22 @@ return [
 
         'toolbar_buttons' => [
             'attach_files' => 'Прикрепить файлы',
-            'blockquote' => 'Цитата',
             'bold' => 'Жирный',
             'bullet_list' => 'Маркировочный список',
             'code_block' => 'Код',
-            'heading' => 'Заголовок',
+            'edit' => 'Изменить',
             'italic' => 'Курсив',
             'link' => 'Ссылка',
             'ordered_list' => 'Нумерованный список',
-            'redo' => 'Вернуть',
+            'preview' => 'Предпросмотр',
             'strike' => 'Зачеркнутый',
-            'table' => 'Таблица',
-            'undo' => 'Отменить',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Содержимое свернуто',
 
         'actions' => [
 
@@ -253,7 +135,7 @@ return [
             ],
 
             'clone' => [
-                'label' => 'Дублировать',
+                'label' => 'Клонировать',
             ],
 
             'reorder' => [
@@ -313,9 +195,9 @@ return [
             'bold' => 'Жирный',
             'bullet_list' => 'Маркировочный список',
             'code_block' => 'Код',
-            'h1' => 'Название',
-            'h2' => 'Заголовок',
-            'h3' => 'Подзаголовок',
+            'h1' => 'H1',
+            'h2' => 'H2',
+            'h3' => 'H3',
             'italic' => 'Курсив',
             'link' => 'Ссылка',
             'ordered_list' => 'Нумерованный список',
@@ -341,27 +223,6 @@ return [
                         'create' => [
                             'label' => 'Создать',
                         ],
-                        'create_another' => [
-                            'label' => 'Создать еще один',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Изменить',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Сохранить',
-                        ],
 
                     ],
 
@@ -382,7 +243,7 @@ return [
 
         'no_search_results_message' => 'Нет вариантов, соответствующих вашему запросу.',
 
-        'placeholder' => 'Выбрать вариант',
+        'placeholder' => 'Выберите вариант',
 
         'searching_message' => 'Поиск...',
 

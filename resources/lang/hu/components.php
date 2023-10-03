@@ -4,6 +4,8 @@ return [
 
     'builder' => [
 
+        'collapsed' => 'Tartalom becsukva',
+
         'actions' => [
 
             'clone' => [
@@ -12,10 +14,6 @@ return [
 
             'add' => [
                 'label' => 'Új :label',
-            ],
-
-            'add_between' => [
-                'label' => 'Beillesztés közé',
             ],
 
             'delete' => [
@@ -43,146 +41,11 @@ return [
             ],
 
             'collapse_all' => [
-                'label' => 'Becsuk mindent',
+                'label' => 'Becsuk minden',
             ],
 
             'expand_all' => [
-                'label' => 'Kibont mindent',
-            ],
-
-        ],
-
-    ],
-
-    'checkbox_list' => [
-
-        'actions' => [
-
-            'deselect_all' => [
-                'label' => 'Törölje az összes jelölést',
-            ],
-
-            'select_all' => [
-                'label' => 'Összes kijelölése',
-            ],
-
-        ],
-
-    ],
-
-    'file_upload' => [
-
-        'editor' => [
-
-            'actions' => [
-
-                'cancel' => [
-                    'label' => 'Mégse',
-                ],
-
-                'drag_crop' => [
-                    'label' => 'Kijelölés mód',
-                ],
-
-                'drag_move' => [
-                    'label' => 'Mozgatás mód',
-                ],
-
-                'flip_horizontal' => [
-                    'label' => 'A kép vízszintes tükrözése',
-                ],
-
-                'flip_vertical' => [
-                    'label' => 'A kép függőleges tükrözése',
-                ],
-
-                'move_down' => [
-                    'label' => 'Lefele mozgatás',
-                ],
-
-                'move_left' => [
-                    'label' => 'Balra mozgatás',
-                ],
-
-                'move_right' => [
-                    'label' => 'Jobbra mozgatás',
-                ],
-
-                'move_up' => [
-                    'label' => 'Felfele mozgatás',
-                ],
-
-                'reset' => [
-                    'label' => 'Újra tölt',
-                ],
-
-                'rotate_left' => [
-                    'label' => 'Kép elforgatása balra',
-                ],
-
-                'rotate_right' => [
-                    'label' => 'Kép elforgatása jobbra',
-                ],
-
-                'set_aspect_ratio' => [
-                    'label' => 'Állítsa be a képarányt :ratio értékre',
-                ],
-
-                'save' => [
-                    'label' => 'Mentés',
-                ],
-
-                'zoom_100' => [
-                    'label' => 'Kép nagyítása 100%-ra',
-                ],
-
-                'zoom_in' => [
-                    'label' => 'Nagyítás',
-                ],
-
-                'zoom_out' => [
-                    'label' => 'Kicsinyítés',
-                ],
-
-            ],
-
-            'fields' => [
-
-                'height' => [
-                    'label' => 'Magasság',
-                    'unit' => 'px',
-                ],
-
-                'rotation' => [
-                    'label' => 'Forgatás',
-                    'unit' => 'fok',
-                ],
-
-                'width' => [
-                    'label' => 'Szélesség',
-                    'unit' => 'px',
-                ],
-
-                'x_position' => [
-                    'label' => 'X',
-                    'unit' => 'px',
-                ],
-
-                'y_position' => [
-                    'label' => 'Y',
-                    'unit' => 'px',
-                ],
-
-            ],
-
-            'aspect_ratios' => [
-
-                'label' => 'Képarányok',
-
-                'no_fixed' => [
-                    'label' => 'Szabad',
-                ],
-
+                'label' => 'Kibont minden',
             ],
 
         ],
@@ -224,24 +87,23 @@ return [
     'markdown_editor' => [
 
         'toolbar_buttons' => [
-            'attach_files' => 'Fájlok csatolása',
-            'blockquote' => 'Idézet',
+            'attach_files' => 'Fileok csatolása',
             'bold' => 'Félkövér',
             'bullet_list' => 'Felsorolás',
             'code_block' => 'Kódblokk',
-            'heading' => 'Cím',
+            'edit' => 'Szerkesztés',
             'italic' => 'Dőlt',
             'link' => 'Hivatkozás',
             'ordered_list' => 'Számozott lista',
-            'redo' => 'Előre',
+            'preview' => 'Előnézet',
             'strike' => 'Áthúzott',
-            'table' => 'Táblázat',
-            'undo' => 'Vissza',
         ],
 
     ],
 
     'repeater' => [
+
+        'collapsed' => 'Tartalom becsukva',
 
         'actions' => [
 
@@ -278,11 +140,11 @@ return [
             ],
 
             'collapse_all' => [
-                'label' => 'Becsuk mindent',
+                'label' => 'Becsuk minden',
             ],
 
             'expand_all' => [
-                'label' => 'Kibont mindent',
+                'label' => 'Kibont minden',
             ],
 
         ],
@@ -309,7 +171,7 @@ return [
         ],
 
         'toolbar_buttons' => [
-            'attach_files' => 'Fájlok csatolása',
+            'attach_files' => 'Fileok csatolása',
             'blockquote' => 'Idézet',
             'bold' => 'Félkövér',
             'bullet_list' => 'Felsorolás',
@@ -320,9 +182,8 @@ return [
             'italic' => 'Dőlt',
             'link' => 'Hivatkozás',
             'ordered_list' => 'Számozott lista',
-            'redo' => 'Előre',
+            'redo' => 'Újra',
             'strike' => 'Áthúzott',
-            'underline' => 'Alázhúzott',
             'undo' => 'Vissza',
         ],
 
@@ -342,28 +203,6 @@ return [
 
                         'create' => [
                             'label' => 'Hozzáadás',
-                        ],
-
-                        'create_another' => [
-                            'label' => 'Hozzáadás és másik hozzáadása',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'edit_option' => [
-
-                'modal' => [
-
-                    'heading' => 'Szerkesztés',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Mentés',
                         ],
 
                     ],

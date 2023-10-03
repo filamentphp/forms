@@ -1,52 +1,50 @@
 @php
-    $canSelectPlaceholder = $canSelectPlaceholder();
     $isDisabled = $isDisabled();
-    $isPrefixInline = $isPrefixInline();
-    $isSuffixInline = $isSuffixInline();
-    $prefixActions = $getPrefixActions();
-    $prefixIcon = $getPrefixIcon();
-    $prefixLabel = $getPrefixLabel();
-    $suffixActions = $getSuffixActions();
-    $suffixIcon = $getSuffixIcon();
-    $suffixLabel = $getSuffixLabel();
+
     $statePath = $getStatePath();
+
+    $prefixLabel = $getPrefixLabel();
+    $prefixIcon = $getPrefixIcon();
+    $hasPrefix = $prefixLabel || $prefixIcon;
+
+    $suffixLabel = $getSuffixLabel();
+    $suffixIcon = $getSuffixIcon();
+    $hasSuffix = $suffixLabel || $suffixIcon;
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
-    <x-filament::input.wrapper
-        :disabled="$isDisabled"
-        :inline-prefix="$isPrefixInline"
-        :inline-suffix="$isSuffixInline"
+    <x-filament-forms::affixes
+        :state-path="$statePath"
         :prefix="$prefixLabel"
-        :prefix-actions="$prefixActions"
+        :prefix-actions="$getPrefixActions()"
         :prefix-icon="$prefixIcon"
         :suffix="$suffixLabel"
-        :suffix-actions="$suffixActions"
+        :suffix-actions="$getSuffixActions()"
         :suffix-icon="$suffixIcon"
-        :valid="! $errors->has($statePath)"
-        class="fi-fo-select"
+        class="filament-forms-select-component"
         :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
     >
-        @if ((! ($isSearchable() || $isMultiple()) && $isNative()))
+        @unless ($isSearchable() || $isMultiple())
             <x-filament::input.select
                 :autofocus="$isAutofocused()"
                 :disabled="$isDisabled"
                 :id="$getId()"
-                :inline-prefix="$isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel))"
-                :inline-suffix="$isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel))"
                 :required="$isRequired() && ((bool) $isConcealed())"
                 :attributes="
-                    $getExtraInputAttributeBag()
-                        ->merge([
-                            $applyStateBindingModifiers('wire:model') => $statePath,
-                        ], escape: false)
+                    \Filament\Support\prepare_inherited_attributes($getExtraInputAttributeBag()->merge([
+                        $applyStateBindingModifiers('wire:model') => $statePath,
+                    ], escape: false))
                 "
+                :error="$errors->has($statePath)"
+                :prefix="$hasPrefix"
+                :suffix="$hasSuffix"
+                class="filament-forms-input w-full"
             >
                 @php
                     $isHtmlAllowed = $isHtmlAllowed();
                 @endphp
 
-                @if ($canSelectPlaceholder)
+                @if ($canSelectPlaceholder())
                     <option value="">
                         @if (! $isDisabled)
                             {{ $getPlaceholder() }}
@@ -55,33 +53,16 @@
                 @endif
 
                 @foreach ($getOptions() as $value => $label)
-                    @if (is_array($label))
-                        <optgroup label="{{ $value }}">
-                            @foreach ($label as $groupedValue => $groupedLabel)
-                                <option
-                                    @disabled($isOptionDisabled($groupedValue, $groupedLabel))
-                                    value="{{ $groupedValue }}"
-                                >
-                                    @if ($isHtmlAllowed)
-                                        {!! $groupedLabel !!}
-                                    @else
-                                        {{ $groupedLabel }}
-                                    @endif
-                                </option>
-                            @endforeach
-                        </optgroup>
-                    @else
-                        <option
-                            @disabled($isOptionDisabled($value, $label))
-                            value="{{ $value }}"
-                        >
-                            @if ($isHtmlAllowed)
-                                {!! $label !!}
-                            @else
-                                {{ $label }}
-                            @endif
-                        </option>
-                    @endif
+                    <option
+                        value="{{ $value }}"
+                        @disabled($isOptionDisabled($value, $label))
+                    >
+                        @if ($isHtmlAllowed)
+                            {!! $label !!}
+                        @else
+                            {{ $label }}
+                        @endif
+                    </option>
                 @endforeach
             </x-filament::input.select>
         @else
@@ -90,7 +71,7 @@
                 ax-load
                 ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('select', 'filament/forms') }}"
                 x-data="selectFormComponent({
-                            canSelectPlaceholder: @js($canSelectPlaceholder),
+                            canSelectPlaceholder: @js($canSelectPlaceholder()),
                             isHtmlAllowed: @js($isHtmlAllowed()),
                             getOptionLabelUsing: async () => {
                                 return await $wire.getFormSelectOptionLabel(@js($statePath))
@@ -105,9 +86,9 @@
                                 return await $wire.getFormSelectSearchResults(@js($statePath), search)
                             },
                             isAutofocused: @js($isAutofocused()),
+                            isDisabled: @js($isDisabled),
                             isMultiple: @js($isMultiple()),
-                            isSearchable: @js($isSearchable()),
-                            livewireId: @js($this->getId()),
+                            livewireId: @js($this->id),
                             hasDynamicOptions: @js($hasDynamicOptions()),
                             hasDynamicSearchResults: @js($hasDynamicSearchResults()),
                             loadingMessage: @js($getLoadingMessage()),
@@ -122,15 +103,23 @@
                             searchingMessage: @js($getSearchingMessage()),
                             searchPrompt: @js($getSearchPrompt()),
                             searchableOptionFields: @js($getSearchableOptionFields()),
-                            state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
+                            state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
                             statePath: @js($statePath),
                         })"
-                wire:ignore
                 x-on:keydown.esc="select.dropdown.isActive && $event.stopPropagation()"
+                wire:ignore
+                x-bind:class="{
+                    'choices--error': @js($statePath) in $wire.__instance.serverMemo.errors,
+                }"
                 {{
                     $attributes
                         ->merge($getExtraAttributes(), escape: false)
                         ->merge($getExtraAlpineAttributes(), escape: false)
+                        ->class([
+                            'filament-forms-input',
+                            'filament-select-input-with-prefix' => $hasPrefix,
+                            'filament-select-input-with-suffix' => $hasSuffix,
+                        ])
                 }}
             >
                 <select
@@ -146,5 +135,5 @@
                 ></select>
             </div>
         @endif
-    </x-filament::input.wrapper>
+    </x-filament-forms::affixes>
 </x-dynamic-component>

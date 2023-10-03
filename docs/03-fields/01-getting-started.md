@@ -7,9 +7,9 @@ import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 Field classes can be found in the `Filament\Form\Components` namespace.
 
-Fields reside within the schema of your form, alongside any [layout components](layout/getting-started).
+Fields reside within the schema of your form, alongside any [layout components](layout).
 
-Fields may be created using the static `make()` method, passing its unique name. The name of the field should correspond to a property on your Livewire component. You may use "dot notation" to bind fields to keys in arrays.
+Fields may be created using the static `make()` method, passing its unique name. The name of the field should correspond to a property on your Livewire component. You may use [Livewire's "dot notation"](https://laravel-livewire.com/docs/properties#binding-nested-data) to bind fields to arrays.
 
 ```php
 use Filament\Forms\Components\TextInput;
@@ -91,29 +91,13 @@ Note that these defaults are only used when the form is loaded without existing 
 
 Sometimes, you may wish to provide extra information for the user of the form. For this purpose, you may add helper text below the field.
 
-The `helperText()` method is used to add helper text:
+The `helperText()` method is used to add helper text, and supports Markdown formatting:
 
 ```php
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('name')
-    ->helperText('Your full name here, including any middle names.')
-```
-
-This method accepts a plain text string, or an instance of `Illuminate\Support\HtmlString` or `Illuminate\Contracts\Support\Htmlable`. This allows you to render HTML, or even markdown, in the helper text:
-
-```php
-use Filament\Forms\Components\TextInput;
-use Illuminate\Support\HtmlString;
-
-TextInput::make('name')
-    ->helperText(new HtmlString('Your <strong>full name</strong> here, including any middle names.'))
-
-TextInput::make('name')
-    ->helperText(str('Your **full name** here, including any middle names.')->inlineMarkdown()->toHtmlString())
-
-TextInput::make('name')
-    ->helperText(view('name-helper-text'))
+    ->helperText('Your **full name** here, including any middle names.')
 ```
 
 <AutoScreenshot name="forms/fields/helper-text" alt="Form field with helper text" version="3.x" />
@@ -122,29 +106,13 @@ TextInput::make('name')
 
 As well as [helper text](#adding-helper-text-below-the-field) below the field, you may also add a "hint" next to the label of the field. This is useful for displaying additional information about the field, such as a link to a help page.
 
-The `hint()` method is used to add a hint:
+The `hint()` method is used to add a hint, and supports Markdown formatting:
 
 ```php
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('password')
-    ->hint('Forgotten your password? Bad luck.')
-```
-
-This method accepts a plain text string, or an instance of `Illuminate\Support\HtmlString` or `Illuminate\Contracts\Support\Htmlable`. This allows you to render HTML, or even markdown, in the helper text:
-
-```php
-use Filament\Forms\Components\TextInput;
-use Illuminate\Support\HtmlString;
-
-TextInput::make('password')
-    ->hint(new HtmlString('<a href="/forgotten-password">Forgotten your password?</a>'))
-
-TextInput::make('password')
-    ->hint(str('[Forgotten your password?](/forgotten-password)')->inlineMarkdown()->toHtmlString())
-
-TextInput::make('password')
-    ->hint(view('forgotten-password-hint'))
+    ->hint('[Forgotten your password?](forgotten-password)')
 ```
 
 <AutoScreenshot name="forms/fields/hint" alt="Form field with hint" version="3.x" />
@@ -176,17 +144,6 @@ RichEditor::make('content')
 ```
 
 <AutoScreenshot name="forms/fields/hint-icon" alt="Form field with hint icon" version="3.x" />
-
-#### Adding a tooltip to a hint icon
-
-Additionally, you can add a tooltip to display when you hover over the hint icon, using the `tooltip` parameter of `hintIcon()`:
-
-```php
-use Filament\Forms\Components\TextInput;
-
-TextInput::make('name')
-    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Need some more information?')
-```
 
 ## Adding extra HTML attributes
 
@@ -238,7 +195,7 @@ Toggle::make('is_admin')
     ->dehydrated()
 ```
 
-> If you choose to dehydrate the field, a skilled user could still edit the field's value by manipulating Livewire's JavaScript.
+Please note that if you choose to dehydrate the field, a skilled user could still edit the field's value by manipulating Livewire's JavaScript.
 
 ### Hiding a field
 
