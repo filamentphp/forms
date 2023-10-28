@@ -5,7 +5,7 @@
 @import 'filepond-plugin-media-preview/dist/filepond-plugin-media-preview.css';
 
 .filepond--root {
-    @apply mb-0 overflow-hidden;
+    @apply mb-0;
 }
 
 .filepond--panel-root {
@@ -32,10 +32,6 @@
 
 .filepond--root[data-style-panel-layout='compact'] .filepond--item {
     @apply mb-0.5;
-}
-
-.filepond--root[data-style-panel-layout='compact'] .filepond--drop-label {
-    min-height: 2.625em;
 }
 
 .filepond--root[data-style-panel-layout='compact'] .filepond--file {
