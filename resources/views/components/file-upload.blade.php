@@ -39,6 +39,12 @@
                         return await $wire.getFormUploadedFiles(@js($statePath))
                     },
                     hasImageEditor: @js($hasImageEditor),
+                    canEditSvgs: @js($canEditSvgs()),
+                    isSvgEditingConfirmed: @js($isSvgEditingConfirmed()),
+                    confirmSvgEditingMessage:
+                        '{{ __('filament-forms::components.file_upload.editor.svg.messages.confirmation') }}',
+                    disabledSvgEditingMessage:
+                        '{{ __('filament-forms::components.file_upload.editor.svg.messages.disabled') }}',
                     imageCropAspectRatio: @js($imageCropAspectRatio),
                     imagePreviewHeight: @js($getImagePreviewHeight()),
                     imageResizeMode: @js($getImageResizeMode()),
@@ -49,6 +55,7 @@
                     isDeletable: @js($isDeletable()),
                     isDisabled: @js($isDisabled),
                     isDownloadable: @js($isDownloadable()),
+                    isMultiple: @js($isMultiple()),
                     isOpenable: @js($isOpenable()),
                     isPreviewable: @js($isPreviewable()),
                     isReorderable: @js($isReorderable()),
