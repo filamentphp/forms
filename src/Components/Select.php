@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
@@ -30,14 +29,12 @@ use Livewire\Component as LivewireComponent;
 use function Filament\Support\generate_search_column_expression;
 use function Filament\Support\generate_search_term_expression;
 
-class Select extends Field implements Contracts\CanDisableOptions, Contracts\HasAffixActions, Contracts\HasNestedRecursiveValidationRules
+class Select extends Field implements Contracts\HasAffixActions, Contracts\HasNestedRecursiveValidationRules
 {
     use Concerns\CanAllowHtml;
     use Concerns\CanBePreloaded;
     use Concerns\CanBeSearchable;
     use Concerns\CanDisableOptions;
-    use Concerns\CanDisableOptionsWhenSelectedInSiblingRepeaterItems;
-    use Concerns\CanFixIndistinctState;
     use Concerns\CanLimitItemsLength;
     use Concerns\CanSelectPlaceholder;
     use Concerns\HasAffixes;
@@ -1063,7 +1060,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
         return parent::getLabel();
     }
 
-    public function getRelationship(): BelongsTo | BelongsToMany | HasOneOrMany | HasOneThrough | \Znck\Eloquent\Relations\BelongsToThrough | null
+    public function getRelationship(): BelongsTo | BelongsToMany | HasOneThrough | \Znck\Eloquent\Relations\BelongsToThrough | null
     {
         if (blank($this->getRelationshipName())) {
             return null;
@@ -1112,10 +1109,6 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
     public function hasDynamicOptions(): bool
     {
-        if ($this->hasDynamicDisabledOptions()) {
-            return true;
-        }
-
         if ($this->hasRelationship()) {
             return $this->isPreloaded();
         }
@@ -1192,10 +1185,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             return $relationship->getQualifiedForeignKeyName();
         }
 
-        if (
-            ($relationship instanceof HasOneOrMany) ||
-            ($relationship instanceof \Znck\Eloquent\Relations\BelongsToThrough)
-        ) {
+        if ($relationship instanceof \Znck\Eloquent\Relations\BelongsToThrough) {
             return $relationship->getRelated()->getQualifiedKeyName();
         }
 

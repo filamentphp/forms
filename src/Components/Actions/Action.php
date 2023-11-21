@@ -2,7 +2,6 @@
 
 namespace Filament\Forms\Components\Actions;
 
-use Exception;
 use Filament\Actions\Concerns\HasMountableArguments;
 use Filament\Actions\MountableAction;
 use Illuminate\Database\Eloquent\Model;
@@ -36,15 +35,7 @@ class Action extends MountableAction
             $argumentsParameter .= '';
         }
 
-        $componentKey = $this->getComponent()->getKey();
-
-        if (blank($componentKey)) {
-            $componentClass = $this->getComponent()::class;
-
-            throw new Exception("The form component [{$componentClass}] must have a [key()] set in order to use actions. This [key()] must be a unique identifier for the component.");
-        }
-
-        return "mountFormComponentAction('{$componentKey}', '{$this->getName()}'{$argumentsParameter})";
+        return "mountFormComponentAction('{$this->getComponent()->getKey()}', '{$this->getName()}'{$argumentsParameter})";
     }
 
     public function toFormComponent(): ActionContainer

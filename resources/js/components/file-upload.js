@@ -9,6 +9,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import FilePondPluginImageResize from 'filepond-plugin-image-resize'
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform'
 import FilePondPluginMediaPreview from 'filepond-plugin-media-preview'
+import FilePondPluginPdfPreview from 'filepond-plugin-pdf-preview'
 
 FilePond.registerPlugin(FilePondPluginFileValidateSize)
 FilePond.registerPlugin(FilePondPluginFileValidateType)
@@ -19,6 +20,7 @@ FilePond.registerPlugin(FilePondPluginImagePreview)
 FilePond.registerPlugin(FilePondPluginImageResize)
 FilePond.registerPlugin(FilePondPluginImageTransform)
 FilePond.registerPlugin(FilePondPluginMediaPreview)
+FilePond.registerPlugin(FilePondPluginPdfPreview)
 
 window.FilePond = FilePond
 
@@ -40,7 +42,6 @@ export default function fileUploadFormComponent({
     imageResizeUpscale,
     isAvatar,
     hasImageEditor,
-    hasCircleCropper,
     canEditSvgs,
     isSvgEditingConfirmed,
     confirmSvgEditingMessage,
@@ -56,6 +57,8 @@ export default function fileUploadFormComponent({
     minSize,
     panelAspectRatio,
     panelLayout,
+    pdfPreviewHeight,
+    pdfPreviewParams,
     placeholder,
     removeUploadedFileButtonPosition,
     removeUploadedFileUsing,
@@ -102,6 +105,7 @@ export default function fileUploadFormComponent({
                 allowVideoPreview: isPreviewable,
                 allowAudioPreview: isPreviewable,
                 allowImageTransform: shouldTransformImage,
+                allowPdfPreview: isPreviewable,
                 credits: false,
                 files: await this.getFiles(),
                 imageCropAspectRatio,
@@ -120,6 +124,8 @@ export default function fileUploadFormComponent({
                 stylePanelAspectRatio: panelAspectRatio,
                 stylePanelLayout: panelLayout,
                 styleProgressIndicatorPosition: uploadProgressIndicatorPosition,
+                pdfPreviewHeight,
+                pdfComponentExtraParams: pdfPreviewParams,
                 server: {
                     load: async (source, load) => {
                         let response = await fetch(source, {
@@ -339,7 +345,8 @@ export default function fileUploadFormComponent({
                     source: uploadedFile.url,
                     options: {
                         type: 'local',
-                        ...(/^image/.test(uploadedFile.type)
+                        ...(!uploadedFile.type ||
+                        /^image/.test(uploadedFile.type)
                             ? {}
                             : {
                                   file: {
@@ -568,33 +575,6 @@ export default function fileUploadFormComponent({
             })
         },
 
-        getRoundedCanvas: function (sourceCanvas) {
-            let width = sourceCanvas.width
-            let height = sourceCanvas.height
-
-            let canvas = document.createElement('canvas')
-            canvas.width = width
-            canvas.height = height
-
-            let context = canvas.getContext('2d')
-            context.imageSmoothingEnabled = true
-            context.drawImage(sourceCanvas, 0, 0, width, height)
-            context.globalCompositeOperation = 'destination-in'
-            context.beginPath()
-            context.ellipse(
-                width / 2,
-                height / 2,
-                width / 2,
-                height / 2,
-                0,
-                0,
-                2 * Math.PI,
-            )
-            context.fill()
-
-            return canvas
-        },
-
         saveEditor: function () {
             if (isDisabled) {
                 return
@@ -604,20 +584,15 @@ export default function fileUploadFormComponent({
                 return
             }
 
-            let croppedCanvas = this.editor.getCroppedCanvas({
-                fillColor: imageEditorEmptyFillColor ?? 'transparent',
-                height: imageResizeTargetHeight,
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high',
-                width: imageResizeTargetWidth,
-            })
-
-            if (hasCircleCropper) {
-                croppedCanvas = this.getRoundedCanvas(croppedCanvas)
-            }
-
-            croppedCanvas.toBlob(
-                (croppedImage) => {
+            this.editor
+                .getCroppedCanvas({
+                    fillColor: imageEditorEmptyFillColor ?? 'transparent',
+                    height: imageResizeTargetHeight,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                    width: imageResizeTargetWidth,
+                })
+                .toBlob((croppedImage) => {
                     if (isMultiple) {
                         this.pond.removeFile(
                             this.pond
@@ -669,8 +644,7 @@ export default function fileUploadFormComponent({
                                     {
                                         type:
                                             this.editingFile.type ===
-                                                'image/svg+xml' ||
-                                            hasCircleCropper
+                                            'image/svg+xml'
                                                 ? 'image/png'
                                                 : this.editingFile.type,
                                         lastModified: new Date().getTime(),
@@ -684,9 +658,7 @@ export default function fileUploadFormComponent({
                                 this.closeEditor()
                             })
                     })
-                },
-                hasCircleCropper ? 'image/png' : this.editingFile.type,
-            )
+                }, this.editingFile.type)
         },
 
         destroyEditor: function () {

@@ -41,9 +41,4 @@ trait CanDisableOptions
             'value' => $value,
         ]);
     }
-
-    public function hasDynamicDisabledOptions(): bool
-    {
-        return $this->isOptionDisabled instanceof Closure;
-    }
 }

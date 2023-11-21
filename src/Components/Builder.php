@@ -14,13 +14,12 @@ use Illuminate\Support\Str;
 use function Filament\Forms\array_move_after;
 use function Filament\Forms\array_move_before;
 
-class Builder extends Field implements Contracts\CanConcealComponents, Contracts\HasExtraItemActions
+class Builder extends Field implements Contracts\CanConcealComponents
 {
     use Concerns\CanBeCloned;
     use Concerns\CanBeCollapsed;
     use Concerns\CanGenerateUuids;
     use Concerns\CanLimitItemsLength;
-    use Concerns\HasExtraItemActions;
 
     /**
      * @var view-string
@@ -139,7 +138,7 @@ class Builder extends Field implements Contracts\CanConcealComponents, Contracts
 
                 $component->state($items);
 
-                $component->getChildComponentContainer($newUuid)->fill();
+                $component->getChildComponentContainers()[$newUuid]->fill();
 
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
 
@@ -194,7 +193,7 @@ class Builder extends Field implements Contracts\CanConcealComponents, Contracts
 
                 $component->state($items);
 
-                $component->getChildComponentContainer($newUuid)->fill();
+                $component->getChildComponentContainers()[$newUuid]->fill();
 
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
 
@@ -880,41 +879,6 @@ class Builder extends Field implements Contracts\CanConcealComponents, Contracts
 
     public function getBlockPickerWidth(): ?string
     {
-        $width = $this->evaluate($this->blockPickerWidth);
-
-        if (filled($width)) {
-            return $width;
-        }
-
-        $columns = $this->getBlockPickerColumns();
-
-        if (empty($columns)) {
-            return null;
-        }
-
-        return match (max($columns)) {
-            2 => 'md',
-            3 => '2xl',
-            4 => '4xl',
-            5 => '6xl',
-            6 => '7xl',
-            default => null,
-        };
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getItemState(string $uuid): array
-    {
-        return $this->getChildComponentContainer($uuid)->getState(shouldCallHooksBefore: false);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getRawItemState(string $uuid): array
-    {
-        return $this->getChildComponentContainer($uuid)->getRawState();
+        return $this->evaluate($this->blockPickerWidth);
     }
 }

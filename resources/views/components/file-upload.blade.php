@@ -16,7 +16,6 @@
         $statePath = $getStatePath();
         $isDisabled = $isDisabled();
         $hasImageEditor = $hasImageEditor();
-        $hasCircleCropper = $hasCircleCropper();
 
         $alignment = $getAlignment() ?? Alignment::Start;
 
@@ -45,11 +44,12 @@
                         return await $wire.getFormUploadedFiles(@js($statePath))
                     },
                     hasImageEditor: @js($hasImageEditor),
-                    hasCircleCropper: @js($hasCircleCropper),
                     canEditSvgs: @js($canEditSvgs()),
                     isSvgEditingConfirmed: @js($isSvgEditingConfirmed()),
-                    confirmSvgEditingMessage: @js(__('filament-forms::components.file_upload.editor.svg.messages.confirmation')),
-                    disabledSvgEditingMessage: @js(__('filament-forms::components.file_upload.editor.svg.messages.disabled')),
+                    confirmSvgEditingMessage:
+                        '{{ __('filament-forms::components.file_upload.editor.svg.messages.confirmation') }}',
+                    disabledSvgEditingMessage:
+                        '{{ __('filament-forms::components.file_upload.editor.svg.messages.disabled') }}',
                     imageCropAspectRatio: @js($imageCropAspectRatio),
                     imagePreviewHeight: @js($getImagePreviewHeight()),
                     imageResizeMode: @js($getImageResizeMode()),
@@ -68,6 +68,8 @@
                     locale: @js(app()->getLocale()),
                     panelAspectRatio: @js($getPanelAspectRatio()),
                     panelLayout: @js($getPanelLayout()),
+                    pdfPreviewHeight: @js($getPdfPreviewHeight()),
+                    pdfPreviewParams: @js($getPdfPreviewParams()),
                     placeholder: @js($getPlaceholder()),
                     maxSize: @js(($size = $getMaxSize()) ? "'{$size} KB'" : null),
                     minSize: @js(($size = $getMinSize()) ? "'{$size} KB'" : null),
@@ -147,10 +149,7 @@
                 x-on:click.stop
                 x-trap.noscroll="isEditorOpen"
                 x-on:keydown.escape.window="closeEditor"
-                @class([
-                    'fixed inset-0 isolate z-50 h-screen w-screen p-2 sm:p-10 md:p-20',
-                    'fi-fo-file-upload-circle-cropper' => $hasCircleCropper,
-                ])
+                class="fixed inset-0 isolate z-50 h-screen w-screen p-2 sm:p-10 md:p-20"
             >
                 <div
                     aria-hidden="true"

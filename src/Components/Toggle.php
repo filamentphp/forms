@@ -8,7 +8,6 @@ class Toggle extends Field
 {
     use Concerns\CanBeAccepted;
     use Concerns\CanBeInline;
-    use Concerns\CanFixIndistinctState;
     use Concerns\HasToggleColors;
     use Concerns\HasToggleIcons;
     use HasExtraAlpineAttributes;

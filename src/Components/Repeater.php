@@ -18,14 +18,13 @@ use Illuminate\Support\Str;
 use function Filament\Forms\array_move_after;
 use function Filament\Forms\array_move_before;
 
-class Repeater extends Field implements Contracts\CanConcealComponents, Contracts\HasExtraItemActions
+class Repeater extends Field implements Contracts\CanConcealComponents
 {
     use Concerns\CanBeCloned;
     use Concerns\CanBeCollapsed;
     use Concerns\CanGenerateUuids;
     use Concerns\CanLimitItemsLength;
     use Concerns\HasContainerGridLayout;
-    use Concerns\HasExtraItemActions;
 
     protected string | Closure | null $addActionLabel = null;
 
@@ -157,7 +156,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents, Contract
 
                 $component->state($items);
 
-                $component->getChildComponentContainer($newUuid)->fill();
+                $component->getChildComponentContainers()[$newUuid]->fill();
 
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
 
@@ -208,7 +207,7 @@ class Repeater extends Field implements Contracts\CanConcealComponents, Contract
 
                 $component->state($items);
 
-                $component->getChildComponentContainer($newUuid)->fill();
+                $component->getChildComponentContainers()[$newUuid]->fill();
 
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
 
@@ -1191,21 +1190,5 @@ class Repeater extends Field implements Contracts\CanConcealComponents, Contract
     public function isItemLabelTruncated(): bool
     {
         return (bool) $this->evaluate($this->isItemLabelTruncated);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getItemState(string $uuid): array
-    {
-        return $this->getChildComponentContainer($uuid)->getState(shouldCallHooksBefore: false);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getRawItemState(string $uuid): array
-    {
-        return $this->getChildComponentContainer($uuid)->getRawState();
     }
 }

@@ -7,7 +7,6 @@ use Filament\Forms\Components\Contracts\HasNestedRecursiveValidationRules;
 use Filament\Forms\Components\Field;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -76,7 +75,7 @@ trait CanBeValidated
     /**
      * @param  array<scalar> | Arrayable | string | Closure  $values
      */
-    public function doesntStartWith(array | Arrayable | string | Closure $values): static
+    public function doesntStartWith(array | Arrayable | string | Closure $values, bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component) use ($values) {
             $values = $component->evaluate($values);
@@ -90,15 +89,7 @@ trait CanBeValidated
             }
 
             return 'doesnt_start_with:' . $values;
-        }, static function (Field $component) use ($values): bool {
-            $values = $component->evaluate($values);
-
-            if ($values instanceof Arrayable) {
-                $values = $values->toArray();
-            }
-
-            return is_array($values) ? count($values) : filled($values);
-        });
+        }, $condition);
 
         return $this;
     }
@@ -106,7 +97,7 @@ trait CanBeValidated
     /**
      * @param  array<scalar> | Arrayable | string | Closure  $values
      */
-    public function doesntEndWith(array | Arrayable | string | Closure $values): static
+    public function doesntEndWith(array | Arrayable | string | Closure $values, bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component) use ($values) {
             $values = $component->evaluate($values);
@@ -120,15 +111,7 @@ trait CanBeValidated
             }
 
             return 'doesnt_end_with:' . $values;
-        }, static function (Field $component) use ($values): bool {
-            $values = $component->evaluate($values);
-
-            if ($values instanceof Arrayable) {
-                $values = $values->toArray();
-            }
-
-            return is_array($values) ? count($values) : filled($values);
-        });
+        }, $condition);
 
         return $this;
     }
@@ -136,7 +119,7 @@ trait CanBeValidated
     /**
      * @param  array<scalar> | Arrayable | string | Closure  $values
      */
-    public function endsWith(array | Arrayable | string | Closure $values): static
+    public function endsWith(array | Arrayable | string | Closure $values, bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component) use ($values) {
             $values = $component->evaluate($values);
@@ -150,15 +133,7 @@ trait CanBeValidated
             }
 
             return 'ends_with:' . $values;
-        }, static function (Field $component) use ($values): bool {
-            $values = $component->evaluate($values);
-
-            if ($values instanceof Arrayable) {
-                $values = $values->toArray();
-            }
-
-            return is_array($values) ? count($values) : filled($values);
-        });
+        }, $condition);
 
         return $this;
     }
@@ -204,7 +179,7 @@ trait CanBeValidated
     /**
      * @param  array<scalar> | Arrayable | string | Closure  $values
      */
-    public function in(array | Arrayable | string | Closure $values): static
+    public function in(array | Arrayable | string | Closure $values, bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component) use ($values) {
             $values = $component->evaluate($values);
@@ -218,15 +193,7 @@ trait CanBeValidated
             }
 
             return Rule::in($values);
-        }, static function (Field $component) use ($values): bool {
-            $values = $component->evaluate($values);
-
-            if ($values instanceof Arrayable) {
-                $values = $values->toArray();
-            }
-
-            return is_array($values) ? count($values) : filled($values);
-        });
+        }, $condition);
 
         return $this;
     }
@@ -278,7 +245,7 @@ trait CanBeValidated
     /**
      * @param  array<scalar> | Arrayable | string | Closure  $values
      */
-    public function notIn(array | Arrayable | string | Closure $values): static
+    public function notIn(array | Arrayable | string | Closure $values, bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component) use ($values) {
             $values = $component->evaluate($values);
@@ -292,15 +259,7 @@ trait CanBeValidated
             }
 
             return Rule::notIn($values);
-        }, static function (Field $component) use ($values): bool {
-            $values = $component->evaluate($values);
-
-            if ($values instanceof Arrayable) {
-                $values = $values->toArray();
-            }
-
-            return is_array($values) ? count($values) : filled($values);
-        });
+        }, $condition);
 
         return $this;
     }
@@ -407,7 +366,7 @@ trait CanBeValidated
     /**
      * @param  array<scalar> | Arrayable | string | Closure  $values
      */
-    public function startsWith(array | Arrayable | string | Closure $values): static
+    public function startsWith(array | Arrayable | string | Closure $values, bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component) use ($values) {
             $values = $component->evaluate($values);
@@ -421,15 +380,7 @@ trait CanBeValidated
             }
 
             return 'starts_with:' . $values;
-        }, static function (Field $component) use ($values): bool {
-            $values = $component->evaluate($values);
-
-            if ($values instanceof Arrayable) {
-                $values = $values->toArray();
-            }
-
-            return is_array($values) ? count($values) : filled($values);
-        });
+        }, $condition);
 
         return $this;
     }
@@ -551,87 +502,6 @@ trait CanBeValidated
 
             return $rule;
         }, fn (Field $component, ?string $model): bool => (bool) ($component->evaluate($table) ?? $model));
-
-        return $this;
-    }
-
-    public function distinct(): static
-    {
-        $this->rule(static function (Field $component, mixed $state) {
-            return function (string $attribute, mixed $value, Closure $fail) use ($component, $state) {
-                if (blank($state)) {
-                    return;
-                }
-
-                $repeater = $component->getParentRepeater();
-
-                if (! $repeater) {
-                    return;
-                }
-
-                $repeaterStatePath = $repeater->getStatePath();
-
-                $componentItemStatePath = (string) str($component->getStatePath())
-                    ->after("{$repeaterStatePath}.")
-                    ->after('.');
-
-                $repeaterItemKey = (string) str($component->getStatePath())
-                    ->after("{$repeaterStatePath}.")
-                    ->beforeLast(".{$componentItemStatePath}");
-
-                $repeaterSiblingState = Arr::except($repeater->getState(), [$repeaterItemKey]);
-
-                if (empty($repeaterSiblingState)) {
-                    return;
-                }
-
-                $validationMessages = $component->getValidationMessages();
-
-                if (is_bool($state)) {
-                    $isSiblingItemSelected = collect($repeaterSiblingState)
-                        ->pluck($componentItemStatePath)
-                        ->contains(true);
-
-                    if ($state && $isSiblingItemSelected) {
-                        $fail(__($validationMessages['distinct.only_one_must_be_selected'] ?? 'filament-forms::validation.distinct.only_one_must_be_selected', ['attribute' => $component->getValidationAttribute()]));
-
-                        return;
-                    }
-
-                    if ($state || $isSiblingItemSelected) {
-                        return;
-                    }
-
-                    $fail(__($validationMessages['distinct.must_be_selected'] ?? 'filament-forms::validation.distinct.must_be_selected', ['attribute' => $component->getValidationAttribute()]));
-
-                    return;
-                }
-
-                if (is_array($state)) {
-                    $hasSiblingStateIntersections = collect($repeaterSiblingState)
-                        ->filter(fn (array $item): bool => filled(array_intersect(data_get($item, $componentItemStatePath, []), $state)))
-                        ->isNotEmpty();
-
-                    if (! $hasSiblingStateIntersections) {
-                        return;
-                    }
-
-                    $fail(__($validationMessages['distinct'] ?? 'validation.distinct', ['attribute' => $component->getValidationAttribute()]));
-
-                    return;
-                }
-
-                $hasDuplicateSiblingState = collect($repeaterSiblingState)
-                    ->pluck($componentItemStatePath)
-                    ->contains($state);
-
-                if (! $hasDuplicateSiblingState) {
-                    return;
-                }
-
-                $fail(__($validationMessages['distinct'] ?? 'validation.distinct', ['attribute' => $component->getValidationAttribute()]));
-            };
-        });
 
         return $this;
     }

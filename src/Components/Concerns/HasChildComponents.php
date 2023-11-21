@@ -46,8 +46,8 @@ trait HasChildComponents
      */
     public function getChildComponentContainer($key = null): ComponentContainer
     {
-        if (filled($key) && array_key_exists($key, $containers = $this->getChildComponentContainers())) {
-            return $containers[$key];
+        if (filled($key)) {
+            return $this->getChildComponentContainers()[$key];
         }
 
         return ComponentContainer::make($this->getLivewire())
