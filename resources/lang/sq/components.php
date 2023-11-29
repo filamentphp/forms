@@ -7,47 +7,47 @@ return [
         'actions' => [
 
             'clone' => [
-                'label' => 'Clone',
+                'label' => 'Kopjo',
             ],
 
             'add' => [
-                'label' => 'Add to :label',
+                'label' => 'Shto në :label',
             ],
 
             'add_between' => [
-                'label' => 'Insert between blocks',
+                'label' => 'Shto midis blloqeve',
             ],
 
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'Fshi',
             ],
 
             'reorder' => [
-                'label' => 'Move',
+                'label' => 'Zhvendos',
             ],
 
             'move_down' => [
-                'label' => 'Move down',
+                'label' => 'Zhvendos poshtë',
             ],
 
             'move_up' => [
-                'label' => 'Move up',
+                'label' => 'Zhvendos sipër',
             ],
 
             'collapse' => [
-                'label' => 'Collapse',
+                'label' => 'Mbyll',
             ],
 
             'expand' => [
-                'label' => 'Expand',
+                'label' => 'Hap',
             ],
 
             'collapse_all' => [
-                'label' => 'Collapse all',
+                'label' => 'Mbyll të gjitha',
             ],
 
             'expand_all' => [
-                'label' => 'Expand all',
+                'label' => 'Hap të gjitha',
             ],
 
         ],
@@ -59,11 +59,11 @@ return [
         'actions' => [
 
             'deselect_all' => [
-                'label' => 'Deselect all',
+                'label' => 'Çzgjidh të gjitha',
             ],
 
             'select_all' => [
-                'label' => 'Select all',
+                'label' => 'Zgjidh të gjitha',
             ],
 
         ],
@@ -77,71 +77,71 @@ return [
             'actions' => [
 
                 'cancel' => [
-                    'label' => 'Cancel',
+                    'label' => 'Anulo',
                 ],
 
                 'drag_crop' => [
-                    'label' => 'Drag mode "crop"',
+                    'label' => 'Modaliteti i tërheqjes "prerje"',
                 ],
 
                 'drag_move' => [
-                    'label' => 'Drag mode "move"',
+                    'label' => 'Modaliteti i tërheqjes "zhvendos"',
                 ],
 
                 'flip_horizontal' => [
-                    'label' => 'Flip image horizontally',
+                    'label' => 'Kthejeni imazhin horizontal',
                 ],
 
                 'flip_vertical' => [
-                    'label' => 'Flip image vertically',
+                    'label' => 'Kthejeni imazhin vertikal',
                 ],
 
                 'move_down' => [
-                    'label' => 'Move image down',
+                    'label' => 'Zhvendos imazhin poshtë',
                 ],
 
                 'move_left' => [
-                    'label' => 'Move image to left',
+                    'label' => 'Zhvendos imazhin majtas',
                 ],
 
                 'move_right' => [
-                    'label' => 'Move image to right',
+                    'label' => 'Zhvendos imazhin djathtas',
                 ],
 
                 'move_up' => [
-                    'label' => 'Move image up',
+                    'label' => 'Zhvendos imazhin sipër',
                 ],
 
                 'reset' => [
-                    'label' => 'Reset',
+                    'label' => 'Rivendos',
                 ],
 
                 'rotate_left' => [
-                    'label' => 'Rotate image to left',
+                    'label' => 'Rrotulloni imazhin në të majtë',
                 ],
 
                 'rotate_right' => [
-                    'label' => 'Rotate image to right',
+                    'label' => 'Rrotulloni imazhin në të djathtë',
                 ],
 
                 'set_aspect_ratio' => [
-                    'label' => 'Set aspect ratio to :ratio',
+                    'label' => 'Cakto raportin e pamjes në :ratio',
                 ],
 
                 'save' => [
-                    'label' => 'Save',
+                    'label' => 'Ruaj',
                 ],
 
                 'zoom_100' => [
-                    'label' => 'Zoom image to 100%',
+                    'label' => 'Zmadhoni imazhin në 100%',
                 ],
 
                 'zoom_in' => [
-                    'label' => 'Zoom in',
+                    'label' => 'Zmadhoni',
                 ],
 
                 'zoom_out' => [
-                    'label' => 'Zoom out',
+                    'label' => 'Zvogëloni',
                 ],
 
             ],
@@ -149,17 +149,17 @@ return [
             'fields' => [
 
                 'height' => [
-                    'label' => 'Height',
+                    'label' => 'Lartësia',
                     'unit' => 'px',
                 ],
 
                 'rotation' => [
-                    'label' => 'Rotation',
+                    'label' => 'Rrotullimi',
                     'unit' => 'deg',
                 ],
 
                 'width' => [
-                    'label' => 'Width',
+                    'label' => 'Gjerësia',
                     'unit' => 'px',
                 ],
 
@@ -177,19 +177,10 @@ return [
 
             'aspect_ratios' => [
 
-                'label' => 'Aspect ratios',
+                'label' => 'Raportet e aspektit',
 
                 'no_fixed' => [
-                    'label' => 'Free',
-                ],
-
-            ],
-
-            'svg' => [
-
-                'messages' => [
-                    'confirmation' => 'Editing SVG files is not recommended as it can result in quality loss when scaling.\n Are you sure you want to continue?',
-                    'disabled' => 'Editing SVG files is disabled as it can result in quality loss when scaling.',
+                    'label' => 'i lirë',
                 ],
 
             ],
@@ -203,15 +194,15 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Add row',
+                'label' => 'Shto rresht',
             ],
 
             'delete' => [
-                'label' => 'Delete row',
+                'label' => 'Fshi rresht',
             ],
 
             'reorder' => [
-                'label' => 'Reorder row',
+                'label' => 'Renditni përsëri rreshtin',
             ],
 
         ],
@@ -219,11 +210,11 @@ return [
         'fields' => [
 
             'key' => [
-                'label' => 'Key',
+                'label' => 'Çelësi',
             ],
 
             'value' => [
-                'label' => 'Value',
+                'label' => 'Vlera',
             ],
 
         ],
@@ -233,28 +224,19 @@ return [
     'markdown_editor' => [
 
         'toolbar_buttons' => [
-            'attach_files' => 'Attach files',
+            'attach_files' => 'Bashkangjit skedarët',
             'blockquote' => 'Blockquote',
-            'bold' => 'Bold',
-            'bullet_list' => 'Bullet list',
-            'code_block' => 'Code block',
-            'heading' => 'Heading',
-            'italic' => 'Italic',
+            'bold' => 'i theksuar',
+            'bullet_list' => 'Lista me pika',
+            'code_block' => 'Blloku i kodit',
+            'heading' => 'Titull',
+            'italic' => 'I pjerrët',
             'link' => 'Link',
-            'ordered_list' => 'Numbered list',
-            'redo' => 'Redo',
-            'strike' => 'Strikethrough',
-            'table' => 'Table',
-            'undo' => 'Undo',
-        ],
-
-    ],
-
-    'radio' => [
-
-        'boolean' => [
-            'true' => 'Yes',
-            'false' => 'No',
+            'ordered_list' => 'Lista e numëruar',
+            'redo' => 'Ribëj',
+            'strike' => 'I mesvijëzuar',
+            'table' => 'Tabela',
+            'undo' => 'Zhbëj',
         ],
 
     ],
@@ -264,47 +246,43 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Add to :label',
-            ],
-
-            'add_between' => [
-                'label' => 'Insert between',
+                'label' => 'Shto në :label',
             ],
 
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'Fshi',
             ],
 
             'clone' => [
-                'label' => 'Clone',
+                'label' => 'Kopjo',
             ],
 
             'reorder' => [
-                'label' => 'Move',
+                'label' => 'Zhvendos',
             ],
 
             'move_down' => [
-                'label' => 'Move down',
+                'label' => 'Zhvendos poshtë',
             ],
 
             'move_up' => [
-                'label' => 'Move up',
+                'label' => 'Zhvendos sipër',
             ],
 
             'collapse' => [
-                'label' => 'Collapse',
+                'label' => 'Mbyll',
             ],
 
             'expand' => [
-                'label' => 'Expand',
+                'label' => 'Hap',
             ],
 
             'collapse_all' => [
-                'label' => 'Collapse all',
+                'label' => 'Mbyll të gjitha',
             ],
 
             'expand_all' => [
-                'label' => 'Expand all',
+                'label' => 'Hap të gjitha',
             ],
 
         ],
@@ -324,28 +302,28 @@ return [
 
                 'label' => 'URL',
 
-                'placeholder' => 'Enter a URL',
+                'placeholder' => 'Fut një URL',
 
             ],
 
         ],
 
         'toolbar_buttons' => [
-            'attach_files' => 'Attach files',
+            'attach_files' => 'Bashkangjit skedarët',
             'blockquote' => 'Blockquote',
-            'bold' => 'Bold',
-            'bullet_list' => 'Bullet list',
-            'code_block' => 'Code block',
-            'h1' => 'Title',
-            'h2' => 'Heading',
-            'h3' => 'Subheading',
-            'italic' => 'Italic',
+            'bold' => 'I theksuar',
+            'bullet_list' => 'Lista me pika',
+            'code_block' => 'Blloku i kodit',
+            'h1' => 'Kryetitull',
+            'h2' => 'Titull',
+            'h3' => 'Nëntitull',
+            'italic' => 'I pjerrët',
             'link' => 'Link',
-            'ordered_list' => 'Numbered list',
-            'redo' => 'Redo',
-            'strike' => 'Strikethrough',
-            'underline' => 'Underline',
-            'undo' => 'Undo',
+            'ordered_list' => 'Lista e numëruar',
+            'redo' => 'Ribëj',
+            'strike' => 'I mesvijëzuar',
+            'underline' => 'I nënvizuar',
+            'undo' => 'Ribëj',
         ],
 
     ],
@@ -358,16 +336,16 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Create',
+                    'heading' => 'Krijo',
 
                     'actions' => [
 
                         'create' => [
-                            'label' => 'Create',
+                            'label' => 'Krijo',
                         ],
 
                         'create_another' => [
-                            'label' => 'Create & create another',
+                            'label' => 'Krijoni dhe krijoni një tjetër',
                         ],
 
                     ],
@@ -380,12 +358,12 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Edit',
+                    'heading' => 'Modifiko',
 
                     'actions' => [
 
                         'save' => [
-                            'label' => 'Save',
+                            'label' => 'Ruaj',
                         ],
 
                     ],
@@ -397,26 +375,26 @@ return [
         ],
 
         'boolean' => [
-            'true' => 'Yes',
-            'false' => 'No',
+            'true' => 'Po',
+            'false' => 'Jo',
         ],
 
-        'loading_message' => 'Loading...',
+        'loading_message' => 'Po ngarkohet...',
 
-        'max_items_message' => 'Only :count can be selected.',
+        'max_items_message' => 'Mund të zgjidhet vetëm :count.',
 
-        'no_search_results_message' => 'No options match your search.',
+        'no_search_results_message' => 'Asnjë opsion nuk përputhet me kërkimin tuaj.',
 
-        'placeholder' => 'Select an option',
+        'placeholder' => 'Zgjidhni një opsion',
 
-        'searching_message' => 'Searching...',
+        'searching_message' => 'Duke kërkuar...',
 
-        'search_prompt' => 'Start typing to search...',
+        'search_prompt' => 'Filloni të shkruani për të kërkuar...',
 
     ],
 
     'tags_input' => [
-        'placeholder' => 'New tag',
+        'placeholder' => 'Tag i ri',
     ],
 
     'wizard' => [
@@ -424,11 +402,11 @@ return [
         'actions' => [
 
             'previous_step' => [
-                'label' => 'Back',
+                'label' => 'Pas',
             ],
 
             'next_step' => [
-                'label' => 'Next',
+                'label' => 'Para',
             ],
 
         ],
