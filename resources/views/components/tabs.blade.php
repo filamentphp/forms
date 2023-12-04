@@ -26,7 +26,7 @@
                             return
                         }
 
-                        let const = this.getTabs()
+                        const tabs = this.getTabs()
 
                         if (! tabs.includes(this.tab)) {
                              this.tab = tabs[@js($getActiveTab()) - 1]
