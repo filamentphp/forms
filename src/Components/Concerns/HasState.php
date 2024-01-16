@@ -107,6 +107,7 @@ trait HasState
     protected function callAfterStateUpdatedHook(Closure $hook): void
     {
         $this->evaluate($hook, [
+            'component' => $this,
             'old' => $this->getOldState(),
         ]);
     }
