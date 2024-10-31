@@ -11,15 +11,67 @@ return [
             ],
 
             'add' => [
+
                 'label' => 'Lisää :label',
+
+                'modal' => [
+
+                    'heading' => 'Lisää :label',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Lisää',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'add_between' => [
-                'label' => 'Sijoita',
+
+                'label' => 'Lisää lohkon väliin',
+
+                'modal' => [
+
+                    'heading' => 'Lisää :label',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Lisää',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'delete' => [
                 'label' => 'Poista',
+            ],
+
+            'edit' => [
+
+                'label' => 'Muokkaa',
+
+                'modal' => [
+
+                    'heading' => 'Muokkaa lohkoa',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Tallenna muutokset',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'reorder' => [

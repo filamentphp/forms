@@ -8,6 +8,7 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\ActionSize;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Support\Arr;
@@ -53,6 +54,8 @@ class Builder extends Field implements Contracts\CanConcealComponents, Contracts
     protected bool | Closure $hasBlockPreviews = false;
 
     protected bool | Closure $hasInteractiveBlockPreviews = false;
+
+    protected Alignment | string | Closure | null $addActionAlignment = null;
 
     protected ?Closure $modifyAddActionUsing = null;
 
@@ -192,6 +195,24 @@ class Builder extends Field implements Contracts\CanConcealComponents, Contracts
         }
 
         return $action;
+    }
+
+    public function addActionAlignment(Alignment | string | Closure | null $addActionAlignment): static
+    {
+        $this->addActionAlignment = $addActionAlignment;
+
+        return $this;
+    }
+
+    public function getAddActionAlignment(): Alignment | string | null
+    {
+        $alignment = $this->evaluate($this->addActionAlignment);
+
+        if (is_string($alignment)) {
+            $alignment = Alignment::tryFrom($alignment) ?? $alignment;
+        }
+
+        return $alignment;
     }
 
     public function addAction(?Closure $callback): static
