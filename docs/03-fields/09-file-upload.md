@@ -458,6 +458,33 @@ FileUpload::make('attachment')
     ->maxSize(1024)
 ```
 
+#### Uploading large files
+
+If you experience issues when uploading large files, such as HTTP requests failing with a response status of 422 in the browser's console, you may need to tweak your configuration.
+
+In the `php.ini` file for your server, increasing the maximum file size may fix the issue:
+
+```ini
+post_max_size = 120M
+upload_max_filesize = 120M
+```
+
+Livewire also validates file size before uploading. To publish the Livewire config file, run:
+
+```bash
+php artisan livewire:publish --config
+```
+
+The [max upload size can be adjusted in the `rules` key of `temporary_file_upload`]((https://livewire.laravel.com/docs/uploads#global-validation)). In this instance, KB are used in the rule, and 120MB is 122880KB:
+
+```php
+'temporary_file_upload' => [
+    // ...
+    'rules' => ['required', 'file', 'max:122880'],
+    // ...
+],
+```
+
 ### Number of files validation
 
 You may customize the number of files that may be uploaded, using the `minFiles()` and `maxFiles()` methods:
