@@ -202,7 +202,11 @@
                             <span
                                 class="fi-fo-checkbox-list-option-label overflow-hidden break-words font-medium text-gray-950 dark:text-white"
                             >
-                                {{ $label }}
+                                @if ($isHtmlAllowed())
+                                    {!! $label !!}
+                                @else
+                                    {{ $label }}
+                                @endif
                             </span>
 
                             @if ($hasDescription($value))

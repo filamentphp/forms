@@ -12,15 +12,65 @@ return [
 
             'add' => [
                 'label' => 'Zu :label hinzufügen',
+
+                'modal' => [
+
+                    'heading' => 'Hinzufügen zu :label',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Hinzufügen',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'add_between' => [
                 'label' => 'Dazwischen einfügen',
+
+                'modal' => [
+
+                    'heading' => 'Hinzufügen zu :label',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Hinzufügen',
+                        ],
+
+                    ],
+
+                ],
             ],
 
             'delete' => [
                 'label' => 'Löschen',
             ],
+
+            'edit' => [
+
+                'label' => 'Bearbeiten',
+
+                'modal' => [
+
+                    'heading' => 'Block bearbeiten',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Änderungen speichern',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
 
             'reorder' => [
                 'label' => 'Verschieben',

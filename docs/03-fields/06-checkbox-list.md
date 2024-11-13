@@ -45,6 +45,26 @@ class App extends Model
 }
 ```
 
+## Allowing HTML in the option labels
+
+By default, Filament will escape any HTML in the option labels. If you'd like to allow HTML, you can use the `allowHtml()` method:
+
+```php
+use Filament\Forms\Components\CheckboxList;
+
+CheckboxList::make('technology')
+    ->options([
+        'tailwind' => '<span class="text-blue-500">Tailwind</span>',
+        'alpine' => '<span class="text-green-500">Alpine</span>',
+        'laravel' => '<span class="text-red-500">Laravel</span>',
+        'livewire' => '<span class="text-pink-500">Livewire</span>',
+    ])
+    ->searchable()
+    ->allowHtml()
+```
+
+Be aware that you will need to ensure that the HTML is safe to render, otherwise your application will be vulnerable to XSS attacks.
+
 ## Setting option descriptions
 
 You can optionally provide descriptions to each option using the `descriptions()` method. This method accepts an array of plain text strings, or instances of `Illuminate\Support\HtmlString` or `Illuminate\Contracts\Support\Htmlable`. This allows you to render HTML, or even markdown, in the descriptions:
