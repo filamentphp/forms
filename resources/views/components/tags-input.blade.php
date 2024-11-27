@@ -102,10 +102,7 @@
                                 x-sortable
                                 data-sortable-animation-duration="{{ $getReorderAnimationDuration() }}"
                             @endif
-                            @class([
-                                'flex w-full flex-wrap gap-1.5 p-2',
-                                'border-t border-t-gray-200 dark:border-t-white/10',
-                            ])
+                            class="fi-fo-tags-input-tags-ctn flex w-full flex-wrap gap-1.5 border-t border-t-gray-200 p-2 dark:border-t-white/10"
                         >
                             <template
                                 x-for="(tag, index) in state"

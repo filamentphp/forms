@@ -417,9 +417,15 @@ class FileUpload extends BaseFileUpload
         return $this->evaluate($this->imageEditorViewportWidth);
     }
 
-    protected function getParentTargetSizes(int $withOrHeight): float
+    protected function getParentTargetSizes(int $widthOrHeight): int | float
     {
-        return $withOrHeight > 1 ? 360 / (int) $this->getImageResizeTargetWidth() : 1;
+        $targetWidth = (int) $this->getImageResizeTargetWidth();
+
+        if ($targetWidth === 0) {
+            return 1;
+        }
+
+        return $widthOrHeight > 1 ? 360 / $targetWidth : 1;
     }
 
     public function getImageEditorMode(): int

@@ -35,7 +35,7 @@
             \Filament\Support\prepare_inherited_attributes($attributes)
                 ->merge($getExtraAttributes(), escape: false)
                 ->class([
-                    'fi-fo-radio gap-3',
+                    'fi-fo-toggle-buttons gap-3',
                     '-mt-3' => (! $isInline) && ($gridDirection === 'column'),
                     'flex flex-wrap' => $isInline,
                 ])

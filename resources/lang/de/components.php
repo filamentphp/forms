@@ -71,7 +71,6 @@ return [
 
             ],
 
-
             'reorder' => [
                 'label' => 'Verschieben',
             ],

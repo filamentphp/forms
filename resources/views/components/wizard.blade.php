@@ -21,7 +21,7 @@
             this.step = this.getSteps()[nextStepIndex]
 
             this.autofocusFields()
-            this.scrollToTop()
+            this.scroll()
         },
 
         previousStep: function () {
@@ -34,13 +34,15 @@
             this.step = this.getSteps()[previousStepIndex]
 
             this.autofocusFields()
-            this.scrollToTop()
+            this.scroll()
         },
 
-        scrollToTop: function () {
-            this.$nextTick(() =>
-                this.$root.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-            )
+        scroll: function () {
+            this.$nextTick(() => {
+                this.$refs.header.children[
+                    this.getStepIndex(this.step)
+                ].scrollIntoView({ behavior: 'smooth', block: 'start' })
+            })
         },
 
         autofocusFields: function () {
@@ -135,6 +137,7 @@
             'border-b border-gray-200 dark:border-white/10' => $isContained,
             'rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10' => ! $isContained,
         ])
+        x-ref="header"
     >
         @foreach ($getChildComponentContainer()->getComponents() as $step)
             <li
