@@ -70,6 +70,20 @@ class Message extends Model
 }
 ```
 
+### Controlling the maximum parallel uploads
+
+You can control the maximum number of parallel uploads using the `maxParallelUploads()` method:
+
+```php
+use Filament\Forms\Components\FileUpload;
+
+FileUpload::make('attachments')
+    ->multiple()
+    ->maxParallelUploads(1)
+```
+
+This will limit the number of parallel uploads to `1`. If unset, we'll use the [default FilePond value](https://pqina.nl/filepond/docs/api/instance/properties/#core-properties) which is `2`.
+
 ## Controlling file names
 
 By default, a random file name will be generated for newly-uploaded files. This is to ensure that there are never any conflicts with existing files.
