@@ -107,7 +107,7 @@
     @if ($datalistOptions)
         <datalist id="{{ $id }}-list">
             @foreach ($datalistOptions as $option)
-                <option value="{{ $option }}" />
+                <option value="{{ $option }}"></option>
             @endforeach
         </datalist>
     @endif

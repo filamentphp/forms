@@ -36,6 +36,8 @@ export default function keyValueFormComponent({ state }) {
                     return
                 }
 
+                this.shouldUpdateRows = true
+
                 this.updateRows()
             })
         },
