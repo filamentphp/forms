@@ -7,7 +7,7 @@ return [
         'actions' => [
 
             'clone' => [
-                'label' => 'Կլոն',
+                'label' => 'Կրկնօրինակել',
             ],
 
             'add' => [
@@ -32,7 +32,7 @@ return [
 
             'add_between' => [
 
-                'label' => 'Տեղադրեք բլոկների միջև',
+                'label' => 'Տեղադրել բլոկների միջև',
 
                 'modal' => [
 
@@ -75,7 +75,7 @@ return [
             ],
 
             'reorder' => [
-                'label' => 'Տեղափոխել',
+                'label' => 'Վերադասավորել',
             ],
 
             'move_down' => [
@@ -201,28 +201,28 @@ return [
             'fields' => [
 
                 'height' => [
-                    'label' => 'Բարձրություն',
+                    'label' => 'Բարձր.',
                     'unit' => 'փիքսել',
                 ],
 
                 'rotation' => [
                     'label' => 'Պտույտ',
-                    'unit' => 'աստիճան',
+                    'unit' => 'աստ.',
                 ],
 
                 'width' => [
-                    'label' => 'Լայնություն',
+                    'label' => 'Լայն.',
                     'unit' => 'փիքսել',
                 ],
 
                 'x_position' => [
                     'label' => 'X',
-                    'unit' => 'փիքսել',
+                    'unit' => 'փքս',
                 ],
 
                 'y_position' => [
                     'label' => 'Y',
-                    'unit' => 'փիքսել',
+                    'unit' => 'փքս',
                 ],
 
             ],
@@ -241,7 +241,7 @@ return [
 
                 'messages' => [
                     'confirmation' => 'SVG ֆայլերը խմբագրելը խորհուրդ չի տրվում, քանի որ դա կարող է հանգեցնել որակի կորստի, երբ այն մասշտաբավորվում է:',
-                    'disabled' => 'Editing SVG files is disabled as it can result in quality loss when scaling.',
+                    'disabled' => 'SVG ֆայլերի խմբագրումն անջատված է, քանի որ դա կարող է հանգեցնել որակի կորստի, երբ մասշտաբավորվում է:',
                 ],
 
             ],
@@ -328,7 +328,7 @@ return [
             ],
 
             'clone' => [
-                'label' => 'Կլոն',
+                'label' => 'Կրկնօրինակել',
             ],
 
             'reorder' => [
@@ -461,9 +461,9 @@ return [
 
         'max_items_message' => 'Կարող եք :count ընտրել միայն մեկը:',
 
-        'no_search_results_message' => 'Ոչ մի տարբերակ չի համապատասխանում ձեր խնդրանքին:',
+        'no_search_results_message' => 'Ոչ մի տվյալ չի համապատասխանում ձեր հարցմանը:',
 
-        'placeholder' => 'Ընտրեք ցանկալի տարբերակը',
+        'placeholder' => 'Ընտրեք ցանկալի հարցում',
 
         'searching_message' => 'Որոնում...',
 
