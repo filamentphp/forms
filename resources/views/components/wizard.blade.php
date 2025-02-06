@@ -292,12 +292,14 @@
                     )
                 "
             @endif
-            x-show="! isLastStep()"
+            x-bind:class="{ 'hidden': isLastStep(), 'block': ! isLastStep() }"
         >
             {{ $nextAction }}
         </span>
 
-        <span x-show="isLastStep()">
+        <span
+            x-bind:class="{ 'hidden': ! isLastStep(), 'block': isLastStep() }"
+        >
             {{ $getSubmitAction() }}
         </span>
     </div>
