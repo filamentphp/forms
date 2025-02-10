@@ -25,11 +25,11 @@
 >
     <div
         @if (FilamentView::hasSpaMode())
-            {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+            {{-- format-ignore-start --}}x-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
         @else
-            ax-load
+            x-load
         @endif
-        ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
+        x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
         x-data="fileUploadFormComponent({
                     acceptedFileTypes: @js($getAcceptedFileTypes()),
                     imageEditorEmptyFillColor: @js($getImageEditorEmptyFillColor()),
@@ -101,7 +101,6 @@
                     },
                 })"
         wire:ignore
-        x-ignore
         {{
             $attributes
                 ->merge([

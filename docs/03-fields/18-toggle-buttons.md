@@ -68,6 +68,8 @@ If you are using an enum for the options, you can use the [`HasIcon` interface](
 
 <AutoScreenshot name="forms/fields/toggle-buttons/icons" alt="Toggle buttons with icons" version="3.x" />
 
+If you want to display only icons, you can use `hiddenButtonLabels()` to hide the option labels.
+
 ## Boolean options
 
 If you want a simple boolean toggle button group, with "Yes" and "No" options, you can use the `boolean()` method:

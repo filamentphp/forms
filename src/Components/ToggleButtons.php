@@ -28,6 +28,8 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
 
     protected bool | Closure $isInline = false;
 
+    protected bool | Closure $areButtonLabelsHidden = false;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -82,6 +84,18 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     public function isInline(): bool
     {
         return (bool) $this->evaluate($this->isInline);
+    }
+
+    public function hiddenButtonLabels(bool | Closure $condition = true): static
+    {
+        $this->areButtonLabelsHidden = $condition;
+
+        return $this;
+    }
+
+    public function areButtonLabelsHidden(): bool
+    {
+        return (bool) $this->evaluate($this->areButtonLabelsHidden);
     }
 
     public function multiple(bool | Closure $condition = true): static

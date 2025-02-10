@@ -11,6 +11,7 @@ Filament requires the following to run:
 - PHP 8.1+
 - Laravel v10.0+
 - Livewire v3.0+
+- Tailwind v3.0+ [(Using Tailwind v4?)](#installing-tailwind-css)
 
 ## Installation
 
@@ -43,6 +44,8 @@ php artisan filament:install --forms
 ```
 
 ### Installing Tailwind CSS
+
+> Filament uses Tailwind CSS v3 for styling. If your project uses Tailwind CSS v4, you will unfortunately need to downgrade it to v3 to use Filament. Filament v3 can't support Tailwind CSS v4 since it introduces breaking changes. Filament v4 will support Tailwind CSS v4.
 
 Run the following command to install Tailwind CSS with the Tailwind Forms and Typography plugins:
 

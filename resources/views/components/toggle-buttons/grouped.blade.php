@@ -4,6 +4,7 @@
     $isDisabled = $isDisabled();
     $isMultiple = $isMultiple();
     $statePath = $getStatePath();
+    $areButtonLabelsHidden = $areButtonLabelsHidden();
 @endphp
 
 <x-dynamic-component
@@ -52,6 +53,7 @@
                 :for="$inputId"
                 grouped
                 :icon="$getIcon($value)"
+                :label-sr-only="$areButtonLabelsHidden"
                 tag="label"
             >
                 {{ $label }}
