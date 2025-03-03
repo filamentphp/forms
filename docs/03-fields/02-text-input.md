@@ -95,7 +95,7 @@ You may specify [datalist](https://developer.mozilla.org/en-US/docs/Web/HTML/Ele
 ```php
 TextInput::make('manufacturer')
     ->datalist([
-        'BWM',
+        'BMW',
         'Ford',
         'Mercedes-Benz',
         'Porsche',

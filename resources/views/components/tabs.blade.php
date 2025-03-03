@@ -26,7 +26,7 @@
             const url = new URL(window.location.href)
             url.searchParams.set(@js($getTabQueryStringKey()), this.tab)
 
-            history.pushState(null, document.title, url.toString())
+            history.replaceState(null, document.title, url.toString())
         },
     }"
     x-init="
