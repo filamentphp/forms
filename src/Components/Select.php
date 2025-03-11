@@ -862,7 +862,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
                 $component->state(
                     $relatedRecords
-                        ->pluck($relationship->getForeignKeyName())
+                        ->pluck($relationship->getLocalKeyName())
                         ->all(),
                 );
 
@@ -874,7 +874,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
                 $component->state(
                     $relatedModel?->getAttribute(
-                        $relationship->getForeignKeyName(),
+                        $relationship->getLocalKeyName(),
                     ),
                 );
 
@@ -987,6 +987,42 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
         $this->saveRelationshipsUsing(static function (Select $component, Model $record, $state) use ($modifyQueryUsing) {
             $relationship = $component->getRelationship();
+
+            if (($relationship instanceof HasOne) || ($relationship instanceof HasMany)) {
+                $query = $relationship->getQuery();
+
+                if ($modifyQueryUsing) {
+                    $component->evaluate($modifyQueryUsing, [
+                        'query' => $query,
+                        'search' => null,
+                    ]);
+                }
+
+                $query->update([
+                    $relationship->getForeignKeyName() => null,
+                ]);
+
+                if (! empty($state)) {
+                    $relationship::noConstraints(function () use ($component, $record, $state, $modifyQueryUsing) {
+                        $relationship = $component->getRelationship();
+
+                        $query = $relationship->getQuery()->whereIn($relationship->getLocalKeyName(), Arr::wrap($state));
+
+                        if ($modifyQueryUsing) {
+                            $component->evaluate($modifyQueryUsing, [
+                                'query' => $query,
+                                'search' => null,
+                            ]);
+                        }
+
+                        $query->update([
+                            $relationship->getForeignKeyName() => $record->getAttribute($relationship->getLocalKeyName()),
+                        ]);
+                    });
+                }
+
+                return;
+            }
 
             if (
                 ($relationship instanceof HasOneOrMany) ||
