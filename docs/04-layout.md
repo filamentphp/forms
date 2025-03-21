@@ -310,8 +310,8 @@ use Filament\Forms\Components\Tabs;
 Tabs::make('Heading')
     ->tabs([
         Tabs\Tab::make('Notifications')
-            ->icon('heroicon-o-bell') // [tl! focus:start]
-            ->badge('39') // [tl! focus:end]
+            ->icon('heroicon-o-bell')
+            ->badge('39')
             ->schema([
                 // ...
             ]),
@@ -328,8 +328,8 @@ Tabs::make('Heading')
     ->tabs([
         Tabs\Tab::make('Notifications')
             ->icon('heroicon-o-bell')
-            ->iconPosition('after') // `before` or `after` [tl! focus:end]
-            ->iconColor('success') // `danger`, `primary`, `success`, `warning` or `secondary` [tl! focus:end]
+            ->iconPosition('after') // `before` or `after`
+            ->iconColor('success') // `danger`, `primary`, `success`, `warning` or `secondary`
             ->schema([
                 // ...
             ]),

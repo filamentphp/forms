@@ -57,28 +57,28 @@ To finish installing Tailwind, you must create a new `tailwind.config.js` file i
 In `tailwind.config.js`, register the plugins you installed, and add custom colors used by the form builder:
 
 ```js
-import colors from 'tailwindcss/colors' // [tl! focus:start]
+import colors from 'tailwindcss/colors'
 import forms from '@tailwindcss/forms'
-import typography from '@tailwindcss/typography' // [tl! focus:end]
+import typography from '@tailwindcss/typography'
 
 export default {
     content: [
         './resources/**/*.blade.php',
-        './vendor/filament/**/*.blade.php', // [tl! focus]
+        './vendor/filament/**/*.blade.php',
     ],
     theme: {
         extend: {
-            colors: { // [tl! focus:start]
+            colors: {
                 danger: colors.rose,
                 primary: colors.blue,
                 success: colors.green,
                 warning: colors.yellow,
-            }, // [tl! focus:end]
+            },
         },
     },
     plugins: [
-        forms, // [tl! focus:start]
-        typography, // [tl! focus:end]
+        forms,
+        typography,
     ],
 }
 ```
@@ -112,7 +112,7 @@ You may also want to update your `vite.config.js` file to refresh the page after
 
 ```js
 import { defineConfig } from 'vite'
-import laravel, { refreshPaths } from 'laravel-vite-plugin' // [tl! focus]
+import laravel, { refreshPaths } from 'laravel-vite-plugin'
 
 export default defineConfig({
     plugins: [
@@ -121,11 +121,11 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
             ],
-            refresh: [ // [tl! focus:start]
+            refresh: [
                 ...refreshPaths,
                 'app/Http/Livewire/**',
                 'app/Forms/Components/**',
-            ], // [tl! focus:end]
+            ],
         }),
     ],
 })
@@ -142,7 +142,7 @@ const mix = require('laravel-mix')
 
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
-        require('tailwindcss'), // [tl! focus]
+        require('tailwindcss'),
     ])
 ```
 

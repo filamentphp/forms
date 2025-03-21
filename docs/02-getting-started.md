@@ -17,9 +17,9 @@ use Filament\Forms;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class EditPost extends Component implements Forms\Contracts\HasForms // [tl! focus]
+class EditPost extends Component implements Forms\Contracts\HasForms
 {
-    use Forms\Concerns\InteractsWithForms; // [tl! focus]
+    use Forms\Concerns\InteractsWithForms;
     
     public function render(): View
     {
@@ -68,14 +68,14 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         ]);
     }
     
-    protected function getFormSchema(): array // [tl! focus:start]
+    protected function getFormSchema(): array
     {
         return [
             Forms\Components\TextInput::make('title')->required(),
             Forms\Components\MarkdownEditor::make('content'),
             // ...
         ];
-    } // [tl! focus:end]
+    }
     
     public function submit(): void
     {
@@ -116,16 +116,16 @@ class CreatePost extends Component implements Forms\Contracts\HasForms
     public $title = '';
     public $content = '';
     
-    public function mount(): void // [tl! focus:start]
+    public function mount(): void
     {
         $this->form->fill();
-    } // [tl! focus:end]
+    }
     
     protected function getFormSchema(): array
     {
         return [
             Forms\Components\TextInput::make('title')
-                ->default('Status Update') // [tl! focus]
+                ->default('Status Update')
                 ->required(),
             Forms\Components\MarkdownEditor::make('content'),
         ];
@@ -163,13 +163,13 @@ class EditPost extends Component implements Forms\Contracts\HasForms
     public $title;
     public $content;
     
-    public function mount(): void // [tl! focus:start]
+    public function mount(): void
     {
         $this->form->fill([
             'title' => $this->post->title,
             'content' => $this->post->content,
         ]);
-    } // [tl! focus:end]
+    }
     
     protected function getFormSchema(): array
     {
@@ -220,10 +220,10 @@ class CreatePost extends Component implements Forms\Contracts\HasForms
         ];
     }
     
-    public function create(): void // [tl! focus:start]
+    public function create(): void
     {
         Post::create($this->form->getState());
-    } // [tl! focus:end]
+    }
     
     public function render(): View
     {
@@ -285,10 +285,10 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         ];
     }
     
-    protected function getFormModel(): Post // [tl! focus:start]
+    protected function getFormModel(): Post
     {
         return $this->post;
-    } // [tl! focus:end]
+    }
     
     public function render(): View
     {
@@ -332,7 +332,7 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         return [
             Forms\Components\TextInput::make('title')->required(),
             Forms\Components\MarkdownEditor::make('content'),
-            Forms\Components\SpatieTagsInput::make('tags')->model($this->post), // [tl! focus]
+            Forms\Components\SpatieTagsInput::make('tags')->model($this->post),
         ];
     }
     
@@ -386,10 +386,10 @@ class CreatePost extends Component implements Forms\Contracts\HasForms
         ];
     }
     
-    protected function getFormModel(): string // [tl! focus:start]
+    protected function getFormModel(): string
     {
         return Post::class;
-    } // [tl! focus:end]
+    }
     
     public function render(): View
     {
@@ -446,7 +446,7 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         ];
     }
     
-    protected function getFormModel(): Post // [tl! focus:start]
+    protected function getFormModel(): Post
     {
         return $this->post;
     }
@@ -456,7 +456,7 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         $this->post->update(
             $this->form->getState(),
         );
-    } // [tl! focus:end]
+    }
     
     public function render(): View
     {
@@ -513,7 +513,7 @@ class CreatePost extends Component implements Forms\Contracts\HasForms
     {
         $post = Post::create($this->form->getState());
         
-        $this->form->model($post)->saveRelationships(); // [tl! focus]
+        $this->form->model($post)->saveRelationships();
     }
     
     public function render(): View
@@ -608,7 +608,7 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         );
     }
     
-    protected function getForms(): array // [tl! focus:start]
+    protected function getForms(): array
     {
         return [
             'postForm' => $this->makeForm()
@@ -618,7 +618,7 @@ class EditPost extends Component implements Forms\Contracts\HasForms
                 ->schema($this->getAuthorFormSchema())
                 ->model($this->author),
         ];
-    } // [tl! focus:end]
+    }
     
     public function render(): View
     {
@@ -647,7 +647,7 @@ class EditPost extends Component implements Forms\Contracts\HasForms
     
     public Post $post;
     
-    public $data; // [tl! focus]
+    public $data;
     
     public function mount(): void
     {
@@ -671,10 +671,10 @@ class EditPost extends Component implements Forms\Contracts\HasForms
         return $this->post;
     }
     
-    protected function getFormStatePath(): string // [tl! focus:start]
+    protected function getFormStatePath(): string
     {
         return 'data';
-    } // [tl! focus:end]
+    }
     
     public function render(): View
     {

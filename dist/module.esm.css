@@ -709,6 +709,7 @@
   padding: 0;
   margin: .25em;
   will-change: transform, opacity;
+  touch-action: auto;
 }
 .filepond--item > .filepond--panel {
   z-index: -1;
@@ -1044,7 +1045,7 @@
 .filepond--root .filepond--credits {
   position: absolute;
   right: 0;
-  opacity: .175;
+  opacity: .4;
   line-height: .85;
   font-size: 11px;
   color: inherit;
