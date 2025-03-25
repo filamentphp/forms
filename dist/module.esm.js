@@ -34,14 +34,14 @@ var require_customParseFormat = __commonJS((exports, module) => {
     typeof exports == "object" && typeof module != "undefined" ? module.exports = t2() : typeof define == "function" && define.amd ? define(t2) : (e2 = typeof globalThis != "undefined" ? globalThis : e2 || self).dayjs_plugin_customParseFormat = t2();
   }(exports, function() {
     "use strict";
-    var e2 = {LTS: "h:mm:ss A", LT: "h:mm A", L: "MM/DD/YYYY", LL: "MMMM D, YYYY", LLL: "MMMM D, YYYY h:mm A", LLLL: "dddd, MMMM D, YYYY h:mm A"}, t2 = /(\[[^[]*\])|([-_:/.,()\s]+)|(A|a|Q|YYYY|YY?|ww?|MM?M?M?|Do|DD?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g, n2 = /\d/, r2 = /\d\d/, i = /\d\d?/, o2 = /\d*[^-_:/,()\s\d]+/, s2 = {}, a2 = function(e3) {
+    var e2 = {LTS: "h:mm:ss A", LT: "h:mm A", L: "MM/DD/YYYY", LL: "MMMM D, YYYY", LLL: "MMMM D, YYYY h:mm A", LLLL: "dddd, MMMM D, YYYY h:mm A"}, t2 = /(\[[^[]*\])|([-_:/.,()\s]+)|(A|a|YYYY|YY?|MM?M?M?|Do|DD?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g, n2 = /\d\d/, r2 = /\d\d?/, i = /\d*[^-_:/,()\s\d]+/, o2 = {}, s2 = function(e3) {
       return (e3 = +e3) + (e3 > 68 ? 1900 : 2e3);
     };
-    var f = function(e3) {
+    var a2 = function(e3) {
       return function(t3) {
         this[e3] = +t3;
       };
-    }, h = [/[+-]\d\d:?(\d\d)?|Z/, function(e3) {
+    }, f = [/[+-]\d\d:?(\d\d)?|Z/, function(e3) {
       (this.zone || (this.zone = {})).offset = function(e4) {
         if (!e4)
           return 0;
@@ -50,11 +50,11 @@ var require_customParseFormat = __commonJS((exports, module) => {
         var t3 = e4.match(/([+-]|\d\d)/g), n3 = 60 * t3[1] + (+t3[2] || 0);
         return n3 === 0 ? 0 : t3[0] === "+" ? -n3 : n3;
       }(e3);
-    }], u = function(e3) {
-      var t3 = s2[e3];
+    }], h = function(e3) {
+      var t3 = o2[e3];
       return t3 && (t3.indexOf ? t3 : t3.s.concat(t3.f));
-    }, d = function(e3, t3) {
-      var n3, r3 = s2.meridiem;
+    }, u = function(e3, t3) {
+      var n3, r3 = o2.meridiem;
       if (r3) {
         for (var i2 = 1; i2 <= 24; i2 += 1)
           if (e3.indexOf(r3(i2, 0, t3)) > -1) {
@@ -64,57 +64,55 @@ var require_customParseFormat = __commonJS((exports, module) => {
       } else
         n3 = e3 === (t3 ? "pm" : "PM");
       return n3;
-    }, c2 = {A: [o2, function(e3) {
-      this.afternoon = d(e3, false);
-    }], a: [o2, function(e3) {
-      this.afternoon = d(e3, true);
-    }], Q: [n2, function(e3) {
-      this.month = 3 * (e3 - 1) + 1;
-    }], S: [n2, function(e3) {
+    }, d = {A: [i, function(e3) {
+      this.afternoon = u(e3, false);
+    }], a: [i, function(e3) {
+      this.afternoon = u(e3, true);
+    }], S: [/\d/, function(e3) {
       this.milliseconds = 100 * +e3;
-    }], SS: [r2, function(e3) {
+    }], SS: [n2, function(e3) {
       this.milliseconds = 10 * +e3;
     }], SSS: [/\d{3}/, function(e3) {
       this.milliseconds = +e3;
-    }], s: [i, f("seconds")], ss: [i, f("seconds")], m: [i, f("minutes")], mm: [i, f("minutes")], H: [i, f("hours")], h: [i, f("hours")], HH: [i, f("hours")], hh: [i, f("hours")], D: [i, f("day")], DD: [r2, f("day")], Do: [o2, function(e3) {
-      var t3 = s2.ordinal, n3 = e3.match(/\d+/);
+    }], s: [r2, a2("seconds")], ss: [r2, a2("seconds")], m: [r2, a2("minutes")], mm: [r2, a2("minutes")], H: [r2, a2("hours")], h: [r2, a2("hours")], HH: [r2, a2("hours")], hh: [r2, a2("hours")], D: [r2, a2("day")], DD: [n2, a2("day")], Do: [i, function(e3) {
+      var t3 = o2.ordinal, n3 = e3.match(/\d+/);
       if (this.day = n3[0], t3)
         for (var r3 = 1; r3 <= 31; r3 += 1)
           t3(r3).replace(/\[|\]/g, "") === e3 && (this.day = r3);
-    }], w: [i, f("week")], ww: [r2, f("week")], M: [i, f("month")], MM: [r2, f("month")], MMM: [o2, function(e3) {
-      var t3 = u("months"), n3 = (u("monthsShort") || t3.map(function(e4) {
+    }], M: [r2, a2("month")], MM: [n2, a2("month")], MMM: [i, function(e3) {
+      var t3 = h("months"), n3 = (h("monthsShort") || t3.map(function(e4) {
         return e4.slice(0, 3);
       })).indexOf(e3) + 1;
       if (n3 < 1)
         throw new Error();
       this.month = n3 % 12 || n3;
-    }], MMMM: [o2, function(e3) {
-      var t3 = u("months").indexOf(e3) + 1;
+    }], MMMM: [i, function(e3) {
+      var t3 = h("months").indexOf(e3) + 1;
       if (t3 < 1)
         throw new Error();
       this.month = t3 % 12 || t3;
-    }], Y: [/[+-]?\d+/, f("year")], YY: [r2, function(e3) {
-      this.year = a2(e3);
-    }], YYYY: [/\d{4}/, f("year")], Z: h, ZZ: h};
-    function l(n3) {
+    }], Y: [/[+-]?\d+/, a2("year")], YY: [n2, function(e3) {
+      this.year = s2(e3);
+    }], YYYY: [/\d{4}/, a2("year")], Z: f, ZZ: f};
+    function c2(n3) {
       var r3, i2;
-      r3 = n3, i2 = s2 && s2.formats;
-      for (var o3 = (n3 = r3.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, function(t3, n4, r4) {
-        var o4 = r4 && r4.toUpperCase();
-        return n4 || i2[r4] || e2[r4] || i2[o4].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g, function(e3, t4, n5) {
+      r3 = n3, i2 = o2 && o2.formats;
+      for (var s3 = (n3 = r3.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, function(t3, n4, r4) {
+        var o3 = r4 && r4.toUpperCase();
+        return n4 || i2[r4] || e2[r4] || i2[o3].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g, function(e3, t4, n5) {
           return t4 || n5.slice(1);
         });
-      })).match(t2), a3 = o3.length, f2 = 0; f2 < a3; f2 += 1) {
-        var h2 = o3[f2], u2 = c2[h2], d2 = u2 && u2[0], l2 = u2 && u2[1];
-        o3[f2] = l2 ? {regex: d2, parser: l2} : h2.replace(/^\[|\]$/g, "");
+      })).match(t2), a3 = s3.length, f2 = 0; f2 < a3; f2 += 1) {
+        var h2 = s3[f2], u2 = d[h2], c3 = u2 && u2[0], l = u2 && u2[1];
+        s3[f2] = l ? {regex: c3, parser: l} : h2.replace(/^\[|\]$/g, "");
       }
       return function(e3) {
         for (var t3 = {}, n4 = 0, r4 = 0; n4 < a3; n4 += 1) {
-          var i3 = o3[n4];
+          var i3 = s3[n4];
           if (typeof i3 == "string")
             r4 += i3.length;
           else {
-            var s3 = i3.regex, f3 = i3.parser, h3 = e3.slice(r4), u3 = s3.exec(h3)[0];
+            var o3 = i3.regex, f3 = i3.parser, h3 = e3.slice(r4), u3 = o3.exec(h3)[0];
             f3.call(t3, u3), e3 = e3.replace(u3, "");
           }
         }
@@ -128,35 +126,35 @@ var require_customParseFormat = __commonJS((exports, module) => {
       };
     }
     return function(e3, t3, n3) {
-      n3.p.customParseFormat = true, e3 && e3.parseTwoDigitYear && (a2 = e3.parseTwoDigitYear);
+      n3.p.customParseFormat = true, e3 && e3.parseTwoDigitYear && (s2 = e3.parseTwoDigitYear);
       var r3 = t3.prototype, i2 = r3.parse;
       r3.parse = function(e4) {
-        var t4 = e4.date, r4 = e4.utc, o3 = e4.args;
+        var t4 = e4.date, r4 = e4.utc, s3 = e4.args;
         this.$u = r4;
-        var a3 = o3[1];
+        var a3 = s3[1];
         if (typeof a3 == "string") {
-          var f2 = o3[2] === true, h2 = o3[3] === true, u2 = f2 || h2, d2 = o3[2];
-          h2 && (d2 = o3[2]), s2 = this.$locale(), !f2 && d2 && (s2 = n3.Ls[d2]), this.$d = function(e5, t5, n4, r5) {
+          var f2 = s3[2] === true, h2 = s3[3] === true, u2 = f2 || h2, d2 = s3[2];
+          h2 && (d2 = s3[2]), o2 = this.$locale(), !f2 && d2 && (o2 = n3.Ls[d2]), this.$d = function(e5, t5, n4) {
             try {
               if (["x", "X"].indexOf(t5) > -1)
                 return new Date((t5 === "X" ? 1e3 : 1) * e5);
-              var i3 = l(t5)(e5), o4 = i3.year, s3 = i3.month, a4 = i3.day, f3 = i3.hours, h3 = i3.minutes, u3 = i3.seconds, d3 = i3.milliseconds, c4 = i3.zone, m2 = i3.week, M3 = new Date(), Y2 = a4 || (o4 || s3 ? 1 : M3.getDate()), p2 = o4 || M3.getFullYear(), v = 0;
-              o4 && !s3 || (v = s3 > 0 ? s3 - 1 : M3.getMonth());
-              var D2, w = f3 || 0, g = h3 || 0, y = u3 || 0, L2 = d3 || 0;
-              return c4 ? new Date(Date.UTC(p2, v, Y2, w, g, y, L2 + 60 * c4.offset * 1e3)) : n4 ? new Date(Date.UTC(p2, v, Y2, w, g, y, L2)) : (D2 = new Date(p2, v, Y2, w, g, y, L2), m2 && (D2 = r5(D2).week(m2).toDate()), D2);
+              var r5 = c2(t5)(e5), i3 = r5.year, o3 = r5.month, s4 = r5.day, a4 = r5.hours, f3 = r5.minutes, h3 = r5.seconds, u3 = r5.milliseconds, d3 = r5.zone, l2 = new Date(), m2 = s4 || (i3 || o3 ? 1 : l2.getDate()), M3 = i3 || l2.getFullYear(), Y2 = 0;
+              i3 && !o3 || (Y2 = o3 > 0 ? o3 - 1 : l2.getMonth());
+              var p2 = a4 || 0, v = f3 || 0, D2 = h3 || 0, g = u3 || 0;
+              return d3 ? new Date(Date.UTC(M3, Y2, m2, p2, v, D2, g + 60 * d3.offset * 1e3)) : n4 ? new Date(Date.UTC(M3, Y2, m2, p2, v, D2, g)) : new Date(M3, Y2, m2, p2, v, D2, g);
             } catch (e6) {
               return new Date("");
             }
-          }(t4, a3, r4, n3), this.init(), d2 && d2 !== true && (this.$L = this.locale(d2).$L), u2 && t4 != this.format(a3) && (this.$d = new Date("")), s2 = {};
+          }(t4, a3, r4), this.init(), d2 && d2 !== true && (this.$L = this.locale(d2).$L), u2 && t4 != this.format(a3) && (this.$d = new Date("")), o2 = {};
         } else if (a3 instanceof Array)
-          for (var c3 = a3.length, m = 1; m <= c3; m += 1) {
-            o3[1] = a3[m - 1];
-            var M2 = n3.apply(this, o3);
+          for (var l = a3.length, m = 1; m <= l; m += 1) {
+            s3[1] = a3[m - 1];
+            var M2 = n3.apply(this, s3);
             if (M2.isValid()) {
               this.$d = M2.$d, this.$L = M2.$L, this.init();
               break;
             }
-            m === c3 && (this.$d = new Date(""));
+            m === l && (this.$d = new Date(""));
           }
         else
           i2.call(this, e4);
@@ -265,19 +263,17 @@ var require_timezone = __commonJS((exports, module) => {
           var f2 = i2[u2], s3 = f2.type, m = f2.value, c2 = t2[s3];
           c2 >= 0 && (r3[c2] = parseInt(m, 10));
         }
-        var d = r3[3], l = d === 24 ? 0 : d, h = r3[0] + "-" + r3[1] + "-" + r3[2] + " " + l + ":" + r3[4] + ":" + r3[5] + ":000", v = +e3;
-        return (o2.utc(h).valueOf() - (v -= v % 1e3)) / 6e4;
+        var d = r3[3], l = d === 24 ? 0 : d, v = r3[0] + "-" + r3[1] + "-" + r3[2] + " " + l + ":" + r3[4] + ":" + r3[5] + ":000", h = +e3;
+        return (o2.utc(v).valueOf() - (h -= h % 1e3)) / 6e4;
       }, f = i.prototype;
       f.tz = function(t3, e3) {
         t3 === void 0 && (t3 = r2);
-        var n3, i2 = this.utcOffset(), a3 = this.toDate(), u2 = a3.toLocaleString("en-US", {timeZone: t3}), f2 = Math.round((a3 - new Date(u2)) / 1e3 / 60), s3 = 15 * -Math.round(a3.getTimezoneOffset() / 15) - f2;
-        if (!Number(s3))
-          n3 = this.utcOffset(0, e3);
-        else if (n3 = o2(u2, {locale: this.$L}).$set("millisecond", this.$ms).utcOffset(s3, true), e3) {
-          var m = n3.utcOffset();
-          n3 = n3.add(i2 - m, "minute");
+        var n3 = this.utcOffset(), i2 = this.toDate(), a3 = i2.toLocaleString("en-US", {timeZone: t3}), u2 = Math.round((i2 - new Date(a3)) / 1e3 / 60), f2 = o2(a3).$set("millisecond", this.$ms).utcOffset(15 * -Math.round(i2.getTimezoneOffset() / 15) - u2, true);
+        if (e3) {
+          var s3 = f2.utcOffset();
+          f2 = f2.add(n3 - s3, "minute");
         }
-        return n3.$x.$timezone = t3, n3;
+        return f2.$x.$timezone = t3, f2;
       }, f.offsetName = function(t3) {
         var e3 = this.$x.$timezone || o2.tz.guess(), n3 = a2(this.valueOf(), e3, {timeZoneName: t3}).find(function(t4) {
           return t4.type.toLowerCase() === "timezonename";
@@ -288,7 +284,7 @@ var require_timezone = __commonJS((exports, module) => {
       f.startOf = function(t3, e3) {
         if (!this.$x || !this.$x.$timezone)
           return s2.call(this, t3, e3);
-        var n3 = o2(this.format("YYYY-MM-DD HH:mm:ss:SSS"), {locale: this.$L});
+        var n3 = o2(this.format("YYYY-MM-DD HH:mm:ss:SSS"));
         return s2.call(n3, t3, e3).tz(this.$x.$timezone, true);
       }, o2.tz = function(t3, e3, n3) {
         var i2 = n3 && e3, a3 = n3 || e3 || r2, f2 = u(+o2(), a3);
@@ -400,7 +396,7 @@ var require_dayjs_min = __commonJS((exports, module) => {
     typeof exports == "object" && typeof module != "undefined" ? module.exports = e2() : typeof define == "function" && define.amd ? define(e2) : (t2 = typeof globalThis != "undefined" ? globalThis : t2 || self).dayjs = e2();
   }(exports, function() {
     "use strict";
-    var t2 = 1e3, e2 = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s2 = "minute", u = "hour", a2 = "day", o2 = "week", c2 = "month", f = "quarter", h = "year", d = "date", l = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M2 = {name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
+    var t2 = 1e3, e2 = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s2 = "minute", u = "hour", a2 = "day", o2 = "week", f = "month", h = "quarter", c2 = "year", d = "date", l = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M2 = {name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
       var e3 = ["th", "st", "nd", "rd"], n3 = t3 % 100;
       return "[" + t3 + (e3[(n3 - 20) % 10] || e3[n3] || e3[0]) + "]";
     }}, m = function(t3, e3, n3) {
@@ -412,19 +408,19 @@ var require_dayjs_min = __commonJS((exports, module) => {
     }, m: function t3(e3, n3) {
       if (e3.date() < n3.date())
         return -t3(n3, e3);
-      var r3 = 12 * (n3.year() - e3.year()) + (n3.month() - e3.month()), i2 = e3.clone().add(r3, c2), s3 = n3 - i2 < 0, u2 = e3.clone().add(r3 + (s3 ? -1 : 1), c2);
+      var r3 = 12 * (n3.year() - e3.year()) + (n3.month() - e3.month()), i2 = e3.clone().add(r3, f), s3 = n3 - i2 < 0, u2 = e3.clone().add(r3 + (s3 ? -1 : 1), f);
       return +(-(r3 + (n3 - i2) / (s3 ? i2 - u2 : u2 - i2)) || 0);
     }, a: function(t3) {
       return t3 < 0 ? Math.ceil(t3) || 0 : Math.floor(t3);
     }, p: function(t3) {
-      return {M: c2, y: h, w: o2, d: a2, D: d, h: u, m: s2, s: i, ms: r2, Q: f}[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
+      return {M: f, y: c2, w: o2, d: a2, D: d, h: u, m: s2, s: i, ms: r2, Q: h}[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
     }, u: function(t3) {
       return t3 === void 0;
     }}, g = "en", D2 = {};
     D2[g] = M2;
-    var p2 = "$isDayjsObject", S2 = function(t3) {
-      return t3 instanceof _ || !(!t3 || !t3[p2]);
-    }, w = function t3(e3, n3, r3) {
+    var p2 = function(t3) {
+      return t3 instanceof _;
+    }, S2 = function t3(e3, n3, r3) {
       var i2;
       if (!e3)
         return g;
@@ -439,18 +435,18 @@ var require_dayjs_min = __commonJS((exports, module) => {
         D2[a3] = e3, i2 = a3;
       }
       return !r3 && i2 && (g = i2), i2 || !r3 && g;
-    }, O = function(t3, e3) {
-      if (S2(t3))
+    }, w = function(t3, e3) {
+      if (p2(t3))
         return t3.clone();
       var n3 = typeof e3 == "object" ? e3 : {};
       return n3.date = t3, n3.args = arguments, new _(n3);
-    }, b = v;
-    b.l = w, b.i = S2, b.w = function(t3, e3) {
-      return O(t3, {locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset});
+    }, O = v;
+    O.l = S2, O.i = p2, O.w = function(t3, e3) {
+      return w(t3, {locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset});
     };
     var _ = function() {
       function M3(t3) {
-        this.$L = w(t3.locale, null, true), this.parse(t3), this.$x = this.$x || t3.x || {}, this[p2] = true;
+        this.$L = S2(t3.locale, null, true), this.parse(t3);
       }
       var m2 = M3.prototype;
       return m2.parse = function(t3) {
@@ -458,7 +454,7 @@ var require_dayjs_min = __commonJS((exports, module) => {
           var e3 = t4.date, n3 = t4.utc;
           if (e3 === null)
             return new Date(NaN);
-          if (b.u(e3))
+          if (O.u(e3))
             return new Date();
           if (e3 instanceof Date)
             return new Date(e3);
@@ -470,38 +466,38 @@ var require_dayjs_min = __commonJS((exports, module) => {
             }
           }
           return new Date(e3);
-        }(t3), this.init();
+        }(t3), this.$x = t3.x || {}, this.init();
       }, m2.init = function() {
         var t3 = this.$d;
         this.$y = t3.getFullYear(), this.$M = t3.getMonth(), this.$D = t3.getDate(), this.$W = t3.getDay(), this.$H = t3.getHours(), this.$m = t3.getMinutes(), this.$s = t3.getSeconds(), this.$ms = t3.getMilliseconds();
       }, m2.$utils = function() {
-        return b;
+        return O;
       }, m2.isValid = function() {
         return !(this.$d.toString() === l);
       }, m2.isSame = function(t3, e3) {
-        var n3 = O(t3);
+        var n3 = w(t3);
         return this.startOf(e3) <= n3 && n3 <= this.endOf(e3);
       }, m2.isAfter = function(t3, e3) {
-        return O(t3) < this.startOf(e3);
+        return w(t3) < this.startOf(e3);
       }, m2.isBefore = function(t3, e3) {
-        return this.endOf(e3) < O(t3);
+        return this.endOf(e3) < w(t3);
       }, m2.$g = function(t3, e3, n3) {
-        return b.u(t3) ? this[e3] : this.set(n3, t3);
+        return O.u(t3) ? this[e3] : this.set(n3, t3);
       }, m2.unix = function() {
         return Math.floor(this.valueOf() / 1e3);
       }, m2.valueOf = function() {
         return this.$d.getTime();
       }, m2.startOf = function(t3, e3) {
-        var n3 = this, r3 = !!b.u(e3) || e3, f2 = b.p(t3), l2 = function(t4, e4) {
-          var i2 = b.w(n3.$u ? Date.UTC(n3.$y, e4, t4) : new Date(n3.$y, e4, t4), n3);
+        var n3 = this, r3 = !!O.u(e3) || e3, h2 = O.p(t3), l2 = function(t4, e4) {
+          var i2 = O.w(n3.$u ? Date.UTC(n3.$y, e4, t4) : new Date(n3.$y, e4, t4), n3);
           return r3 ? i2 : i2.endOf(a2);
         }, $2 = function(t4, e4) {
-          return b.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n3);
+          return O.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n3);
         }, y2 = this.$W, M4 = this.$M, m3 = this.$D, v2 = "set" + (this.$u ? "UTC" : "");
-        switch (f2) {
-          case h:
-            return r3 ? l2(1, 0) : l2(31, 11);
+        switch (h2) {
           case c2:
+            return r3 ? l2(1, 0) : l2(31, 11);
+          case f:
             return r3 ? l2(1, M4) : l2(0, M4 + 1);
           case o2:
             var g2 = this.$locale().weekStart || 0, D3 = (y2 < g2 ? y2 + 7 : y2) - g2;
@@ -521,8 +517,8 @@ var require_dayjs_min = __commonJS((exports, module) => {
       }, m2.endOf = function(t3) {
         return this.startOf(t3, false);
       }, m2.$set = function(t3, e3) {
-        var n3, o3 = b.p(t3), f2 = "set" + (this.$u ? "UTC" : ""), l2 = (n3 = {}, n3[a2] = f2 + "Date", n3[d] = f2 + "Date", n3[c2] = f2 + "Month", n3[h] = f2 + "FullYear", n3[u] = f2 + "Hours", n3[s2] = f2 + "Minutes", n3[i] = f2 + "Seconds", n3[r2] = f2 + "Milliseconds", n3)[o3], $2 = o3 === a2 ? this.$D + (e3 - this.$W) : e3;
-        if (o3 === c2 || o3 === h) {
+        var n3, o3 = O.p(t3), h2 = "set" + (this.$u ? "UTC" : ""), l2 = (n3 = {}, n3[a2] = h2 + "Date", n3[d] = h2 + "Date", n3[f] = h2 + "Month", n3[c2] = h2 + "FullYear", n3[u] = h2 + "Hours", n3[s2] = h2 + "Minutes", n3[i] = h2 + "Seconds", n3[r2] = h2 + "Milliseconds", n3)[o3], $2 = o3 === a2 ? this.$D + (e3 - this.$W) : e3;
+        if (o3 === f || o3 === c2) {
           var y2 = this.clone().set(d, 1);
           y2.$d[l2]($2), y2.init(), this.$d = y2.set(d, Math.min(this.$D, y2.daysInMonth())).$d;
         } else
@@ -531,139 +527,57 @@ var require_dayjs_min = __commonJS((exports, module) => {
       }, m2.set = function(t3, e3) {
         return this.clone().$set(t3, e3);
       }, m2.get = function(t3) {
-        return this[b.p(t3)]();
-      }, m2.add = function(r3, f2) {
+        return this[O.p(t3)]();
+      }, m2.add = function(r3, h2) {
         var d2, l2 = this;
         r3 = Number(r3);
-        var $2 = b.p(f2), y2 = function(t3) {
-          var e3 = O(l2);
-          return b.w(e3.date(e3.date() + Math.round(t3 * r3)), l2);
+        var $2 = O.p(h2), y2 = function(t3) {
+          var e3 = w(l2);
+          return O.w(e3.date(e3.date() + Math.round(t3 * r3)), l2);
         };
+        if ($2 === f)
+          return this.set(f, this.$M + r3);
         if ($2 === c2)
-          return this.set(c2, this.$M + r3);
-        if ($2 === h)
-          return this.set(h, this.$y + r3);
+          return this.set(c2, this.$y + r3);
         if ($2 === a2)
           return y2(1);
         if ($2 === o2)
           return y2(7);
         var M4 = (d2 = {}, d2[s2] = e2, d2[u] = n2, d2[i] = t2, d2)[$2] || 1, m3 = this.$d.getTime() + r3 * M4;
-        return b.w(m3, this);
+        return O.w(m3, this);
       }, m2.subtract = function(t3, e3) {
         return this.add(-1 * t3, e3);
       }, m2.format = function(t3) {
         var e3 = this, n3 = this.$locale();
         if (!this.isValid())
           return n3.invalidDate || l;
-        var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = b.z(this), s3 = this.$H, u2 = this.$m, a3 = this.$M, o3 = n3.weekdays, c3 = n3.months, f2 = n3.meridiem, h2 = function(t4, n4, i3, s4) {
+        var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = O.z(this), s3 = this.$H, u2 = this.$m, a3 = this.$M, o3 = n3.weekdays, f2 = n3.months, h2 = function(t4, n4, i3, s4) {
           return t4 && (t4[n4] || t4(e3, r3)) || i3[n4].slice(0, s4);
-        }, d2 = function(t4) {
-          return b.s(s3 % 12 || 12, t4, "0");
-        }, $2 = f2 || function(t4, e4, n4) {
+        }, c3 = function(t4) {
+          return O.s(s3 % 12 || 12, t4, "0");
+        }, d2 = n3.meridiem || function(t4, e4, n4) {
           var r4 = t4 < 12 ? "AM" : "PM";
           return n4 ? r4.toLowerCase() : r4;
-        };
-        return r3.replace(y, function(t4, r4) {
-          return r4 || function(t5) {
-            switch (t5) {
-              case "YY":
-                return String(e3.$y).slice(-2);
-              case "YYYY":
-                return b.s(e3.$y, 4, "0");
-              case "M":
-                return a3 + 1;
-              case "MM":
-                return b.s(a3 + 1, 2, "0");
-              case "MMM":
-                return h2(n3.monthsShort, a3, c3, 3);
-              case "MMMM":
-                return h2(c3, a3);
-              case "D":
-                return e3.$D;
-              case "DD":
-                return b.s(e3.$D, 2, "0");
-              case "d":
-                return String(e3.$W);
-              case "dd":
-                return h2(n3.weekdaysMin, e3.$W, o3, 2);
-              case "ddd":
-                return h2(n3.weekdaysShort, e3.$W, o3, 3);
-              case "dddd":
-                return o3[e3.$W];
-              case "H":
-                return String(s3);
-              case "HH":
-                return b.s(s3, 2, "0");
-              case "h":
-                return d2(1);
-              case "hh":
-                return d2(2);
-              case "a":
-                return $2(s3, u2, true);
-              case "A":
-                return $2(s3, u2, false);
-              case "m":
-                return String(u2);
-              case "mm":
-                return b.s(u2, 2, "0");
-              case "s":
-                return String(e3.$s);
-              case "ss":
-                return b.s(e3.$s, 2, "0");
-              case "SSS":
-                return b.s(e3.$ms, 3, "0");
-              case "Z":
-                return i2;
-            }
-            return null;
-          }(t4) || i2.replace(":", "");
+        }, $2 = {YY: String(this.$y).slice(-2), YYYY: O.s(this.$y, 4, "0"), M: a3 + 1, MM: O.s(a3 + 1, 2, "0"), MMM: h2(n3.monthsShort, a3, f2, 3), MMMM: h2(f2, a3), D: this.$D, DD: O.s(this.$D, 2, "0"), d: String(this.$W), dd: h2(n3.weekdaysMin, this.$W, o3, 2), ddd: h2(n3.weekdaysShort, this.$W, o3, 3), dddd: o3[this.$W], H: String(s3), HH: O.s(s3, 2, "0"), h: c3(1), hh: c3(2), a: d2(s3, u2, true), A: d2(s3, u2, false), m: String(u2), mm: O.s(u2, 2, "0"), s: String(this.$s), ss: O.s(this.$s, 2, "0"), SSS: O.s(this.$ms, 3, "0"), Z: i2};
+        return r3.replace(y, function(t4, e4) {
+          return e4 || $2[t4] || i2.replace(":", "");
         });
       }, m2.utcOffset = function() {
         return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
       }, m2.diff = function(r3, d2, l2) {
-        var $2, y2 = this, M4 = b.p(d2), m3 = O(r3), v2 = (m3.utcOffset() - this.utcOffset()) * e2, g2 = this - m3, D3 = function() {
-          return b.m(y2, m3);
-        };
-        switch (M4) {
-          case h:
-            $2 = D3() / 12;
-            break;
-          case c2:
-            $2 = D3();
-            break;
-          case f:
-            $2 = D3() / 3;
-            break;
-          case o2:
-            $2 = (g2 - v2) / 6048e5;
-            break;
-          case a2:
-            $2 = (g2 - v2) / 864e5;
-            break;
-          case u:
-            $2 = g2 / n2;
-            break;
-          case s2:
-            $2 = g2 / e2;
-            break;
-          case i:
-            $2 = g2 / t2;
-            break;
-          default:
-            $2 = g2;
-        }
-        return l2 ? $2 : b.a($2);
+        var $2, y2 = O.p(d2), M4 = w(r3), m3 = (M4.utcOffset() - this.utcOffset()) * e2, v2 = this - M4, g2 = O.m(this, M4);
+        return g2 = ($2 = {}, $2[c2] = g2 / 12, $2[f] = g2, $2[h] = g2 / 3, $2[o2] = (v2 - m3) / 6048e5, $2[a2] = (v2 - m3) / 864e5, $2[u] = v2 / n2, $2[s2] = v2 / e2, $2[i] = v2 / t2, $2)[y2] || v2, l2 ? g2 : O.a(g2);
       }, m2.daysInMonth = function() {
-        return this.endOf(c2).$D;
+        return this.endOf(f).$D;
       }, m2.$locale = function() {
         return D2[this.$L];
       }, m2.locale = function(t3, e3) {
         if (!t3)
           return this.$L;
-        var n3 = this.clone(), r3 = w(t3, e3, true);
+        var n3 = this.clone(), r3 = S2(t3, e3, true);
         return r3 && (n3.$L = r3), n3;
       }, m2.clone = function() {
-        return b.w(this.$d, this);
+        return O.w(this.$d, this);
       }, m2.toDate = function() {
         return new Date(this.valueOf());
       }, m2.toJSON = function() {
@@ -673,16 +587,16 @@ var require_dayjs_min = __commonJS((exports, module) => {
       }, m2.toString = function() {
         return this.$d.toUTCString();
       }, M3;
-    }(), k = _.prototype;
-    return O.prototype = k, [["$ms", r2], ["$s", i], ["$m", s2], ["$H", u], ["$W", a2], ["$M", c2], ["$y", h], ["$D", d]].forEach(function(t3) {
-      k[t3[1]] = function(e3) {
+    }(), T = _.prototype;
+    return w.prototype = T, [["$ms", r2], ["$s", i], ["$m", s2], ["$H", u], ["$W", a2], ["$M", f], ["$y", c2], ["$D", d]].forEach(function(t3) {
+      T[t3[1]] = function(e3) {
         return this.$g(e3, t3[0], t3[1]);
       };
-    }), O.extend = function(t3, e3) {
-      return t3.$i || (t3(e3, _, O), t3.$i = true), O;
-    }, O.locale = w, O.isDayjs = S2, O.unix = function(t3) {
-      return O(1e3 * t3);
-    }, O.en = D2[g], O.Ls = D2, O.p = {}, O;
+    }), w.extend = function(t3, e3) {
+      return t3.$i || (t3(e3, _, w), t3.$i = true), w;
+    }, w.locale = S2, w.isDayjs = p2, w.unix = function(t3) {
+      return w(1e3 * t3);
+    }, w.en = D2[g], w.Ls = D2, w.p = {}, w;
   });
 });
 
@@ -695,15 +609,13 @@ var require_ar = __commonJS((exports, module) => {
     function t2(e3) {
       return e3 && typeof e3 == "object" && "default" in e3 ? e3 : {default: e3};
     }
-    var n2 = t2(e2), r2 = "\u064A\u0646\u0627\u064A\u0631_\u0641\u0628\u0631\u0627\u064A\u0631_\u0645\u0627\u0631\u0633_\u0623\u0628\u0631\u064A\u0644_\u0645\u0627\u064A\u0648_\u064A\u0648\u0646\u064A\u0648_\u064A\u0648\u0644\u064A\u0648_\u0623\u063A\u0633\u0637\u0633_\u0633\u0628\u062A\u0645\u0628\u0631_\u0623\u0643\u062A\u0648\u0628\u0631_\u0646\u0648\u0641\u0645\u0628\u0631_\u062F\u064A\u0633\u0645\u0628\u0631".split("_"), d = {1: "\u0661", 2: "\u0662", 3: "\u0663", 4: "\u0664", 5: "\u0665", 6: "\u0666", 7: "\u0667", 8: "\u0668", 9: "\u0669", 0: "\u0660"}, _ = {"\u0661": "1", "\u0662": "2", "\u0663": "3", "\u0664": "4", "\u0665": "5", "\u0666": "6", "\u0667": "7", "\u0668": "8", "\u0669": "9", "\u0660": "0"}, o2 = {name: "ar", weekdays: "\u0627\u0644\u0623\u062D\u062F_\u0627\u0644\u0625\u062B\u0646\u064A\u0646_\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621_\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621_\u0627\u0644\u062E\u0645\u064A\u0633_\u0627\u0644\u062C\u0645\u0639\u0629_\u0627\u0644\u0633\u0628\u062A".split("_"), weekdaysShort: "\u0623\u062D\u062F_\u0625\u062B\u0646\u064A\u0646_\u062B\u0644\u0627\u062B\u0627\u0621_\u0623\u0631\u0628\u0639\u0627\u0621_\u062E\u0645\u064A\u0633_\u062C\u0645\u0639\u0629_\u0633\u0628\u062A".split("_"), weekdaysMin: "\u062D_\u0646_\u062B_\u0631_\u062E_\u062C_\u0633".split("_"), months: r2, monthsShort: r2, weekStart: 6, meridiem: function(e3) {
-      return e3 > 12 ? "\u0645" : "\u0635";
-    }, relativeTime: {future: "\u0628\u0639\u062F %s", past: "\u0645\u0646\u0630 %s", s: "\u062B\u0627\u0646\u064A\u0629 \u0648\u0627\u062D\u062F\u0629", m: "\u062F\u0642\u064A\u0642\u0629 \u0648\u0627\u062D\u062F\u0629", mm: "%d \u062F\u0642\u0627\u0626\u0642", h: "\u0633\u0627\u0639\u0629 \u0648\u0627\u062D\u062F\u0629", hh: "%d \u0633\u0627\u0639\u0627\u062A", d: "\u064A\u0648\u0645 \u0648\u0627\u062D\u062F", dd: "%d \u0623\u064A\u0627\u0645", M: "\u0634\u0647\u0631 \u0648\u0627\u062D\u062F", MM: "%d \u0623\u0634\u0647\u0631", y: "\u0639\u0627\u0645 \u0648\u0627\u062D\u062F", yy: "%d \u0623\u0639\u0648\u0627\u0645"}, preparse: function(e3) {
+    var n2 = t2(e2), r2 = "\u064A\u0646\u0627\u064A\u0631_\u0641\u0628\u0631\u0627\u064A\u0631_\u0645\u0627\u0631\u0633_\u0623\u0628\u0631\u064A\u0644_\u0645\u0627\u064A\u0648_\u064A\u0648\u0646\u064A\u0648_\u064A\u0648\u0644\u064A\u0648_\u0623\u063A\u0633\u0637\u0633_\u0633\u0628\u062A\u0645\u0628\u0631_\u0623\u0643\u062A\u0648\u0628\u0631_\u0646\u0648\u0641\u0645\u0628\u0631_\u062F\u064A\u0633\u0645\u0628\u0631".split("_"), _ = {1: "\u0661", 2: "\u0662", 3: "\u0663", 4: "\u0664", 5: "\u0665", 6: "\u0666", 7: "\u0667", 8: "\u0668", 9: "\u0669", 0: "\u0660"}, d = {"\u0661": "1", "\u0662": "2", "\u0663": "3", "\u0664": "4", "\u0665": "5", "\u0666": "6", "\u0667": "7", "\u0668": "8", "\u0669": "9", "\u0660": "0"}, o2 = {name: "ar", weekdays: "\u0627\u0644\u0623\u062D\u062F_\u0627\u0644\u0625\u062B\u0646\u064A\u0646_\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621_\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621_\u0627\u0644\u062E\u0645\u064A\u0633_\u0627\u0644\u062C\u0645\u0639\u0629_\u0627\u0644\u0633\u0628\u062A".split("_"), weekdaysShort: "\u0623\u062D\u062F_\u0625\u062B\u0646\u064A\u0646_\u062B\u0644\u0627\u062B\u0627\u0621_\u0623\u0631\u0628\u0639\u0627\u0621_\u062E\u0645\u064A\u0633_\u062C\u0645\u0639\u0629_\u0633\u0628\u062A".split("_"), weekdaysMin: "\u062D_\u0646_\u062B_\u0631_\u062E_\u062C_\u0633".split("_"), months: r2, monthsShort: r2, weekStart: 6, relativeTime: {future: "\u0628\u0639\u062F %s", past: "\u0645\u0646\u0630 %s", s: "\u062B\u0627\u0646\u064A\u0629 \u0648\u0627\u062D\u062F\u0629", m: "\u062F\u0642\u064A\u0642\u0629 \u0648\u0627\u062D\u062F\u0629", mm: "%d \u062F\u0642\u0627\u0626\u0642", h: "\u0633\u0627\u0639\u0629 \u0648\u0627\u062D\u062F\u0629", hh: "%d \u0633\u0627\u0639\u0627\u062A", d: "\u064A\u0648\u0645 \u0648\u0627\u062D\u062F", dd: "%d \u0623\u064A\u0627\u0645", M: "\u0634\u0647\u0631 \u0648\u0627\u062D\u062F", MM: "%d \u0623\u0634\u0647\u0631", y: "\u0639\u0627\u0645 \u0648\u0627\u062D\u062F", yy: "%d \u0623\u0639\u0648\u0627\u0645"}, preparse: function(e3) {
       return e3.replace(/[١٢٣٤٥٦٧٨٩٠]/g, function(e4) {
-        return _[e4];
+        return d[e4];
       }).replace(/،/g, ",");
     }, postformat: function(e3) {
       return e3.replace(/\d/g, function(e4) {
-        return d[e4];
+        return _[e4];
       }).replace(/,/g, "\u060C");
     }, ordinal: function(e3) {
       return e3;
@@ -816,10 +728,10 @@ var require_da = __commonJS((exports, module) => {
     function t2(e3) {
       return e3 && typeof e3 == "object" && "default" in e3 ? e3 : {default: e3};
     }
-    var d = t2(e2), a2 = {name: "da", weekdays: "s\xF8ndag_mandag_tirsdag_onsdag_torsdag_fredag_l\xF8rdag".split("_"), weekdaysShort: "s\xF8n._man._tirs._ons._tors._fre._l\xF8r.".split("_"), weekdaysMin: "s\xF8._ma._ti._on._to._fr._l\xF8.".split("_"), months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split("_"), monthsShort: "jan._feb._mar._apr._maj_juni_juli_aug._sept._okt._nov._dec.".split("_"), weekStart: 1, yearStart: 4, ordinal: function(e3) {
+    var d = t2(e2), n2 = {name: "da", weekdays: "s\xF8ndag_mandag_tirsdag_onsdag_torsdag_fredag_l\xF8rdag".split("_"), weekdaysShort: "s\xF8n._man._tirs._ons._tors._fre._l\xF8r.".split("_"), weekdaysMin: "s\xF8._ma._ti._on._to._fr._l\xF8.".split("_"), months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split("_"), monthsShort: "jan._feb._mar._apr._maj_juni_juli_aug._sept._okt._nov._dec.".split("_"), weekStart: 1, ordinal: function(e3) {
       return e3 + ".";
     }, formats: {LT: "HH:mm", LTS: "HH:mm:ss", L: "DD.MM.YYYY", LL: "D. MMMM YYYY", LLL: "D. MMMM YYYY HH:mm", LLLL: "dddd [d.] D. MMMM YYYY [kl.] HH:mm"}, relativeTime: {future: "om %s", past: "%s siden", s: "f\xE5 sekunder", m: "et minut", mm: "%d minutter", h: "en time", hh: "%d timer", d: "en dag", dd: "%d dage", M: "en m\xE5ned", MM: "%d m\xE5neder", y: "et \xE5r", yy: "%d \xE5r"}};
-    return d.default.locale(a2, null, true), a2;
+    return d.default.locale(n2, null, true), n2;
   });
 });
 
@@ -882,9 +794,9 @@ var require_fa = __commonJS((exports, module) => {
     function e2(_2) {
       return _2 && typeof _2 == "object" && "default" in _2 ? _2 : {default: _2};
     }
-    var t2 = e2(_), d = {name: "fa", weekdays: "\u06CC\u06A9\u200C\u0634\u0646\u0628\u0647_\u062F\u0648\u0634\u0646\u0628\u0647_\u0633\u0647\u200C\u0634\u0646\u0628\u0647_\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647_\u067E\u0646\u062C\u200C\u0634\u0646\u0628\u0647_\u062C\u0645\u0639\u0647_\u0634\u0646\u0628\u0647".split("_"), weekdaysShort: "\u06CC\u06A9\u200C\u0634\u0646\u0628\u0647_\u062F\u0648\u0634\u0646\u0628\u0647_\u0633\u0647\u200C\u0634\u0646\u0628\u0647_\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647_\u067E\u0646\u062C\u200C\u0634\u0646\u0628\u0647_\u062C\u0645\u0639\u0647_\u0634\u0646\u0628\u0647".split("_"), weekdaysMin: "\u06CC_\u062F_\u0633_\u0686_\u067E_\u062C_\u0634".split("_"), weekStart: 6, months: "\u0698\u0627\u0646\u0648\u06CC\u0647_\u0641\u0648\u0631\u06CC\u0647_\u0645\u0627\u0631\u0633_\u0622\u0648\u0631\u06CC\u0644_\u0645\u0647_\u0698\u0648\u0626\u0646_\u0698\u0648\u0626\u06CC\u0647_\u0627\u0648\u062A_\u0633\u067E\u062A\u0627\u0645\u0628\u0631_\u0627\u06A9\u062A\u0628\u0631_\u0646\u0648\u0627\u0645\u0628\u0631_\u062F\u0633\u0627\u0645\u0628\u0631".split("_"), monthsShort: "\u0698\u0627\u0646\u0648\u06CC\u0647_\u0641\u0648\u0631\u06CC\u0647_\u0645\u0627\u0631\u0633_\u0622\u0648\u0631\u06CC\u0644_\u0645\u0647_\u0698\u0648\u0626\u0646_\u0698\u0648\u0626\u06CC\u0647_\u0627\u0648\u062A_\u0633\u067E\u062A\u0627\u0645\u0628\u0631_\u0627\u06A9\u062A\u0628\u0631_\u0646\u0648\u0627\u0645\u0628\u0631_\u062F\u0633\u0627\u0645\u0628\u0631".split("_"), ordinal: function(_2) {
+    var t2 = e2(_), d = {name: "fa", weekdays: "\u06CC\u06A9\u200C\u0634\u0646\u0628\u0647_\u062F\u0648\u0634\u0646\u0628\u0647_\u0633\u0647\u200C\u0634\u0646\u0628\u0647_\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647_\u067E\u0646\u062C\u200C\u0634\u0646\u0628\u0647_\u062C\u0645\u0639\u0647_\u0634\u0646\u0628\u0647".split("_"), weekdaysShort: "\u06CC\u06A9\u200C_\u062F\u0648_\u0633\u0647\u200C_\u0686\u0647_\u067E\u0646_\u062C\u0645_\u0634\u0646".split("_"), weekdaysMin: "\u06CC_\u062F_\u0633_\u0686_\u067E_\u062C_\u0634".split("_"), weekStart: 6, months: "\u0641\u0631\u0648\u0631\u062F\u06CC\u0646_\u0627\u0631\u062F\u06CC\u0628\u0647\u0634\u062A_\u062E\u0631\u062F\u0627\u062F_\u062A\u06CC\u0631_\u0645\u0631\u062F\u0627\u062F_\u0634\u0647\u0631\u06CC\u0648\u0631_\u0645\u0647\u0631_\u0622\u0628\u0627\u0646_\u0622\u0630\u0631_\u062F\u06CC_\u0628\u0647\u0645\u0646_\u0627\u0633\u0641\u0646\u062F".split("_"), monthsShort: "\u0641\u0631\u0648_\u0627\u0631\u062F_\u062E\u0631\u062F_\u062A\u06CC\u0631_\u0645\u0631\u062F_\u0634\u0647\u0631_\u0645\u0647\u0631_\u0622\u0628\u0627_\u0622\u0630\u0631_\u062F\u06CC_\u0628\u0647\u0645_\u0627\u0633\u0641".split("_"), ordinal: function(_2) {
       return _2;
-    }, formats: {LT: "HH:mm", LTS: "HH:mm:ss", L: "DD/MM/YYYY", LL: "D MMMM YYYY", LLL: "D MMMM YYYY HH:mm", LLLL: "dddd, D MMMM YYYY HH:mm"}, relativeTime: {future: "\u062F\u0631 %s", past: "%s \u067E\u06CC\u0634", s: "\u0686\u0646\u062F \u062B\u0627\u0646\u06CC\u0647", m: "\u06CC\u06A9 \u062F\u0642\u06CC\u0642\u0647", mm: "%d \u062F\u0642\u06CC\u0642\u0647", h: "\u06CC\u06A9 \u0633\u0627\u0639\u062A", hh: "%d \u0633\u0627\u0639\u062A", d: "\u06CC\u06A9 \u0631\u0648\u0632", dd: "%d \u0631\u0648\u0632", M: "\u06CC\u06A9 \u0645\u0627\u0647", MM: "%d \u0645\u0627\u0647", y: "\u06CC\u06A9 \u0633\u0627\u0644", yy: "%d \u0633\u0627\u0644"}};
+    }, formats: {LT: "HH:mm", LTS: "HH:mm:ss", L: "DD/MM/YYYY", LL: "D MMMM YYYY", LLL: "D MMMM YYYY HH:mm", LLLL: "dddd, D MMMM YYYY HH:mm"}, relativeTime: {future: "\u062F\u0631 %s", past: "%s \u0642\u0628\u0644", s: "\u0686\u0646\u062F \u062B\u0627\u0646\u06CC\u0647", m: "\u06CC\u06A9 \u062F\u0642\u06CC\u0642\u0647", mm: "%d \u062F\u0642\u06CC\u0642\u0647", h: "\u06CC\u06A9 \u0633\u0627\u0639\u062A", hh: "%d \u0633\u0627\u0639\u062A", d: "\u06CC\u06A9 \u0631\u0648\u0632", dd: "%d \u0631\u0648\u0632", M: "\u06CC\u06A9 \u0645\u0627\u0647", MM: "%d \u0645\u0627\u0647", y: "\u06CC\u06A9 \u0633\u0627\u0644", yy: "%d \u0633\u0627\u0644"}};
     return t2.default.locale(d, null, true), d;
   });
 });
@@ -2092,7 +2004,7 @@ var require_trix = __commonJS((exports, module) => {
     var t2 = this;
     (function() {
       (function() {
-        this.Trix = {VERSION: "1.3.5", ZERO_WIDTH_SPACE: "\uFEFF", NON_BREAKING_SPACE: "\xA0", OBJECT_REPLACEMENT_CHARACTER: "\uFFFC", browser: {composesExistingText: /Android.*Chrome/.test(navigator.userAgent), forcesObjectResizing: /Trident.*rv:11/.test(navigator.userAgent), supportsInputEvents: function() {
+        this.Trix = {VERSION: "1.3.1", ZERO_WIDTH_SPACE: "\uFEFF", NON_BREAKING_SPACE: "\xA0", OBJECT_REPLACEMENT_CHARACTER: "\uFFFC", browser: {composesExistingText: /Android.*Chrome/.test(navigator.userAgent), forcesObjectResizing: /Trident.*rv:11/.test(navigator.userAgent), supportsInputEvents: function() {
           var t3, e3, n2, i;
           if (typeof InputEvent == "undefined")
             return false;
@@ -3828,13 +3740,13 @@ var require_trix = __commonJS((exports, module) => {
           return o2(s2, r3), s2.attachmentSelector = "[data-trix-attachment]", s2.prototype.createContentNodes = function() {
             return [];
           }, s2.prototype.createNodes = function() {
-            var n3, o3, r4, s3, u, c2, l;
-            if (n3 = s3 = i({tagName: "figure", className: this.getClassName(), data: this.getData(), editable: false}), (o3 = this.getHref()) && (s3 = i({tagName: "a", editable: false, attributes: {href: o3, tabindex: -1}}), n3.appendChild(s3)), this.attachment.hasContent())
-              e2.HTMLSanitizer.setHTML(s3, this.attachment.getContent());
+            var e3, n3, o3, r4, s3, u, c2;
+            if (e3 = r4 = i({tagName: "figure", className: this.getClassName(), data: this.getData(), editable: false}), (n3 = this.getHref()) && (r4 = i({tagName: "a", editable: false, attributes: {href: n3, tabindex: -1}}), e3.appendChild(r4)), this.attachment.hasContent())
+              r4.innerHTML = this.attachment.getContent();
             else
-              for (l = this.createContentNodes(), r4 = 0, u = l.length; u > r4; r4++)
-                c2 = l[r4], s3.appendChild(c2);
-            return s3.appendChild(this.createCaptionElement()), this.attachment.isPending() && (this.progressElement = i({tagName: "progress", attributes: {class: t3.attachmentProgress, value: this.attachment.getUploadProgress(), max: 100}, data: {trixMutable: true, trixStoreKey: ["progressElement", this.attachment.id].join("/")}}), n3.appendChild(this.progressElement)), [a2("left"), n3, a2("right")];
+              for (c2 = this.createContentNodes(), o3 = 0, s3 = c2.length; s3 > o3; o3++)
+                u = c2[o3], r4.appendChild(u);
+            return r4.appendChild(this.createCaptionElement()), this.attachment.isPending() && (this.progressElement = i({tagName: "progress", attributes: {class: t3.attachmentProgress, value: this.attachment.getUploadProgress(), max: 100}, data: {trixMutable: true, trixStoreKey: ["progressElement", this.attachment.id].join("/")}}), e3.appendChild(this.progressElement)), [a2("left"), e3, a2("right")];
           }, s2.prototype.createCaptionElement = function() {
             var e3, n3, o3, r4, s3, a3, u;
             return o3 = i({tagName: "figcaption", className: t3.attachmentCaption}), (e3 = this.attachmentPiece.getCaption()) ? (o3.classList.add(t3.attachmentCaption + "--edited"), o3.textContent = e3) : (n3 = this.getCaptionConfig(), n3.name && (r4 = this.attachment.getFilename()), n3.size && (a3 = this.attachment.getFormattedFilesize()), r4 && (s3 = i({tagName: "span", className: t3.attachmentName, textContent: r4}), o3.appendChild(s3)), a3 && (r4 && o3.appendChild(document.createTextNode(" ")), u = i({tagName: "span", className: t3.attachmentSize, textContent: a3}), o3.appendChild(u))), o3;
@@ -3858,9 +3770,9 @@ var require_trix = __commonJS((exports, module) => {
             var t4, e3;
             return e3 = this.attachment.getUploadProgress(), (t4 = this.findProgressElement()) != null ? t4.value = e3 : void 0;
           }, s2;
-        }(e2.ObjectView), n2 = function(t4, n3) {
-          var o3;
-          return o3 = i("div"), e2.HTMLSanitizer.setHTML(o3, t4 || ""), o3.querySelector(n3);
+        }(e2.ObjectView), n2 = function(t4, e3) {
+          var n3;
+          return n3 = i("div"), n3.innerHTML = t4 != null ? t4 : "", n3.querySelector(e3);
         };
       }.call(this), function() {
         var t3, n2 = function(t4, e3) {
@@ -4995,10 +4907,7 @@ var require_trix = __commonJS((exports, module) => {
             n3 = e3 != null ? e3 : {}, this.allowedAttributes = n3.allowedAttributes, this.forbiddenProtocols = n3.forbiddenProtocols, this.forbiddenElements = n3.forbiddenElements, this.allowedAttributes == null && (this.allowedAttributes = c2), this.forbiddenProtocols == null && (this.forbiddenProtocols = h), this.forbiddenElements == null && (this.forbiddenElements = l), this.body = p2(t4);
           }
           var c2, l, h, p2;
-          return o2(u, r3), c2 = "style href src width height class".split(" "), h = "javascript:".split(" "), l = "script iframe form noscript embed math".split(" "), u.setHTML = function(t4, e3) {
-            var n3, i2, o3;
-            return o3 = new this(e3), n3 = o3.sanitize(), i2 = n3.getHTML != null ? n3.getHTML() : n3.outerHTML, t4.innerHTML = i2;
-          }, u.sanitize = function(t4, e3) {
+          return o2(u, r3), c2 = "style href src width height class".split(" "), h = "javascript:".split(" "), l = "script iframe".split(" "), u.sanitize = function(t4, e3) {
             var n3;
             return n3 = new this(t4, e3), n3.sanitize(), n3;
           }, u.prototype.sanitize = function() {
@@ -5069,10 +4978,10 @@ var require_trix = __commonJS((exports, module) => {
           }, g.prototype.getDocument = function() {
             return e2.Document.fromJSON(this.blocks);
           }, g.prototype.parse = function() {
-            var t4;
+            var t4, n3;
             try {
-              for (this.createHiddenContainer(), e2.HTMLSanitizer.setHTML(this.containerElement, this.html), t4 = h(this.containerElement, {usingFilter: x}); t4.nextNode(); )
-                this.processNode(t4.currentNode);
+              for (this.createHiddenContainer(), t4 = e2.HTMLSanitizer.sanitize(this.html).getHTML(), this.containerElement.innerHTML = t4, n3 = h(this.containerElement, {usingFilter: x}); n3.nextNode(); )
+                this.processNode(n3.currentNode);
               return this.translateBlockElementMarginsToNewlines();
             } finally {
               this.removeHiddenContainer();
@@ -9270,8 +9179,8 @@ var require_choices = __commonJS((exports, module) => {
             value: true
           });
           exports2.parseCustomProperties = exports2.diff = exports2.cloneObject = exports2.existsInArray = exports2.dispatchEvent = exports2.sortByScore = exports2.sortByAlpha = exports2.strToEl = exports2.sanitise = exports2.isScrolledIntoView = exports2.getAdjacentEl = exports2.wrap = exports2.isType = exports2.getType = exports2.generateId = exports2.generateChars = exports2.getRandomNumber = void 0;
-          var getRandomNumber2 = function(min2, max2) {
-            return Math.floor(Math.random() * (max2 - min2) + min2);
+          var getRandomNumber2 = function(min3, max3) {
+            return Math.floor(Math.random() * (max3 - min3) + min3);
           };
           exports2.getRandomNumber = getRandomNumber2;
           var generateChars = function(length) {
@@ -10193,7 +10102,7 @@ var require_choices = __commonJS((exports, module) => {
           const EXTENDED_SEARCH_UNAVAILABLE = "Extended search is not available";
           const INCORRECT_INDEX_TYPE = "Incorrect 'index' type";
           const LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY = (key) => `Invalid value for key ${key}`;
-          const PATTERN_LENGTH_TOO_LARGE = (max2) => `Pattern length exceeds max of ${max2}.`;
+          const PATTERN_LENGTH_TOO_LARGE = (max3) => `Pattern length exceeds max of ${max3}.`;
           const MISSING_KEY_PROPERTY = (name2) => `Missing ${name2} property in key`;
           const INVALID_KEY_WEIGHT_VALUE = (key) => `Property 'weight' in key '${key}' must be a positive integer`;
           const hasOwn = Object.prototype.hasOwnProperty;
@@ -11304,7 +11213,7 @@ var require_choices = __commonJS((exports, module) => {
             }
             _searchLogical(query) {
               const expression = parse2(query, this.options);
-              const evaluate2 = (node, item2, idx) => {
+              const evaluate = (node, item2, idx) => {
                 if (!node.children) {
                   const {keyId, searcher} = node;
                   const matches2 = this._findMatches({
@@ -11326,7 +11235,7 @@ var require_choices = __commonJS((exports, module) => {
                 const res2 = [];
                 for (let i = 0, len = node.children.length; i < len; i += 1) {
                   const child = node.children[i];
-                  const result = evaluate2(child, item2, idx);
+                  const result = evaluate(child, item2, idx);
                   if (result.length) {
                     res2.push(...result);
                   } else if (node.operator === LogicalOperator.AND) {
@@ -11340,7 +11249,7 @@ var require_choices = __commonJS((exports, module) => {
               const results = [];
               records.forEach(({$: item2, i: idx}) => {
                 if (isDefined4(item2)) {
-                  let expResults = evaluate2(expression, item2, idx);
+                  let expResults = evaluate(expression, item2, idx);
                   if (expResults.length) {
                     if (!resultMap[idx]) {
                       resultMap[idx] = {idx, item: item2, matches: []};
@@ -11682,13 +11591,13 @@ var require_choices = __commonJS((exports, module) => {
               var _ref;
               var outerSubscribe = subscribe;
               return _ref = {
-                subscribe: function subscribe2(observer) {
-                  if (typeof observer !== "object" || observer === null) {
+                subscribe: function subscribe2(observer2) {
+                  if (typeof observer2 !== "object" || observer2 === null) {
                     throw new Error(true ? formatProdErrorMessage(11) : 0);
                   }
                   function observeState() {
-                    if (observer.next) {
-                      observer.next(getState());
+                    if (observer2.next) {
+                      observer2.next(getState());
                     }
                   }
                   observeState();
@@ -11941,8 +11850,8 @@ var require_choices = __commonJS((exports, module) => {
 });
 
 // node_modules/vanilla-colorful/lib/utils/math.js
-var clamp = (number, min2 = 0, max2 = 1) => {
-  return number > max2 ? max2 : number < min2 ? min2 : number;
+var clamp = (number, min3 = 0, max3 = 1) => {
+  return number > max3 ? max3 : number < min3 ? min3 : number;
 };
 var round = (number, digits = 0, base = Math.pow(10, digits)) => {
   return Math.round(base * number) / base;
@@ -12057,13 +11966,13 @@ var rgbaToHex = ({r: r2, g, b}) => {
   return "#" + format(r2) + format(g) + format(b);
 };
 var rgbaToHsva = ({r: r2, g, b, a: a2}) => {
-  const max2 = Math.max(r2, g, b);
-  const delta = max2 - Math.min(r2, g, b);
-  const hh = delta ? max2 === r2 ? (g - b) / delta : max2 === g ? 2 + (b - r2) / delta : 4 + (r2 - g) / delta : 0;
+  const max3 = Math.max(r2, g, b);
+  const delta = max3 - Math.min(r2, g, b);
+  const hh = delta ? max3 === r2 ? (g - b) / delta : max3 === g ? 2 + (b - r2) / delta : 4 + (r2 - g) / delta : 0;
   return {
     h: round(60 * (hh < 0 ? hh + 6 : hh)),
-    s: round(max2 ? delta / max2 * 100 : 0),
-    v: round(max2 / 255 * 100),
+    s: round(max3 ? delta / max3 * 100 : 0),
+    v: round(max3 / 255 * 100),
     a: a2
   };
 };
@@ -12562,9 +12471,8 @@ var utils_default = {
 var L = "en";
 var Ls = {};
 Ls[L] = en_default;
-var IS_DAYJS = "$isDayjsObject";
 var isDayjs = function isDayjs2(d) {
-  return d instanceof Dayjs || !!(d && d[IS_DAYJS]);
+  return d instanceof Dayjs;
 };
 var parseLocale = function parseLocale2(preset, object, isLocal) {
   var l;
@@ -12638,12 +12546,11 @@ var Dayjs = /* @__PURE__ */ function() {
   function Dayjs2(cfg) {
     this.$L = parseLocale(cfg.locale, null, true);
     this.parse(cfg);
-    this.$x = this.$x || cfg.x || {};
-    this[IS_DAYJS] = true;
   }
   var _proto = Dayjs2.prototype;
   _proto.parse = function parse2(cfg) {
     this.$d = parseDate(cfg);
+    this.$x = cfg.x || {};
     this.init();
   };
   _proto.init = function init() {
@@ -12793,107 +12700,47 @@ var Dayjs = /* @__PURE__ */ function() {
       var m = hour < 12 ? "AM" : "PM";
       return isLowercase ? m.toLowerCase() : m;
     };
-    var matches2 = function matches3(match) {
-      switch (match) {
-        case "YY":
-          return String(_this3.$y).slice(-2);
-        case "YYYY":
-          return Utils.s(_this3.$y, 4, "0");
-        case "M":
-          return $M + 1;
-        case "MM":
-          return Utils.s($M + 1, 2, "0");
-        case "MMM":
-          return getShort(locale.monthsShort, $M, months, 3);
-        case "MMMM":
-          return getShort(months, $M);
-        case "D":
-          return _this3.$D;
-        case "DD":
-          return Utils.s(_this3.$D, 2, "0");
-        case "d":
-          return String(_this3.$W);
-        case "dd":
-          return getShort(locale.weekdaysMin, _this3.$W, weekdays, 2);
-        case "ddd":
-          return getShort(locale.weekdaysShort, _this3.$W, weekdays, 3);
-        case "dddd":
-          return weekdays[_this3.$W];
-        case "H":
-          return String($H);
-        case "HH":
-          return Utils.s($H, 2, "0");
-        case "h":
-          return get$H(1);
-        case "hh":
-          return get$H(2);
-        case "a":
-          return meridiemFunc($H, $m, true);
-        case "A":
-          return meridiemFunc($H, $m, false);
-        case "m":
-          return String($m);
-        case "mm":
-          return Utils.s($m, 2, "0");
-        case "s":
-          return String(_this3.$s);
-        case "ss":
-          return Utils.s(_this3.$s, 2, "0");
-        case "SSS":
-          return Utils.s(_this3.$ms, 3, "0");
-        case "Z":
-          return zoneStr;
-        default:
-          break;
-      }
-      return null;
+    var matches2 = {
+      YY: String(this.$y).slice(-2),
+      YYYY: Utils.s(this.$y, 4, "0"),
+      M: $M + 1,
+      MM: Utils.s($M + 1, 2, "0"),
+      MMM: getShort(locale.monthsShort, $M, months, 3),
+      MMMM: getShort(months, $M),
+      D: this.$D,
+      DD: Utils.s(this.$D, 2, "0"),
+      d: String(this.$W),
+      dd: getShort(locale.weekdaysMin, this.$W, weekdays, 2),
+      ddd: getShort(locale.weekdaysShort, this.$W, weekdays, 3),
+      dddd: weekdays[this.$W],
+      H: String($H),
+      HH: Utils.s($H, 2, "0"),
+      h: get$H(1),
+      hh: get$H(2),
+      a: meridiemFunc($H, $m, true),
+      A: meridiemFunc($H, $m, false),
+      m: String($m),
+      mm: Utils.s($m, 2, "0"),
+      s: String(this.$s),
+      ss: Utils.s(this.$s, 2, "0"),
+      SSS: Utils.s(this.$ms, 3, "0"),
+      Z: zoneStr
     };
     return str.replace(REGEX_FORMAT, function(match, $1) {
-      return $1 || matches2(match) || zoneStr.replace(":", "");
+      return $1 || matches2[match] || zoneStr.replace(":", "");
     });
   };
   _proto.utcOffset = function utcOffset() {
     return -Math.round(this.$d.getTimezoneOffset() / 15) * 15;
   };
   _proto.diff = function diff(input, units, _float) {
-    var _this4 = this;
+    var _C$Y$C$M$C$Q$C$W$C$D$;
     var unit = Utils.p(units);
     var that = dayjs(input);
     var zoneDelta = (that.utcOffset() - this.utcOffset()) * MILLISECONDS_A_MINUTE;
     var diff2 = this - that;
-    var getMonth = function getMonth2() {
-      return Utils.m(_this4, that);
-    };
-    var result;
-    switch (unit) {
-      case Y:
-        result = getMonth() / 12;
-        break;
-      case M:
-        result = getMonth();
-        break;
-      case Q:
-        result = getMonth() / 3;
-        break;
-      case W:
-        result = (diff2 - zoneDelta) / MILLISECONDS_A_WEEK;
-        break;
-      case D:
-        result = (diff2 - zoneDelta) / MILLISECONDS_A_DAY;
-        break;
-      case H:
-        result = diff2 / MILLISECONDS_A_HOUR;
-        break;
-      case MIN:
-        result = diff2 / MILLISECONDS_A_MINUTE;
-        break;
-      case S:
-        result = diff2 / MILLISECONDS_A_SECOND;
-        break;
-      default:
-        result = diff2;
-        break;
-    }
+    var result = Utils.m(this, that);
+    result = (_C$Y$C$M$C$Q$C$W$C$D$ = {}, _C$Y$C$M$C$Q$C$W$C$D$[Y] = result / 12, _C$Y$C$M$C$Q$C$W$C$D$[M] = result, _C$Y$C$M$C$Q$C$W$C$D$[Q] = result / 3, _C$Y$C$M$C$Q$C$W$C$D$[W] = (diff2 - zoneDelta) / MILLISECONDS_A_WEEK, _C$Y$C$M$C$Q$C$W$C$D$[D] = (diff2 - zoneDelta) / MILLISECONDS_A_DAY, _C$Y$C$M$C$Q$C$W$C$D$[H] = diff2 / MILLISECONDS_A_HOUR, _C$Y$C$M$C$Q$C$W$C$D$[MIN] = diff2 / MILLISECONDS_A_MINUTE, _C$Y$C$M$C$Q$C$W$C$D$[S] = diff2 / MILLISECONDS_A_SECOND, _C$Y$C$M$C$Q$C$W$C$D$)[unit] || diff2;
     return _float ? result : Utils.a(result);
   };
   _proto.daysInMonth = function daysInMonth() {
@@ -13321,7 +13168,7 @@ __export(filepond_esm_exports, {
   supported: () => supported
 });
 /*!
- * FilePond 4.32.7
+ * FilePond 4.30.4
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -13762,8 +13609,8 @@ var styles = ({mixinConfig, viewProps, viewInternalAPI, viewExternalAPI, view}) 
   const currentProps = {};
   addGetSet(mixinConfig, [viewInternalAPI, viewExternalAPI], viewProps);
   const getOffset = () => [viewProps["translateX"] || 0, viewProps["translateY"] || 0];
-  const getScale2 = () => [viewProps["scaleX"] || 0, viewProps["scaleY"] || 0];
-  const getRect2 = () => view.rect ? getViewRect(view.rect, view.childViews, getOffset(), getScale2()) : null;
+  const getScale = () => [viewProps["scaleX"] || 0, viewProps["scaleY"] || 0];
+  const getRect2 = () => view.rect ? getViewRect(view.rect, view.childViews, getOffset(), getScale()) : null;
   viewInternalAPI.rect = {get: getRect2};
   viewExternalAPI.rect = {get: getRect2};
   mixinConfig.forEach((key) => {
@@ -14761,7 +14608,7 @@ var hasRoomForItem = (state2) => {
   }
   return false;
 };
-var limit = (value, min2, max2) => Math.max(Math.min(max2, value), min2);
+var limit = (value, min3, max3) => Math.max(Math.min(max3, value), min3);
 var arrayInsert = (arr, index2, item2) => arr.splice(index2, 0, item2);
 var insertItem = (items, item2, index2) => {
   if (isEmpty(item2)) {
@@ -14776,7 +14623,7 @@ var insertItem = (items, item2, index2) => {
   return item2;
 };
 var isBase64DataURI = (str) => /^\s*data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)?)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*)\s*$/i.test(str);
-var getFilenameFromURL = (url) => `${url}`.split("/").pop().split("?").shift();
+var getFilenameFromURL = (url) => url.split("/").pop().split("?").shift();
 var getExtensionFromFilename = (name2) => name2.split(".").pop();
 var guesstimateExtension = (type) => {
   if (typeof type !== "string") {
@@ -14869,8 +14716,8 @@ var getFileNameFromHeader = (header) => {
 };
 var getFileSizeFromHeader = (header) => {
   if (/content-length:/i.test(header)) {
-    const size3 = header.match(/[0-9]+/)[0];
-    return size3 ? parseInt(size3, 10) : null;
+    const size2 = header.match(/[0-9]+/)[0];
+    return size2 ? parseInt(size2, 10) : null;
   }
   return null;
 };
@@ -14894,9 +14741,9 @@ var getFileInfoFromHeaders = (headers) => {
       info.name = name2;
       continue;
     }
-    const size3 = getFileSizeFromHeader(header);
-    if (size3) {
-      info.size = size3;
+    const size2 = getFileSizeFromHeader(header);
+    if (size2) {
+      info.size = size2;
       continue;
     }
     const source = getTranfserIdFromHeader(header);
@@ -15203,8 +15050,6 @@ var processFileChunked = (apiUrl, action, name2, file2, metadata, load, error2, 
     chunk.progress = null;
     const ondata2 = chunkServer.ondata || ((fd) => fd);
     const onerror2 = chunkServer.onerror || ((res2) => null);
-    const onload2 = chunkServer.onload || (() => {
-    });
     const requestUrl = buildURL(apiUrl, chunkServer.url, state2.serverId);
     const headers = typeof chunkServer.headers === "function" ? chunkServer.headers(chunk) : {
       ...chunkServer.headers,
@@ -15217,8 +15062,7 @@ var processFileChunked = (apiUrl, action, name2, file2, metadata, load, error2, 
       ...chunkServer,
       headers
     });
-    request.onload = (xhr) => {
-      onload2(xhr, chunk.index, chunks.length);
+    request.onload = () => {
       chunk.status = ChunkStatus.COMPLETE;
       chunk.request = null;
       processChunks();
@@ -15374,7 +15218,7 @@ var createRevertFunction = (apiUrl = "", action) => {
     return request;
   };
 };
-var getRandomNumber = (min2 = 0, max2 = 1) => min2 + Math.random() * (max2 - min2);
+var getRandomNumber = (min3 = 0, max3 = 1) => min3 + Math.random() * (max3 - min3);
 var createPerceivedPerformanceUpdater = (cb, duration = 1e3, offset2 = 0, tickMin = 25, tickMax = 250) => {
   let timeout = null;
   const start = Date.now();
@@ -15778,8 +15622,7 @@ var createItem = (origin = null, serverFileReference = null, file2 = null) => {
     release: () => state2.released = true,
     released: {get: () => state2.released},
     archive: () => state2.archived = true,
-    archived: {get: () => state2.archived},
-    setFile: (file3) => state2.file = file3
+    archived: {get: () => state2.archived}
   };
   const itemAPI = createObject(api);
   return itemAPI;
@@ -16115,11 +15958,6 @@ var actions = (dispatch, query, state2) => ({
       dispatch("REMOVE_ITEM", {query: id});
     });
     item2.on("load-skip", () => {
-      item2.on("metadata-update", (change) => {
-        if (!isFile(item2.file))
-          return;
-        dispatch("DID_UPDATE_ITEM_METADATA", {id, change});
-      });
       dispatch("COMPLETE_LOAD_ITEM", {
         query: id,
         item: item2,
@@ -16539,7 +16377,7 @@ var write = ({root: root2, props}) => {
     root2.element.dataset.align = props.align;
   }
   const ringStrokeWidth = parseInt(attr(root2.ref.path, "stroke-width"), 10);
-  const size3 = root2.rect.element.width * 0.5;
+  const size2 = root2.rect.element.width * 0.5;
   let ringFrom = 0;
   let ringTo = 0;
   if (props.spin) {
@@ -16549,7 +16387,7 @@ var write = ({root: root2, props}) => {
     ringFrom = 0;
     ringTo = props.progress;
   }
-  const coordinates = percentageArc(size3, size3, size3 - ringStrokeWidth, ringFrom, ringTo);
+  const coordinates = percentageArc(size2, size2, size2 - ringStrokeWidth, ringFrom, ringTo);
   attr(root2.ref.path, "d", coordinates);
   attr(root2.ref.path, "stroke-opacity", props.spin || props.progress > 0 ? 1 : 0);
 };
@@ -17254,25 +17092,17 @@ var create$7 = ({root: root2, props}) => {
     const drop4 = (e3) => {
       if (!e3.isPrimary)
         return;
+      document.removeEventListener("pointermove", drag);
+      document.removeEventListener("pointerup", drop4);
       props.dragOffset = {
         x: e3.pageX - origin.x,
         y: e3.pageY - origin.y
       };
-      reset();
-    };
-    const cancel = () => {
-      reset();
-    };
-    const reset = () => {
-      document.removeEventListener("pointercancel", cancel);
-      document.removeEventListener("pointermove", drag);
-      document.removeEventListener("pointerup", drop4);
       root2.dispatch("DID_DROP_ITEM", {id: props.id, dragState});
       if (removedActivateListener) {
         setTimeout(() => root2.element.addEventListener("click", root2.ref.handleClick), 0);
       }
     };
-    document.addEventListener("pointercancel", cancel);
     document.addEventListener("pointermove", drag);
     document.addEventListener("pointerup", drop4);
   };
@@ -17822,14 +17652,6 @@ var updateRequiredStatus = ({root: root2}) => {
   if (root2.query("GET_TOTAL_ITEMS") > 0) {
     attrToggle(element, "required", false);
     attrToggle(element, "name", false);
-    const activeItems = root2.query("GET_ACTIVE_ITEMS");
-    let hasInvalidField = false;
-    for (let i = 0; i < activeItems.length; i++) {
-      if (activeItems[i].status === ItemStatus.LOAD_ERROR) {
-        hasInvalidField = true;
-      }
-    }
-    root2.element.setCustomValidity(hasInvalidField ? root2.query("GET_LABEL_INVALID_FIELD") : "");
   } else {
     attrToggle(element, "name", true, root2.query("GET_NAME"));
     const shouldCheckValidity = root2.query("GET_CHECK_VALIDITY");
@@ -17880,6 +17702,7 @@ var create$b = ({root: root2, props}) => {
   const label = createElement$1("label");
   attr(label, "for", `filepond--browser-${props.id}`);
   attr(label, "id", `filepond--drop-label-${props.id}`);
+  attr(label, "aria-hidden", "true");
   root2.ref.handleKeyDown = (e2) => {
     const isActivationKey = e2.keyCode === Key.ENTER || e2.keyCode === Key.SPACE;
     if (!isActivationKey)
@@ -18016,12 +17839,7 @@ var setInputFiles = (element, files) => {
   }
   return true;
 };
-var create$c = ({root: root2}) => {
-  root2.ref.fields = {};
-  const legend = document.createElement("legend");
-  legend.textContent = "Files";
-  root2.element.appendChild(legend);
-};
+var create$c = ({root: root2}) => root2.ref.fields = {};
 var getField = (root2, id) => root2.ref.fields[id];
 var syncFieldPositionsWithItems = (root2) => {
   root2.query("GET_ACTIVE_ITEMS").forEach((item2) => {
@@ -18038,6 +17856,7 @@ var didAddItem = ({root: root2, action}) => {
   const dataContainer = createElement$1("input");
   dataContainer.type = shouldUseFileInput ? "file" : "hidden";
   dataContainer.name = root2.query("GET_NAME");
+  dataContainer.disabled = root2.query("GET_DISABLED");
   root2.ref.fields[action.id] = dataContainer;
   syncFieldPositionsWithItems(root2);
 };
@@ -18080,9 +17899,7 @@ var didDefineValue = ({root: root2, action}) => {
   if (action.value === null) {
     field.removeAttribute("value");
   } else {
-    if (field.type != "file") {
-      field.value = action.value;
-    }
+    field.value = action.value;
   }
   syncFieldPositionsWithItems(root2);
 };
@@ -18260,7 +18077,7 @@ var eventPosition = (e2) => ({
   scopeTop: e2.offsetY || e2.layerY
 });
 var createDragNDropClient = (element, scopeToObserve, filterElement) => {
-  const observer = getDragNDropObserver(scopeToObserve);
+  const observer2 = getDragNDropObserver(scopeToObserve);
   const client = {
     element,
     filterElement,
@@ -18278,13 +18095,13 @@ var createDragNDropClient = (element, scopeToObserve, filterElement) => {
     allowdrop: () => {
     }
   };
-  client.destroy = observer.addListener(client);
+  client.destroy = observer2.addListener(client);
   return client;
 };
 var getDragNDropObserver = (element) => {
-  const observer = dragNDropObservers.find((item2) => item2.element === element);
-  if (observer) {
-    return observer;
+  const observer2 = dragNDropObservers.find((item2) => item2.element === element);
+  if (observer2) {
+    return observer2;
   }
   const newObserver = createDragNDropObserver(element);
   dragNDropObservers.push(newObserver);
@@ -18303,14 +18120,14 @@ var createDragNDropObserver = (element) => {
     handlers[event] = createHandler(element, clients);
     element.addEventListener(event, handlers[event], false);
   });
-  const observer = {
+  const observer2 = {
     element,
     addListener: (client) => {
       clients.push(client);
       return () => {
         clients.splice(clients.indexOf(client), 1);
         if (clients.length === 0) {
-          dragNDropObservers.splice(dragNDropObservers.indexOf(observer), 1);
+          dragNDropObservers.splice(dragNDropObservers.indexOf(observer2), 1);
           forin(routes, (event) => {
             element.removeEventListener(event, handlers[event], false);
           });
@@ -18318,7 +18135,7 @@ var createDragNDropObserver = (element) => {
       };
     }
   };
-  return observer;
+  return observer2;
 };
 var elementFromPoint = (root2, point) => {
   if (!("elementFromPoint" in root2)) {
@@ -18469,8 +18286,7 @@ var listening = false;
 var listeners$1 = [];
 var handlePaste = (e2) => {
   const activeEl = document.activeElement;
-  const isActiveElementEditable = activeEl && (/textarea|input/i.test(activeEl.nodeName) || activeEl.getAttribute("contenteditable") === "true");
-  if (isActiveElementEditable) {
+  if (activeEl && /textarea|input/i.test(activeEl.nodeName)) {
     let inScope = false;
     let element = activeEl;
     while (element !== document.body) {
@@ -18524,7 +18340,7 @@ var createPaster = () => {
 };
 var create$d = ({root: root2, props}) => {
   root2.element.id = `filepond--assistant-${props.id}`;
-  attr(root2.element, "role", "alert");
+  attr(root2.element, "role", "status");
   attr(root2.element, "aria-live", "polite");
   attr(root2.element, "aria-relevant", "additions");
 };
@@ -18668,10 +18484,11 @@ var create$e = ({root: root2, props}) => {
   if (hasCredits) {
     const frag = document.createElement("a");
     frag.className = "filepond--credits";
+    frag.setAttribute("aria-hidden", "true");
     frag.href = credits[0];
-    frag.tabIndex = -1;
+    frag.tabindex = -1;
     frag.target = "_blank";
-    frag.rel = "noopener noreferrer nofollow";
+    frag.rel = "noopener noreferrer";
     frag.textContent = credits[1];
     root2.element.appendChild(frag);
     root2.ref.credits = frag;
@@ -19748,7 +19565,7 @@ var filepond_plugin_file_validate_size_esm_default = plugin;
 
 // node_modules/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js
 /*!
- * FilePondPluginFileValidateType 1.2.9
+ * FilePondPluginFileValidateType 1.2.8
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -19823,14 +19640,16 @@ var plugin2 = ({addFilter: addFilter2, utils}) => {
     const validationResult = validateFile(file2, acceptedFileTypes, typeDetector);
     const handleRejection = () => {
       const acceptedFileTypesMapped = acceptedFileTypes.map(applyMimeTypeMap(query("GET_FILE_VALIDATE_TYPE_LABEL_EXPECTED_TYPES_MAP"))).filter((label) => label !== false);
-      const acceptedFileTypesMappedUnique = acceptedFileTypesMapped.filter((item2, index2) => acceptedFileTypesMapped.indexOf(item2) === index2);
+      const acceptedFileTypesMapped_unique = acceptedFileTypesMapped.filter(function(item2, index2) {
+        return acceptedFileTypesMapped.indexOf(item2) === index2;
+      });
       reject({
         status: {
           main: query("GET_LABEL_FILE_TYPE_NOT_ALLOWED"),
           sub: replaceInString2(query("GET_FILE_VALIDATE_TYPE_LABEL_EXPECTED_TYPES"), {
-            allTypes: acceptedFileTypesMappedUnique.join(", "),
-            allButLastType: acceptedFileTypesMappedUnique.slice(0, -1).join(", "),
-            lastType: acceptedFileTypesMappedUnique[acceptedFileTypesMappedUnique.length - 1]
+            allTypes: acceptedFileTypesMapped_unique.join(", "),
+            allButLastType: acceptedFileTypesMapped_unique.slice(0, -1).join(", "),
+            lastType: acceptedFileTypesMapped_unique[acceptedFileTypesMapped.length - 1]
           })
         }
       });
@@ -19900,10 +19719,10 @@ var plugin3 = ({addFilter: addFilter2, utils}) => {
         return;
       return updateCrop(item2, {rotation});
     });
-    item2.extend("setImageCropFlip", (flip3) => {
-      if (!allowCrop(item2, query) || !isObject2(flip3))
+    item2.extend("setImageCropFlip", (flip2) => {
+      if (!allowCrop(item2, query) || !isObject2(flip2))
         return;
-      return updateCrop(item2, {flip: flip3});
+      return updateCrop(item2, {flip: flip2});
     });
     item2.extend("setImageCropAspectRatio", (newAspectRatio) => {
       if (!allowCrop(item2, query) || typeof newAspectRatio === "undefined")
@@ -20053,7 +19872,7 @@ var filepond_plugin_image_exif_orientation_esm_default = plugin4;
 
 // node_modules/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js
 /*!
- * FilePondPluginImagePreview 4.6.12
+ * FilePondPluginImagePreview 4.6.11
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -20077,23 +19896,23 @@ var vectorRotate = (v, radians, origin) => {
   return createVector(origin.x + cos * t2.x - sin * t2.y, origin.y + sin * t2.x + cos * t2.y);
 };
 var createVector = (x = 0, y = 0) => ({x, y});
-var getMarkupValue = (value, size3, scalar = 1, axis) => {
+var getMarkupValue = (value, size2, scalar = 1, axis) => {
   if (typeof value === "string") {
     return parseFloat(value) * scalar;
   }
   if (typeof value === "number") {
-    return value * (axis ? size3[axis] : Math.min(size3.width, size3.height));
+    return value * (axis ? size2[axis] : Math.min(size2.width, size2.height));
   }
   return;
 };
-var getMarkupStyles = (markup, size3, scale) => {
+var getMarkupStyles = (markup, size2, scale) => {
   const lineStyle = markup.borderStyle || markup.lineStyle || "solid";
   const fill = markup.backgroundColor || markup.fontColor || "transparent";
   const stroke = markup.borderColor || markup.lineColor || "transparent";
-  const strokeWidth = getMarkupValue(markup.borderWidth || markup.lineWidth, size3, scale);
+  const strokeWidth = getMarkupValue(markup.borderWidth || markup.lineWidth, size2, scale);
   const lineCap = markup.lineCap || "round";
   const lineJoin = markup.lineJoin || "round";
-  const dashes = typeof lineStyle === "string" ? "" : lineStyle.map((v) => getMarkupValue(v, size3, scale)).join(",");
+  const dashes = typeof lineStyle === "string" ? "" : lineStyle.map((v) => getMarkupValue(v, size2, scale)).join(",");
   const opacity = markup.opacity || 1;
   return {
     "stroke-linecap": lineCap,
@@ -20106,37 +19925,37 @@ var getMarkupStyles = (markup, size3, scale) => {
   };
 };
 var isDefined2 = (value) => value != null;
-var getMarkupRect = (rect, size3, scalar = 1) => {
-  let left = getMarkupValue(rect.x, size3, scalar, "width") || getMarkupValue(rect.left, size3, scalar, "width");
-  let top = getMarkupValue(rect.y, size3, scalar, "height") || getMarkupValue(rect.top, size3, scalar, "height");
-  let width = getMarkupValue(rect.width, size3, scalar, "width");
-  let height = getMarkupValue(rect.height, size3, scalar, "height");
-  let right = getMarkupValue(rect.right, size3, scalar, "width");
-  let bottom = getMarkupValue(rect.bottom, size3, scalar, "height");
+var getMarkupRect = (rect, size2, scalar = 1) => {
+  let left = getMarkupValue(rect.x, size2, scalar, "width") || getMarkupValue(rect.left, size2, scalar, "width");
+  let top = getMarkupValue(rect.y, size2, scalar, "height") || getMarkupValue(rect.top, size2, scalar, "height");
+  let width = getMarkupValue(rect.width, size2, scalar, "width");
+  let height = getMarkupValue(rect.height, size2, scalar, "height");
+  let right = getMarkupValue(rect.right, size2, scalar, "width");
+  let bottom = getMarkupValue(rect.bottom, size2, scalar, "height");
   if (!isDefined2(top)) {
     if (isDefined2(height) && isDefined2(bottom)) {
-      top = size3.height - height - bottom;
+      top = size2.height - height - bottom;
     } else {
       top = bottom;
     }
   }
   if (!isDefined2(left)) {
     if (isDefined2(width) && isDefined2(right)) {
-      left = size3.width - width - right;
+      left = size2.width - width - right;
     } else {
       left = right;
     }
   }
   if (!isDefined2(width)) {
     if (isDefined2(left) && isDefined2(right)) {
-      width = size3.width - left - right;
+      width = size2.width - left - right;
     } else {
       width = 0;
     }
   }
   if (!isDefined2(height)) {
     if (isDefined2(top) && isDefined2(bottom)) {
-      height = size3.height - top - bottom;
+      height = size2.height - top - bottom;
     } else {
       height = 0;
     }
@@ -20191,8 +20010,8 @@ var TEXT_ANCHOR = {
   center: "middle",
   right: "end"
 };
-var updateText = (element, markup, size3, scale) => {
-  const fontSize = getMarkupValue(markup.fontSize, size3, scale);
+var updateText = (element, markup, size2, scale) => {
+  const fontSize = getMarkupValue(markup.fontSize, size2, scale);
   const fontFamily = markup.fontFamily || "sans-serif";
   const fontWeight = markup.fontWeight || "normal";
   const textAlign = TEXT_ANCHOR[markup.textAlign] || "start";
@@ -20210,7 +20029,7 @@ var updateText = (element, markup, size3, scale) => {
     element.textContent = markup.text.length ? markup.text : " ";
   }
 };
-var updateLine = (element, markup, size3, scale) => {
+var updateLine = (element, markup, size2, scale) => {
   setAttributes(element, {
     ...element.rect,
     ...element.styles,
@@ -20238,7 +20057,7 @@ var updateLine = (element, markup, size3, scale) => {
     x: target.x - origin.x,
     y: target.y - origin.y
   });
-  const l = getMarkupValue(0.05, size3, scale);
+  const l = getMarkupValue(0.05, size2, scale);
   if (markup.lineDecoration.indexOf("arrow-begin") !== -1) {
     const arrowBeginRotationPoint = vectorMultiply(v, l);
     const arrowBeginCenter = vectorAdd(origin, arrowBeginRotationPoint);
@@ -20260,13 +20079,13 @@ var updateLine = (element, markup, size3, scale) => {
     });
   }
 };
-var updatePath = (element, markup, size3, scale) => {
+var updatePath = (element, markup, size2, scale) => {
   setAttributes(element, {
     ...element.styles,
     fill: "none",
     d: pointsToPathShape(markup.points.map((point) => ({
-      x: getMarkupValue(point.x, size3, scale, "width"),
-      y: getMarkupValue(point.y, size3, scale, "height")
+      x: getMarkupValue(point.x, size2, scale, "width"),
+      y: getMarkupValue(point.y, size2, scale, "height")
     })))
   });
 };
@@ -20315,12 +20134,12 @@ var UPDATE_TYPE_ROUTES = {
   line: updateLine
 };
 var createMarkupByType = (type, markup) => CREATE_TYPE_ROUTES[type](markup);
-var updateMarkupByType = (element, type, markup, size3, scale) => {
+var updateMarkupByType = (element, type, markup, size2, scale) => {
   if (type !== "path") {
-    element.rect = getMarkupRect(markup, size3, scale);
+    element.rect = getMarkupRect(markup, size2, scale);
   }
-  element.styles = getMarkupStyles(markup, size3, scale);
-  UPDATE_TYPE_ROUTES[type](element, markup, size3, scale);
+  element.styles = getMarkupStyles(markup, size2, scale);
+  UPDATE_TYPE_ROUTES[type](element, markup, size2, scale);
 };
 var MARKUP_RECT = [
   "x",
@@ -20373,9 +20192,9 @@ var createMarkupView = (_) => _.utils.createView({
     let cropWidth = crop.width;
     let cropHeight = crop.height;
     if (resize) {
-      const {size: size4} = resize;
-      let outputWidth = size4 && size4.width;
-      let outputHeight = size4 && size4.height;
+      const {size: size3} = resize;
+      let outputWidth = size3 && size3.width;
+      let outputHeight = size3 && size3.height;
       const outputFit = resize.mode;
       const outputUpscale = resize.upscale;
       if (outputWidth && !outputHeight)
@@ -20401,19 +20220,19 @@ var createMarkupView = (_) => _.utils.createView({
         }
       }
     }
-    const size3 = {
+    const size2 = {
       width: viewWidth,
       height: viewHeight
     };
-    root2.element.setAttribute("width", size3.width);
-    root2.element.setAttribute("height", size3.height);
+    root2.element.setAttribute("width", size2.width);
+    root2.element.setAttribute("height", size2.height);
     const scale = Math.min(viewWidth / cropWidth, viewHeight / cropHeight);
     root2.element.innerHTML = "";
     const markupFilter = root2.query("GET_IMAGE_PREVIEW_MARKUP_FILTER");
     markup.filter(markupFilter).map(prepareMarkup).sort(sortMarkupByZIndex).forEach((markup2) => {
       const [type, settings] = markup2;
       const element = createMarkupByType(type, settings);
-      updateMarkupByType(element, type, settings, size3, scale);
+      updateMarkupByType(element, type, settings, size2, scale);
       root2.element.appendChild(element);
     });
   }
@@ -20563,10 +20382,10 @@ var createImageCanvasWrapper = (_) => _.utils.createView({
     root2.ref.bitmap = root2.appendChildView(root2.createChildView(createBitmapView(_), {image: props.image}));
   },
   write: ({root: root2, props}) => {
-    const {flip: flip3} = props.crop;
+    const {flip: flip2} = props.crop;
     const {bitmap} = root2.ref;
-    bitmap.scaleX = flip3.horizontal ? -1 : 1;
-    bitmap.scaleY = flip3.vertical ? -1 : 1;
+    bitmap.scaleX = flip2.horizontal ? -1 : 1;
+    bitmap.scaleY = flip2.vertical ? -1 : 1;
   }
 });
 var createClipView = (_) => _.utils.createView({
@@ -21057,7 +20876,7 @@ var createImageWrapperView = (_) => {
     const userAgent2 = window.navigator.userAgent;
     const isFirefox = userAgent2.match(/Firefox\/([0-9]+)\./);
     const firefoxVersion = isFirefox ? parseInt(isFirefox[1]) : null;
-    if (firefoxVersion !== null && firefoxVersion <= 58)
+    if (firefoxVersion <= 58)
       return false;
     return "createImageBitmap" in window && isBitmap(file2);
   };
@@ -21383,11 +21202,11 @@ var plugin6 = ({addFilter: addFilter2, utils}) => {
     const targetWidth = width === null ? height : width;
     const targetHeight = height === null ? targetWidth : height;
     const fileURL = URL.createObjectURL(file2);
-    getImageSize2(fileURL, (size3) => {
+    getImageSize2(fileURL, (size2) => {
       URL.revokeObjectURL(fileURL);
-      if (!size3)
+      if (!size2)
         return resolve(item2);
-      let {width: imageWidth, height: imageHeight} = size3;
+      let {width: imageWidth, height: imageHeight} = size2;
       const orientation = (item2.getMetadata("exif") || {}).orientation || -1;
       if (orientation >= 5 && orientation <= 8) {
         [imageWidth, imageHeight] = [imageHeight, imageWidth];
@@ -21545,9 +21364,9 @@ var canvasRelease = (canvas) => {
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, 1, 1);
 };
-var isFlipped = (flip3) => flip3 && (flip3.horizontal || flip3.vertical);
-var getBitmap = (image, orientation, flip3) => {
-  if (orientation <= 1 && !isFlipped(flip3)) {
+var isFlipped = (flip2) => flip2 && (flip2.horizontal || flip2.vertical);
+var getBitmap = (image, orientation, flip2) => {
+  if (orientation <= 1 && !isFlipped(flip2)) {
     image.width = image.naturalWidth;
     image.height = image.naturalHeight;
     return image;
@@ -21567,13 +21386,13 @@ var getBitmap = (image, orientation, flip3) => {
   if (orientation) {
     ctx.transform.apply(ctx, getImageOrientationMatrix(width, height, orientation));
   }
-  if (isFlipped(flip3)) {
+  if (isFlipped(flip2)) {
     const matrix2 = [1, 0, 0, 1, 0, 0];
-    if (!swapped && flip3.horizontal || swapped & flip3.vertical) {
+    if (!swapped && flip2.horizontal || swapped & flip2.vertical) {
       matrix2[0] = -1;
       matrix2[4] = width;
     }
-    if (!swapped && flip3.vertical || swapped && flip3.horizontal) {
+    if (!swapped && flip2.vertical || swapped && flip2.horizontal) {
       matrix2[3] = -1;
       matrix2[5] = height;
     }
@@ -21679,23 +21498,23 @@ var vectorRotate2 = (v, radians, origin) => {
   return createVector$12(origin.x + cos * t2.x - sin * t2.y, origin.y + sin * t2.x + cos * t2.y);
 };
 var createVector$12 = (x = 0, y = 0) => ({x, y});
-var getMarkupValue2 = (value, size3, scalar = 1, axis) => {
+var getMarkupValue2 = (value, size2, scalar = 1, axis) => {
   if (typeof value === "string") {
     return parseFloat(value) * scalar;
   }
   if (typeof value === "number") {
-    return value * (axis ? size3[axis] : Math.min(size3.width, size3.height));
+    return value * (axis ? size2[axis] : Math.min(size2.width, size2.height));
   }
   return;
 };
-var getMarkupStyles2 = (markup, size3, scale) => {
+var getMarkupStyles2 = (markup, size2, scale) => {
   const lineStyle = markup.borderStyle || markup.lineStyle || "solid";
   const fill = markup.backgroundColor || markup.fontColor || "transparent";
   const stroke = markup.borderColor || markup.lineColor || "transparent";
-  const strokeWidth = getMarkupValue2(markup.borderWidth || markup.lineWidth, size3, scale);
+  const strokeWidth = getMarkupValue2(markup.borderWidth || markup.lineWidth, size2, scale);
   const lineCap = markup.lineCap || "round";
   const lineJoin = markup.lineJoin || "round";
-  const dashes = typeof lineStyle === "string" ? "" : lineStyle.map((v) => getMarkupValue2(v, size3, scale)).join(",");
+  const dashes = typeof lineStyle === "string" ? "" : lineStyle.map((v) => getMarkupValue2(v, size2, scale)).join(",");
   const opacity = markup.opacity || 1;
   return {
     "stroke-linecap": lineCap,
@@ -21708,37 +21527,37 @@ var getMarkupStyles2 = (markup, size3, scale) => {
   };
 };
 var isDefined3 = (value) => value != null;
-var getMarkupRect2 = (rect, size3, scalar = 1) => {
-  let left = getMarkupValue2(rect.x, size3, scalar, "width") || getMarkupValue2(rect.left, size3, scalar, "width");
-  let top = getMarkupValue2(rect.y, size3, scalar, "height") || getMarkupValue2(rect.top, size3, scalar, "height");
-  let width = getMarkupValue2(rect.width, size3, scalar, "width");
-  let height = getMarkupValue2(rect.height, size3, scalar, "height");
-  let right = getMarkupValue2(rect.right, size3, scalar, "width");
-  let bottom = getMarkupValue2(rect.bottom, size3, scalar, "height");
+var getMarkupRect2 = (rect, size2, scalar = 1) => {
+  let left = getMarkupValue2(rect.x, size2, scalar, "width") || getMarkupValue2(rect.left, size2, scalar, "width");
+  let top = getMarkupValue2(rect.y, size2, scalar, "height") || getMarkupValue2(rect.top, size2, scalar, "height");
+  let width = getMarkupValue2(rect.width, size2, scalar, "width");
+  let height = getMarkupValue2(rect.height, size2, scalar, "height");
+  let right = getMarkupValue2(rect.right, size2, scalar, "width");
+  let bottom = getMarkupValue2(rect.bottom, size2, scalar, "height");
   if (!isDefined3(top)) {
     if (isDefined3(height) && isDefined3(bottom)) {
-      top = size3.height - height - bottom;
+      top = size2.height - height - bottom;
     } else {
       top = bottom;
     }
   }
   if (!isDefined3(left)) {
     if (isDefined3(width) && isDefined3(right)) {
-      left = size3.width - width - right;
+      left = size2.width - width - right;
     } else {
       left = right;
     }
   }
   if (!isDefined3(width)) {
     if (isDefined3(left) && isDefined3(right)) {
-      width = size3.width - left - right;
+      width = size2.width - left - right;
     } else {
       width = 0;
     }
   }
   if (!isDefined3(height)) {
     if (isDefined3(top) && isDefined3(bottom)) {
-      height = size3.height - top - bottom;
+      height = size2.height - top - bottom;
     } else {
       height = 0;
     }
@@ -21793,8 +21612,8 @@ var TEXT_ANCHOR2 = {
   center: "middle",
   right: "end"
 };
-var updateText2 = (element, markup, size3, scale) => {
-  const fontSize = getMarkupValue2(markup.fontSize, size3, scale);
+var updateText2 = (element, markup, size2, scale) => {
+  const fontSize = getMarkupValue2(markup.fontSize, size2, scale);
   const fontFamily = markup.fontFamily || "sans-serif";
   const fontWeight = markup.fontWeight || "normal";
   const textAlign = TEXT_ANCHOR2[markup.textAlign] || "start";
@@ -21812,7 +21631,7 @@ var updateText2 = (element, markup, size3, scale) => {
     element.textContent = markup.text.length ? markup.text : " ";
   }
 };
-var updateLine2 = (element, markup, size3, scale) => {
+var updateLine2 = (element, markup, size2, scale) => {
   setAttributes2(element, {
     ...element.rect,
     ...element.styles,
@@ -21840,7 +21659,7 @@ var updateLine2 = (element, markup, size3, scale) => {
     x: target.x - origin.x,
     y: target.y - origin.y
   });
-  const l = getMarkupValue2(0.05, size3, scale);
+  const l = getMarkupValue2(0.05, size2, scale);
   if (markup.lineDecoration.indexOf("arrow-begin") !== -1) {
     const arrowBeginRotationPoint = vectorMultiply2(v, l);
     const arrowBeginCenter = vectorAdd2(origin, arrowBeginRotationPoint);
@@ -21862,13 +21681,13 @@ var updateLine2 = (element, markup, size3, scale) => {
     });
   }
 };
-var updatePath2 = (element, markup, size3, scale) => {
+var updatePath2 = (element, markup, size2, scale) => {
   setAttributes2(element, {
     ...element.styles,
     fill: "none",
     d: pointsToPathShape2(markup.points.map((point) => ({
-      x: getMarkupValue2(point.x, size3, scale, "width"),
-      y: getMarkupValue2(point.y, size3, scale, "height")
+      x: getMarkupValue2(point.x, size2, scale, "width"),
+      y: getMarkupValue2(point.y, size2, scale, "height")
     })))
   });
 };
@@ -21917,12 +21736,12 @@ var UPDATE_TYPE_ROUTES2 = {
   line: updateLine2
 };
 var createMarkupByType2 = (type, markup) => CREATE_TYPE_ROUTES2[type](markup);
-var updateMarkupByType2 = (element, type, markup, size3, scale) => {
+var updateMarkupByType2 = (element, type, markup, size2, scale) => {
   if (type !== "path") {
-    element.rect = getMarkupRect2(markup, size3, scale);
+    element.rect = getMarkupRect2(markup, size2, scale);
   }
-  element.styles = getMarkupStyles2(markup, size3, scale);
-  UPDATE_TYPE_ROUTES2[type](element, markup, size3, scale);
+  element.styles = getMarkupStyles2(markup, size2, scale);
+  UPDATE_TYPE_ROUTES2[type](element, markup, size2, scale);
 };
 var sortMarkupByZIndex2 = (a2, b) => {
   if (a2[1].zIndex > b[1].zIndex) {
@@ -21967,13 +21786,13 @@ var cropSVG = (blob2, crop = {}, markup, options2) => new Promise((resolve) => {
     originalNode.setAttribute("height", imageHeight);
     let markupSVG = "";
     if (markup && markup.length) {
-      const size3 = {
+      const size2 = {
         width: imageWidth,
         height: imageHeight
       };
       markupSVG = markup.sort(sortMarkupByZIndex2).reduce((prev, shape) => {
         const el = createMarkupByType2(shape[0], shape[1]);
-        updateMarkupByType2(el, shape[0], shape[1], size3);
+        updateMarkupByType2(el, shape[0], shape[1], size2);
         el.removeAttribute("id");
         if (el.getAttribute("opacity") === 1) {
           el.removeAttribute("opacity");
@@ -22365,13 +22184,13 @@ var loadImage3 = (url) => new Promise((resolve, reject) => {
 });
 var chain = (funcs) => funcs.reduce((promise, func) => promise.then((result) => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
 var canvasApplyMarkup = (canvas, markup) => new Promise((resolve) => {
-  const size3 = {
+  const size2 = {
     width: canvas.width,
     height: canvas.height
   };
   const ctx = canvas.getContext("2d");
   const drawers = markup.sort(sortMarkupByZIndex2).map((item2) => () => new Promise((resolve2) => {
-    const result = TYPE_DRAW_ROUTES[item2[0]](ctx, size3, item2[1], resolve2);
+    const result = TYPE_DRAW_ROUTES[item2[0]](ctx, size2, item2[1], resolve2);
     if (result)
       resolve2();
   }));
@@ -22394,17 +22213,17 @@ var drawMarkupStyles = (ctx) => {
   ctx.stroke();
   ctx.globalAlpha = 1;
 };
-var drawRect = (ctx, size3, markup) => {
-  const rect = getMarkupRect2(markup, size3);
-  const styles3 = getMarkupStyles2(markup, size3);
+var drawRect = (ctx, size2, markup) => {
+  const rect = getMarkupRect2(markup, size2);
+  const styles3 = getMarkupStyles2(markup, size2);
   applyMarkupStyles(ctx, styles3);
   ctx.rect(rect.x, rect.y, rect.width, rect.height);
   drawMarkupStyles(ctx, styles3);
   return true;
 };
-var drawEllipse = (ctx, size3, markup) => {
-  const rect = getMarkupRect2(markup, size3);
-  const styles3 = getMarkupStyles2(markup, size3);
+var drawEllipse = (ctx, size2, markup) => {
+  const rect = getMarkupRect2(markup, size2);
+  const styles3 = getMarkupStyles2(markup, size2);
   applyMarkupStyles(ctx, styles3);
   const x = rect.x, y = rect.y, w = rect.width, h = rect.height, kappa = 0.5522848, ox = w / 2 * kappa, oy = h / 2 * kappa, xe = x + w, ye = y + h, xm = x + w / 2, ym = y + h / 2;
   ctx.moveTo(x, ym);
@@ -22415,9 +22234,9 @@ var drawEllipse = (ctx, size3, markup) => {
   drawMarkupStyles(ctx, styles3);
   return true;
 };
-var drawImage = (ctx, size3, markup, done) => {
-  const rect = getMarkupRect2(markup, size3);
-  const styles3 = getMarkupStyles2(markup, size3);
+var drawImage = (ctx, size2, markup, done) => {
+  const rect = getMarkupRect2(markup, size2);
+  const styles3 = getMarkupStyles2(markup, size2);
   applyMarkupStyles(ctx, styles3);
   const image = new Image();
   const isCrossOriginImage = new URL(markup.src, window.location.href).origin !== window.location.origin;
@@ -22446,11 +22265,11 @@ var drawImage = (ctx, size3, markup, done) => {
   };
   image.src = markup.src;
 };
-var drawText = (ctx, size3, markup) => {
-  const rect = getMarkupRect2(markup, size3);
-  const styles3 = getMarkupStyles2(markup, size3);
+var drawText = (ctx, size2, markup) => {
+  const rect = getMarkupRect2(markup, size2);
+  const styles3 = getMarkupStyles2(markup, size2);
   applyMarkupStyles(ctx, styles3);
-  const fontSize = getMarkupValue2(markup.fontSize, size3);
+  const fontSize = getMarkupValue2(markup.fontSize, size2);
   const fontFamily = markup.fontFamily || "sans-serif";
   const fontWeight = markup.fontWeight || "normal";
   const textAlign = markup.textAlign || "left";
@@ -22460,13 +22279,13 @@ var drawText = (ctx, size3, markup) => {
   drawMarkupStyles(ctx, styles3);
   return true;
 };
-var drawPath = (ctx, size3, markup) => {
-  const styles3 = getMarkupStyles2(markup, size3);
+var drawPath = (ctx, size2, markup) => {
+  const styles3 = getMarkupStyles2(markup, size2);
   applyMarkupStyles(ctx, styles3);
   ctx.beginPath();
   const points = markup.points.map((point) => ({
-    x: getMarkupValue2(point.x, size3, 1, "width"),
-    y: getMarkupValue2(point.y, size3, 1, "height")
+    x: getMarkupValue2(point.x, size2, 1, "width"),
+    y: getMarkupValue2(point.y, size2, 1, "height")
   }));
   ctx.moveTo(points[0].x, points[0].y);
   const l = points.length;
@@ -22476,9 +22295,9 @@ var drawPath = (ctx, size3, markup) => {
   drawMarkupStyles(ctx, styles3);
   return true;
 };
-var drawLine = (ctx, size3, markup) => {
-  const rect = getMarkupRect2(markup, size3);
-  const styles3 = getMarkupStyles2(markup, size3);
+var drawLine = (ctx, size2, markup) => {
+  const rect = getMarkupRect2(markup, size2);
+  const styles3 = getMarkupStyles2(markup, size2);
   applyMarkupStyles(ctx, styles3);
   ctx.beginPath();
   const origin = {
@@ -22495,7 +22314,7 @@ var drawLine = (ctx, size3, markup) => {
     x: target.x - origin.x,
     y: target.y - origin.y
   });
-  const l = 0.04 * Math.min(size3.width, size3.height);
+  const l = 0.04 * Math.min(size2.width, size2.height);
   if (markup.lineDecoration.indexOf("arrow-begin") !== -1) {
     const arrowBeginRotationPoint = vectorMultiply2(v, l);
     const arrowBeginCenter = vectorAdd2(origin, arrowBeginRotationPoint);
@@ -22537,15 +22356,15 @@ var transformImage = (file2, instructions, options2 = {}) => new Promise((resolv
   if (!file2 || !isImage$1(file2))
     return reject({status: "not an image file", file: file2});
   const {stripImageHead, beforeCreateBlob, afterCreateBlob, canvasMemoryLimit} = options2;
-  const {crop, size: size3, filter, markup, output} = instructions;
+  const {crop, size: size2, filter, markup, output} = instructions;
   const orientation = instructions.image && instructions.image.orientation ? Math.max(1, Math.min(8, instructions.image.orientation)) : null;
   const qualityAsPercentage = output && output.quality;
   const quality = qualityAsPercentage === null ? null : qualityAsPercentage / 100;
   const type = output && output.type || null;
   const background = output && output.background || null;
   const transforms2 = [];
-  if (size3 && (typeof size3.width === "number" || typeof size3.height === "number")) {
-    transforms2.push({type: "resize", data: size3});
+  if (size2 && (typeof size2.width === "number" || typeof size2.height === "number")) {
+    transforms2.push({type: "resize", data: size2});
   }
   if (filter && filter.length === 20) {
     transforms2.push({type: "filter", data: filter});
@@ -23227,39 +23046,39 @@ var en_en_default = {
 
 // node_modules/filepond/locale/es-es.js
 var es_es_default = {
-  labelIdle: 'Arrastra y suelta tus archivos o <span class = "filepond--label-action"> Examina <span>',
+  labelIdle: 'Arrastra y suelta tus archivos o <span class = "filepond--label-action"> Examinar <span>',
   labelInvalidField: "El campo contiene archivos inv\xE1lidos",
   labelFileWaitingForSize: "Esperando tama\xF1o",
   labelFileSizeNotAvailable: "Tama\xF1o no disponible",
   labelFileLoading: "Cargando",
   labelFileLoadError: "Error durante la carga",
-  labelFileProcessing: "Subiendo",
-  labelFileProcessingComplete: "Subida completa",
-  labelFileProcessingAborted: "Subida cancelada",
-  labelFileProcessingError: "Error durante la subida",
+  labelFileProcessing: "Cargando",
+  labelFileProcessingComplete: "Carga completa",
+  labelFileProcessingAborted: "Carga cancelada",
+  labelFileProcessingError: "Error durante la carga",
   labelFileProcessingRevertError: "Error durante la reversi\xF3n",
   labelFileRemoveError: "Error durante la eliminaci\xF3n",
   labelTapToCancel: "toca para cancelar",
-  labelTapToRetry: "tocar para reintentar",
+  labelTapToRetry: "tocar para volver a intentar",
   labelTapToUndo: "tocar para deshacer",
   labelButtonRemoveItem: "Eliminar",
-  labelButtonAbortItemLoad: "Cancelar",
+  labelButtonAbortItemLoad: "Abortar",
   labelButtonRetryItemLoad: "Reintentar",
   labelButtonAbortItemProcessing: "Cancelar",
   labelButtonUndoItemProcessing: "Deshacer",
   labelButtonRetryItemProcessing: "Reintentar",
-  labelButtonProcessItem: "Subir",
+  labelButtonProcessItem: "Cargar",
   labelMaxFileSizeExceeded: "El archivo es demasiado grande",
   labelMaxFileSize: "El tama\xF1o m\xE1ximo del archivo es {filesize}",
   labelMaxTotalFileSizeExceeded: "Tama\xF1o total m\xE1ximo excedido",
   labelMaxTotalFileSize: "El tama\xF1o total m\xE1ximo del archivo es {filesize}",
-  labelFileTypeNotAllowed: "Archivo de tipo inv\xE1lido",
+  labelFileTypeNotAllowed: "Archivo de tipo no v\xE1lido",
   fileValidateTypeLabelExpectedTypes: "Espera {allButLastType} o {lastType}",
-  imageValidateSizeLabelFormatError: "Tipo de imagen no soportada",
+  imageValidateSizeLabelFormatError: "Tipo de imagen no compatible",
   imageValidateSizeLabelImageSizeTooSmall: "La imagen es demasiado peque\xF1a",
   imageValidateSizeLabelImageSizeTooBig: "La imagen es demasiado grande",
-  imageValidateSizeLabelExpectedMinSize: "El tama\xF1o m\xEDnimo es {minWidth} x {minHeight}",
-  imageValidateSizeLabelExpectedMaxSize: "El tama\xF1o m\xE1ximo es {maxWidth} x {maxHeight}",
+  imageValidateSizeLabelExpectedMinSize: "El tama\xF1o m\xEDnimo es {minWidth} \xD7 {minHeight}",
+  imageValidateSizeLabelExpectedMaxSize: "El tama\xF1o m\xE1ximo es {maxWidth} \xD7 {maxHeight}",
   imageValidateSizeLabelImageResolutionTooLow: "La resoluci\xF3n es demasiado baja",
   imageValidateSizeLabelImageResolutionTooHigh: "La resoluci\xF3n es demasiado alta",
   imageValidateSizeLabelExpectedMinResolution: "La resoluci\xF3n m\xEDnima es {minResolution}",
@@ -23350,7 +23169,7 @@ var fi_fi_default = {
 
 // node_modules/filepond/locale/fr-fr.js
 var fr_fr_default = {
-  labelIdle: 'Faites glisser vos fichiers ou <span class = "filepond--label-action"> Parcourir </span>',
+  labelIdle: 'Faites glisser vos fichiers ou <span class = "filepond--label-action"> Parcourir <span>',
   labelInvalidField: "Le champ contient des fichiers invalides",
   labelFileWaitingForSize: "En attente de taille",
   labelFileSizeNotAvailable: "Taille non disponible",
@@ -23432,37 +23251,37 @@ var hu_hu_default = {
 
 // node_modules/filepond/locale/id-id.js
 var id_id_default = {
-  labelIdle: 'Seret & Jatuhkan berkas Anda atau <span class="filepond--label-action">Jelajahi</span>',
-  labelInvalidField: "Isian berisi berkas yang tidak valid",
-  labelFileWaitingForSize: "Menunggu ukuran berkas",
-  labelFileSizeNotAvailable: "Ukuran berkas tidak tersedia",
+  labelIdle: 'Seret dan Jatuhkan file Anda atau <span class="filepond--label-action">Jelajahi</span>',
+  labelInvalidField: "Field berisi file tidak valid",
+  labelFileWaitingForSize: "Menunggu ukuran",
+  labelFileSizeNotAvailable: "Ukuran tidak tersedia",
   labelFileLoading: "Memuat",
   labelFileLoadError: "Kesalahan saat memuat",
   labelFileProcessing: "Mengunggah",
-  labelFileProcessingComplete: "Pengunggahan selesai",
-  labelFileProcessingAborted: "Pengunggahan dibatalkan",
-  labelFileProcessingError: "Kesalahan saat pengunggahan",
-  labelFileProcessingRevertError: "Kesalahan saat pemulihan",
-  labelFileRemoveError: "Kesalahan saat penghapusan",
+  labelFileProcessingComplete: "Unggahan selesai",
+  labelFileProcessingAborted: "Unggahan dibatalkan",
+  labelFileProcessingError: "Kesalahan saat mengunggah",
+  labelFileProcessingRevertError: "Kesalahan saat pengembalian",
+  labelFileRemoveError: "Kesalahan saat menghapus",
   labelTapToCancel: "ketuk untuk membatalkan",
   labelTapToRetry: "ketuk untuk mencoba lagi",
   labelTapToUndo: "ketuk untuk mengurungkan",
   labelButtonRemoveItem: "Hapus",
-  labelButtonAbortItemLoad: "Batalkan",
+  labelButtonAbortItemLoad: "Batal",
   labelButtonRetryItemLoad: "Coba Kembali",
-  labelButtonAbortItemProcessing: "Batalkan",
-  labelButtonUndoItemProcessing: "Urungkan",
+  labelButtonAbortItemProcessing: "Batal",
+  labelButtonUndoItemProcessing: "Batal",
   labelButtonRetryItemProcessing: "Coba Kembali",
   labelButtonProcessItem: "Unggah",
-  labelMaxFileSizeExceeded: "Berkas terlalu besar",
-  labelMaxFileSize: "Ukuran berkas maksimum adalah {filesize}",
-  labelMaxTotalFileSizeExceeded: "Jumlah berkas maksimum terlampaui",
-  labelMaxTotalFileSize: "Jumlah berkas maksimum adalah {filesize}",
-  labelFileTypeNotAllowed: "Jenis berkas tidak valid",
+  labelMaxFileSizeExceeded: "File terlalu besar",
+  labelMaxFileSize: "Ukuran file maksimum adalah {filesize}",
+  labelMaxTotalFileSizeExceeded: "Jumlah file maksimum terlampaui",
+  labelMaxTotalFileSize: "Jumlah file maksimum adalah {filesize}",
+  labelFileTypeNotAllowed: "Jenis file tidak valid",
   fileValidateTypeLabelExpectedTypes: "Mengharapkan {allButLastType} atau {lastType}",
-  imageValidateSizeLabelFormatError: "Jenis citra tidak didukung",
-  imageValidateSizeLabelImageSizeTooSmall: "Citra terlalu kecil",
-  imageValidateSizeLabelImageSizeTooBig: "Citra terlalu besar",
+  imageValidateSizeLabelFormatError: "Jenis gambar tidak didukung",
+  imageValidateSizeLabelImageSizeTooSmall: "Gambar terlalu kecil",
+  imageValidateSizeLabelImageSizeTooBig: "Gambar terlalu besar",
   imageValidateSizeLabelExpectedMinSize: "Ukuran minimum adalah {minWidth} \xD7 {minHeight}",
   imageValidateSizeLabelExpectedMaxSize: "Ukuran maksimum adalah {minWidth} \xD7 {minHeight}",
   imageValidateSizeLabelImageResolutionTooLow: "Resolusi terlalu rendah",
@@ -31063,7 +30882,7 @@ var textarea_default = (Alpine) => {
 
 // node_modules/sortablejs/modular/sortable.esm.js
 /**!
- * Sortable 1.15.6
+ * Sortable 1.15.0
  * @author	RubaXa   <trash@rubaxa.org>
  * @author	owenm    <owen23355@gmail.com>
  * @license MIT
@@ -31170,7 +30989,7 @@ function _objectWithoutProperties(source, excluded) {
   }
   return target;
 }
-var version = "1.15.6";
+var version = "1.15.0";
 function userAgent(pattern) {
   if (typeof window !== "undefined" && window.navigator) {
     return !!/* @__PURE__ */ navigator.userAgent.match(pattern);
@@ -31483,24 +31302,6 @@ function clone2(el) {
   } else {
     return el.cloneNode(true);
   }
-}
-function getChildContainingRectFromElement(container, options2, ghostEl2) {
-  var rect = {};
-  Array.from(container.children).forEach(function(child) {
-    var _rect$left, _rect$top, _rect$right, _rect$bottom;
-    if (!closest(child, options2.draggable, container, false) || child.animated || child === ghostEl2)
-      return;
-    var childRect = getRect(child);
-    rect.left = Math.min((_rect$left = rect.left) !== null && _rect$left !== void 0 ? _rect$left : Infinity, childRect.left);
-    rect.top = Math.min((_rect$top = rect.top) !== null && _rect$top !== void 0 ? _rect$top : Infinity, childRect.top);
-    rect.right = Math.max((_rect$right = rect.right) !== null && _rect$right !== void 0 ? _rect$right : -Infinity, childRect.right);
-    rect.bottom = Math.max((_rect$bottom = rect.bottom) !== null && _rect$bottom !== void 0 ? _rect$bottom : -Infinity, childRect.bottom);
-  });
-  rect.width = rect.right - rect.left;
-  rect.height = rect.bottom - rect.top;
-  rect.x = rect.left;
-  rect.y = rect.top;
-  return rect;
 }
 var expando = "Sortable" + new Date().getTime();
 function AnimationStateManager() {
@@ -31986,7 +31787,7 @@ function Sortable(el, options2) {
       x: 0,
       y: 0
     },
-    supportPointer: Sortable.supportPointer !== false && "PointerEvent" in window && (!Safari || IOS),
+    supportPointer: Sortable.supportPointer !== false && "PointerEvent" in window && !Safari,
     emptyInsertThreshold: 5
   };
   PluginManager.initializePlugins(this, el, defaults4);
@@ -32066,7 +31867,7 @@ Sortable.prototype = {
         pluginEvent2("filter", _this, {
           evt
         });
-        preventOnFilter && evt.preventDefault();
+        preventOnFilter && evt.cancelable && evt.preventDefault();
         return;
       }
     } else if (filter) {
@@ -32088,7 +31889,7 @@ Sortable.prototype = {
         }
       });
       if (filter) {
-        preventOnFilter && evt.preventDefault();
+        preventOnFilter && evt.cancelable && evt.preventDefault();
         return;
       }
     }
@@ -32144,14 +31945,9 @@ Sortable.prototype = {
       on2(ownerDocument, "dragover", nearestEmptyInsertDetectEvent);
       on2(ownerDocument, "mousemove", nearestEmptyInsertDetectEvent);
       on2(ownerDocument, "touchmove", nearestEmptyInsertDetectEvent);
-      if (options2.supportPointer) {
-        on2(ownerDocument, "pointerup", _this._onDrop);
-        !this.nativeDraggable && on2(ownerDocument, "pointercancel", _this._onDrop);
-      } else {
-        on2(ownerDocument, "mouseup", _this._onDrop);
-        on2(ownerDocument, "touchend", _this._onDrop);
-        on2(ownerDocument, "touchcancel", _this._onDrop);
-      }
+      on2(ownerDocument, "mouseup", _this._onDrop);
+      on2(ownerDocument, "touchend", _this._onDrop);
+      on2(ownerDocument, "touchcancel", _this._onDrop);
       if (FireFox && this.nativeDraggable) {
         this.options.touchStartThreshold = 4;
         dragEl.draggable = true;
@@ -32164,14 +31960,9 @@ Sortable.prototype = {
           this._onDrop();
           return;
         }
-        if (options2.supportPointer) {
-          on2(ownerDocument, "pointerup", _this._disableDelayedDrag);
-          on2(ownerDocument, "pointercancel", _this._disableDelayedDrag);
-        } else {
-          on2(ownerDocument, "mouseup", _this._disableDelayedDrag);
-          on2(ownerDocument, "touchend", _this._disableDelayedDrag);
-          on2(ownerDocument, "touchcancel", _this._disableDelayedDrag);
-        }
+        on2(ownerDocument, "mouseup", _this._disableDelayedDrag);
+        on2(ownerDocument, "touchend", _this._disableDelayedDrag);
+        on2(ownerDocument, "touchcancel", _this._disableDelayedDrag);
         on2(ownerDocument, "mousemove", _this._delayedDragTouchMoveHandler);
         on2(ownerDocument, "touchmove", _this._delayedDragTouchMoveHandler);
         options2.supportPointer && on2(ownerDocument, "pointermove", _this._delayedDragTouchMoveHandler);
@@ -32197,8 +31988,6 @@ Sortable.prototype = {
     off(ownerDocument, "mouseup", this._disableDelayedDrag);
     off(ownerDocument, "touchend", this._disableDelayedDrag);
     off(ownerDocument, "touchcancel", this._disableDelayedDrag);
-    off(ownerDocument, "pointerup", this._disableDelayedDrag);
-    off(ownerDocument, "pointercancel", this._disableDelayedDrag);
     off(ownerDocument, "mousemove", this._delayedDragTouchMoveHandler);
     off(ownerDocument, "touchmove", this._delayedDragTouchMoveHandler);
     off(ownerDocument, "pointermove", this._delayedDragTouchMoveHandler);
@@ -32280,7 +32069,7 @@ Sortable.prototype = {
             }
           }
           target = parent;
-        } while (parent = getParentOrHost(parent));
+        } while (parent = parent.parentNode);
       }
       _unhideGhostForTarget();
     }
@@ -32412,7 +32201,6 @@ Sortable.prototype = {
     _this._dragStartId = _nextTick(_this._dragStarted.bind(_this, fallback, evt));
     on2(document, "selectstart", _this);
     moved = true;
-    window.getSelection().removeAllRanges();
     if (Safari) {
       css(document.body, "user-select", "none");
     }
@@ -32634,7 +32422,6 @@ Sortable.prototype = {
     off(ownerDocument, "mouseup", this._onDrop);
     off(ownerDocument, "touchend", this._onDrop);
     off(ownerDocument, "pointerup", this._onDrop);
-    off(ownerDocument, "pointercancel", this._onDrop);
     off(ownerDocument, "touchcancel", this._onDrop);
     off(document, "selectstart", this);
   },
@@ -32930,16 +32717,14 @@ function _unsilent() {
   _silent = false;
 }
 function _ghostIsFirst(evt, vertical, sortable) {
-  var firstElRect = getRect(getChild(sortable.el, 0, sortable.options, true));
-  var childContainingRect = getChildContainingRectFromElement(sortable.el, sortable.options, ghostEl);
+  var rect = getRect(getChild(sortable.el, 0, sortable.options, true));
   var spacer = 10;
-  return vertical ? evt.clientX < childContainingRect.left - spacer || evt.clientY < firstElRect.top && evt.clientX < firstElRect.right : evt.clientY < childContainingRect.top - spacer || evt.clientY < firstElRect.bottom && evt.clientX < firstElRect.left;
+  return vertical ? evt.clientX < rect.left - spacer || evt.clientY < rect.top && evt.clientX < rect.right : evt.clientY < rect.top - spacer || evt.clientY < rect.bottom && evt.clientX < rect.left;
 }
 function _ghostIsLast(evt, vertical, sortable) {
-  var lastElRect = getRect(lastChild(sortable.el, sortable.options.draggable));
-  var childContainingRect = getChildContainingRectFromElement(sortable.el, sortable.options, ghostEl);
+  var rect = getRect(lastChild(sortable.el, sortable.options.draggable));
   var spacer = 10;
-  return vertical ? evt.clientX > childContainingRect.right + spacer || evt.clientY > lastElRect.bottom && evt.clientX > lastElRect.left : evt.clientY > childContainingRect.bottom + spacer || evt.clientX > lastElRect.right && evt.clientY > lastElRect.top;
+  return vertical ? evt.clientX > rect.right + spacer || evt.clientX <= rect.right && evt.clientY > rect.bottom && evt.clientX >= rect.left : evt.clientX > rect.right && evt.clientY > rect.top || evt.clientX <= rect.right && evt.clientY > rect.bottom + spacer;
 }
 function _getSwapDirection(evt, target, targetRect, vertical, swapThreshold, invertedSwapThreshold, invertSwap, isLastTarget) {
   var mouseOnAxis = vertical ? evt.clientY : evt.clientX, targetLength = vertical ? targetRect.height : targetRect.width, targetS1 = vertical ? targetRect.top : targetRect.left, targetS2 = vertical ? targetRect.bottom : targetRect.right, invert = false;
@@ -33022,8 +32807,7 @@ Sortable.utils = {
   nextTick: _nextTick,
   cancelNextTick: _cancelNextTick,
   detectDirection: _detectDirection,
-  getChild,
-  expando
+  getChild
 };
 Sortable.get = function(element) {
   return element[expando];
@@ -33301,142 +33085,30 @@ var sortable_default = (Alpine) => {
 };
 
 // node_modules/@awcodes/alpine-floating-ui/dist/module.esm.js
-var sides = ["top", "right", "bottom", "left"];
-var alignments = ["start", "end"];
-var placements = /* @__PURE__ */ sides.reduce((acc, side) => acc.concat(side, side + "-" + alignments[0], side + "-" + alignments[1]), []);
-var min = Math.min;
-var max = Math.max;
-var round2 = Math.round;
-var floor = Math.floor;
-var createCoords = (v) => ({
-  x: v,
-  y: v
-});
-var oppositeSideMap = {
-  left: "right",
-  right: "left",
-  bottom: "top",
-  top: "bottom"
-};
-var oppositeAlignmentMap = {
-  start: "end",
-  end: "start"
-};
-function clamp2(start, value, end) {
-  return max(start, min(value, end));
-}
-function evaluate(value, param) {
-  return typeof value === "function" ? value(param) : value;
-}
 function getSide(placement) {
   return placement.split("-")[0];
 }
 function getAlignment(placement) {
   return placement.split("-")[1];
 }
-function getOppositeAxis(axis) {
-  return axis === "x" ? "y" : "x";
+function getMainAxisFromPlacement(placement) {
+  return ["top", "bottom"].includes(getSide(placement)) ? "x" : "y";
 }
-function getAxisLength(axis) {
+function getLengthFromAxis(axis) {
   return axis === "y" ? "height" : "width";
-}
-function getSideAxis(placement) {
-  return ["top", "bottom"].includes(getSide(placement)) ? "y" : "x";
-}
-function getAlignmentAxis(placement) {
-  return getOppositeAxis(getSideAxis(placement));
-}
-function getAlignmentSides(placement, rects, rtl) {
-  if (rtl === void 0) {
-    rtl = false;
-  }
-  const alignment = getAlignment(placement);
-  const alignmentAxis = getAlignmentAxis(placement);
-  const length = getAxisLength(alignmentAxis);
-  let mainAlignmentSide = alignmentAxis === "x" ? alignment === (rtl ? "end" : "start") ? "right" : "left" : alignment === "start" ? "bottom" : "top";
-  if (rects.reference[length] > rects.floating[length]) {
-    mainAlignmentSide = getOppositePlacement(mainAlignmentSide);
-  }
-  return [mainAlignmentSide, getOppositePlacement(mainAlignmentSide)];
-}
-function getExpandedPlacements(placement) {
-  const oppositePlacement = getOppositePlacement(placement);
-  return [getOppositeAlignmentPlacement(placement), oppositePlacement, getOppositeAlignmentPlacement(oppositePlacement)];
-}
-function getOppositeAlignmentPlacement(placement) {
-  return placement.replace(/start|end/g, (alignment) => oppositeAlignmentMap[alignment]);
-}
-function getSideList(side, isStart, rtl) {
-  const lr = ["left", "right"];
-  const rl = ["right", "left"];
-  const tb = ["top", "bottom"];
-  const bt = ["bottom", "top"];
-  switch (side) {
-    case "top":
-    case "bottom":
-      if (rtl)
-        return isStart ? rl : lr;
-      return isStart ? lr : rl;
-    case "left":
-    case "right":
-      return isStart ? tb : bt;
-    default:
-      return [];
-  }
-}
-function getOppositeAxisPlacements(placement, flipAlignment, direction, rtl) {
-  const alignment = getAlignment(placement);
-  let list2 = getSideList(getSide(placement), direction === "start", rtl);
-  if (alignment) {
-    list2 = list2.map((side) => side + "-" + alignment);
-    if (flipAlignment) {
-      list2 = list2.concat(list2.map(getOppositeAlignmentPlacement));
-    }
-  }
-  return list2;
-}
-function getOppositePlacement(placement) {
-  return placement.replace(/left|right|bottom|top/g, (side) => oppositeSideMap[side]);
-}
-function expandPaddingObject(padding) {
-  return {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    ...padding
-  };
-}
-function getPaddingObject(padding) {
-  return typeof padding !== "number" ? expandPaddingObject(padding) : {
-    top: padding,
-    right: padding,
-    bottom: padding,
-    left: padding
-  };
-}
-function rectToClientRect(rect) {
-  return {
-    ...rect,
-    top: rect.y,
-    left: rect.x,
-    right: rect.x + rect.width,
-    bottom: rect.y + rect.height
-  };
 }
 function computeCoordsFromPlacement(_ref, placement, rtl) {
   let {
     reference,
     floating
   } = _ref;
-  const sideAxis = getSideAxis(placement);
-  const alignmentAxis = getAlignmentAxis(placement);
-  const alignLength = getAxisLength(alignmentAxis);
-  const side = getSide(placement);
-  const isVertical = sideAxis === "y";
   const commonX = reference.x + reference.width / 2 - floating.width / 2;
   const commonY = reference.y + reference.height / 2 - floating.height / 2;
-  const commonAlign = reference[alignLength] / 2 - floating[alignLength] / 2;
+  const mainAxis = getMainAxisFromPlacement(placement);
+  const length = getLengthFromAxis(mainAxis);
+  const commonAlign = reference[length] / 2 - floating[length] / 2;
+  const side = getSide(placement);
+  const isVertical = mainAxis === "x";
   let coords;
   switch (side) {
     case "top":
@@ -33471,10 +33143,10 @@ function computeCoordsFromPlacement(_ref, placement, rtl) {
   }
   switch (getAlignment(placement)) {
     case "start":
-      coords[alignmentAxis] -= commonAlign * (rtl && isVertical ? -1 : 1);
+      coords[mainAxis] -= commonAlign * (rtl && isVertical ? -1 : 1);
       break;
     case "end":
-      coords[alignmentAxis] += commonAlign * (rtl && isVertical ? -1 : 1);
+      coords[mainAxis] += commonAlign * (rtl && isVertical ? -1 : 1);
       break;
   }
   return coords;
@@ -33486,8 +33158,20 @@ var computePosition = async (reference, floating, config) => {
     middleware = [],
     platform: platform2
   } = config;
-  const validMiddleware = middleware.filter(Boolean);
   const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(floating));
+  if (true) {
+    if (platform2 == null) {
+      console.error(["Floating UI: `platform` property was not passed to config. If you", "want to use Floating UI on the web, install @floating-ui/dom", "instead of the /core package. Otherwise, you can create your own", "`platform`: https://floating-ui.com/docs/platform"].join(" "));
+    }
+    if (middleware.filter((_ref) => {
+      let {
+        name: name2
+      } = _ref;
+      return name2 === "autoPlacement" || name2 === "flip";
+    }).length > 1) {
+      throw new Error(["Floating UI: duplicate `flip` and/or `autoPlacement`", "middleware detected. This will lead to an infinite loop. Ensure only", "one of either has been passed to the `middleware` array."].join(" "));
+    }
+  }
   let rects = await platform2.getElementRects({
     reference,
     floating,
@@ -33499,12 +33183,18 @@ var computePosition = async (reference, floating, config) => {
   } = computeCoordsFromPlacement(rects, placement, rtl);
   let statefulPlacement = placement;
   let middlewareData = {};
-  let resetCount = 0;
-  for (let i = 0; i < validMiddleware.length; i++) {
+  let _debug_loop_count_ = 0;
+  for (let i = 0; i < middleware.length; i++) {
+    if (true) {
+      _debug_loop_count_++;
+      if (_debug_loop_count_ > 100) {
+        throw new Error(["Floating UI: The middleware lifecycle appears to be", "running in an infinite loop. This is usually caused by a `reset`", "continually being returned without a break condition."].join(" "));
+      }
+    }
     const {
       name: name2,
       fn: fn2
-    } = validMiddleware[i];
+    } = middleware[i];
     const {
       x: nextX,
       y: nextY,
@@ -33533,8 +33223,7 @@ var computePosition = async (reference, floating, config) => {
         ...data3
       }
     };
-    if (reset && resetCount <= 50) {
-      resetCount++;
+    if (reset) {
       if (typeof reset === "object") {
         if (reset.placement) {
           statefulPlacement = reset.placement;
@@ -33552,6 +33241,7 @@ var computePosition = async (reference, floating, config) => {
         } = computeCoordsFromPlacement(rects, statefulPlacement, rtl));
       }
       i = -1;
+      continue;
     }
   }
   return {
@@ -33562,7 +33252,33 @@ var computePosition = async (reference, floating, config) => {
     middlewareData
   };
 };
-async function detectOverflow(state2, options2) {
+function expandPaddingObject(padding) {
+  return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    ...padding
+  };
+}
+function getSideObjectFromPadding(padding) {
+  return typeof padding !== "number" ? expandPaddingObject(padding) : {
+    top: padding,
+    right: padding,
+    bottom: padding,
+    left: padding
+  };
+}
+function rectToClientRect(rect) {
+  return {
+    ...rect,
+    top: rect.y,
+    left: rect.x,
+    right: rect.x + rect.width,
+    bottom: rect.y + rect.height
+  };
+}
+async function detectOverflow(middlewareArguments, options2) {
   var _await$platform$isEle;
   if (options2 === void 0) {
     options2 = {};
@@ -33574,15 +33290,15 @@ async function detectOverflow(state2, options2) {
     rects,
     elements,
     strategy
-  } = state2;
+  } = middlewareArguments;
   const {
     boundary = "clippingAncestors",
     rootBoundary = "viewport",
     elementContext = "floating",
     altBoundary = false,
     padding = 0
-  } = evaluate(options2, state2);
-  const paddingObject = getPaddingObject(padding);
+  } = options2;
+  const paddingObject = getSideObjectFromPadding(padding);
   const altContext = elementContext === "floating" ? "reference" : "floating";
   const element = elements[altBoundary ? altContext : elementContext];
   const clippingClientRect = rectToClientRect(await platform2.getClippingRect({
@@ -33591,94 +33307,109 @@ async function detectOverflow(state2, options2) {
     rootBoundary,
     strategy
   }));
-  const rect = elementContext === "floating" ? {
-    ...rects.floating,
-    x,
-    y
-  } : rects.reference;
-  const offsetParent = await (platform2.getOffsetParent == null ? void 0 : platform2.getOffsetParent(elements.floating));
-  const offsetScale = await (platform2.isElement == null ? void 0 : platform2.isElement(offsetParent)) ? await (platform2.getScale == null ? void 0 : platform2.getScale(offsetParent)) || {
-    x: 1,
-    y: 1
-  } : {
-    x: 1,
-    y: 1
-  };
   const elementClientRect = rectToClientRect(platform2.convertOffsetParentRelativeRectToViewportRelativeRect ? await platform2.convertOffsetParentRelativeRectToViewportRelativeRect({
-    elements,
-    rect,
-    offsetParent,
+    rect: elementContext === "floating" ? {
+      ...rects.floating,
+      x,
+      y
+    } : rects.reference,
+    offsetParent: await (platform2.getOffsetParent == null ? void 0 : platform2.getOffsetParent(elements.floating)),
     strategy
-  }) : rect);
+  }) : rects[elementContext]);
   return {
-    top: (clippingClientRect.top - elementClientRect.top + paddingObject.top) / offsetScale.y,
-    bottom: (elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom) / offsetScale.y,
-    left: (clippingClientRect.left - elementClientRect.left + paddingObject.left) / offsetScale.x,
-    right: (elementClientRect.right - clippingClientRect.right + paddingObject.right) / offsetScale.x
+    top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
+    bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
+    left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
+    right: elementClientRect.right - clippingClientRect.right + paddingObject.right
   };
+}
+var min = Math.min;
+var max = Math.max;
+function within(min$1, value, max$1) {
+  return max(min$1, min(value, max$1));
 }
 var arrow = (options2) => ({
   name: "arrow",
   options: options2,
-  async fn(state2) {
+  async fn(middlewareArguments) {
+    const {
+      element,
+      padding = 0
+    } = options2 != null ? options2 : {};
     const {
       x,
       y,
       placement,
       rects,
-      platform: platform2,
-      elements,
-      middlewareData
-    } = state2;
-    const {
-      element,
-      padding = 0
-    } = evaluate(options2, state2) || {};
+      platform: platform2
+    } = middlewareArguments;
     if (element == null) {
+      if (true) {
+        console.warn("Floating UI: No `element` was passed to the `arrow` middleware.");
+      }
       return {};
     }
-    const paddingObject = getPaddingObject(padding);
+    const paddingObject = getSideObjectFromPadding(padding);
     const coords = {
       x,
       y
     };
-    const axis = getAlignmentAxis(placement);
-    const length = getAxisLength(axis);
+    const axis = getMainAxisFromPlacement(placement);
+    const length = getLengthFromAxis(axis);
     const arrowDimensions = await platform2.getDimensions(element);
-    const isYAxis = axis === "y";
-    const minProp = isYAxis ? "top" : "left";
-    const maxProp = isYAxis ? "bottom" : "right";
-    const clientProp = isYAxis ? "clientHeight" : "clientWidth";
+    const minProp = axis === "y" ? "top" : "left";
+    const maxProp = axis === "y" ? "bottom" : "right";
     const endDiff = rects.reference[length] + rects.reference[axis] - coords[axis] - rects.floating[length];
     const startDiff = coords[axis] - rects.reference[axis];
     const arrowOffsetParent = await (platform2.getOffsetParent == null ? void 0 : platform2.getOffsetParent(element));
-    let clientSize = arrowOffsetParent ? arrowOffsetParent[clientProp] : 0;
-    if (!clientSize || !await (platform2.isElement == null ? void 0 : platform2.isElement(arrowOffsetParent))) {
-      clientSize = elements.floating[clientProp] || rects.floating[length];
-    }
+    const clientSize = arrowOffsetParent ? axis === "y" ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
     const centerToReference = endDiff / 2 - startDiff / 2;
-    const largestPossiblePadding = clientSize / 2 - arrowDimensions[length] / 2 - 1;
-    const minPadding = min(paddingObject[minProp], largestPossiblePadding);
-    const maxPadding = min(paddingObject[maxProp], largestPossiblePadding);
-    const min$1 = minPadding;
-    const max2 = clientSize - arrowDimensions[length] - maxPadding;
+    const min3 = paddingObject[minProp];
+    const max3 = clientSize - arrowDimensions[length] - paddingObject[maxProp];
     const center2 = clientSize / 2 - arrowDimensions[length] / 2 + centerToReference;
-    const offset2 = clamp2(min$1, center2, max2);
-    const shouldAddOffset = !middlewareData.arrow && getAlignment(placement) != null && center2 !== offset2 && rects.reference[length] / 2 - (center2 < min$1 ? minPadding : maxPadding) - arrowDimensions[length] / 2 < 0;
-    const alignmentOffset = shouldAddOffset ? center2 < min$1 ? center2 - min$1 : center2 - max2 : 0;
+    const offset2 = within(min3, center2, max3);
     return {
-      [axis]: coords[axis] + alignmentOffset,
       data: {
         [axis]: offset2,
-        centerOffset: center2 - offset2 - alignmentOffset,
-        ...shouldAddOffset && {
-          alignmentOffset
-        }
-      },
-      reset: shouldAddOffset
+        centerOffset: center2 - offset2
+      }
     };
   }
 });
+var hash$1 = {
+  left: "right",
+  right: "left",
+  bottom: "top",
+  top: "bottom"
+};
+function getOppositePlacement(placement) {
+  return placement.replace(/left|right|bottom|top/g, (matched) => hash$1[matched]);
+}
+function getAlignmentSides(placement, rects, rtl) {
+  if (rtl === void 0) {
+    rtl = false;
+  }
+  const alignment = getAlignment(placement);
+  const mainAxis = getMainAxisFromPlacement(placement);
+  const length = getLengthFromAxis(mainAxis);
+  let mainAlignmentSide = mainAxis === "x" ? alignment === (rtl ? "end" : "start") ? "right" : "left" : alignment === "start" ? "bottom" : "top";
+  if (rects.reference[length] > rects.floating[length]) {
+    mainAlignmentSide = getOppositePlacement(mainAlignmentSide);
+  }
+  return {
+    main: mainAlignmentSide,
+    cross: getOppositePlacement(mainAlignmentSide)
+  };
+}
+var hash = {
+  start: "end",
+  end: "start"
+};
+function getOppositeAlignmentPlacement(placement) {
+  return placement.replace(/start|end/g, (matched) => hash[matched]);
+}
+var sides = ["top", "right", "bottom", "left"];
+var allPlacements = /* @__PURE__ */ sides.reduce((acc, side) => acc.concat(side, side + "-start", side + "-end"), []);
 function getPlacementList(alignment, autoAlignment, allowedPlacements) {
   const allowedPlacementsSortedByAlignment = alignment ? [...allowedPlacements.filter((placement) => getAlignment(placement) === alignment), ...allowedPlacements.filter((placement) => getAlignment(placement) !== alignment)] : allowedPlacements.filter((placement) => getSide(placement) === placement);
   return allowedPlacementsSortedByAlignment.filter((placement) => {
@@ -33695,43 +33426,49 @@ var autoPlacement = function(options2) {
   return {
     name: "autoPlacement",
     options: options2,
-    async fn(state2) {
-      var _middlewareData$autoP, _middlewareData$autoP2, _placementsThatFitOnE;
+    async fn(middlewareArguments) {
+      var _middlewareData$autoP, _middlewareData$autoP2, _middlewareData$autoP3, _middlewareData$autoP4, _placementsSortedByLe;
       const {
+        x,
+        y,
         rects,
         middlewareData,
         placement,
         platform: platform2,
         elements
-      } = state2;
+      } = middlewareArguments;
       const {
-        crossAxis = false,
-        alignment,
-        allowedPlacements = placements,
+        alignment = null,
+        allowedPlacements = allPlacements,
         autoAlignment = true,
         ...detectOverflowOptions
-      } = evaluate(options2, state2);
-      const placements$1 = alignment !== void 0 || allowedPlacements === placements ? getPlacementList(alignment || null, autoAlignment, allowedPlacements) : allowedPlacements;
-      const overflow = await detectOverflow(state2, detectOverflowOptions);
-      const currentIndex = ((_middlewareData$autoP = middlewareData.autoPlacement) == null ? void 0 : _middlewareData$autoP.index) || 0;
-      const currentPlacement = placements$1[currentIndex];
+      } = options2;
+      const placements = getPlacementList(alignment, autoAlignment, allowedPlacements);
+      const overflow = await detectOverflow(middlewareArguments, detectOverflowOptions);
+      const currentIndex = (_middlewareData$autoP = (_middlewareData$autoP2 = middlewareData.autoPlacement) == null ? void 0 : _middlewareData$autoP2.index) != null ? _middlewareData$autoP : 0;
+      const currentPlacement = placements[currentIndex];
       if (currentPlacement == null) {
         return {};
       }
-      const alignmentSides = getAlignmentSides(currentPlacement, rects, await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)));
+      const {
+        main,
+        cross
+      } = getAlignmentSides(currentPlacement, rects, await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)));
       if (placement !== currentPlacement) {
         return {
+          x,
+          y,
           reset: {
-            placement: placements$1[0]
+            placement: placements[0]
           }
         };
       }
-      const currentOverflows = [overflow[getSide(currentPlacement)], overflow[alignmentSides[0]], overflow[alignmentSides[1]]];
-      const allOverflows = [...((_middlewareData$autoP2 = middlewareData.autoPlacement) == null ? void 0 : _middlewareData$autoP2.overflows) || [], {
+      const currentOverflows = [overflow[getSide(currentPlacement)], overflow[main], overflow[cross]];
+      const allOverflows = [...(_middlewareData$autoP3 = (_middlewareData$autoP4 = middlewareData.autoPlacement) == null ? void 0 : _middlewareData$autoP4.overflows) != null ? _middlewareData$autoP3 : [], {
         placement: currentPlacement,
         overflows: currentOverflows
       }];
-      const nextPlacement = placements$1[currentIndex + 1];
+      const nextPlacement = placements[currentIndex + 1];
       if (nextPlacement) {
         return {
           data: {
@@ -33743,12 +33480,14 @@ var autoPlacement = function(options2) {
           }
         };
       }
-      const placementsSortedByMostSpace = allOverflows.map((d) => {
-        const alignment2 = getAlignment(d.placement);
-        return [d.placement, alignment2 && crossAxis ? d.overflows.slice(0, 2).reduce((acc, v) => acc + v, 0) : d.overflows[0], d.overflows];
-      }).sort((a2, b) => a2[1] - b[1]);
-      const placementsThatFitOnEachSide = placementsSortedByMostSpace.filter((d) => d[2].slice(0, getAlignment(d[0]) ? 2 : 3).every((v) => v <= 0));
-      const resetPlacement = ((_placementsThatFitOnE = placementsThatFitOnEachSide[0]) == null ? void 0 : _placementsThatFitOnE[0]) || placementsSortedByMostSpace[0][0];
+      const placementsSortedByLeastOverflow = allOverflows.slice().sort((a2, b) => a2.overflows[0] - b.overflows[0]);
+      const placementThatFitsOnAllSides = (_placementsSortedByLe = placementsSortedByLeastOverflow.find((_ref) => {
+        let {
+          overflows
+        } = _ref;
+        return overflows.every((overflow2) => overflow2 <= 0);
+      })) == null ? void 0 : _placementsSortedByLe.placement;
+      const resetPlacement = placementThatFitsOnAllSides != null ? placementThatFitsOnAllSides : placementsSortedByLeastOverflow[0].placement;
       if (resetPlacement !== placement) {
         return {
           data: {
@@ -33764,6 +33503,10 @@ var autoPlacement = function(options2) {
     }
   };
 };
+function getExpandedPlacements(placement) {
+  const oppositePlacement = getOppositePlacement(placement);
+  return [getOppositeAlignmentPlacement(placement), oppositePlacement, getOppositeAlignmentPlacement(oppositePlacement)];
+}
 var flip = function(options2) {
   if (options2 === void 0) {
     options2 = {};
@@ -33771,8 +33514,8 @@ var flip = function(options2) {
   return {
     name: "flip",
     options: options2,
-    async fn(state2) {
-      var _middlewareData$arrow, _middlewareData$flip;
+    async fn(middlewareArguments) {
+      var _middlewareData$flip;
       const {
         placement,
         middlewareData,
@@ -33780,45 +33523,40 @@ var flip = function(options2) {
         initialPlacement,
         platform: platform2,
         elements
-      } = state2;
+      } = middlewareArguments;
       const {
         mainAxis: checkMainAxis = true,
         crossAxis: checkCrossAxis = true,
         fallbackPlacements: specifiedFallbackPlacements,
         fallbackStrategy = "bestFit",
-        fallbackAxisSideDirection = "none",
         flipAlignment = true,
         ...detectOverflowOptions
-      } = evaluate(options2, state2);
-      if ((_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
-        return {};
-      }
+      } = options2;
       const side = getSide(placement);
-      const isBasePlacement = getSide(initialPlacement) === initialPlacement;
-      const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating));
+      const isBasePlacement = side === initialPlacement;
       const fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipAlignment ? [getOppositePlacement(initialPlacement)] : getExpandedPlacements(initialPlacement));
-      if (!specifiedFallbackPlacements && fallbackAxisSideDirection !== "none") {
-        fallbackPlacements.push(...getOppositeAxisPlacements(initialPlacement, flipAlignment, fallbackAxisSideDirection, rtl));
-      }
-      const placements2 = [initialPlacement, ...fallbackPlacements];
-      const overflow = await detectOverflow(state2, detectOverflowOptions);
+      const placements = [initialPlacement, ...fallbackPlacements];
+      const overflow = await detectOverflow(middlewareArguments, detectOverflowOptions);
       const overflows = [];
       let overflowsData = ((_middlewareData$flip = middlewareData.flip) == null ? void 0 : _middlewareData$flip.overflows) || [];
       if (checkMainAxis) {
         overflows.push(overflow[side]);
       }
       if (checkCrossAxis) {
-        const sides2 = getAlignmentSides(placement, rects, rtl);
-        overflows.push(overflow[sides2[0]], overflow[sides2[1]]);
+        const {
+          main,
+          cross
+        } = getAlignmentSides(placement, rects, await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)));
+        overflows.push(overflow[main], overflow[cross]);
       }
       overflowsData = [...overflowsData, {
         placement,
         overflows
       }];
       if (!overflows.every((side2) => side2 <= 0)) {
-        var _middlewareData$flip2, _overflowsData$filter;
-        const nextIndex = (((_middlewareData$flip2 = middlewareData.flip) == null ? void 0 : _middlewareData$flip2.index) || 0) + 1;
-        const nextPlacement = placements2[nextIndex];
+        var _middlewareData$flip$, _middlewareData$flip2;
+        const nextIndex = ((_middlewareData$flip$ = (_middlewareData$flip2 = middlewareData.flip) == null ? void 0 : _middlewareData$flip2.index) != null ? _middlewareData$flip$ : 0) + 1;
+        const nextPlacement = placements[nextIndex];
         if (nextPlacement) {
           return {
             data: {
@@ -33830,21 +33568,19 @@ var flip = function(options2) {
             }
           };
         }
-        let resetPlacement = (_overflowsData$filter = overflowsData.filter((d) => d.overflows[0] <= 0).sort((a2, b) => a2.overflows[1] - b.overflows[1])[0]) == null ? void 0 : _overflowsData$filter.placement;
-        if (!resetPlacement) {
-          switch (fallbackStrategy) {
-            case "bestFit": {
-              var _overflowsData$map$so;
-              const placement2 = (_overflowsData$map$so = overflowsData.map((d) => [d.placement, d.overflows.filter((overflow2) => overflow2 > 0).reduce((acc, overflow2) => acc + overflow2, 0)]).sort((a2, b) => a2[1] - b[1])[0]) == null ? void 0 : _overflowsData$map$so[0];
-              if (placement2) {
-                resetPlacement = placement2;
-              }
-              break;
+        let resetPlacement = "bottom";
+        switch (fallbackStrategy) {
+          case "bestFit": {
+            var _overflowsData$map$so;
+            const placement2 = (_overflowsData$map$so = overflowsData.map((d) => [d, d.overflows.filter((overflow2) => overflow2 > 0).reduce((acc, overflow2) => acc + overflow2, 0)]).sort((a2, b) => a2[1] - b[1])[0]) == null ? void 0 : _overflowsData$map$so[0].placement;
+            if (placement2) {
+              resetPlacement = placement2;
             }
-            case "initialPlacement":
-              resetPlacement = initialPlacement;
-              break;
+            break;
           }
+          case "initialPlacement":
+            resetPlacement = initialPlacement;
+            break;
         }
         if (placement !== resetPlacement) {
           return {
@@ -33869,24 +33605,20 @@ function getSideOffsets(overflow, rect) {
 function isAnySideFullyClipped(overflow) {
   return sides.some((side) => overflow[side] >= 0);
 }
-var hide = function(options2) {
-  if (options2 === void 0) {
-    options2 = {};
-  }
+var hide = function(_temp) {
+  let {
+    strategy = "referenceHidden",
+    ...detectOverflowOptions
+  } = _temp === void 0 ? {} : _temp;
   return {
     name: "hide",
-    options: options2,
-    async fn(state2) {
+    async fn(middlewareArguments) {
       const {
         rects
-      } = state2;
-      const {
-        strategy = "referenceHidden",
-        ...detectOverflowOptions
-      } = evaluate(options2, state2);
+      } = middlewareArguments;
       switch (strategy) {
         case "referenceHidden": {
-          const overflow = await detectOverflow(state2, {
+          const overflow = await detectOverflow(middlewareArguments, {
             ...detectOverflowOptions,
             elementContext: "reference"
           });
@@ -33899,7 +33631,7 @@ var hide = function(options2) {
           };
         }
         case "escaped": {
-          const overflow = await detectOverflow(state2, {
+          const overflow = await detectOverflow(middlewareArguments, {
             ...detectOverflowOptions,
             altBoundary: true
           });
@@ -33918,33 +33650,195 @@ var hide = function(options2) {
     }
   };
 };
-function getBoundingRect(rects) {
-  const minX = min(...rects.map((rect) => rect.left));
-  const minY = min(...rects.map((rect) => rect.top));
-  const maxX = max(...rects.map((rect) => rect.right));
-  const maxY = max(...rects.map((rect) => rect.bottom));
-  return {
-    x: minX,
-    y: minY,
-    width: maxX - minX,
-    height: maxY - minY
+function convertValueToCoords(placement, rects, value, rtl) {
+  if (rtl === void 0) {
+    rtl = false;
+  }
+  const side = getSide(placement);
+  const alignment = getAlignment(placement);
+  const isVertical = getMainAxisFromPlacement(placement) === "x";
+  const mainAxisMulti = ["left", "top"].includes(side) ? -1 : 1;
+  const crossAxisMulti = rtl && isVertical ? -1 : 1;
+  const rawValue = typeof value === "function" ? value({
+    ...rects,
+    placement
+  }) : value;
+  let {
+    mainAxis,
+    crossAxis,
+    alignmentAxis
+  } = typeof rawValue === "number" ? {
+    mainAxis: rawValue,
+    crossAxis: 0,
+    alignmentAxis: null
+  } : {
+    mainAxis: 0,
+    crossAxis: 0,
+    alignmentAxis: null,
+    ...rawValue
+  };
+  if (alignment && typeof alignmentAxis === "number") {
+    crossAxis = alignment === "end" ? alignmentAxis * -1 : alignmentAxis;
+  }
+  return isVertical ? {
+    x: crossAxis * crossAxisMulti,
+    y: mainAxis * mainAxisMulti
+  } : {
+    x: mainAxis * mainAxisMulti,
+    y: crossAxis * crossAxisMulti
   };
 }
-function getRectsByLine(rects) {
-  const sortedRects = rects.slice().sort((a2, b) => a2.y - b.y);
-  const groups = [];
-  let prevRect = null;
-  for (let i = 0; i < sortedRects.length; i++) {
-    const rect = sortedRects[i];
-    if (!prevRect || rect.y - prevRect.y > prevRect.height / 2) {
-      groups.push([rect]);
-    } else {
-      groups[groups.length - 1].push(rect);
-    }
-    prevRect = rect;
+var offset = function(value) {
+  if (value === void 0) {
+    value = 0;
   }
-  return groups.map((rect) => rectToClientRect(getBoundingRect(rect)));
+  return {
+    name: "offset",
+    options: value,
+    async fn(middlewareArguments) {
+      const {
+        x,
+        y,
+        placement,
+        rects,
+        platform: platform2,
+        elements
+      } = middlewareArguments;
+      const diffCoords = convertValueToCoords(placement, rects, value, await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)));
+      return {
+        x: x + diffCoords.x,
+        y: y + diffCoords.y,
+        data: diffCoords
+      };
+    }
+  };
+};
+function getCrossAxis(axis) {
+  return axis === "x" ? "y" : "x";
 }
+var shift = function(options2) {
+  if (options2 === void 0) {
+    options2 = {};
+  }
+  return {
+    name: "shift",
+    options: options2,
+    async fn(middlewareArguments) {
+      const {
+        x,
+        y,
+        placement
+      } = middlewareArguments;
+      const {
+        mainAxis: checkMainAxis = true,
+        crossAxis: checkCrossAxis = false,
+        limiter = {
+          fn: (_ref) => {
+            let {
+              x: x2,
+              y: y2
+            } = _ref;
+            return {
+              x: x2,
+              y: y2
+            };
+          }
+        },
+        ...detectOverflowOptions
+      } = options2;
+      const coords = {
+        x,
+        y
+      };
+      const overflow = await detectOverflow(middlewareArguments, detectOverflowOptions);
+      const mainAxis = getMainAxisFromPlacement(getSide(placement));
+      const crossAxis = getCrossAxis(mainAxis);
+      let mainAxisCoord = coords[mainAxis];
+      let crossAxisCoord = coords[crossAxis];
+      if (checkMainAxis) {
+        const minSide = mainAxis === "y" ? "top" : "left";
+        const maxSide = mainAxis === "y" ? "bottom" : "right";
+        const min3 = mainAxisCoord + overflow[minSide];
+        const max3 = mainAxisCoord - overflow[maxSide];
+        mainAxisCoord = within(min3, mainAxisCoord, max3);
+      }
+      if (checkCrossAxis) {
+        const minSide = crossAxis === "y" ? "top" : "left";
+        const maxSide = crossAxis === "y" ? "bottom" : "right";
+        const min3 = crossAxisCoord + overflow[minSide];
+        const max3 = crossAxisCoord - overflow[maxSide];
+        crossAxisCoord = within(min3, crossAxisCoord, max3);
+      }
+      const limitedCoords = limiter.fn({
+        ...middlewareArguments,
+        [mainAxis]: mainAxisCoord,
+        [crossAxis]: crossAxisCoord
+      });
+      return {
+        ...limitedCoords,
+        data: {
+          x: limitedCoords.x - x,
+          y: limitedCoords.y - y
+        }
+      };
+    }
+  };
+};
+var size = function(options2) {
+  if (options2 === void 0) {
+    options2 = {};
+  }
+  return {
+    name: "size",
+    options: options2,
+    async fn(middlewareArguments) {
+      const {
+        placement,
+        rects,
+        platform: platform2,
+        elements
+      } = middlewareArguments;
+      const {
+        apply: apply2,
+        ...detectOverflowOptions
+      } = options2;
+      const overflow = await detectOverflow(middlewareArguments, detectOverflowOptions);
+      const side = getSide(placement);
+      const alignment = getAlignment(placement);
+      let heightSide;
+      let widthSide;
+      if (side === "top" || side === "bottom") {
+        heightSide = side;
+        widthSide = alignment === (await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)) ? "start" : "end") ? "left" : "right";
+      } else {
+        widthSide = side;
+        heightSide = alignment === "end" ? "top" : "bottom";
+      }
+      const xMin = max(overflow.left, 0);
+      const xMax = max(overflow.right, 0);
+      const yMin = max(overflow.top, 0);
+      const yMax = max(overflow.bottom, 0);
+      const dimensions = {
+        height: rects.floating.height - (["left", "right"].includes(placement) ? 2 * (yMin !== 0 || yMax !== 0 ? yMin + yMax : max(overflow.top, overflow.bottom)) : overflow[heightSide]),
+        width: rects.floating.width - (["top", "bottom"].includes(placement) ? 2 * (xMin !== 0 || xMax !== 0 ? xMin + xMax : max(overflow.left, overflow.right)) : overflow[widthSide])
+      };
+      const prevDimensions = await platform2.getDimensions(elements.floating);
+      apply2 == null ? void 0 : apply2({
+        ...dimensions,
+        ...rects
+      });
+      const nextDimensions = await platform2.getDimensions(elements.floating);
+      if (prevDimensions.width !== nextDimensions.width || prevDimensions.height !== nextDimensions.height) {
+        return {
+          reset: {
+            rects: true
+          }
+        };
+      }
+      return {};
+    }
+  };
+};
 var inline2 = function(options2) {
   if (options2 === void 0) {
     options2 = {};
@@ -33952,29 +33846,34 @@ var inline2 = function(options2) {
   return {
     name: "inline",
     options: options2,
-    async fn(state2) {
+    async fn(middlewareArguments) {
+      var _await$platform$getCl;
       const {
         placement,
         elements,
         rects,
         platform: platform2,
         strategy
-      } = state2;
+      } = middlewareArguments;
       const {
         padding = 2,
         x,
         y
-      } = evaluate(options2, state2);
-      const nativeClientRects = Array.from(await (platform2.getClientRects == null ? void 0 : platform2.getClientRects(elements.reference)) || []);
-      const clientRects = getRectsByLine(nativeClientRects);
-      const fallback = rectToClientRect(getBoundingRect(nativeClientRects));
-      const paddingObject = getPaddingObject(padding);
+      } = options2;
+      const fallback = rectToClientRect(platform2.convertOffsetParentRelativeRectToViewportRelativeRect ? await platform2.convertOffsetParentRelativeRectToViewportRelativeRect({
+        rect: rects.reference,
+        offsetParent: await (platform2.getOffsetParent == null ? void 0 : platform2.getOffsetParent(elements.floating)),
+        strategy
+      }) : rects.reference);
+      const clientRects = (_await$platform$getCl = await (platform2.getClientRects == null ? void 0 : platform2.getClientRects(elements.reference))) != null ? _await$platform$getCl : [];
+      const paddingObject = getSideObjectFromPadding(padding);
       function getBoundingClientRect2() {
         if (clientRects.length === 2 && clientRects[0].left > clientRects[1].right && x != null && y != null) {
-          return clientRects.find((rect) => x > rect.left - paddingObject.left && x < rect.right + paddingObject.right && y > rect.top - paddingObject.top && y < rect.bottom + paddingObject.bottom) || fallback;
+          var _clientRects$find;
+          return (_clientRects$find = clientRects.find((rect) => x > rect.left - paddingObject.left && x < rect.right + paddingObject.right && y > rect.top - paddingObject.top && y < rect.bottom + paddingObject.bottom)) != null ? _clientRects$find : fallback;
         }
         if (clientRects.length >= 2) {
-          if (getSideAxis(placement) === "y") {
+          if (getMainAxisFromPlacement(placement) === "x") {
             const firstRect = clientRects[0];
             const lastRect = clientRects[clientRects.length - 1];
             const isTop = getSide(placement) === "top";
@@ -34036,285 +33935,97 @@ var inline2 = function(options2) {
     }
   };
 };
-async function convertValueToCoords(state2, options2) {
-  const {
-    placement,
-    platform: platform2,
-    elements
-  } = state2;
-  const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating));
-  const side = getSide(placement);
-  const alignment = getAlignment(placement);
-  const isVertical = getSideAxis(placement) === "y";
-  const mainAxisMulti = ["left", "top"].includes(side) ? -1 : 1;
-  const crossAxisMulti = rtl && isVertical ? -1 : 1;
-  const rawValue = evaluate(options2, state2);
-  let {
-    mainAxis,
-    crossAxis,
-    alignmentAxis
-  } = typeof rawValue === "number" ? {
-    mainAxis: rawValue,
-    crossAxis: 0,
-    alignmentAxis: null
-  } : {
-    mainAxis: 0,
-    crossAxis: 0,
-    alignmentAxis: null,
-    ...rawValue
-  };
-  if (alignment && typeof alignmentAxis === "number") {
-    crossAxis = alignment === "end" ? alignmentAxis * -1 : alignmentAxis;
-  }
-  return isVertical ? {
-    x: crossAxis * crossAxisMulti,
-    y: mainAxis * mainAxisMulti
-  } : {
-    x: mainAxis * mainAxisMulti,
-    y: crossAxis * crossAxisMulti
-  };
-}
-var offset = function(options2) {
-  if (options2 === void 0) {
-    options2 = 0;
-  }
-  return {
-    name: "offset",
-    options: options2,
-    async fn(state2) {
-      var _middlewareData$offse, _middlewareData$arrow;
-      const {
-        x,
-        y,
-        placement,
-        middlewareData
-      } = state2;
-      const diffCoords = await convertValueToCoords(state2, options2);
-      if (placement === ((_middlewareData$offse = middlewareData.offset) == null ? void 0 : _middlewareData$offse.placement) && (_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
-        return {};
-      }
-      return {
-        x: x + diffCoords.x,
-        y: y + diffCoords.y,
-        data: {
-          ...diffCoords,
-          placement
-        }
-      };
-    }
-  };
-};
-var shift = function(options2) {
-  if (options2 === void 0) {
-    options2 = {};
-  }
-  return {
-    name: "shift",
-    options: options2,
-    async fn(state2) {
-      const {
-        x,
-        y,
-        placement
-      } = state2;
-      const {
-        mainAxis: checkMainAxis = true,
-        crossAxis: checkCrossAxis = false,
-        limiter = {
-          fn: (_ref) => {
-            let {
-              x: x2,
-              y: y2
-            } = _ref;
-            return {
-              x: x2,
-              y: y2
-            };
-          }
-        },
-        ...detectOverflowOptions
-      } = evaluate(options2, state2);
-      const coords = {
-        x,
-        y
-      };
-      const overflow = await detectOverflow(state2, detectOverflowOptions);
-      const crossAxis = getSideAxis(getSide(placement));
-      const mainAxis = getOppositeAxis(crossAxis);
-      let mainAxisCoord = coords[mainAxis];
-      let crossAxisCoord = coords[crossAxis];
-      if (checkMainAxis) {
-        const minSide = mainAxis === "y" ? "top" : "left";
-        const maxSide = mainAxis === "y" ? "bottom" : "right";
-        const min2 = mainAxisCoord + overflow[minSide];
-        const max2 = mainAxisCoord - overflow[maxSide];
-        mainAxisCoord = clamp2(min2, mainAxisCoord, max2);
-      }
-      if (checkCrossAxis) {
-        const minSide = crossAxis === "y" ? "top" : "left";
-        const maxSide = crossAxis === "y" ? "bottom" : "right";
-        const min2 = crossAxisCoord + overflow[minSide];
-        const max2 = crossAxisCoord - overflow[maxSide];
-        crossAxisCoord = clamp2(min2, crossAxisCoord, max2);
-      }
-      const limitedCoords = limiter.fn({
-        ...state2,
-        [mainAxis]: mainAxisCoord,
-        [crossAxis]: crossAxisCoord
-      });
-      return {
-        ...limitedCoords,
-        data: {
-          x: limitedCoords.x - x,
-          y: limitedCoords.y - y
-        }
-      };
-    }
-  };
-};
-var size = function(options2) {
-  if (options2 === void 0) {
-    options2 = {};
-  }
-  return {
-    name: "size",
-    options: options2,
-    async fn(state2) {
-      const {
-        placement,
-        rects,
-        platform: platform2,
-        elements
-      } = state2;
-      const {
-        apply: apply2 = () => {
-        },
-        ...detectOverflowOptions
-      } = evaluate(options2, state2);
-      const overflow = await detectOverflow(state2, detectOverflowOptions);
-      const side = getSide(placement);
-      const alignment = getAlignment(placement);
-      const isYAxis = getSideAxis(placement) === "y";
-      const {
-        width,
-        height
-      } = rects.floating;
-      let heightSide;
-      let widthSide;
-      if (side === "top" || side === "bottom") {
-        heightSide = side;
-        widthSide = alignment === (await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating)) ? "start" : "end") ? "left" : "right";
-      } else {
-        widthSide = side;
-        heightSide = alignment === "end" ? "top" : "bottom";
-      }
-      const overflowAvailableHeight = height - overflow[heightSide];
-      const overflowAvailableWidth = width - overflow[widthSide];
-      const noShift = !state2.middlewareData.shift;
-      let availableHeight = overflowAvailableHeight;
-      let availableWidth = overflowAvailableWidth;
-      if (isYAxis) {
-        const maximumClippingWidth = width - overflow.left - overflow.right;
-        availableWidth = alignment || noShift ? min(overflowAvailableWidth, maximumClippingWidth) : maximumClippingWidth;
-      } else {
-        const maximumClippingHeight = height - overflow.top - overflow.bottom;
-        availableHeight = alignment || noShift ? min(overflowAvailableHeight, maximumClippingHeight) : maximumClippingHeight;
-      }
-      if (noShift && !alignment) {
-        const xMin = max(overflow.left, 0);
-        const xMax = max(overflow.right, 0);
-        const yMin = max(overflow.top, 0);
-        const yMax = max(overflow.bottom, 0);
-        if (isYAxis) {
-          availableWidth = width - 2 * (xMin !== 0 || xMax !== 0 ? xMin + xMax : max(overflow.left, overflow.right));
-        } else {
-          availableHeight = height - 2 * (yMin !== 0 || yMax !== 0 ? yMin + yMax : max(overflow.top, overflow.bottom));
-        }
-      }
-      await apply2({
-        ...state2,
-        availableWidth,
-        availableHeight
-      });
-      const nextDimensions = await platform2.getDimensions(elements.floating);
-      if (width !== nextDimensions.width || height !== nextDimensions.height) {
-        return {
-          reset: {
-            rects: true
-          }
-        };
-      }
-      return {};
-    }
-  };
-};
-function getNodeName(node) {
-  if (isNode2(node)) {
-    return (node.nodeName || "").toLowerCase();
-  }
-  return "#document";
+function isWindow(value) {
+  return value && value.document && value.location && value.alert && value.setInterval;
 }
 function getWindow(node) {
-  var _node$ownerDocument;
-  return (node == null || (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
+  if (node == null) {
+    return window;
+  }
+  if (!isWindow(node)) {
+    const ownerDocument = node.ownerDocument;
+    return ownerDocument ? ownerDocument.defaultView || window : window;
+  }
+  return node;
 }
-function getDocumentElement(node) {
-  var _ref;
-  return (_ref = (isNode2(node) ? node.ownerDocument : node.document) || window.document) == null ? void 0 : _ref.documentElement;
+function getComputedStyle$1(element) {
+  return getWindow(element).getComputedStyle(element);
 }
-function isNode2(value) {
-  return value instanceof Node || value instanceof getWindow(value).Node;
-}
-function isElement(value) {
-  return value instanceof Element || value instanceof getWindow(value).Element;
+function getNodeName(node) {
+  return isWindow(node) ? "" : node ? (node.nodeName || "").toLowerCase() : "";
 }
 function isHTMLElement(value) {
-  return value instanceof HTMLElement || value instanceof getWindow(value).HTMLElement;
+  return value instanceof getWindow(value).HTMLElement;
 }
-function isShadowRoot(value) {
+function isElement(value) {
+  return value instanceof getWindow(value).Element;
+}
+function isNode2(value) {
+  return value instanceof getWindow(value).Node;
+}
+function isShadowRoot(node) {
   if (typeof ShadowRoot === "undefined") {
     return false;
   }
-  return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+  const OwnElement = getWindow(node).ShadowRoot;
+  return node instanceof OwnElement || node instanceof ShadowRoot;
 }
 function isOverflowElement(element) {
   const {
     overflow,
     overflowX,
-    overflowY,
-    display
-  } = getComputedStyle(element);
-  return /auto|scroll|overlay|hidden|clip/.test(overflow + overflowY + overflowX) && !["inline", "contents"].includes(display);
+    overflowY
+  } = getComputedStyle$1(element);
+  return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
 }
 function isTableElement(element) {
   return ["table", "td", "th"].includes(getNodeName(element));
 }
 function isContainingBlock(element) {
-  const webkit = isWebKit();
-  const css2 = getComputedStyle(element);
-  return css2.transform !== "none" || css2.perspective !== "none" || (css2.containerType ? css2.containerType !== "normal" : false) || !webkit && (css2.backdropFilter ? css2.backdropFilter !== "none" : false) || !webkit && (css2.filter ? css2.filter !== "none" : false) || ["transform", "perspective", "filter"].some((value) => (css2.willChange || "").includes(value)) || ["paint", "layout", "strict", "content"].some((value) => (css2.contain || "").includes(value));
+  const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+  const css2 = getComputedStyle$1(element);
+  return css2.transform !== "none" || css2.perspective !== "none" || css2.contain === "paint" || ["transform", "perspective"].includes(css2.willChange) || isFirefox && css2.willChange === "filter" || isFirefox && (css2.filter ? css2.filter !== "none" : false);
 }
-function getContainingBlock(element) {
-  let currentNode = getParentNode(element);
-  while (isHTMLElement(currentNode) && !isLastTraversableNode(currentNode)) {
-    if (isContainingBlock(currentNode)) {
-      return currentNode;
-    } else {
-      currentNode = getParentNode(currentNode);
-    }
+function isLayoutViewport() {
+  return !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+var min2 = Math.min;
+var max2 = Math.max;
+var round2 = Math.round;
+function getBoundingClientRect(element, includeScale, isFixedStrategy) {
+  var _win$visualViewport$o, _win$visualViewport, _win$visualViewport$o2, _win$visualViewport2;
+  if (includeScale === void 0) {
+    includeScale = false;
   }
-  return null;
+  if (isFixedStrategy === void 0) {
+    isFixedStrategy = false;
+  }
+  const clientRect = element.getBoundingClientRect();
+  let scaleX = 1;
+  let scaleY = 1;
+  if (includeScale && isHTMLElement(element)) {
+    scaleX = element.offsetWidth > 0 ? round2(clientRect.width) / element.offsetWidth || 1 : 1;
+    scaleY = element.offsetHeight > 0 ? round2(clientRect.height) / element.offsetHeight || 1 : 1;
+  }
+  const win = isElement(element) ? getWindow(element) : window;
+  const addVisualOffsets = !isLayoutViewport() && isFixedStrategy;
+  const x = (clientRect.left + (addVisualOffsets ? (_win$visualViewport$o = (_win$visualViewport = win.visualViewport) == null ? void 0 : _win$visualViewport.offsetLeft) != null ? _win$visualViewport$o : 0 : 0)) / scaleX;
+  const y = (clientRect.top + (addVisualOffsets ? (_win$visualViewport$o2 = (_win$visualViewport2 = win.visualViewport) == null ? void 0 : _win$visualViewport2.offsetTop) != null ? _win$visualViewport$o2 : 0 : 0)) / scaleY;
+  const width = clientRect.width / scaleX;
+  const height = clientRect.height / scaleY;
+  return {
+    width,
+    height,
+    top: y,
+    right: x + width,
+    bottom: y + height,
+    left: x,
+    x,
+    y
+  };
 }
-function isWebKit() {
-  if (typeof CSS === "undefined" || !CSS.supports)
-    return false;
-  return CSS.supports("-webkit-backdrop-filter", "none");
-}
-function isLastTraversableNode(node) {
-  return ["html", "body", "#document"].includes(getNodeName(node));
-}
-function getComputedStyle(element) {
-  return getWindow(element).getComputedStyle(element);
+function getDocumentElement(node) {
+  return ((isNode2(node) ? node.ownerDocument : node.document) || window.document).documentElement;
 }
 function getNodeScroll(element) {
   if (isElement(element)) {
@@ -34328,226 +34039,127 @@ function getNodeScroll(element) {
     scrollTop: element.pageYOffset
   };
 }
+function getWindowScrollBarX(element) {
+  return getBoundingClientRect(getDocumentElement(element)).left + getNodeScroll(element).scrollLeft;
+}
+function isScaled(element) {
+  const rect = getBoundingClientRect(element);
+  return round2(rect.width) !== element.offsetWidth || round2(rect.height) !== element.offsetHeight;
+}
+function getRectRelativeToOffsetParent(element, offsetParent, strategy) {
+  const isOffsetParentAnElement = isHTMLElement(offsetParent);
+  const documentElement = getDocumentElement(offsetParent);
+  const rect = getBoundingClientRect(element, isOffsetParentAnElement && isScaled(offsetParent), strategy === "fixed");
+  let scroll = {
+    scrollLeft: 0,
+    scrollTop: 0
+  };
+  const offsets = {
+    x: 0,
+    y: 0
+  };
+  if (isOffsetParentAnElement || !isOffsetParentAnElement && strategy !== "fixed") {
+    if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) {
+      scroll = getNodeScroll(offsetParent);
+    }
+    if (isHTMLElement(offsetParent)) {
+      const offsetRect = getBoundingClientRect(offsetParent, true);
+      offsets.x = offsetRect.x + offsetParent.clientLeft;
+      offsets.y = offsetRect.y + offsetParent.clientTop;
+    } else if (documentElement) {
+      offsets.x = getWindowScrollBarX(documentElement);
+    }
+  }
+  return {
+    x: rect.left + scroll.scrollLeft - offsets.x,
+    y: rect.top + scroll.scrollTop - offsets.y,
+    width: rect.width,
+    height: rect.height
+  };
+}
 function getParentNode(node) {
   if (getNodeName(node) === "html") {
     return node;
   }
-  const result = node.assignedSlot || node.parentNode || isShadowRoot(node) && node.host || getDocumentElement(node);
-  return isShadowRoot(result) ? result.host : result;
+  return node.assignedSlot || node.parentNode || (isShadowRoot(node) ? node.host : null) || getDocumentElement(node);
 }
-function getNearestOverflowAncestor(node) {
-  const parentNode = getParentNode(node);
-  if (isLastTraversableNode(parentNode)) {
-    return node.ownerDocument ? node.ownerDocument.body : node.body;
+function getTrueOffsetParent(element) {
+  if (!isHTMLElement(element) || getComputedStyle(element).position === "fixed") {
+    return null;
   }
-  if (isHTMLElement(parentNode) && isOverflowElement(parentNode)) {
-    return parentNode;
-  }
-  return getNearestOverflowAncestor(parentNode);
+  return element.offsetParent;
 }
-function getOverflowAncestors(node, list2, traverseIframes) {
-  var _node$ownerDocument2;
-  if (list2 === void 0) {
-    list2 = [];
+function getContainingBlock(element) {
+  let currentNode = getParentNode(element);
+  if (isShadowRoot(currentNode)) {
+    currentNode = currentNode.host;
   }
-  if (traverseIframes === void 0) {
-    traverseIframes = true;
-  }
-  const scrollableAncestor = getNearestOverflowAncestor(node);
-  const isBody = scrollableAncestor === ((_node$ownerDocument2 = node.ownerDocument) == null ? void 0 : _node$ownerDocument2.body);
-  const win = getWindow(scrollableAncestor);
-  if (isBody) {
-    return list2.concat(win, win.visualViewport || [], isOverflowElement(scrollableAncestor) ? scrollableAncestor : [], win.frameElement && traverseIframes ? getOverflowAncestors(win.frameElement) : []);
-  }
-  return list2.concat(scrollableAncestor, getOverflowAncestors(scrollableAncestor, [], traverseIframes));
-}
-function getCssDimensions(element) {
-  const css2 = getComputedStyle(element);
-  let width = parseFloat(css2.width) || 0;
-  let height = parseFloat(css2.height) || 0;
-  const hasOffset = isHTMLElement(element);
-  const offsetWidth = hasOffset ? element.offsetWidth : width;
-  const offsetHeight = hasOffset ? element.offsetHeight : height;
-  const shouldFallback = round2(width) !== offsetWidth || round2(height) !== offsetHeight;
-  if (shouldFallback) {
-    width = offsetWidth;
-    height = offsetHeight;
-  }
-  return {
-    width,
-    height,
-    $: shouldFallback
-  };
-}
-function unwrapElement(element) {
-  return !isElement(element) ? element.contextElement : element;
-}
-function getScale(element) {
-  const domElement = unwrapElement(element);
-  if (!isHTMLElement(domElement)) {
-    return createCoords(1);
-  }
-  const rect = domElement.getBoundingClientRect();
-  const {
-    width,
-    height,
-    $
-  } = getCssDimensions(domElement);
-  let x = ($ ? round2(rect.width) : rect.width) / width;
-  let y = ($ ? round2(rect.height) : rect.height) / height;
-  if (!x || !Number.isFinite(x)) {
-    x = 1;
-  }
-  if (!y || !Number.isFinite(y)) {
-    y = 1;
-  }
-  return {
-    x,
-    y
-  };
-}
-var noOffsets = /* @__PURE__ */ createCoords(0);
-function getVisualOffsets(element) {
-  const win = getWindow(element);
-  if (!isWebKit() || !win.visualViewport) {
-    return noOffsets;
-  }
-  return {
-    x: win.visualViewport.offsetLeft,
-    y: win.visualViewport.offsetTop
-  };
-}
-function shouldAddVisualOffsets(element, isFixed, floatingOffsetParent) {
-  if (isFixed === void 0) {
-    isFixed = false;
-  }
-  if (!floatingOffsetParent || isFixed && floatingOffsetParent !== getWindow(element)) {
-    return false;
-  }
-  return isFixed;
-}
-function getBoundingClientRect(element, includeScale, isFixedStrategy, offsetParent) {
-  if (includeScale === void 0) {
-    includeScale = false;
-  }
-  if (isFixedStrategy === void 0) {
-    isFixedStrategy = false;
-  }
-  const clientRect = element.getBoundingClientRect();
-  const domElement = unwrapElement(element);
-  let scale = createCoords(1);
-  if (includeScale) {
-    if (offsetParent) {
-      if (isElement(offsetParent)) {
-        scale = getScale(offsetParent);
-      }
+  while (isHTMLElement(currentNode) && !["html", "body"].includes(getNodeName(currentNode))) {
+    if (isContainingBlock(currentNode)) {
+      return currentNode;
     } else {
-      scale = getScale(element);
+      currentNode = currentNode.parentNode;
     }
   }
-  const visualOffsets = shouldAddVisualOffsets(domElement, isFixedStrategy, offsetParent) ? getVisualOffsets(domElement) : createCoords(0);
-  let x = (clientRect.left + visualOffsets.x) / scale.x;
-  let y = (clientRect.top + visualOffsets.y) / scale.y;
-  let width = clientRect.width / scale.x;
-  let height = clientRect.height / scale.y;
-  if (domElement) {
-    const win = getWindow(domElement);
-    const offsetWin = offsetParent && isElement(offsetParent) ? getWindow(offsetParent) : offsetParent;
-    let currentWin = win;
-    let currentIFrame = currentWin.frameElement;
-    while (currentIFrame && offsetParent && offsetWin !== currentWin) {
-      const iframeScale = getScale(currentIFrame);
-      const iframeRect = currentIFrame.getBoundingClientRect();
-      const css2 = getComputedStyle(currentIFrame);
-      const left = iframeRect.left + (currentIFrame.clientLeft + parseFloat(css2.paddingLeft)) * iframeScale.x;
-      const top = iframeRect.top + (currentIFrame.clientTop + parseFloat(css2.paddingTop)) * iframeScale.y;
-      x *= iframeScale.x;
-      y *= iframeScale.y;
-      width *= iframeScale.x;
-      height *= iframeScale.y;
-      x += left;
-      y += top;
-      currentWin = getWindow(currentIFrame);
-      currentIFrame = currentWin.frameElement;
-    }
-  }
-  return rectToClientRect({
-    width,
-    height,
-    x,
-    y
-  });
+  return null;
 }
-var topLayerSelectors = [":popover-open", ":modal"];
-function isTopLayer(floating) {
-  return topLayerSelectors.some((selector) => {
-    try {
-      return floating.matches(selector);
-    } catch (e2) {
-      return false;
-    }
-  });
+function getOffsetParent(element) {
+  const window2 = getWindow(element);
+  let offsetParent = getTrueOffsetParent(element);
+  while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === "static") {
+    offsetParent = getTrueOffsetParent(offsetParent);
+  }
+  if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle(offsetParent).position === "static" && !isContainingBlock(offsetParent))) {
+    return window2;
+  }
+  return offsetParent || getContainingBlock(element) || window2;
+}
+function getDimensions(element) {
+  if (isHTMLElement(element)) {
+    return {
+      width: element.offsetWidth,
+      height: element.offsetHeight
+    };
+  }
+  const rect = getBoundingClientRect(element);
+  return {
+    width: rect.width,
+    height: rect.height
+  };
 }
 function convertOffsetParentRelativeRectToViewportRelativeRect(_ref) {
   let {
-    elements,
     rect,
     offsetParent,
     strategy
   } = _ref;
-  const isFixed = strategy === "fixed";
+  const isOffsetParentAnElement = isHTMLElement(offsetParent);
   const documentElement = getDocumentElement(offsetParent);
-  const topLayer = elements ? isTopLayer(elements.floating) : false;
-  if (offsetParent === documentElement || topLayer && isFixed) {
+  if (offsetParent === documentElement) {
     return rect;
   }
   let scroll = {
     scrollLeft: 0,
     scrollTop: 0
   };
-  let scale = createCoords(1);
-  const offsets = createCoords(0);
-  const isOffsetParentAnElement = isHTMLElement(offsetParent);
-  if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+  const offsets = {
+    x: 0,
+    y: 0
+  };
+  if (isOffsetParentAnElement || !isOffsetParentAnElement && strategy !== "fixed") {
     if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) {
       scroll = getNodeScroll(offsetParent);
     }
     if (isHTMLElement(offsetParent)) {
-      const offsetRect = getBoundingClientRect(offsetParent);
-      scale = getScale(offsetParent);
+      const offsetRect = getBoundingClientRect(offsetParent, true);
       offsets.x = offsetRect.x + offsetParent.clientLeft;
       offsets.y = offsetRect.y + offsetParent.clientTop;
     }
   }
   return {
-    width: rect.width * scale.x,
-    height: rect.height * scale.y,
-    x: rect.x * scale.x - scroll.scrollLeft * scale.x + offsets.x,
-    y: rect.y * scale.y - scroll.scrollTop * scale.y + offsets.y
-  };
-}
-function getClientRects(element) {
-  return Array.from(element.getClientRects());
-}
-function getWindowScrollBarX(element) {
-  return getBoundingClientRect(getDocumentElement(element)).left + getNodeScroll(element).scrollLeft;
-}
-function getDocumentRect(element) {
-  const html2 = getDocumentElement(element);
-  const scroll = getNodeScroll(element);
-  const body = element.ownerDocument.body;
-  const width = max(html2.scrollWidth, html2.clientWidth, body.scrollWidth, body.clientWidth);
-  const height = max(html2.scrollHeight, html2.clientHeight, body.scrollHeight, body.clientHeight);
-  let x = -scroll.scrollLeft + getWindowScrollBarX(element);
-  const y = -scroll.scrollTop;
-  if (getComputedStyle(body).direction === "rtl") {
-    x += max(html2.clientWidth, body.clientWidth) - width;
-  }
-  return {
-    width,
-    height,
-    x,
-    y
+    ...rect,
+    x: rect.x - scroll.scrollLeft + offsets.x,
+    y: rect.y - scroll.scrollTop + offsets.y
   };
 }
 function getViewportRect(element, strategy) {
@@ -34561,8 +34173,8 @@ function getViewportRect(element, strategy) {
   if (visualViewport) {
     width = visualViewport.width;
     height = visualViewport.height;
-    const visualViewportBased = isWebKit();
-    if (!visualViewportBased || visualViewportBased && strategy === "fixed") {
+    const layoutViewport = isLayoutViewport();
+    if (layoutViewport || !layoutViewport && strategy === "fixed") {
       x = visualViewport.offsetLeft;
       y = visualViewport.offsetTop;
     }
@@ -34574,15 +34186,18 @@ function getViewportRect(element, strategy) {
     y
   };
 }
-function getInnerBoundingClientRect(element, strategy) {
-  const clientRect = getBoundingClientRect(element, true, strategy === "fixed");
-  const top = clientRect.top + element.clientTop;
-  const left = clientRect.left + element.clientLeft;
-  const scale = isHTMLElement(element) ? getScale(element) : createCoords(1);
-  const width = element.clientWidth * scale.x;
-  const height = element.clientHeight * scale.y;
-  const x = left * scale.x;
-  const y = top * scale.y;
+function getDocumentRect(element) {
+  var _element$ownerDocumen;
+  const html2 = getDocumentElement(element);
+  const scroll = getNodeScroll(element);
+  const body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+  const width = max2(html2.scrollWidth, html2.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
+  const height = max2(html2.scrollHeight, html2.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+  let x = -scroll.scrollLeft + getWindowScrollBarX(element);
+  const y = -scroll.scrollTop;
+  if (getComputedStyle$1(body || html2).direction === "rtl") {
+    x += max2(html2.clientWidth, body ? body.clientWidth : 0) - width;
+  }
   return {
     width,
     height,
@@ -34590,56 +34205,75 @@ function getInnerBoundingClientRect(element, strategy) {
     y
   };
 }
-function getClientRectFromClippingAncestor(element, clippingAncestor, strategy) {
-  let rect;
-  if (clippingAncestor === "viewport") {
-    rect = getViewportRect(element, strategy);
-  } else if (clippingAncestor === "document") {
-    rect = getDocumentRect(getDocumentElement(element));
-  } else if (isElement(clippingAncestor)) {
-    rect = getInnerBoundingClientRect(clippingAncestor, strategy);
-  } else {
-    const visualOffsets = getVisualOffsets(element);
-    rect = {
-      ...clippingAncestor,
-      x: clippingAncestor.x - visualOffsets.x,
-      y: clippingAncestor.y - visualOffsets.y
-    };
+function getNearestOverflowAncestor(node) {
+  const parentNode = getParentNode(node);
+  if (["html", "body", "#document"].includes(getNodeName(parentNode))) {
+    return node.ownerDocument.body;
   }
-  return rectToClientRect(rect);
+  if (isHTMLElement(parentNode) && isOverflowElement(parentNode)) {
+    return parentNode;
+  }
+  return getNearestOverflowAncestor(parentNode);
 }
-function hasFixedPositionAncestor(element, stopNode) {
-  const parentNode = getParentNode(element);
-  if (parentNode === stopNode || !isElement(parentNode) || isLastTraversableNode(parentNode)) {
-    return false;
+function getOverflowAncestors(node, list2) {
+  var _node$ownerDocument;
+  if (list2 === void 0) {
+    list2 = [];
   }
-  return getComputedStyle(parentNode).position === "fixed" || hasFixedPositionAncestor(parentNode, stopNode);
+  const scrollableAncestor = getNearestOverflowAncestor(node);
+  const isBody = scrollableAncestor === ((_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.body);
+  const win = getWindow(scrollableAncestor);
+  const target = isBody ? [win].concat(win.visualViewport || [], isOverflowElement(scrollableAncestor) ? scrollableAncestor : []) : scrollableAncestor;
+  const updatedList = list2.concat(target);
+  return isBody ? updatedList : updatedList.concat(getOverflowAncestors(target));
 }
-function getClippingElementAncestors(element, cache2) {
-  const cachedResult = cache2.get(element);
-  if (cachedResult) {
-    return cachedResult;
+function contains(parent, child) {
+  const rootNode = child == null ? void 0 : child.getRootNode == null ? void 0 : child.getRootNode();
+  if (parent != null && parent.contains(child)) {
+    return true;
+  } else if (rootNode && isShadowRoot(rootNode)) {
+    let next = child;
+    do {
+      if (next && parent === next) {
+        return true;
+      }
+      next = next.parentNode || next.host;
+    } while (next);
   }
-  let result = getOverflowAncestors(element, [], false).filter((el) => isElement(el) && getNodeName(el) !== "body");
-  let currentContainingBlockComputedStyle = null;
-  const elementIsFixed = getComputedStyle(element).position === "fixed";
-  let currentNode = elementIsFixed ? getParentNode(element) : element;
-  while (isElement(currentNode) && !isLastTraversableNode(currentNode)) {
-    const computedStyle = getComputedStyle(currentNode);
-    const currentNodeIsContaining = isContainingBlock(currentNode);
-    if (!currentNodeIsContaining && computedStyle.position === "fixed") {
-      currentContainingBlockComputedStyle = null;
-    }
-    const shouldDropCurrentNode = elementIsFixed ? !currentNodeIsContaining && !currentContainingBlockComputedStyle : !currentNodeIsContaining && computedStyle.position === "static" && !!currentContainingBlockComputedStyle && ["absolute", "fixed"].includes(currentContainingBlockComputedStyle.position) || isOverflowElement(currentNode) && !currentNodeIsContaining && hasFixedPositionAncestor(element, currentNode);
-    if (shouldDropCurrentNode) {
-      result = result.filter((ancestor) => ancestor !== currentNode);
-    } else {
-      currentContainingBlockComputedStyle = computedStyle;
-    }
-    currentNode = getParentNode(currentNode);
+  return false;
+}
+function getInnerBoundingClientRect(element, strategy) {
+  const clientRect = getBoundingClientRect(element, false, strategy === "fixed");
+  const top = clientRect.top + element.clientTop;
+  const left = clientRect.left + element.clientLeft;
+  return {
+    top,
+    left,
+    x: left,
+    y: top,
+    right: left + element.clientWidth,
+    bottom: top + element.clientHeight,
+    width: element.clientWidth,
+    height: element.clientHeight
+  };
+}
+function getClientRectFromClippingAncestor(element, clippingParent, strategy) {
+  if (clippingParent === "viewport") {
+    return rectToClientRect(getViewportRect(element, strategy));
   }
-  cache2.set(element, result);
-  return result;
+  if (isElement(clippingParent)) {
+    return getInnerBoundingClientRect(clippingParent, strategy);
+  }
+  return rectToClientRect(getDocumentRect(getDocumentElement(element)));
+}
+function getClippingAncestors(element) {
+  const clippingAncestors = getOverflowAncestors(element);
+  const canEscapeClipping = ["absolute", "fixed"].includes(getComputedStyle$1(element).position);
+  const clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
+  if (!isElement(clipperElement)) {
+    return [];
+  }
+  return clippingAncestors.filter((clippingAncestors2) => isElement(clippingAncestors2) && contains(clippingAncestors2, clipperElement) && getNodeName(clippingAncestors2) !== "body");
 }
 function getClippingRect(_ref) {
   let {
@@ -34648,15 +34282,15 @@ function getClippingRect(_ref) {
     rootBoundary,
     strategy
   } = _ref;
-  const elementClippingAncestors = boundary === "clippingAncestors" ? getClippingElementAncestors(element, this._c) : [].concat(boundary);
-  const clippingAncestors = [...elementClippingAncestors, rootBoundary];
+  const mainClippingAncestors = boundary === "clippingAncestors" ? getClippingAncestors(element) : [].concat(boundary);
+  const clippingAncestors = [...mainClippingAncestors, rootBoundary];
   const firstClippingAncestor = clippingAncestors[0];
   const clippingRect = clippingAncestors.reduce((accRect, clippingAncestor) => {
     const rect = getClientRectFromClippingAncestor(element, clippingAncestor, strategy);
-    accRect.top = max(rect.top, accRect.top);
-    accRect.right = min(rect.right, accRect.right);
-    accRect.bottom = min(rect.bottom, accRect.bottom);
-    accRect.left = max(rect.left, accRect.left);
+    accRect.top = max2(rect.top, accRect.top);
+    accRect.right = min2(rect.right, accRect.right);
+    accRect.bottom = min2(rect.bottom, accRect.bottom);
+    accRect.left = max2(rect.left, accRect.left);
     return accRect;
   }, getClientRectFromClippingAncestor(element, firstClippingAncestor, strategy));
   return {
@@ -34666,205 +34300,57 @@ function getClippingRect(_ref) {
     y: clippingRect.top
   };
 }
-function getDimensions(element) {
-  const {
-    width,
-    height
-  } = getCssDimensions(element);
-  return {
-    width,
-    height
-  };
-}
-function getRectRelativeToOffsetParent(element, offsetParent, strategy) {
-  const isOffsetParentAnElement = isHTMLElement(offsetParent);
-  const documentElement = getDocumentElement(offsetParent);
-  const isFixed = strategy === "fixed";
-  const rect = getBoundingClientRect(element, true, isFixed, offsetParent);
-  let scroll = {
-    scrollLeft: 0,
-    scrollTop: 0
-  };
-  const offsets = createCoords(0);
-  if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
-    if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) {
-      scroll = getNodeScroll(offsetParent);
-    }
-    if (isOffsetParentAnElement) {
-      const offsetRect = getBoundingClientRect(offsetParent, true, isFixed, offsetParent);
-      offsets.x = offsetRect.x + offsetParent.clientLeft;
-      offsets.y = offsetRect.y + offsetParent.clientTop;
-    } else if (documentElement) {
-      offsets.x = getWindowScrollBarX(documentElement);
-    }
-  }
-  const x = rect.left + scroll.scrollLeft - offsets.x;
-  const y = rect.top + scroll.scrollTop - offsets.y;
-  return {
-    x,
-    y,
-    width: rect.width,
-    height: rect.height
-  };
-}
-function getTrueOffsetParent(element, polyfill) {
-  if (!isHTMLElement(element) || getComputedStyle(element).position === "fixed") {
-    return null;
-  }
-  if (polyfill) {
-    return polyfill(element);
-  }
-  return element.offsetParent;
-}
-function getOffsetParent(element, polyfill) {
-  const window2 = getWindow(element);
-  if (!isHTMLElement(element) || isTopLayer(element)) {
-    return window2;
-  }
-  let offsetParent = getTrueOffsetParent(element, polyfill);
-  while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === "static") {
-    offsetParent = getTrueOffsetParent(offsetParent, polyfill);
-  }
-  if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle(offsetParent).position === "static" && !isContainingBlock(offsetParent))) {
-    return window2;
-  }
-  return offsetParent || getContainingBlock(element) || window2;
-}
-var getElementRects = async function(data3) {
-  const getOffsetParentFn = this.getOffsetParent || getOffsetParent;
-  const getDimensionsFn = this.getDimensions;
-  return {
-    reference: getRectRelativeToOffsetParent(data3.reference, await getOffsetParentFn(data3.floating), data3.strategy),
-    floating: {
-      x: 0,
-      y: 0,
-      ...await getDimensionsFn(data3.floating)
-    }
-  };
-};
-function isRTL(element) {
-  return getComputedStyle(element).direction === "rtl";
-}
 var platform = {
-  convertOffsetParentRelativeRectToViewportRelativeRect,
-  getDocumentElement,
   getClippingRect,
-  getOffsetParent,
-  getElementRects,
-  getClientRects,
-  getDimensions,
-  getScale,
+  convertOffsetParentRelativeRectToViewportRelativeRect,
   isElement,
-  isRTL
-};
-function observeMove(element, onMove) {
-  let io = null;
-  let timeoutId;
-  const root2 = getDocumentElement(element);
-  function cleanup() {
-    var _io;
-    clearTimeout(timeoutId);
-    (_io = io) == null || _io.disconnect();
-    io = null;
-  }
-  function refresh(skip, threshold) {
-    if (skip === void 0) {
-      skip = false;
-    }
-    if (threshold === void 0) {
-      threshold = 1;
-    }
-    cleanup();
-    const {
-      left,
-      top,
-      width,
-      height
-    } = element.getBoundingClientRect();
-    if (!skip) {
-      onMove();
-    }
-    if (!width || !height) {
-      return;
-    }
-    const insetTop = floor(top);
-    const insetRight = floor(root2.clientWidth - (left + width));
-    const insetBottom = floor(root2.clientHeight - (top + height));
-    const insetLeft = floor(left);
-    const rootMargin = -insetTop + "px " + -insetRight + "px " + -insetBottom + "px " + -insetLeft + "px";
-    const options2 = {
-      rootMargin,
-      threshold: max(0, min(1, threshold)) || 1
-    };
-    let isFirstUpdate = true;
-    function handleObserve(entries2) {
-      const ratio = entries2[0].intersectionRatio;
-      if (ratio !== threshold) {
-        if (!isFirstUpdate) {
-          return refresh();
-        }
-        if (!ratio) {
-          timeoutId = setTimeout(() => {
-            refresh(false, 1e-7);
-          }, 100);
-        } else {
-          refresh(false, ratio);
-        }
+  getDimensions,
+  getOffsetParent,
+  getDocumentElement,
+  getElementRects: (_ref) => {
+    let {
+      reference,
+      floating,
+      strategy
+    } = _ref;
+    return {
+      reference: getRectRelativeToOffsetParent(reference, getOffsetParent(floating), strategy),
+      floating: {
+        ...getDimensions(floating),
+        x: 0,
+        y: 0
       }
-      isFirstUpdate = false;
-    }
-    try {
-      io = new IntersectionObserver(handleObserve, {
-        ...options2,
-        root: root2.ownerDocument
-      });
-    } catch (e2) {
-      io = new IntersectionObserver(handleObserve, options2);
-    }
-    io.observe(element);
-  }
-  refresh(true);
-  return cleanup;
-}
+    };
+  },
+  getClientRects: (element) => Array.from(element.getClientRects()),
+  isRTL: (element) => getComputedStyle$1(element).direction === "rtl"
+};
 function autoUpdate(reference, floating, update, options2) {
   if (options2 === void 0) {
     options2 = {};
   }
   const {
-    ancestorScroll = true,
-    ancestorResize = true,
-    elementResize = typeof ResizeObserver === "function",
-    layoutShift = typeof IntersectionObserver === "function",
+    ancestorScroll: _ancestorScroll = true,
+    ancestorResize: _ancestorResize = true,
+    elementResize: _elementResize = true,
     animationFrame = false
   } = options2;
-  const referenceEl = unwrapElement(reference);
-  const ancestors = ancestorScroll || ancestorResize ? [...referenceEl ? getOverflowAncestors(referenceEl) : [], ...getOverflowAncestors(floating)] : [];
+  let cleanedUp = false;
+  const ancestorScroll = _ancestorScroll && !animationFrame;
+  const ancestorResize = _ancestorResize && !animationFrame;
+  const elementResize = _elementResize && !animationFrame;
+  const ancestors = ancestorScroll || ancestorResize ? [...isElement(reference) ? getOverflowAncestors(reference) : [], ...getOverflowAncestors(floating)] : [];
   ancestors.forEach((ancestor) => {
     ancestorScroll && ancestor.addEventListener("scroll", update, {
       passive: true
     });
     ancestorResize && ancestor.addEventListener("resize", update);
   });
-  const cleanupIo = referenceEl && layoutShift ? observeMove(referenceEl, update) : null;
-  let reobserveFrame = -1;
-  let resizeObserver = null;
+  let observer2 = null;
   if (elementResize) {
-    resizeObserver = new ResizeObserver((_ref) => {
-      let [firstEntry] = _ref;
-      if (firstEntry && firstEntry.target === referenceEl && resizeObserver) {
-        resizeObserver.unobserve(floating);
-        cancelAnimationFrame(reobserveFrame);
-        reobserveFrame = requestAnimationFrame(() => {
-          var _resizeObserver;
-          (_resizeObserver = resizeObserver) == null || _resizeObserver.observe(floating);
-        });
-      }
-      update();
-    });
-    if (referenceEl && !animationFrame) {
-      resizeObserver.observe(referenceEl);
-    }
-    resizeObserver.observe(floating);
+    observer2 = new ResizeObserver(update);
+    isElement(reference) && observer2.observe(reference);
+    observer2.observe(floating);
   }
   let frameId;
   let prevRefRect = animationFrame ? getBoundingClientRect(reference) : null;
@@ -34872,6 +34358,9 @@ function autoUpdate(reference, floating, update, options2) {
     frameLoop();
   }
   function frameLoop() {
+    if (cleanedUp) {
+      return;
+    }
     const nextRefRect = getBoundingClientRect(reference);
     if (prevRefRect && (nextRefRect.x !== prevRefRect.x || nextRefRect.y !== prevRefRect.y || nextRefRect.width !== prevRefRect.width || nextRefRect.height !== prevRefRect.height)) {
       update();
@@ -34879,47 +34368,27 @@ function autoUpdate(reference, floating, update, options2) {
     prevRefRect = nextRefRect;
     frameId = requestAnimationFrame(frameLoop);
   }
-  update();
   return () => {
-    var _resizeObserver2;
+    var _observer;
+    cleanedUp = true;
     ancestors.forEach((ancestor) => {
       ancestorScroll && ancestor.removeEventListener("scroll", update);
       ancestorResize && ancestor.removeEventListener("resize", update);
     });
-    cleanupIo == null || cleanupIo();
-    (_resizeObserver2 = resizeObserver) == null || _resizeObserver2.disconnect();
-    resizeObserver = null;
+    (_observer = observer2) == null ? void 0 : _observer.disconnect();
+    observer2 = null;
     if (animationFrame) {
       cancelAnimationFrame(frameId);
     }
   };
 }
-var autoPlacement2 = autoPlacement;
-var shift2 = shift;
-var flip2 = flip;
-var size2 = size;
-var hide2 = hide;
-var arrow2 = arrow;
-var inline22 = inline2;
-var computePosition2 = (reference, floating, options2) => {
-  const cache2 = /* @__PURE__ */ new Map();
-  const mergedOptions = {
-    platform,
-    ...options2
-  };
-  const platformWithCache = {
-    ...mergedOptions.platform,
-    _c: cache2
-  };
-  return computePosition(reference, floating, {
-    ...mergedOptions,
-    platform: platformWithCache
-  });
-};
+var computePosition2 = (reference, floating, options2) => computePosition(reference, floating, {
+  platform,
+  ...options2
+});
 var buildConfigFromModifiers = (modifiers) => {
   const config = {
     placement: "bottom",
-    strategy: "absolute",
     middleware: []
   };
   const keys = Object.keys(modifiers);
@@ -34929,32 +34398,29 @@ var buildConfigFromModifiers = (modifiers) => {
   if (keys.includes("offset")) {
     config.middleware.push(offset(getModifierArgument("offset")));
   }
-  if (keys.includes("teleport")) {
-    config.strategy = "fixed";
-  }
   if (keys.includes("placement")) {
     config.placement = getModifierArgument("placement");
   }
   if (keys.includes("autoPlacement") && !keys.includes("flip")) {
-    config.middleware.push(autoPlacement2(getModifierArgument("autoPlacement")));
+    config.middleware.push(autoPlacement(getModifierArgument("autoPlacement")));
   }
   if (keys.includes("flip")) {
-    config.middleware.push(flip2(getModifierArgument("flip")));
+    config.middleware.push(flip(getModifierArgument("flip")));
   }
   if (keys.includes("shift")) {
-    config.middleware.push(shift2(getModifierArgument("shift")));
+    config.middleware.push(shift(getModifierArgument("shift")));
   }
   if (keys.includes("inline")) {
-    config.middleware.push(inline22(getModifierArgument("inline")));
+    config.middleware.push(inline2(getModifierArgument("inline")));
   }
   if (keys.includes("arrow")) {
-    config.middleware.push(arrow2(getModifierArgument("arrow")));
+    config.middleware.push(arrow(getModifierArgument("arrow")));
   }
   if (keys.includes("hide")) {
-    config.middleware.push(hide2(getModifierArgument("hide")));
+    config.middleware.push(hide(getModifierArgument("hide")));
   }
   if (keys.includes("size")) {
-    config.middleware.push(size2(getModifierArgument("size")));
+    config.middleware.push(size(getModifierArgument("size")));
   }
   return config;
 };
@@ -34985,41 +34451,25 @@ var buildDirectiveConfigFromModifiers = (modifiers, settings) => {
     config.float.placement = getModifierArgument("placement");
   }
   if (modifiers.includes("autoPlacement") && !modifiers.includes("flip")) {
-    config.float.middleware.push(autoPlacement2(settings["autoPlacement"]));
+    config.float.middleware.push(autoPlacement(settings["autoPlacement"]));
   }
   if (modifiers.includes("flip")) {
-    config.float.middleware.push(flip2(settings["flip"]));
+    config.float.middleware.push(flip(settings["flip"]));
   }
   if (modifiers.includes("shift")) {
-    config.float.middleware.push(shift2(settings["shift"]));
+    config.float.middleware.push(shift(settings["shift"]));
   }
   if (modifiers.includes("inline")) {
-    config.float.middleware.push(inline22(settings["inline"]));
+    config.float.middleware.push(inline2(settings["inline"]));
   }
   if (modifiers.includes("arrow")) {
-    config.float.middleware.push(arrow2(settings["arrow"]));
+    config.float.middleware.push(arrow(settings["arrow"]));
   }
   if (modifiers.includes("hide")) {
-    config.float.middleware.push(hide2(settings["hide"]));
+    config.float.middleware.push(hide(settings["hide"]));
   }
   if (modifiers.includes("size")) {
-    const width = settings["size"]?.availableWidth ?? null;
-    const height = settings["size"]?.availableHeight ?? null;
-    if (width) {
-      delete settings["size"].availableWidth;
-    }
-    if (height) {
-      delete settings["size"].availableHeight;
-    }
-    config.float.middleware.push(size2({
-      ...settings["size"],
-      apply({availableWidth, availableHeight, elements}) {
-        Object.assign(elements.floating.style, {
-          maxWidth: `${width ?? availableWidth}px`,
-          maxHeight: `${height ?? availableHeight}px`
-        });
-      }
-    }));
+    config.float.middleware.push(size(settings["size"]));
   }
   return config;
 };
@@ -35034,6 +34484,135 @@ var randomString = (length) => {
   }
   return str;
 };
+var onAttributeAddeds = [];
+var onElRemoveds = [];
+var onElAddeds = [];
+function cleanupAttributes(el, names) {
+  if (!el._x_attributeCleanups)
+    return;
+  Object.entries(el._x_attributeCleanups).forEach(([name2, value]) => {
+    if (names === void 0 || names.includes(name2)) {
+      value.forEach((i) => i());
+      delete el._x_attributeCleanups[name2];
+    }
+  });
+}
+var observer = new MutationObserver(onMutate);
+var currentlyObserving = false;
+function startObservingMutations() {
+  observer.observe(document, {subtree: true, childList: true, attributes: true, attributeOldValue: true});
+  currentlyObserving = true;
+}
+function stopObservingMutations() {
+  flushObserver();
+  observer.disconnect();
+  currentlyObserving = false;
+}
+var recordQueue = [];
+var willProcessRecordQueue = false;
+function flushObserver() {
+  recordQueue = recordQueue.concat(observer.takeRecords());
+  if (recordQueue.length && !willProcessRecordQueue) {
+    willProcessRecordQueue = true;
+    queueMicrotask(() => {
+      processRecordQueue();
+      willProcessRecordQueue = false;
+    });
+  }
+}
+function processRecordQueue() {
+  onMutate(recordQueue);
+  recordQueue.length = 0;
+}
+function mutateDom(callback) {
+  if (!currentlyObserving)
+    return callback();
+  stopObservingMutations();
+  let result = callback();
+  startObservingMutations();
+  return result;
+}
+var isCollecting = false;
+var deferredMutations = [];
+function onMutate(mutations) {
+  if (isCollecting) {
+    deferredMutations = deferredMutations.concat(mutations);
+    return;
+  }
+  let addedNodes = [];
+  let removedNodes = [];
+  let addedAttributes = /* @__PURE__ */ new Map();
+  let removedAttributes = /* @__PURE__ */ new Map();
+  for (let i = 0; i < mutations.length; i++) {
+    if (mutations[i].target._x_ignoreMutationObserver)
+      continue;
+    if (mutations[i].type === "childList") {
+      mutations[i].addedNodes.forEach((node) => node.nodeType === 1 && addedNodes.push(node));
+      mutations[i].removedNodes.forEach((node) => node.nodeType === 1 && removedNodes.push(node));
+    }
+    if (mutations[i].type === "attributes") {
+      let el = mutations[i].target;
+      let name2 = mutations[i].attributeName;
+      let oldValue = mutations[i].oldValue;
+      let add = () => {
+        if (!addedAttributes.has(el))
+          addedAttributes.set(el, []);
+        addedAttributes.get(el).push({name: name2, value: el.getAttribute(name2)});
+      };
+      let remove = () => {
+        if (!removedAttributes.has(el))
+          removedAttributes.set(el, []);
+        removedAttributes.get(el).push(name2);
+      };
+      if (el.hasAttribute(name2) && oldValue === null) {
+        add();
+      } else if (el.hasAttribute(name2)) {
+        remove();
+        add();
+      } else {
+        remove();
+      }
+    }
+  }
+  removedAttributes.forEach((attrs, el) => {
+    cleanupAttributes(el, attrs);
+  });
+  addedAttributes.forEach((attrs, el) => {
+    onAttributeAddeds.forEach((i) => i(el, attrs));
+  });
+  for (let node of removedNodes) {
+    if (addedNodes.includes(node))
+      continue;
+    onElRemoveds.forEach((i) => i(node));
+    if (node._x_cleanups) {
+      while (node._x_cleanups.length)
+        node._x_cleanups.pop()();
+    }
+  }
+  addedNodes.forEach((node) => {
+    node._x_ignoreSelf = true;
+    node._x_ignore = true;
+  });
+  for (let node of addedNodes) {
+    if (removedNodes.includes(node))
+      continue;
+    if (!node.isConnected)
+      continue;
+    delete node._x_ignoreSelf;
+    delete node._x_ignore;
+    onElAddeds.forEach((i) => i(node));
+    node._x_ignore = true;
+    node._x_ignoreSelf = true;
+  }
+  addedNodes.forEach((node) => {
+    delete node._x_ignoreSelf;
+    delete node._x_ignore;
+  });
+  addedNodes = null;
+  removedNodes = null;
+  addedAttributes = null;
+  removedAttributes = null;
+}
 function once(callback, fallback = () => {
 }) {
   let called = false;
@@ -35051,7 +34630,7 @@ function src_default(Alpine) {
     dismissable: true,
     trap: false
   };
-  function setupA11y(trigger, panel2 = null) {
+  function setupA11y(component, trigger, panel2 = null) {
     if (!trigger)
       return;
     if (!trigger.hasAttribute("aria-expanded")) {
@@ -35067,29 +34646,35 @@ function src_default(Alpine) {
     panel2.setAttribute("aria-modal", true);
     panel2.setAttribute("role", "dialog");
   }
+  const atMagicTrigger = document.querySelectorAll('[\\@click^="$float"]');
+  const xMagicTrigger = document.querySelectorAll('[x-on\\:click^="$float"]');
+  [...atMagicTrigger, ...xMagicTrigger].forEach((trigger) => {
+    const component = trigger.parentElement.closest("[x-data]");
+    const panel2 = component.querySelector('[x-ref="panel"]');
+    setupA11y(component, trigger, panel2);
+  });
   Alpine.magic("float", (el) => {
     return (modifiers = {}, settings = {}) => {
       const options2 = {...defaultOptions2, ...settings};
-      const config = Object.keys(modifiers).length > 0 ? buildConfigFromModifiers(modifiers) : {middleware: [autoPlacement2()]};
+      const config = Object.keys(modifiers).length > 0 ? buildConfigFromModifiers(modifiers) : {middleware: [autoPlacement()]};
       const trigger = el;
       const component = el.parentElement.closest("[x-data]");
       const panel2 = component.querySelector('[x-ref="panel"]');
-      setupA11y(trigger, panel2);
       function isFloating() {
         return panel2.style.display == "block";
       }
       function closePanel() {
-        panel2.style.display = "none";
-        trigger.setAttribute("aria-expanded", "false");
+        panel2.style.display = "";
+        trigger.setAttribute("aria-expanded", false);
         if (options2.trap)
-          panel2.setAttribute("x-trap", "false");
+          panel2.setAttribute("x-trap", false);
         autoUpdate(el, panel2, update);
       }
       function openPanel() {
         panel2.style.display = "block";
-        trigger.setAttribute("aria-expanded", "true");
+        trigger.setAttribute("aria-expanded", true);
         if (options2.trap)
-          panel2.setAttribute("x-trap", "true");
+          panel2.setAttribute("x-trap", true);
         update();
       }
       function togglePanel() {
@@ -35142,8 +34727,8 @@ function src_default(Alpine) {
       togglePanel();
     };
   });
-  Alpine.directive("float", (panel2, {modifiers, expression}, {evaluate: evaluate2, effect}) => {
-    const settings = expression ? evaluate2(expression) : {};
+  Alpine.directive("float", (panel2, {modifiers, expression}, {evaluate, effect}) => {
+    const settings = expression ? evaluate(expression) : {};
     const config = modifiers.length > 0 ? buildDirectiveConfigFromModifiers(modifiers, settings) : {};
     let cleanup = null;
     if (config.float.strategy == "fixed") {
@@ -35156,18 +34741,22 @@ function src_default(Alpine) {
     const atTrigger = component.querySelectorAll(`[\\@click^="$refs.${refName}"]`);
     const xTrigger = component.querySelectorAll(`[x-on\\:click^="$refs.${refName}"]`);
     panel2.style.setProperty("display", "none");
-    setupA11y([...atTrigger, ...xTrigger][0], panel2);
+    setupA11y(component, [...atTrigger, ...xTrigger][0], panel2);
     panel2._x_isShown = false;
     panel2.trigger = null;
     if (!panel2._x_doHide)
       panel2._x_doHide = () => {
-        panel2.style.setProperty("display", "none", modifiers.includes("important") ? "important" : void 0);
+        mutateDom(() => {
+          panel2.style.setProperty("display", "none", modifiers.includes("important") ? "important" : void 0);
+        });
       };
     if (!panel2._x_doShow)
       panel2._x_doShow = () => {
-        panel2.style.setProperty("display", "block", modifiers.includes("important") ? "important" : void 0);
+        mutateDom(() => {
+          panel2.style.setProperty("display", "block", modifiers.includes("important") ? "important" : void 0);
+        });
       };
-    let hide3 = () => {
+    let hide2 = () => {
       panel2._x_doHide();
       panel2._x_isShown = false;
     };
@@ -35176,20 +34765,20 @@ function src_default(Alpine) {
       panel2._x_isShown = true;
     };
     let clickAwayCompatibleShow = () => setTimeout(show);
-    let toggle = once((value) => value ? show() : hide3(), (value) => {
+    let toggle = once((value) => value ? show() : hide2(), (value) => {
       if (typeof panel2._x_toggleAndCascadeWithTransitions === "function") {
-        panel2._x_toggleAndCascadeWithTransitions(panel2, value, show, hide3);
+        panel2._x_toggleAndCascadeWithTransitions(panel2, value, show, hide2);
       } else {
-        value ? clickAwayCompatibleShow() : hide3();
+        value ? clickAwayCompatibleShow() : hide2();
       }
     });
     let oldValue;
     let firstTime = true;
-    effect(() => evaluate2((value) => {
+    effect(() => evaluate((value) => {
       if (!firstTime && value === oldValue)
         return;
       if (modifiers.includes("immediate"))
-        value ? clickAwayCompatibleShow() : hide3();
+        value ? clickAwayCompatibleShow() : hide2();
       toggle(value);
       oldValue = value;
       firstTime = false;
@@ -35197,9 +34786,9 @@ function src_default(Alpine) {
     panel2.open = async function(event) {
       panel2.trigger = event.currentTarget ? event.currentTarget : event;
       toggle(true);
-      panel2.trigger.setAttribute("aria-expanded", "true");
+      panel2.trigger.setAttribute("aria-expanded", true);
       if (config.component.trap)
-        panel2.setAttribute("x-trap", "true");
+        panel2.setAttribute("x-trap", true);
       cleanup = autoUpdate(panel2.trigger, panel2, () => {
         computePosition2(panel2.trigger, panel2, config.float).then(({middlewareData, placement, x, y}) => {
           if (middlewareData.arrow) {
@@ -35236,13 +34825,10 @@ function src_default(Alpine) {
       window.addEventListener("keydown", keyEscape, true);
     };
     panel2.close = function() {
-      if (!panel2._x_isShown) {
-        return false;
-      }
       toggle(false);
-      panel2.trigger.setAttribute("aria-expanded", "false");
+      panel2.trigger.setAttribute("aria-expanded", false);
       if (config.component.trap)
-        panel2.setAttribute("x-trap", "false");
+        panel2.setAttribute("x-trap", false);
       cleanup();
       window.removeEventListener("click", clickAway);
       window.removeEventListener("keydown", keyEscape, false);
