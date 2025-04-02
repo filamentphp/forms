@@ -293,6 +293,7 @@
                 "
             @endif
             x-bind:class="{ 'hidden': isLastStep(), 'block': ! isLastStep() }"
+            wire:loading.class="pointer-events-none opacity-70"
         >
             {{ $nextAction }}
         </span>
