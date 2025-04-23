@@ -2,9 +2,11 @@
 
 namespace Filament\Forms\Components\Builder;
 
+use BackedEnum;
 use Closure;
-use Filament\Forms\Components\Component;
+use Exception;
 use Filament\Forms\Components\Concerns;
+use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Block extends Component
@@ -14,7 +16,7 @@ class Block extends Component
     }
     use Concerns\HasPreview;
 
-    protected string | Closure | null $icon = null;
+    protected string | BackedEnum | Closure | null $icon = null;
 
     protected int | Closure | null $maxItems = null;
 
@@ -23,22 +25,35 @@ class Block extends Component
         $this->name($name);
     }
 
-    public static function make(string $name): static
+    public static function make(?string $name = null): static
     {
-        $static = app(static::class, ['name' => $name]);
+        $blockClass = static::class;
+
+        $name ??= static::getDefaultName();
+
+        if (blank($name)) {
+            throw new Exception("Block of class [$blockClass] must have a unique name, passed to the [make()] method.");
+        }
+
+        $static = app($blockClass, ['name' => $name]);
         $static->configure();
 
         return $static;
     }
 
-    public function icon(string | Closure | null $icon): static
+    public static function getDefaultName(): ?string
+    {
+        return null;
+    }
+
+    public function icon(string | BackedEnum | Closure | null $icon): static
     {
         $this->icon = $icon;
 
         return $this;
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string | BackedEnum | null
     {
         return $this->evaluate($this->icon);
     }
@@ -58,11 +73,11 @@ class Block extends Component
     /**
      * @param  array<string, mixed> | null  $state
      */
-    public function getLabel(?array $state = null, ?string $uuid = null): string | Htmlable
+    public function getLabel(?array $state = null, ?string $key = null): string | Htmlable
     {
         return $this->evaluate(
             $this->label,
-            ['state' => $state, 'uuid' => $uuid],
+            ['key' => $key, 'state' => $state, 'uuid' => $key],
         ) ?? $this->getDefaultLabel();
     }
 }

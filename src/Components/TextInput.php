@@ -5,10 +5,11 @@ namespace Filament\Forms\Components;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Contracts\CanHaveNumericState;
+use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\RawJs;
 
-class TextInput extends Field implements CanHaveNumericState, Contracts\CanBeLengthConstrained, Contracts\HasAffixActions
+class TextInput extends Field implements CanHaveNumericState, Contracts\CanBeLengthConstrained, HasAffixActions
 {
     use Concerns\CanBeAutocapitalized;
     use Concerns\CanBeAutocompleted;
@@ -55,9 +56,13 @@ class TextInput extends Field implements CanHaveNumericState, Contracts\CanBeLen
 
     protected string | Closure | null $type = null;
 
-    public function currentPassword(bool | Closure $condition = true): static
+    public function currentPassword(bool | Closure $condition = true, ?string $guard = null): static
     {
-        $this->rule('current_password', $condition);
+        if (filled($guard)) {
+            $this->rule("current_password:{$guard}", $condition);
+        } else {
+            $this->rule('current_password', $condition);
+        }
 
         return $this;
     }

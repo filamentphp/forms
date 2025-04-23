@@ -11,17 +11,64 @@ return [
             ],
 
             'add' => [
+
                 'label' => ':label 추가',
-            ],
 
+                'modal' => [
+
+                    'heading' => ':label 추가',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => '추가',
+                        ],
+
+                    ],
+
+                ],
+            ],
             'add_between' => [
-                'label' => '블록 사이에 삽입',
-            ],
 
+                'label' => '블록 사이에 삽입',
+
+                'modal' => [
+
+                    'heading' => ':label 추가',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => '추가',
+                        ],
+
+                    ],
+
+                ],
+            ],
             'delete' => [
                 'label' => '삭제',
             ],
 
+            'edit' => [
+
+                'label' => '수정',
+
+                'modal' => [
+
+                    'heading' => '블록 수정',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => '변경사항 저장',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
             'reorder' => [
                 'label' => '이동',
             ],
@@ -358,7 +405,7 @@ return [
 
                 'modal' => [
 
-                    'heading' => '만들기',
+                    'heading' => '새로 만들기',
 
                     'actions' => [
 
@@ -367,7 +414,7 @@ return [
                         ],
 
                         'create_another' => [
-                            'label' => '계속 만들기',
+                            'label' => '만들고 다른 것 만들기',
                         ],
 
                     ],
@@ -403,16 +450,15 @@ return [
 
         'loading_message' => '로드 중...',
 
-        'max_items_message' => ':count개 까지 선택할 수 있습니다.',
+        'max_items_message' => ':count개까지만 선택할 수 있습니다.',
 
-        'no_search_results_message' => '검색과 일치하는 옵션이 없습니다.',
+        'no_search_results_message' => '검색 결과가 없습니다.',
 
-        'placeholder' => '옵션 선택',
+        'placeholder' => '옵션을 선택하세요',
 
         'searching_message' => '검색 중...',
 
-        'search_prompt' => '이곳에 입력하여 검색 시작',
-
+        'search_prompt' => '검색어를 입력하세요...',
     ],
 
     'tags_input' => [
@@ -440,22 +486,6 @@ return [
         'boolean' => [
             'true' => '예',
             'false' => '아니오',
-        ],
-
-    ],
-
-    'wizard' => [
-
-        'actions' => [
-
-            'previous_step' => [
-                'label' => '이전',
-            ],
-
-            'next_step' => [
-                'label' => '다음',
-            ],
-
         ],
 
     ],

@@ -2,10 +2,9 @@
 
 namespace Filament\Forms;
 
-use Filament\Forms\Testing\TestsComponentActions;
+use Filament\Forms\Testing\TestsFormComponentActions;
 use Filament\Forms\Testing\TestsForms;
 use Filament\Support\Assets\AlpineComponent;
-use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
@@ -18,7 +17,11 @@ class FormsServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('filament-forms')
-            ->hasCommands($this->getCommands())
+            ->hasCommands([
+                Commands\MakeFieldCommand::class,
+                Commands\MakeFormCommand::class,
+                Commands\MakeLivewireFormCommand::class,
+            ])
             ->hasTranslations()
             ->hasViews();
     }
@@ -26,6 +29,7 @@ class FormsServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         FilamentAsset::register([
+            AlpineComponent::make('checkbox-list', __DIR__ . '/../dist/components/checkbox-list.js'),
             AlpineComponent::make('color-picker', __DIR__ . '/../dist/components/color-picker.js'),
             AlpineComponent::make('date-time-picker', __DIR__ . '/../dist/components/date-time-picker.js'),
             AlpineComponent::make('file-upload', __DIR__ . '/../dist/components/file-upload.js'),
@@ -35,7 +39,6 @@ class FormsServiceProvider extends PackageServiceProvider
             AlpineComponent::make('select', __DIR__ . '/../dist/components/select.js'),
             AlpineComponent::make('tags-input', __DIR__ . '/../dist/components/tags-input.js'),
             AlpineComponent::make('textarea', __DIR__ . '/../dist/components/textarea.js'),
-            Css::make('forms', __DIR__ . '/../dist/index.css'),
         ], 'filament/forms');
 
         if ($this->app->runningInConsole()) {
@@ -47,35 +50,6 @@ class FormsServiceProvider extends PackageServiceProvider
         }
 
         Testable::mixin(new TestsForms);
-        Testable::mixin(new TestsComponentActions);
-    }
-
-    /**
-     * @return array<class-string>
-     */
-    protected function getCommands(): array
-    {
-        $commands = [
-            Commands\MakeFieldCommand::class,
-            Commands\MakeFormCommand::class,
-            Commands\MakeLayoutComponentCommand::class,
-        ];
-
-        $aliases = [];
-
-        foreach ($commands as $command) {
-            $class = 'Filament\\Forms\\Commands\\Aliases\\' . class_basename($command);
-
-            if (! class_exists($class)) {
-                continue;
-            }
-
-            $aliases[] = $class;
-        }
-
-        return [
-            ...$commands,
-            ...$aliases,
-        ];
+        Testable::mixin(new TestsFormComponentActions);
     }
 }

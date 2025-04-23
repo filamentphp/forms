@@ -778,11 +778,11 @@ import km from 'filepond/locale/km-km'
 import ko from 'filepond/locale/ko-kr'
 import lt from 'filepond/locale/lt-lt'
 import lv from 'filepond/locale/lv-lv'
+import nb from 'filepond/locale/no_nb'
 import nl from 'filepond/locale/nl-nl'
-import no from 'filepond/locale/no_nb'
 import pl from 'filepond/locale/pl-pl'
+import pt from 'filepond/locale/pt-pt'
 import pt_BR from 'filepond/locale/pt-br'
-import pt_PT from 'filepond/locale/pt-br'
 import ro from 'filepond/locale/ro-ro'
 import ru from 'filepond/locale/ru-ru'
 import sk from 'filepond/locale/sk-sk'
@@ -818,11 +818,11 @@ const locales = {
     ko,
     lt,
     lv,
+    nb,
     nl,
-    no,
     pl,
+    pt,
     pt_BR,
-    pt_PT,
     ro,
     ru,
     sk,

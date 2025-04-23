@@ -396,6 +396,8 @@ return [
             'ordered_list' => 'Numbered list',
             'redo' => 'Redo',
             'strike' => 'Strikethrough',
+            'subscript' => 'Subscript',
+            'superscript' => 'Superscript',
             'underline' => 'Underline',
             'undo' => 'Undo',
         ],
@@ -496,22 +498,6 @@ return [
         'boolean' => [
             'true' => 'Yes',
             'false' => 'No',
-        ],
-
-    ],
-
-    'wizard' => [
-
-        'actions' => [
-
-            'previous_step' => [
-                'label' => 'Back',
-            ],
-
-            'next_step' => [
-                'label' => 'Next',
-            ],
-
         ],
 
     ],

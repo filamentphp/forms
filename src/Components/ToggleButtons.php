@@ -3,7 +3,12 @@
 namespace Filament\Forms\Components;
 
 use Closure;
+use Filament\Schemas\Components\StateCasts\BooleanStateCast;
+use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
+use Filament\Schemas\Components\StateCasts\EnumArrayStateCast;
+use Filament\Schemas\Components\StateCasts\EnumStateCast;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 
 class ToggleButtons extends Field implements Contracts\CanDisableOptions
 {
@@ -67,9 +72,11 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
         ]);
 
         $this->icons([
-            1 => FilamentIcon::resolve('forms::components.toggle-buttons.boolean.true') ?? 'heroicon-m-check',
-            0 => FilamentIcon::resolve('forms::components.toggle-buttons.boolean.false') ?? 'heroicon-m-x-mark',
+            1 => FilamentIcon::resolve('forms::components.toggle-buttons.boolean.true') ?? Heroicon::Check,
+            0 => FilamentIcon::resolve('forms::components.toggle-buttons.boolean.false') ?? Heroicon::XMark,
         ]);
+
+        $this->stateCast(app(BooleanStateCast::class, ['isStoredAsInt' => true]));
 
         return $this;
     }
@@ -119,5 +126,43 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
         }
 
         return $state;
+    }
+
+    public function getEnumDefaultStateCast(): ?StateCast
+    {
+        $enum = $this->getEnum();
+
+        if (blank($enum)) {
+            return null;
+        }
+
+        return app(
+            $this->isMultiple() ? EnumArrayStateCast::class : EnumStateCast::class,
+            ['enum' => $enum],
+        );
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getInValidationRuleValues(): ?array
+    {
+        $values = parent::getInValidationRuleValues();
+
+        if ($values !== null) {
+            return $values;
+        }
+
+        return array_keys($this->getEnabledOptions());
+    }
+
+    public function hasInValidationOnMultipleValues(): bool
+    {
+        return $this->isMultiple();
+    }
+
+    public function hasNullableBooleanState(): bool
+    {
+        return true;
     }
 }
