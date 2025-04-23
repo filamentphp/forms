@@ -3,12 +3,8 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Exception;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
-use Filament\Schemas\Components\StateCasts\EnumArrayStateCast;
-use Filament\Support\Concerns\HasExtraAlpineAttributes;
-use Filament\Support\Enums\Size;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Support\Enums\ActionSize;
 use Filament\Support\Services\RelationshipJoiner;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,7 +27,6 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     use Concerns\HasNestedRecursiveValidationRules;
     use Concerns\HasOptions;
     use Concerns\HasPivotData;
-    use HasExtraAlpineAttributes;
 
     /**
      * @var view-string
@@ -56,7 +51,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
 
         $this->default([]);
 
-        $this->afterStateHydrated(static function (CheckboxList $component, $state): void {
+        $this->afterStateHydrated(static function (CheckboxList $component, $state) {
             if (is_array($state)) {
                 return;
             }
@@ -78,7 +73,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             ->label(__('filament-forms::components.checkbox_list.actions.select_all.label'))
             ->livewireClickHandlerEnabled(false)
             ->link()
-            ->size(Size::Small);
+            ->size(ActionSize::Small);
 
         if ($this->modifySelectAllActionUsing) {
             $action = $this->evaluate($this->modifySelectAllActionUsing, [
@@ -107,7 +102,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             ->label(__('filament-forms::components.checkbox_list.actions.deselect_all.label'))
             ->livewireClickHandlerEnabled(false)
             ->link()
-            ->size(Size::Small);
+            ->size(ActionSize::Small);
 
         if ($this->modifyDeselectAllActionUsing) {
             $action = $this->evaluate($this->modifyDeselectAllActionUsing, [
@@ -198,7 +193,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             );
         });
 
-        $this->saveRelationshipsUsing(static function (CheckboxList $component, ?array $state) use ($modifyQueryUsing): void {
+        $this->saveRelationshipsUsing(static function (CheckboxList $component, ?array $state) use ($modifyQueryUsing) {
             $relationship = $component->getRelationship();
 
             if ($modifyQueryUsing) {
@@ -299,13 +294,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             return null;
         }
 
-        $record = $this->getModelInstance();
-
-        if (! $record->isRelation($name)) {
-            throw new Exception("The relationship [{$name}] does not exist on the model [{$this->getModel()}].");
-        }
-
-        return $record->{$name}();
+        return $this->getModelInstance()->{$name}();
     }
 
     public function getRelationshipName(): ?string
@@ -316,38 +305,5 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     public function isBulkToggleable(): bool
     {
         return (bool) $this->evaluate($this->isBulkToggleable);
-    }
-
-    public function getEnumDefaultStateCast(): ?StateCast
-    {
-        $enum = $this->getEnum();
-
-        if (blank($enum)) {
-            return null;
-        }
-
-        return app(
-            EnumArrayStateCast::class,
-            ['enum' => $enum],
-        );
-    }
-
-    /**
-     * @return ?array<string>
-     */
-    public function getInValidationRuleValues(): ?array
-    {
-        $values = parent::getInValidationRuleValues();
-
-        if ($values !== null) {
-            return $values;
-        }
-
-        return array_keys($this->getEnabledOptions());
-    }
-
-    public function hasInValidationOnMultipleValues(): bool
-    {
-        return true;
     }
 }

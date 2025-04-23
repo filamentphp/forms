@@ -3,13 +3,12 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Illuminate\Contracts\Support\Arrayable;
 
-class TagsInput extends Field implements Contracts\HasNestedRecursiveValidationRules, HasAffixActions
+class TagsInput extends Field implements Contracts\HasAffixActions, Contracts\HasNestedRecursiveValidationRules
 {
     use Concerns\HasAffixes;
     use Concerns\HasExtraInputAttributes;

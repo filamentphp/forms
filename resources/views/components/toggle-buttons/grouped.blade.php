@@ -1,30 +1,37 @@
 @php
-    $fieldWrapperView = $getFieldWrapperView();
     $hasInlineLabel = $hasInlineLabel();
     $id = $getId();
     $isDisabled = $isDisabled();
     $isMultiple = $isMultiple();
     $statePath = $getStatePath();
     $areButtonLabelsHidden = $areButtonLabelsHidden();
-    $wireModelAttribute = $applyStateBindingModifiers('wire:model');
-    $extraInputAttributeBag = $getExtraInputAttributeBag()->class(['fi-fo-toggle-buttons-input']);
 @endphp
 
 <x-dynamic-component
-    :component="$fieldWrapperView"
+    :component="$getFieldWrapperView()"
     :field="$field"
     :has-inline-label="$hasInlineLabel"
-    class="fi-fo-toggle-buttons-wrp"
 >
-    <div
-        {{ $getExtraAttributeBag()->class(['fi-fo-toggle-buttons fi-btn-group']) }}
+    <x-slot
+        name="label"
+        @class([
+            'sm:pt-1.5' => $hasInlineLabel,
+        ])
+    >
+        {{ $getLabel() }}
+    </x-slot>
+
+    <x-filament::button.group
+        :attributes="
+            \Filament\Support\prepare_inherited_attributes($attributes)
+                ->merge($getExtraAttributes(), escape: false)
+                ->class(['w-max'])
+        "
     >
         @foreach ($getOptions() as $value => $label)
             @php
                 $inputId = "{$id}-{$value}";
                 $shouldOptionBeDisabled = $isDisabled || $isOptionDisabled($value, $label);
-                $color = $getColor($value);
-                $icon = $getIcon($value);
             @endphp
 
             <input
@@ -36,21 +43,21 @@
                 type="{{ $isMultiple ? 'checkbox' : 'radio' }}"
                 value="{{ $value }}"
                 wire:loading.attr="disabled"
-                {{ $wireModelAttribute }}="{{ $statePath }}"
-                {{ $extraInputAttributeBag }}
+                {{ $applyStateBindingModifiers('wire:model') }}="{{ $statePath }}"
+                {{ $getExtraInputAttributeBag()->class(['peer pointer-events-none absolute opacity-0']) }}
             />
 
             <x-filament::button
-                :color="$color"
+                :color="$getColor($value)"
                 :disabled="$shouldOptionBeDisabled"
                 :for="$inputId"
                 grouped
-                :icon="$icon"
+                :icon="$getIcon($value)"
                 :label-sr-only="$areButtonLabelsHidden"
                 tag="label"
             >
                 {{ $label }}
             </x-filament::button>
         @endforeach
-    </div>
+    </x-filament::button.group>
 </x-dynamic-component>

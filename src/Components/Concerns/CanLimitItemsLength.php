@@ -3,7 +3,7 @@
 namespace Filament\Forms\Components\Concerns;
 
 use Closure;
-use Filament\Schemas\Components\Component;
+use Filament\Forms\Components\Component;
 
 trait CanLimitItemsLength
 {
@@ -73,7 +73,7 @@ trait CanLimitItemsLength
 
     public function getItemsCount(): int
     {
-        $state = $this->getRawState();
+        $state = $this->getState();
 
         return is_array($state) ? count($state) : 0;
     }

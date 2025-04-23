@@ -236,4 +236,20 @@ return [
         'placeholder' => 'Lebo mpya',
     ],
 
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Nyuma',
+            ],
+
+            'next_step' => [
+                'label' => 'Mbele',
+            ],
+
+        ],
+
+    ],
+
 ];

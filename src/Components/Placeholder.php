@@ -2,22 +2,54 @@
 
 namespace Filament\Forms\Components;
 
-use Filament\Infolists\Components\TextEntry;
-
-/**
- * @deprecated Use `TextEntry` with the `state()` method instead.
- */
-class Placeholder extends TextEntry
+class Placeholder extends Component implements Contracts\HasHintActions
 {
+    use Concerns\HasHelperText;
+    use Concerns\HasHint;
+    use Concerns\HasName;
+
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-forms::components.placeholder';
+
+    protected mixed $content = null;
+
+    final public function __construct(string $name)
+    {
+        $this->name($name);
+        $this->statePath($name);
+    }
+
+    public static function make(string $name): static
+    {
+        $static = app(static::class, ['name' => $name]);
+        $static->configure();
+
+        return $static;
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->dehydrated(false);
+    }
+
     public function content(mixed $content): static
     {
-        $this->state($content);
+        $this->content = $content;
 
         return $this;
     }
 
+    public function getId(): string
+    {
+        return parent::getId() ?? $this->getStatePath();
+    }
+
     public function getContent(): mixed
     {
-        return $this->getState();
+        return $this->evaluate($this->content);
     }
 }

@@ -1,8 +1,6 @@
 @php
     use Filament\Support\Facades\FilamentView;
 
-    $fieldWrapperView = $getFieldWrapperView();
-    $extraAttributeBag = $getExtraAttributeBag();
     $isDisabled = $isDisabled();
     $isLive = $isLive();
     $isLiveOnBlur = $isLiveOnBlur();
@@ -12,17 +10,15 @@
     $liveDebounce = $getLiveDebounce();
     $prefixActions = $getPrefixActions();
     $prefixIcon = $getPrefixIcon();
-    $prefixIconColor = $getPrefixIconColor();
     $prefixLabel = $getPrefixLabel();
     $suffixActions = $getSuffixActions();
     $suffixIcon = $getSuffixIcon();
-    $suffixIconColor = $getSuffixIconColor();
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
 @endphp
 
 <x-dynamic-component
-    :component="$fieldWrapperView"
+    :component="$getFieldWrapperView()"
     :field="$field"
     :inline-label-vertical-alignment="\Filament\Support\Enums\VerticalAlignment::Center"
 >
@@ -33,20 +29,20 @@
         :prefix="$prefixLabel"
         :prefix-actions="$prefixActions"
         :prefix-icon="$prefixIcon"
-        :prefix-icon-color="$prefixIconColor"
+        :prefix-icon-color="$getPrefixIconColor()"
         :suffix="$suffixLabel"
         :suffix-actions="$suffixActions"
         :suffix-icon="$suffixIcon"
-        :suffix-icon-color="$suffixIconColor"
+        :suffix-icon-color="$getSuffixIconColor()"
         :valid="! $errors->has($statePath)"
         :attributes="
-            \Filament\Support\prepare_inherited_attributes($extraAttributeBag)
+            \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())
                 ->class('fi-fo-color-picker')
         "
     >
         <div
             @if (FilamentView::hasSpaMode())
-                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
+                {{-- format-ignore-start --}}x-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
             @else
                 x-load
             @endif
@@ -61,48 +57,45 @@
                         state: $wire.$entangle('{{ $statePath }}'),
                     })"
             x-on:keydown.esc="isOpen() && $event.stopPropagation()"
-            {{ $getExtraAlpineAttributeBag()->class(['fi-input-wrp-content']) }}
+            {{ $getExtraAlpineAttributeBag()->class(['flex']) }}
         >
-            <input
+            <x-filament::input
                 x-on:focus="$refs.panel.open($refs.input)"
                 x-on:keydown.enter.stop.prevent="togglePanelVisibility()"
                 x-ref="input"
-                {{
-                    $getExtraInputAttributeBag()
+                :attributes="
+                    \Filament\Support\prepare_inherited_attributes($getExtraInputAttributeBag())
                         ->merge([
                             'autocomplete' => 'off',
                             'disabled' => $isDisabled,
                             'id' => $getId(),
+                            'inlinePrefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
+                            'inlineSuffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
                             'placeholder' => $getPlaceholder(),
                             'required' => $isRequired() && (! $isConcealed()),
                             'type' => 'text',
                             'x-model' . ($isLiveDebounced ? '.debounce.' . $liveDebounce : null) => 'state',
                             'x-on:blur' => $isLiveOnBlur ? 'isOpen() ? null : commitState()' : null,
                         ], escape: false)
-                        ->class([
-                            'fi-input',
-                            'fi-input-has-inline-prefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
-                            'fi-input-has-inline-suffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
-                        ])
-                }}
+                "
             />
 
             <div
-                class="fi-fo-color-picker-preview my-auto me-3 size-5 shrink-0 rounded-full select-none"
+                class="fi-fo-color-picker-preview my-auto me-3 h-5 w-5 shrink-0 select-none rounded-full"
                 x-on:click="togglePanelVisibility()"
                 x-bind:class="{
-                    'fi-empty': ! state,
+                    'ring-1 ring-inset ring-gray-200 dark:ring-white/10': ! state,
                 }"
                 x-bind:style="{ 'background-color': state }"
             ></div>
 
             <div
                 wire:ignore.self
-                wire:key="{{ $getLivewireKey() }}.panel"
+                wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.panel"
                 x-cloak
                 x-float.placement.bottom-start.offset.flip.shift="{ offset: 8 }"
                 x-ref="panel"
-                class="fi-fo-color-picker-panel"
+                class="fi-fo-color-picker-panel absolute z-10 hidden rounded-lg shadow-lg"
             >
                 @php
                     $tag = match ($getFormat()) {

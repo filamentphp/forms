@@ -2,35 +2,34 @@
 
 namespace Filament\Forms\Components\Concerns;
 
-use BackedEnum;
 use Closure;
 
 trait HasToggleIcons
 {
-    protected string | BackedEnum | Closure | null $offIcon = null;
+    protected string | Closure | null $offIcon = null;
 
-    protected string | BackedEnum | Closure | null $onIcon = null;
+    protected string | Closure | null $onIcon = null;
 
-    public function offIcon(string | BackedEnum | Closure | null $icon): static
+    public function offIcon(string | Closure | null $icon): static
     {
         $this->offIcon = $icon;
 
         return $this;
     }
 
-    public function onIcon(string | BackedEnum | Closure | null $icon): static
+    public function onIcon(string | Closure | null $icon): static
     {
         $this->onIcon = $icon;
 
         return $this;
     }
 
-    public function getOffIcon(): string | BackedEnum | null
+    public function getOffIcon(): ?string
     {
         return $this->evaluate($this->offIcon);
     }
 
-    public function getOnIcon(): string | BackedEnum | null
+    public function getOnIcon(): ?string
     {
         return $this->evaluate($this->onIcon);
     }

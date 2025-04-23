@@ -2,7 +2,6 @@
 
 namespace Filament\Forms\Components\Concerns;
 
-use BackedEnum;
 use Closure;
 use Filament\Support\Contracts\HasIcon as IconInterface;
 use Illuminate\Contracts\Support\Arrayable;
@@ -12,12 +11,12 @@ use UnitEnum;
 trait HasIcons
 {
     /**
-     * @var array<string| BackedEnum | Htmlable | null> | Arrayable | Closure | null
+     * @var array<string | Htmlable | null> | Arrayable | Closure | null
      */
     protected array | Arrayable | Closure | null $icons = null;
 
     /**
-     * @param  array<string | BackedEnum | Htmlable | null> | Arrayable | Closure | null  $icons
+     * @param  array<string | Htmlable | null> | Arrayable | Closure | null  $icons
      */
     public function icons(array | Arrayable | Closure | null $icons): static
     {
@@ -26,13 +25,13 @@ trait HasIcons
         return $this;
     }
 
-    public function getIcon(mixed $value): string | BackedEnum | Htmlable | null
+    public function getIcon(mixed $value): string | Htmlable | null
     {
         return $this->getIcons()[$value] ?? null;
     }
 
     /**
-     * @return array<string | BackedEnum | Htmlable | null>
+     * @return array<string | Htmlable | null>
      */
     public function getIcons(): array
     {
@@ -43,12 +42,12 @@ trait HasIcons
         }
 
         if (
-            blank($icons) &&
-            filled($enum = $this->getEnum()) &&
+            is_string($this->options) &&
+            enum_exists($enum = $this->options) &&
             is_a($enum, IconInterface::class, allow_string: true)
         ) {
             return array_reduce($enum::cases(), function (array $carry, IconInterface & UnitEnum $case): array {
-                $carry[$case->value ?? $case->name] = $case->getIcon();
+                $carry[$case?->value ?? $case->name] = $case->getIcon();
 
                 return $carry;
             }, []);

@@ -3,10 +3,9 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 
-class ColorPicker extends Field implements HasAffixActions
+class ColorPicker extends Field implements Contracts\HasAffixActions
 {
     use Concerns\HasAffixes;
     use Concerns\HasExtraInputAttributes;

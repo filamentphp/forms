@@ -3,7 +3,6 @@
 namespace Filament\Forms\Components\Concerns;
 
 use Closure;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -45,7 +44,7 @@ trait CanDisableOptions
     /**
      * @param  array-key  $value
      */
-    public function isOptionDisabled($value, string | Htmlable $label): bool
+    public function isOptionDisabled($value, string $label): bool
     {
         return collect($this->isOptionDisabled)
             ->contains(fn (bool | Closure $isOptionDisabled): bool => (bool) $this->evaluate($isOptionDisabled, [

@@ -112,8 +112,7 @@ export default function markdownEditorFormComponent({
                 autoRefresh: true,
                 autoSave: false,
                 element: this.$refs.editor,
-                imageAccept:
-                    'image/png, image/jpeg, image/gif, image/avif, image/webp',
+                imageAccept: 'image/png, image/jpeg, image/gif, image/avif',
                 imageUploadFunction: uploadFileAttachmentUsing,
                 initialValue: this.state ?? '',
                 maxHeight,
@@ -190,13 +189,15 @@ export default function markdownEditorFormComponent({
                     this.state = this.editor.value()
 
                     if (isLiveDebounced) {
-                        this.$wire.commit()
+                        this.$wire.call('$refresh')
                     }
                 }, liveDebounce ?? 300),
             )
 
             if (isLiveOnBlur) {
-                this.editor.codemirror.on('blur', () => this.$wire.commit())
+                this.editor.codemirror.on('blur', () =>
+                    this.$wire.call('$refresh'),
+                )
             }
 
             this.$watch('state', () => {

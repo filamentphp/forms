@@ -8,12 +8,18 @@
         "source": "https://github.com/filamentphp/filament"
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.1",
         "danharrin/date-format-converter": "^0.3",
         "filament/actions": "self.version",
-        "filament/schemas": "self.version",
         "filament/support": "self.version",
-        "ueberdosis/tiptap-php": "^1.4"
+        "illuminate/console": "^10.45|^11.0|^12.0",
+        "illuminate/contracts": "^10.45|^11.0|^12.0",
+        "illuminate/database": "^10.45|^11.0|^12.0",
+        "illuminate/filesystem": "^10.45|^11.0|^12.0",
+        "illuminate/support": "^10.45|^11.0|^12.0",
+        "illuminate/validation": "^10.45|^11.0|^12.0",
+        "illuminate/view": "^10.45|^11.0|^12.0",
+        "spatie/laravel-package-tools": "^1.9"
     },
     "autoload": {
         "files": [

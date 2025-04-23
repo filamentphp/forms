@@ -2,18 +2,15 @@
 
 namespace Filament\Forms\Components;
 
-use BackedEnum;
 use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use DateTime;
-use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Carbon;
 use Illuminate\View\ComponentAttributeBag;
 
-class DateTimePicker extends Field implements HasAffixActions
+class DateTimePicker extends Field implements Contracts\HasAffixActions
 {
     use Concerns\CanBeNative;
     use Concerns\CanBeReadOnly;
@@ -61,15 +58,15 @@ class DateTimePicker extends Field implements HasAffixActions
      */
     protected array | Closure $disabledDates = [];
 
-    protected string | Closure $defaultDateDisplayFormat = 'M j, Y';
+    public static string $defaultDateDisplayFormat = 'M j, Y';
 
-    protected string | Closure $defaultDateTimeDisplayFormat = 'M j, Y H:i';
+    public static string $defaultDateTimeDisplayFormat = 'M j, Y H:i';
 
-    protected string | Closure $defaultDateTimeWithSecondsDisplayFormat = 'M j, Y H:i:s';
+    public static string $defaultDateTimeWithSecondsDisplayFormat = 'M j, Y H:i:s';
 
-    protected string | Closure $defaultTimeDisplayFormat = 'H:i';
+    public static string $defaultTimeDisplayFormat = 'H:i';
 
-    protected string | Closure $defaultTimeWithSecondsDisplayFormat = 'H:i:s';
+    public static string $defaultTimeWithSecondsDisplayFormat = 'H:i:s';
 
     protected int | Closure | null $hoursStep = null;
 
@@ -186,15 +183,15 @@ class DateTimePicker extends Field implements HasAffixActions
     }
 
     /**
-     * @deprecated Use `suffixIcon(Heroicon::Calendar)` instead.
+     * @deprecated Use `suffixIcon('heroicon-m-calendar')` instead.
      */
-    public function icon(string | BackedEnum | bool | null $icon = null): static
+    public function icon(string | bool | null $icon = null): static
     {
         if ($icon === false) {
             return $this;
         }
 
-        return $this->suffixIcon($icon ?? Heroicon::Calendar, isInline: true);
+        return $this->suffixIcon($icon ?? 'heroicon-m-calendar', isInline: true);
     }
 
     public function maxDate(CarbonInterface | string | Closure | null $date): static
@@ -352,78 +349,18 @@ class DateTimePicker extends Field implements HasAffixActions
         }
 
         if (! $this->hasTime()) {
-            return $this->getDefaultDateDisplayFormat();
+            return static::$defaultDateDisplayFormat;
         }
 
         if (! $this->hasDate()) {
             return $this->hasSeconds() ?
-                $this->getDefaultTimeWithSecondsDisplayFormat() :
-                $this->getDefaultTimeDisplayFormat();
+                static::$defaultTimeWithSecondsDisplayFormat :
+                static::$defaultTimeDisplayFormat;
         }
 
         return $this->hasSeconds() ?
-            $this->getDefaultDateTimeWithSecondsDisplayFormat() :
-            $this->getDefaultDateTimeDisplayFormat();
-    }
-
-    public function defaultDateDisplayFormat(string | Closure $format): static
-    {
-        $this->defaultDateDisplayFormat = $format;
-
-        return $this;
-    }
-
-    public function defaultDateTimeDisplayFormat(string | Closure $format): static
-    {
-        $this->defaultDateTimeDisplayFormat = $format;
-
-        return $this;
-    }
-
-    public function defaultDateTimeWithSecondsDisplayFormat(string | Closure $format): static
-    {
-        $this->defaultDateTimeWithSecondsDisplayFormat = $format;
-
-        return $this;
-    }
-
-    public function defaultTimeDisplayFormat(string | Closure $format): static
-    {
-        $this->defaultTimeDisplayFormat = $format;
-
-        return $this;
-    }
-
-    public function defaultTimeWithSecondsDisplayFormat(string | Closure $format): static
-    {
-        $this->defaultTimeWithSecondsDisplayFormat = $format;
-
-        return $this;
-    }
-
-    public function getDefaultDateDisplayFormat(): string
-    {
-        return $this->evaluate($this->defaultDateDisplayFormat);
-    }
-
-    public function getDefaultDateTimeDisplayFormat(): string
-    {
-        return $this->evaluate($this->defaultDateTimeDisplayFormat);
-    }
-
-    public function getDefaultDateTimeWithSecondsDisplayFormat(): string
-    {
-        return $this->evaluate($this->defaultDateTimeWithSecondsDisplayFormat);
-    }
-
-    public function getDefaultTimeDisplayFormat(): string
-    {
-        return $this->evaluate($this->defaultTimeDisplayFormat);
-    }
-
-    public function getDefaultTimeWithSecondsDisplayFormat(): string
-    {
-        return $this->evaluate($this->defaultTimeWithSecondsDisplayFormat);
+            static::$defaultDateTimeWithSecondsDisplayFormat :
+            static::$defaultDateTimeDisplayFormat;
     }
 
     /**
@@ -434,7 +371,7 @@ class DateTimePicker extends Field implements HasAffixActions
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraTriggerAttributes as $extraTriggerAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraTriggerAttributes), escape: false);
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraTriggerAttributes));
         }
 
         return $temporaryAttributeBag->getAttributes();

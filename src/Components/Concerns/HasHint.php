@@ -2,55 +2,34 @@
 
 namespace Filament\Forms\Components\Concerns;
 
-use BackedEnum;
 use Closure;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Field;
-use Filament\Forms\Components\Placeholder;
-use Filament\Schemas\Components\Icon;
-use Filament\Schemas\Components\Text;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Arr;
 
 trait HasHint
 {
     protected string | Htmlable | Closure | null $hint = null;
 
     /**
+     * @var array<Action> | null
+     */
+    protected ?array $cachedHintActions = null;
+
+    /**
      * @var array<Action | Closure>
      */
     protected array $hintActions = [];
 
-    protected string | Closure | null $hintColor = null;
+    /**
+     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     */
+    protected string | array | Closure | null $hintColor = null;
 
-    protected string | BackedEnum | Closure | null $hintIcon = null;
+    protected string | Closure | null $hintIcon = null;
 
     protected string | Closure | null $hintIconTooltip = null;
-
-    protected function setUpHint(): void
-    {
-        $this->afterLabel(function (Field | Placeholder $component): array {
-            $components = [];
-
-            $hint = $component->getHint();
-
-            if (filled($hint)) {
-                $components[] = Text::make($hint)
-                    ->color($component->getHintColor());
-            }
-
-            $hintIcon = $component->getHintIcon();
-
-            if (filled($hintIcon)) {
-                $components[] = Icon::make($hintIcon)
-                    ->tooltip($component->getHintIconTooltip());
-            }
-
-            return [
-                ...$components,
-                ...$component->getHintActions(),
-            ];
-        });
-    }
 
     public function hint(string | Htmlable | Closure | null $hint): static
     {
@@ -59,14 +38,17 @@ trait HasHint
         return $this;
     }
 
-    public function hintColor(string | Closure | null $color): static
+    /**
+     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     */
+    public function hintColor(string | array | Closure | null $color): static
     {
         $this->hintColor = $color;
 
         return $this;
     }
 
-    public function hintIcon(string | BackedEnum | Closure | null $icon, string | Closure | null $tooltip = null): static
+    public function hintIcon(string | Closure | null $icon, string | Closure | null $tooltip = null): static
     {
         $this->hintIcon = $icon;
         $this->hintIconTooltip($tooltip);
@@ -106,12 +88,15 @@ trait HasHint
         return $this->evaluate($this->hint);
     }
 
-    public function getHintColor(): ?string
+    /**
+     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     */
+    public function getHintColor(): string | array | null
     {
         return $this->evaluate($this->hintColor);
     }
 
-    public function getHintIcon(): string | BackedEnum | null
+    public function getHintIcon(): ?string
     {
         return $this->evaluate($this->hintIcon);
     }
@@ -126,6 +111,26 @@ trait HasHint
      */
     public function getHintActions(): array
     {
-        return $this->evaluate($this->hintActions);
+        return $this->cachedHintActions ?? $this->cacheHintActions();
+    }
+
+    /**
+     * @return array<Action>
+     */
+    public function cacheHintActions(): array
+    {
+        $this->cachedHintActions = [];
+
+        foreach ($this->hintActions as $hintAction) {
+            foreach (Arr::wrap($this->evaluate($hintAction)) as $action) {
+                $this->cachedHintActions[$action->getName()] = $this->prepareAction(
+                    $action
+                        ->defaultSize(ActionSize::Small)
+                        ->defaultView(Action::LINK_VIEW),
+                );
+            }
+        }
+
+        return $this->cachedHintActions;
     }
 }

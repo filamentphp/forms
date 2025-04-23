@@ -2,10 +2,9 @@
 
 namespace Filament\Forms\Components\Concerns;
 
-use BackedEnum;
 use Closure;
-use Filament\Actions\Action;
-use Filament\Support\Enums\Size;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Arr;
 
@@ -35,13 +34,19 @@ trait HasAffixes
 
     protected string | Htmlable | Closure | null $prefixLabel = null;
 
-    protected string | BackedEnum | Closure | null $prefixIcon = null;
+    protected string | Closure | null $prefixIcon = null;
 
-    protected string | Closure | null $prefixIconColor = null;
+    /**
+     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     */
+    protected string | array | Closure | null $prefixIconColor = null;
 
-    protected string | BackedEnum | Closure | null $suffixIcon = null;
+    protected string | Closure | null $suffixIcon = null;
 
-    protected string | Closure | null $suffixIconColor = null;
+    /**
+     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     */
+    protected string | array | Closure | null $suffixIconColor = null;
 
     protected bool | Closure $isPrefixInline = false;
 
@@ -124,7 +129,7 @@ trait HasAffixes
         return $this;
     }
 
-    public function prefixIcon(string | BackedEnum | Closure | null $icon, bool | Closure $isInline = false): static
+    public function prefixIcon(string | Closure | null $icon, bool | Closure $isInline = false): static
     {
         $this->prefixIcon = $icon;
         $this->inlinePrefix($isInline);
@@ -132,14 +137,17 @@ trait HasAffixes
         return $this;
     }
 
-    public function prefixIconColor(string | Closure | null $color = null): static
+    /**
+     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     */
+    public function prefixIconColor(string | array | Closure | null $color = null): static
     {
         $this->prefixIconColor = $color;
 
         return $this;
     }
 
-    public function suffixIcon(string | BackedEnum | Closure | null $icon, bool | Closure $isInline = false): static
+    public function suffixIcon(string | Closure | null $icon, bool | Closure $isInline = false): static
     {
         $this->suffixIcon = $icon;
         $this->inlineSuffix($isInline);
@@ -147,7 +155,10 @@ trait HasAffixes
         return $this;
     }
 
-    public function suffixIconColor(string | Closure | null $color = null): static
+    /**
+     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     */
+    public function suffixIconColor(string | array | Closure | null $color = null): static
     {
         $this->suffixIconColor = $color;
 
@@ -173,7 +184,7 @@ trait HasAffixes
             foreach (Arr::wrap($this->evaluate($prefixAction)) as $action) {
                 $this->cachedPrefixActions[$action->getName()] = $this->prepareAction(
                     $action
-                        ->defaultSize(Size::Small)
+                        ->defaultSize(ActionSize::Small)
                         ->defaultView(Action::ICON_BUTTON_VIEW),
                 );
             }
@@ -201,7 +212,7 @@ trait HasAffixes
             foreach (Arr::wrap($this->evaluate($suffixAction)) as $action) {
                 $this->cachedSuffixActions[$action->getName()] = $this->prepareAction(
                     $action
-                        ->defaultSize(Size::Small)
+                        ->defaultSize(ActionSize::Small)
                         ->defaultView(Action::ICON_BUTTON_VIEW),
                 );
             }
@@ -220,22 +231,28 @@ trait HasAffixes
         return $this->evaluate($this->suffixLabel);
     }
 
-    public function getPrefixIcon(): string | BackedEnum | null
+    public function getPrefixIcon(): ?string
     {
         return $this->evaluate($this->prefixIcon);
     }
 
-    public function getSuffixIcon(): string | BackedEnum | null
+    public function getSuffixIcon(): ?string
     {
         return $this->evaluate($this->suffixIcon);
     }
 
-    public function getPrefixIconColor(): ?string
+    /**
+     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     */
+    public function getPrefixIconColor(): string | array | null
     {
         return $this->evaluate($this->prefixIconColor);
     }
 
-    public function getSuffixIconColor(): ?string
+    /**
+     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     */
+    public function getSuffixIconColor(): string | array | null
     {
         return $this->evaluate($this->suffixIconColor);
     }

@@ -2,8 +2,6 @@
 
 namespace Filament\Forms\Components;
 
-use Filament\Schemas\Components\StateCasts\BooleanStateCast;
-use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 
 class Toggle extends Field
@@ -26,16 +24,10 @@ class Toggle extends Field
 
         $this->default(false);
 
-        $this->rule('boolean');
-    }
+        $this->afterStateHydrated(static function (Toggle $component, $state): void {
+            $component->state((bool) $state);
+        });
 
-    /**
-     * @return array<StateCast>
-     */
-    public function getDefaultStateCasts(): array
-    {
-        return [
-            app(BooleanStateCast::class, ['isNullable' => false]),
-        ];
+        $this->rule('boolean');
     }
 }

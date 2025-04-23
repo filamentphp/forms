@@ -1,39 +1,26 @@
 @php
     use Filament\Support\Facades\FilamentView;
 
-    $fieldWrapperView = $getFieldWrapperView();
     $datalistOptions = $getDatalistOptions();
     $extraAlpineAttributes = $getExtraAlpineAttributes();
-    $extraAttributeBag = $getExtraAttributeBag();
-    $extraInputAttributeBag = $getExtraInputAttributeBag();
     $hasTime = $hasTime();
     $id = $getId();
     $isDisabled = $isDisabled();
-    $isAutofocused = $isAutofocused();
     $isPrefixInline = $isPrefixInline();
     $isSuffixInline = $isSuffixInline();
     $maxDate = $getMaxDate();
     $minDate = $getMinDate();
     $prefixActions = $getPrefixActions();
     $prefixIcon = $getPrefixIcon();
-    $prefixIconColor = $getPrefixIconColor();
     $prefixLabel = $getPrefixLabel();
     $suffixActions = $getSuffixActions();
     $suffixIcon = $getSuffixIcon();
-    $suffixIconColor = $getSuffixIconColor();
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
-    $placeholder = $getPlaceholder();
-    $isReadOnly = $isReadOnly();
-    $isRequired = $isRequired();
-    $isConcealed = $isConcealed();
-    $step = $getStep();
-    $type = $getType();
-    $livewireKey = $getLivewireKey();
 @endphp
 
 <x-dynamic-component
-    :component="$fieldWrapperView"
+    :component="$getFieldWrapperView()"
     :field="$field"
     :inline-label-vertical-alignment="\Filament\Support\Enums\VerticalAlignment::Center"
 >
@@ -44,45 +31,42 @@
         :prefix="$prefixLabel"
         :prefix-actions="$prefixActions"
         :prefix-icon="$prefixIcon"
-        :prefix-icon-color="$prefixIconColor"
+        :prefix-icon-color="$getPrefixIconColor()"
         :suffix="$suffixLabel"
         :suffix-actions="$suffixActions"
         :suffix-icon="$suffixIcon"
-        :suffix-icon-color="$suffixIconColor"
+        :suffix-icon-color="$getSuffixIconColor()"
         :valid="! $errors->has($statePath)"
-        :attributes="\Filament\Support\prepare_inherited_attributes($extraAttributeBag)->class(['fi-fo-date-time-picker'])"
+        :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
     >
         @if ($isNative())
-            <input
-                {{
-                    $extraInputAttributeBag
+            <x-filament::input
+                :attributes="
+                    \Filament\Support\prepare_inherited_attributes($getExtraInputAttributeBag())
                         ->merge($extraAlpineAttributes, escape: false)
                         ->merge([
-                            'autofocus' => $isAutofocused,
+                            'autofocus' => $isAutofocused(),
                             'disabled' => $isDisabled,
                             'id' => $id,
+                            'inlinePrefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
+                            'inlineSuffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
                             'list' => $datalistOptions ? $id . '-list' : null,
                             'max' => $hasTime ? $maxDate : ($maxDate ? \Carbon\Carbon::parse($maxDate)->toDateString() : null),
                             'min' => $hasTime ? $minDate : ($minDate ? \Carbon\Carbon::parse($minDate)->toDateString() : null),
-                            'placeholder' => $placeholder,
-                            'readonly' => $isReadOnly,
-                            'required' => $isRequired && (! $isConcealed),
-                            'step' => $step,
-                            'type' => $type,
+                            'placeholder' => $getPlaceholder(),
+                            'readonly' => $isReadOnly(),
+                            'required' => $isRequired() && (! $isConcealed()),
+                            'step' => $getStep(),
+                            'type' => $getType(),
                             $applyStateBindingModifiers('wire:model') => $statePath,
                             'x-data' => count($extraAlpineAttributes) ? '{}' : null,
                         ], escape: false)
-                        ->class([
-                            'fi-input',
-                            'fi-input-has-inline-prefix' => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
-                            'fi-input-has-inline-suffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
-                        ])
-                }}
+                "
             />
         @else
             <div
                 @if (FilamentView::hasSpaMode())
-                    {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
+                    {{-- format-ignore-start --}}x-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
                 @else
                     x-load
                 @endif
@@ -91,13 +75,18 @@
                             displayFormat:
                                 '{{ convert_date_format($getDisplayFormat())->to('day.js') }}',
                             firstDayOfWeek: {{ $getFirstDayOfWeek() }},
-                            isAutofocused: @js($isAutofocused),
+                            isAutofocused: @js($isAutofocused()),
                             locale: @js($getLocale()),
                             shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
                             state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                         })"
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"
-                {{ $getExtraAlpineAttributeBag() }}
+                {{
+                    $attributes
+                        ->merge($getExtraAttributes(), escape: false)
+                        ->merge($getExtraAlpineAttributes(), escape: false)
+                        ->class(['fi-fo-date-time-picker'])
+                }}
             >
                 <input x-ref="maxDate" type="hidden" value="{{ $maxDate }}" />
 
@@ -124,25 +113,25 @@
                     x-on:keydown.backspace.stop.prevent="if (! $el.disabled) clearState()"
                     x-on:keydown.clear.stop.prevent="if (! $el.disabled) clearState()"
                     x-on:keydown.delete.stop.prevent="if (! $el.disabled) clearState()"
-                    aria-label="{{ $placeholder }}"
+                    aria-label="{{ $getPlaceholder() }}"
                     type="button"
                     tabindex="-1"
-                    @disabled($isDisabled || $isReadOnly)
+                    @disabled($isDisabled || $isReadOnly())
                     {{
                         $getExtraTriggerAttributeBag()->class([
-                            'fi-fo-date-time-picker-trigger',
+                            'w-full',
                         ])
                     }}
                 >
                     <input
                         @disabled($isDisabled)
                         readonly
-                        placeholder="{{ $placeholder }}"
-                        wire:key="{{ $livewireKey }}.display-text"
+                        placeholder="{{ $getPlaceholder() }}"
+                        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.display-text"
                         x-model="displayText"
                         @if ($id = $getId()) id="{{ $id }}" @endif
                         @class([
-                            'fi-fo-date-time-picker-display-text-input',
+                            'fi-fo-date-time-picker-display-text-input w-full border-none bg-transparent px-3 py-1.5 text-base text-gray-950 outline-none transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] sm:text-sm sm:leading-6',
                         ])
                     />
                 </button>
@@ -152,107 +141,108 @@
                     x-cloak
                     x-float.placement.bottom-start.offset.flip.shift="{ offset: 8 }"
                     wire:ignore
-                    wire:key="{{ $livewireKey }}.panel"
+                    wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.panel"
                     @class([
-                        'fi-fo-date-time-picker-panel',
+                        'fi-fo-date-time-picker-panel absolute z-10 rounded-lg bg-white p-4 shadow-lg ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10',
                     ])
                 >
-                    @if ($hasDate())
-                        <div class="fi-fo-date-time-picker-panel-header">
-                            <select
-                                x-model="focusedMonth"
-                                class="fi-fo-date-time-picker-month-select"
-                            >
-                                <template x-for="(month, index) in months">
-                                    <option
-                                        x-bind:value="index"
-                                        x-text="month"
-                                    ></option>
+                    <div class="grid gap-y-3">
+                        @if ($hasDate())
+                            <div class="flex items-center justify-between">
+                                <select
+                                    x-model="focusedMonth"
+                                    class="grow cursor-pointer border-none bg-transparent p-0 text-sm font-medium text-gray-950 focus:ring-0 dark:bg-gray-900 dark:text-white"
+                                >
+                                    <template
+                                        x-for="(month, index) in months"
+                                    >
+                                        <option
+                                            x-bind:value="index"
+                                            x-text="month"
+                                        ></option>
+                                    </template>
+                                </select>
+
+                                <input
+                                    type="number"
+                                    inputmode="numeric"
+                                    x-model.debounce="focusedYear"
+                                    class="w-16 border-none bg-transparent p-0 text-right text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                />
+                            </div>
+
+                            <div class="grid grid-cols-7 gap-1">
+                                <template
+                                    x-for="(day, index) in dayLabels"
+                                    x-bind:key="index"
+                                >
+                                    <div
+                                        x-text="day"
+                                        class="text-center text-xs font-medium text-gray-500 dark:text-gray-400"
+                                    ></div>
                                 </template>
-                            </select>
+                            </div>
 
-                            <input
-                                type="number"
-                                inputmode="numeric"
-                                x-model.debounce="focusedYear"
-                                class="fi-fo-date-time-picker-year-input"
-                            />
-                        </div>
-
-                        <div class="fi-fo-date-time-picker-calendar-header">
-                            <template
-                                x-for="(day, index) in dayLabels"
-                                x-bind:key="index"
+                            <div
+                                role="grid"
+                                class="grid grid-cols-[repeat(7,minmax(theme(spacing.7),1fr))] gap-1"
                             >
-                                <div
-                                    x-text="day"
-                                    class="fi-fo-date-time-picker-calendar-header-day"
-                                ></div>
-                            </template>
-                        </div>
+                                <template
+                                    x-for="day in emptyDaysInFocusedMonth"
+                                    x-bind:key="day"
+                                >
+                                    <div></div>
+                                </template>
 
-                        <div
-                            role="grid"
-                            class="fi-fo-date-time-picker-calendar"
-                        >
-                            <template
-                                x-for="day in emptyDaysInFocusedMonth"
-                                x-bind:key="day"
+                                <template
+                                    x-for="day in daysInFocusedMonth"
+                                    x-bind:key="day"
+                                >
+                                    <div
+                                        x-text="day"
+                                        x-on:click="dayIsDisabled(day) || selectDate(day)"
+                                        x-on:mouseenter="setFocusedDay(day)"
+                                        role="option"
+                                        x-bind:aria-selected="focusedDate.date() === day"
+                                        x-bind:class="{
+                                            'text-gray-950 dark:text-white': ! dayIsToday(day) && ! dayIsSelected(day),
+                                            'cursor-pointer': ! dayIsDisabled(day),
+                                            'text-primary-600 dark:text-primary-400':
+                                                dayIsToday(day) &&
+                                                ! dayIsSelected(day) &&
+                                                focusedDate.date() !== day &&
+                                                ! dayIsDisabled(day),
+                                            'bg-gray-50 dark:bg-white/5':
+                                                focusedDate.date() === day &&
+                                                ! dayIsSelected(day) &&
+                                                ! dayIsDisabled(day),
+                                            'text-primary-600 bg-gray-50 dark:bg-white/5 dark:text-primary-400':
+                                                dayIsSelected(day),
+                                            'pointer-events-none': dayIsDisabled(day),
+                                            'opacity-50': dayIsDisabled(day),
+                                        }"
+                                        class="rounded-full text-center text-sm leading-loose transition duration-75"
+                                    ></div>
+                                </template>
+                            </div>
+                        @endif
+
+                        @if ($hasTime)
+                            <div
+                                class="flex items-center justify-center rtl:flex-row-reverse"
                             >
-                                <div></div>
-                            </template>
+                                <input
+                                    max="23"
+                                    min="0"
+                                    step="{{ $getHoursStep() }}"
+                                    type="number"
+                                    inputmode="numeric"
+                                    x-model.debounce="hour"
+                                    class="me-1 w-10 border-none bg-transparent p-0 text-center text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                />
 
-                            <template
-                                x-for="day in daysInFocusedMonth"
-                                x-bind:key="day"
-                            >
-                                <div
-                                    x-text="day"
-                                    x-on:click="dayIsDisabled(day) || selectDate(day)"
-                                    x-on:mouseenter="setFocusedDay(day)"
-                                    role="option"
-                                    x-bind:aria-selected="focusedDate.date() === day"
-                                    x-bind:class="{
-                                        'fi-fo-date-time-picker-calendar-day-today': dayIsToday(day),
-                                        'fi-focused': focusedDate.date() === day,
-                                        'fi-selected': dayIsSelected(day),
-                                        'fi-disabled': dayIsDisabled(day),
-                                    }"
-                                    class="fi-fo-date-time-picker-calendar-day"
-                                ></div>
-                            </template>
-                        </div>
-                    @endif
-
-                    @if ($hasTime)
-                        <div class="fi-fo-date-time-picker-time-inputs">
-                            <input
-                                max="23"
-                                min="0"
-                                step="{{ $getHoursStep() }}"
-                                type="number"
-                                inputmode="numeric"
-                                x-model.debounce="hour"
-                            />
-
-                            <span
-                                class="fi-fo-date-time-picker-time-input-separator"
-                            >
-                                :
-                            </span>
-
-                            <input
-                                max="59"
-                                min="0"
-                                step="{{ $getMinutesStep() }}"
-                                type="number"
-                                inputmode="numeric"
-                                x-model.debounce="minute"
-                            />
-
-                            @if ($hasSeconds())
                                 <span
-                                    class="fi-fo-date-time-picker-time-input-separator"
+                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
                                 >
                                     :
                                 </span>
@@ -260,14 +250,33 @@
                                 <input
                                     max="59"
                                     min="0"
-                                    step="{{ $getSecondsStep() }}"
+                                    step="{{ $getMinutesStep() }}"
                                     type="number"
                                     inputmode="numeric"
-                                    x-model.debounce="second"
+                                    x-model.debounce="minute"
+                                    class="me-1 w-10 border-none bg-transparent p-0 text-center text-sm text-gray-950 focus:ring-0 dark:text-white"
                                 />
-                            @endif
-                        </div>
-                    @endif
+
+                                @if ($hasSeconds())
+                                    <span
+                                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    >
+                                        :
+                                    </span>
+
+                                    <input
+                                        max="59"
+                                        min="0"
+                                        step="{{ $getSecondsStep() }}"
+                                        type="number"
+                                        inputmode="numeric"
+                                        x-model.debounce="second"
+                                        class="me-1 w-10 border-none bg-transparent p-0 text-center text-sm text-gray-950 focus:ring-0 dark:text-white"
+                                    />
+                                @endif
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         @endif
