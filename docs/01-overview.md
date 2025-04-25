@@ -28,6 +28,7 @@ Form field classes can be found in the `Filament\Form\Components` namespace. The
 - [Key-value](key-value)
 - [Color picker](color-picker)
 - [Toggle buttons](toggle-buttons)
+- [Slider](slider)
 - [Hidden](hidden)
 
 You may also [create your own custom fields](custom-fields) to edit data however you wish.
@@ -118,7 +119,7 @@ TextInput::make('name')
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `hiddenLabel()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
-## Setting a default value of a field
+## Setting the default value of a field
 
 Fields may have a default value. The default is only used when a schema is loaded with no data. In a standard [panel resource](../resources), defaults are used on the Create page, not the Edit page. To define a default value, use the `default()` method:
 

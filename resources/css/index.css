@@ -11,6 +11,7 @@
 @import './components/repeater.css' layer(components);
 @import './components/rich-editor.css' layer(components);
 @import './components/select.css' layer(components);
+@import './components/slider.css' layer(components);
 @import './components/tags-input.css' layer(components);
 @import './components/text-input.css' layer(components);
 @import './components/textarea.css' layer(components);

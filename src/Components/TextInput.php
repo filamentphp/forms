@@ -6,6 +6,8 @@ use Closure;
 use Exception;
 use Filament\Forms\Components\Contracts\CanHaveNumericState;
 use Filament\Schemas\Components\Contracts\HasAffixActions;
+use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
+use Filament\Schemas\Components\StateCasts\NumberStateCast;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\RawJs;
 
@@ -263,5 +265,15 @@ class TextInput extends Field implements CanHaveNumericState, Contracts\CanBeLen
     public function isUrl(): bool
     {
         return (bool) $this->evaluate($this->isUrl);
+    }
+
+    /**
+     * @return array<StateCast>
+     */
+    public function getDefaultStateCasts(): array
+    {
+        return [
+            ...($this->isNumeric() ? [app(NumberStateCast::class, ['isNullable' => true])] : []),
+        ];
     }
 }
