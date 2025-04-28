@@ -22,13 +22,12 @@
                     statePath: @js($statePath),
                     uploadingFileMessage: @js($getUploadingFileMessage()),
                 })"
-        x-cloak
         x-bind:class="{
             'fi-fo-rich-editor-uploading-file': isUploadingFile,
         }"
         {{ $getExtraAttributeBag()->class(['fi-fo-rich-editor']) }}
     >
-        <x-filament::input.wrapper :valid="! $errors->has($statePath)">
+        <x-filament::input.wrapper :valid="! $errors->has($statePath)" x-cloak>
             @if (filled($getToolbarButtons()))
                 <div class="fi-fo-rich-editor-toolbar">
                     @if ($hasToolbarButton(['bold', 'italic', 'underline', 'strike', 'link']))

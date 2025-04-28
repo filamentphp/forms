@@ -57,6 +57,10 @@ export default function checkboxListFormComponent({ livewireId }) {
         },
 
         toggleAllCheckboxes: function () {
+            this.checkIfAllCheckboxesAreChecked()
+
+            const inverseAreAllCheckboxesChecked = !this.areAllCheckboxesChecked
+
             this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
                 const checkbox = checkboxLabel.querySelector(
                     'input[type=checkbox]',
@@ -66,11 +70,11 @@ export default function checkboxListFormComponent({ livewireId }) {
                     return
                 }
 
-                checkbox.checked = !this.areAllCheckboxesChecked
+                checkbox.checked = inverseAreAllCheckboxesChecked
                 checkbox.dispatchEvent(new Event('change'))
             })
 
-            this.areAllCheckboxesChecked = !this.areAllCheckboxesChecked
+            this.areAllCheckboxesChecked = inverseAreAllCheckboxesChecked
         },
 
         updateVisibleCheckboxListOptions: function () {

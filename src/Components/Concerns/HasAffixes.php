@@ -37,11 +37,17 @@ trait HasAffixes
 
     protected string | BackedEnum | Closure | null $prefixIcon = null;
 
-    protected string | Closure | null $prefixIconColor = null;
+    /**
+     * @var string | array<string> | Closure | null
+     */
+    protected string | array | Closure | null $prefixIconColor = null;
 
     protected string | BackedEnum | Closure | null $suffixIcon = null;
 
-    protected string | Closure | null $suffixIconColor = null;
+    /**
+     * @var string | array<string> | Closure | null
+     */
+    protected string | array | Closure | null $suffixIconColor = null;
 
     protected bool | Closure $isPrefixInline = false;
 
@@ -132,7 +138,10 @@ trait HasAffixes
         return $this;
     }
 
-    public function prefixIconColor(string | Closure | null $color = null): static
+    /**
+     * @param  string | array<string> | Closure | null  $color
+     */
+    public function prefixIconColor(string | array | Closure | null $color = null): static
     {
         $this->prefixIconColor = $color;
 
@@ -147,7 +156,10 @@ trait HasAffixes
         return $this;
     }
 
-    public function suffixIconColor(string | Closure | null $color = null): static
+    /**
+     * @param  string | array<string> | Closure | null  $color
+     */
+    public function suffixIconColor(string | array | Closure | null $color = null): static
     {
         $this->suffixIconColor = $color;
 
@@ -230,12 +242,18 @@ trait HasAffixes
         return $this->evaluate($this->suffixIcon);
     }
 
-    public function getPrefixIconColor(): ?string
+    /**
+     * @return string | array<string> | null
+     */
+    public function getPrefixIconColor(): string | array | null
     {
         return $this->evaluate($this->prefixIconColor);
     }
 
-    public function getSuffixIconColor(): ?string
+    /**
+     * @return string | array<string> | null
+     */
+    public function getSuffixIconColor(): string | array | null
     {
         return $this->evaluate($this->suffixIconColor);
     }

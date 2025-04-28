@@ -23,7 +23,7 @@
         @apply flex gap-x-3;
 
         & .fi-checkbox-input {
-            @apply mt-1;
+            @apply mt-1 shrink-0;
         }
 
         & .fi-fo-checkbox-list-option-text {

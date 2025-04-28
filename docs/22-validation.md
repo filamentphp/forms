@@ -189,7 +189,7 @@ By default, the field name will be used as the column to search. You may specify
 Field::make('invitation')->exists(column: 'id')
 ```
 
-You can further customize the rule by passing a [closure](overview#closure-customization) to the `callback` parameter:
+You can further customize the rule by passing a [closure](overview#closure-customization) to the `modifyRuleUsing` parameter:
 
 ```php
 use Illuminate\Validation\Rules\Exists;

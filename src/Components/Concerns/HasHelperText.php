@@ -9,7 +9,7 @@ trait HasHelperText
 {
     public function helperText(string | Htmlable | Closure | null $text): static
     {
-        $this->belowErrorMessage($text);
+        $this->belowContent($text);
 
         return $this;
     }

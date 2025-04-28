@@ -70,7 +70,10 @@ class FileUpload extends BaseFileUpload
 
     protected int $imageEditorMode = 1;
 
-    protected string | Closure | null $imageEditorEmptyFillColor = null;
+    /**
+     * @var string | array<string> | Closure | null
+     */
+    protected string | array | Closure | null $imageEditorEmptyFillColor = null;
 
     /**
      * @var array<?string> | Closure

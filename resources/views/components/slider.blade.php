@@ -30,7 +30,6 @@
                     step: @js($getStep()),
                     tooltips: @js($getTooltipsForJs()),
                 })"
-        x-cloak
         wire:ignore
         {{
             $attributes
