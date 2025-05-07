@@ -30,6 +30,10 @@ class MorphToSelect extends Component
      */
     protected array | Closure $types = [];
 
+    protected ?Closure $modifyTypeSelectUsing = null;
+
+    protected ?Closure $modifyKeySelectUsing = null;
+
     final public function __construct(string $name)
     {
         $this->name($name);
@@ -63,54 +67,91 @@ class MorphToSelect extends Component
             $types = $component->getTypes();
             $isRequired = $component->isRequired();
 
-            return [
-                Select::make($typeColumn)
-                    ->label($component->getLabel())
-                    ->hiddenLabel()
-                    ->options(array_map(
-                        fn (Type $type): string => $type->getLabel(),
-                        $types,
-                    ))
-                    ->native($component->isNative())
-                    ->required($isRequired)
-                    ->live()
-                    ->afterStateUpdated(function (Set $set) use ($component, $keyColumn): void {
-                        $set($keyColumn, null);
-                        $component->callAfterStateUpdated();
-                    }),
-                Select::make($keyColumn)
-                    ->label(fn (Get $get): ?string => ($types[$get($typeColumn)] ?? null)?->getLabel())
-                    ->hiddenLabel()
-                    ->options(fn (Select $component, Get $get): ?array => $component->evaluate(($types[$get($typeColumn)] ?? null)?->getOptionsUsing))
-                    ->getSearchResultsUsing(fn (Select $component, Get $get, $search): ?array => $component->evaluate(($types[$get($typeColumn)] ?? null)?->getSearchResultsUsing, ['search' => $search]))
-                    ->getOptionLabelUsing(fn (Select $component, Get $get, $value): ?string => $component->evaluate(($types[$get($typeColumn)] ?? null)?->getOptionLabelUsing, ['value' => $value]))
-                    ->native($component->isNative())
-                    ->required(fn (Get $get): bool => filled(($types[$get($typeColumn)] ?? null)))
-                    ->hidden(fn (Get $get): bool => blank(($types[$get($typeColumn)] ?? null)))
-                    ->dehydratedWhenHidden()
-                    ->searchable($component->isSearchable())
-                    ->searchDebounce($component->getSearchDebounce())
-                    ->searchPrompt($component->getSearchPrompt())
-                    ->searchingMessage($component->getSearchingMessage())
-                    ->noSearchResultsMessage($component->getNoSearchResultsMessage())
-                    ->loadingMessage($component->getLoadingMessage())
-                    ->allowHtml($component->isHtmlAllowed())
-                    ->optionsLimit($component->getOptionsLimit())
-                    ->preload($component->isPreloaded())
-                    ->when(
-                        $component->isLive(),
-                        fn (Select $component) => $component->live(onBlur: $this->isLiveOnBlur()),
-                    )
-                    ->afterStateUpdated(function () use ($component): void {
-                        $component->callAfterStateUpdated();
-                    }),
-            ];
+            $typeSelect = Select::make($typeColumn)
+                ->label($component->getLabel())
+                ->hiddenLabel()
+                ->options(array_map(
+                    fn (Type $type): string => $type->getLabel(),
+                    $types,
+                ))
+                ->native($component->isNative())
+                ->required($isRequired)
+                ->live()
+                ->afterStateUpdated(function (Set $set) use ($component, $keyColumn): void {
+                    $set($keyColumn, null);
+                    $component->callAfterStateUpdated();
+                });
+
+            $keySelect = Select::make($keyColumn)
+                ->label(fn (Get $get): ?string => ($types[$get($typeColumn)] ?? null)?->getLabel())
+                ->hiddenLabel()
+                ->options(fn (Select $component, Get $get): ?array => $component->evaluate(($types[$get($typeColumn)] ?? null)?->getOptionsUsing))
+                ->getSearchResultsUsing(fn (Select $component, Get $get, $search): ?array => $component->evaluate(($types[$get($typeColumn)] ?? null)?->getSearchResultsUsing, ['search' => $search]))
+                ->getOptionLabelUsing(fn (Select $component, Get $get, $value): ?string => $component->evaluate(($types[$get($typeColumn)] ?? null)?->getOptionLabelUsing, ['value' => $value]))
+                ->native($component->isNative())
+                ->required(fn (Get $get): bool => filled(($types[$get($typeColumn)] ?? null)))
+                ->hidden(fn (Get $get): bool => blank(($types[$get($typeColumn)] ?? null)))
+                ->dehydratedWhenHidden()
+                ->searchable($component->isSearchable())
+                ->searchDebounce($component->getSearchDebounce())
+                ->searchPrompt($component->getSearchPrompt())
+                ->searchingMessage($component->getSearchingMessage())
+                ->noSearchResultsMessage($component->getNoSearchResultsMessage())
+                ->loadingMessage($component->getLoadingMessage())
+                ->allowHtml($component->isHtmlAllowed())
+                ->optionsLimit($component->getOptionsLimit())
+                ->preload($component->isPreloaded())
+                ->when(
+                    $component->isLive(),
+                    fn (Select $component) => $component->live(onBlur: $this->isLiveOnBlur()),
+                )
+                ->afterStateUpdated(function () use ($component): void {
+                    $component->callAfterStateUpdated();
+                });
+
+            if ($callback = $component->getModifyTypeSelectUsingCallback()) {
+                $typeSelect = $component->evaluate($callback, [
+                    'select' => $typeSelect,
+                ]) ?? $typeSelect;
+            }
+
+            if ($callback = $component->getModifyKeySelectUsingCallback()) {
+                $keySelect = $component->evaluate($callback, [
+                    'select' => $keySelect,
+                ]) ?? $keySelect;
+            }
+
+            return [$typeSelect, $keySelect];
         });
     }
 
     public static function getDefaultName(): ?string
     {
         return null;
+    }
+
+    public function modifyTypeSelectUsing(?Closure $callback): static
+    {
+        $this->modifyTypeSelectUsing = $callback;
+
+        return $this;
+    }
+
+    public function modifyKeySelectUsing(?Closure $callback): static
+    {
+        $this->modifyKeySelectUsing = $callback;
+
+        return $this;
+    }
+
+    public function getModifyTypeSelectUsingCallback(): ?Closure
+    {
+        return $this->modifyTypeSelectUsing;
+    }
+
+    public function getModifyKeySelectUsingCallback(): ?Closure
+    {
+        return $this->modifyKeySelectUsing;
     }
 
     public function optionsLimit(int | Closure $limit): static

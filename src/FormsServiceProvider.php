@@ -30,6 +30,7 @@ class FormsServiceProvider extends PackageServiceProvider
     {
         FilamentAsset::register([
             AlpineComponent::make('checkbox-list', __DIR__ . '/../dist/components/checkbox-list.js'),
+            AlpineComponent::make('code-editor', __DIR__ . '/../dist/components/code-editor.js'),
             AlpineComponent::make('color-picker', __DIR__ . '/../dist/components/color-picker.js'),
             AlpineComponent::make('date-time-picker', __DIR__ . '/../dist/components/date-time-picker.js'),
             AlpineComponent::make('file-upload', __DIR__ . '/../dist/components/file-upload.js'),

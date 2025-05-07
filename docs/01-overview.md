@@ -29,6 +29,7 @@ Form field classes can be found in the `Filament\Form\Components` namespace. The
 - [Color picker](color-picker)
 - [Toggle buttons](toggle-buttons)
 - [Slider](slider)
+- [Code editor](code-editor)
 - [Hidden](hidden)
 
 You may also [create your own custom fields](custom-fields) to edit data however you wish.
