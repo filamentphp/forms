@@ -37,6 +37,10 @@
         @apply bg-gray-50 dark:bg-transparent dark:ring-white/10;
     }
 
+    & .filepond--root[data-style-panel-layout='compact circle'] {
+        @apply rounded-full;
+    }
+
     & .filepond--panel-root {
         @apply bg-transparent;
     }

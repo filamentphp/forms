@@ -28,6 +28,10 @@
         @apply block w-full rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-xs ring-1 ring-gray-950/10 sm:text-sm dark:bg-transparent dark:text-gray-400 dark:ring-white/10;
     }
 
+    & .EasyMDEContainer .CodeMirror {
+        @apply px-4! py-3!;
+    }
+
     & .cm-s-easymde .cm-comment {
         background-color: transparent;
         color: var(--color-cm-gray-muted);

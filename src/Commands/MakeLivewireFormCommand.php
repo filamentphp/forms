@@ -226,7 +226,7 @@ class MakeLivewireFormCommand extends Command
         }
 
         $this->isGenerated = $this->option('generate') || confirm(
-            label: 'Would you like to generate the form fields based on the attributes of the model?',
+            label: 'Should the form fields be generated from the current database columns?',
             default: false,
         );
     }

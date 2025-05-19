@@ -6,8 +6,11 @@ use Closure;
 use Exception;
 use Filament\Forms\Components\MorphToSelect\Type;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Concerns\HasLabel;
+use Filament\Schemas\Components\Concerns\HasName;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class MorphToSelect extends Component
@@ -17,7 +20,10 @@ class MorphToSelect extends Component
     use Concerns\CanBePreloaded;
     use Concerns\CanBeSearchable;
     use Concerns\HasLoadingMessage;
-    use Concerns\HasName;
+    use HasLabel {
+        getLabel as getBaseLabel;
+    }
+    use HasName;
 
     protected string $view = 'filament-schemas::components.fieldset';
 
@@ -213,5 +219,20 @@ class MorphToSelect extends Component
     public function getOptionsLimit(): int
     {
         return $this->evaluate($this->optionsLimit);
+    }
+
+    public function getLabel(): string | Htmlable | null
+    {
+        if (filled($label = $this->getBaseLabel())) {
+            return $label;
+        }
+
+        $label = (string) str($this->getName())
+            ->afterLast('.')
+            ->kebab()
+            ->replace(['-', '_'], ' ')
+            ->ucfirst();
+
+        return $this->shouldTranslateLabel ? __($label) : $label;
     }
 }

@@ -40,7 +40,7 @@
                                     $wire
                                         .callSchemaComponentMethod(
                                             '{{ $key }}',
-                                            'saveUploadedFileAttachment',
+                                            'saveUploadedFileAttachmentAndGetUrl',
                                         )
                                         .then((url) => {
                                             if (! url) {

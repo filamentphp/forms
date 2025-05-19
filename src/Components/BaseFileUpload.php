@@ -63,7 +63,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     protected string | Closure | null $fileNamesStatePath = null;
 
-    protected string | Closure $visibility = 'public';
+    protected string | Closure $visibility = 'private';
 
     protected ?Closure $deleteUploadedFileUsing = null;
 
@@ -127,7 +127,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
                 try {
                     $url = $storage->temporaryUrl(
                         $file,
-                        now()->addMinutes(5),
+                        now()->addMinutes(30)->endOfHour(),
                     );
                 } catch (Throwable $exception) {
                     // This driver does not support creating temporary URLs.
@@ -478,7 +478,28 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function getDiskName(): string
     {
-        return $this->evaluate($this->diskName) ?? config('filament.default_filesystem_disk');
+        $name = $this->getCustomDiskName();
+
+        if (filled($name)) {
+            return $name;
+        }
+
+        $name = config('filament.default_filesystem_disk');
+
+        if ($name !== 'public') {
+            return $name;
+        }
+
+        if ($this->getVisibility() !== 'private') {
+            return $name;
+        }
+
+        return 'local';
+    }
+
+    public function getCustomDiskName(): ?string
+    {
+        return $this->evaluate($this->diskName);
     }
 
     public function getMaxFiles(): ?int
@@ -508,7 +529,17 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function getVisibility(): string
     {
-        return $this->evaluate($this->visibility);
+        $visibility = $this->evaluate($this->visibility);
+
+        if ($visibility !== 'private') {
+            return $visibility;
+        }
+
+        if ($this->getCustomDiskName() !== 'public') {
+            return $visibility;
+        }
+
+        return 'public';
     }
 
     public function shouldPreserveFilenames(): bool

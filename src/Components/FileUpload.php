@@ -8,7 +8,6 @@ use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\HtmlString;
 
 use function Filament\Support\generate_icon_html;
 
@@ -529,7 +528,7 @@ class FileUpload extends BaseFileUpload
                 [
                     'label' => __('filament-forms::components.file_upload.editor.actions.drag_move.label'),
                     'iconHtml' => generate_icon_html(
-                        new HtmlString('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M13 6v5h5V7.75L22.25 12L18 16.25V13h-5v5h3.25L12 22.25L7.75 18H11v-5H6v3.25L1.75 12L6 7.75V11h5V6H7.75L12 1.75L16.25 6H13Z"/></svg>'),
+                        'fi-s-drag-move',
                         alias: 'forms::components.file-upload.editor.actions.drag-move',
                     ),
                     'alpineClickHandler' => "editor.setDragMode('move')",
@@ -537,7 +536,7 @@ class FileUpload extends BaseFileUpload
                 [
                     'label' => __('filament-forms::components.file_upload.editor.actions.drag_crop.label'),
                     'iconHtml' => generate_icon_html(
-                        new HtmlString('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M17 23v-4H7q-.825 0-1.412-.587Q5 17.825 5 17V7H1V5h4V1h2v16h16v2h-4v4Zm0-8V7H9V5h8q.825 0 1.413.588Q19 6.175 19 7v8Z"/></svg>'),
+                        'fi-s-drag-crop',
                         alias: 'forms::components.file-upload.editor.actions.drag-crop',
                     ),
                     'alpineClickHandler' => "editor.setDragMode('crop')",
@@ -621,7 +620,7 @@ class FileUpload extends BaseFileUpload
                 [
                     'label' => __('filament-forms::components.file_upload.editor.actions.flip_horizontal.label'),
                     'iconHtml' => generate_icon_html(
-                        new HtmlString('<svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 7l5 5l-5 5V7m18 0l-5 5l5 5V7m-9 13v2m0-8v2m0-8v2m0-8v2"/></svg>'),
+                        'fi-s-flip-horizontal',
                         alias: 'forms::components.file-upload.editor.actions.flip-horizontal',
                     ),
                     'alpineClickHandler' => 'editor.scaleX(-editor.getData().scaleX || -1)',
@@ -629,7 +628,7 @@ class FileUpload extends BaseFileUpload
                 [
                     'label' => __('filament-forms::components.file_upload.editor.actions.flip_vertical.label'),
                     'iconHtml' => generate_icon_html(
-                        new HtmlString('<svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m17 3l-5 5l-5-5h10m0 18l-5-5l-5 5h10M4 12H2m8 0H8m8 0h-2m8 0h-2"/></svg>'),
+                        'fi-s-flip-vertical',
                         alias: 'forms::components.file-upload.editor.actions.flip-vertical',
                     ),
                     'alpineClickHandler' => 'editor.scaleY(-editor.getData().scaleY || -1)',

@@ -44,7 +44,7 @@
                             'data-sortable-animation-duration' => $getReorderAnimationDuration(),
                             'wire:end.stop' => 'mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })',
                         ], escape: false)
-                        ->class(['fi-fo-repeater-items'])
+                        ->class(['fi-fo-simple-repeater-items'])
                 }}
             >
                 @foreach ($items as $itemKey => $item)
@@ -67,14 +67,14 @@
                     <li
                         wire:key="{{ $item->getLivewireKey() }}.item"
                         x-sortable-item="{{ $itemKey }}"
-                        class="fi-fo-repeater-item"
+                        class="fi-fo-simple-repeater-item"
                     >
-                        <div class="fi-fo-repeater-item-content">
+                        <div class="fi-fo-simple-repeater-item-content">
                             {{ $item }}
                         </div>
 
                         @if ($reorderActionIsVisible || $moveUpActionIsVisible || $moveDownActionIsVisible || $cloneActionIsVisible || $deleteActionIsVisible || $visibleExtraItemActions)
-                            <ul class="fi-fo-repeater-item-actions">
+                            <ul class="fi-fo-simple-repeater-item-actions">
                                 @if ($reorderActionIsVisible)
                                     <li x-sortable-handle x-on:click.stop>
                                         {{ $reorderAction }}
@@ -118,7 +118,7 @@
         @if ($isAddable && $addAction->isVisible())
             <div
                 @class([
-                    'fi-fo-repeater-add',
+                    'fi-fo-simple-repeater-add',
                     ($addActionAlignment instanceof Alignment) ? ('fi-align-' . $addActionAlignment->value) : $addActionAlignment,
                 ])
             >

@@ -7,14 +7,17 @@ use Closure;
 use Exception;
 use Filament\Forms\Components\Concerns;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Concerns\HasLabel;
+use Filament\Schemas\Components\Concerns\HasName;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Block extends Component
 {
-    use Concerns\HasName {
-        getLabel as getDefaultLabel;
-    }
     use Concerns\HasPreview;
+    use HasLabel {
+        getLabel as getBaseLabel;
+    }
+    use HasName;
 
     protected string | BackedEnum | Closure | null $icon = null;
 
@@ -75,9 +78,25 @@ class Block extends Component
      */
     public function getLabel(?array $state = null, ?string $key = null): string | Htmlable
     {
-        return $this->evaluate(
+        $label = $this->evaluate(
             $this->label,
             ['key' => $key, 'state' => $state, 'uuid' => $key],
-        ) ?? $this->getDefaultLabel();
+        );
+
+        if (blank($label) && filled($label = $this->getBaseLabel())) {
+            return $label;
+        }
+
+        if (blank($label)) {
+            $label = (string) str($this->getName())
+                ->afterLast('.')
+                ->kebab()
+                ->replace(['-', '_'], ' ')
+                ->ucfirst();
+        }
+
+        return (is_string($label) && $this->shouldTranslateLabel) ?
+            __($label) :
+            $label;
     }
 }

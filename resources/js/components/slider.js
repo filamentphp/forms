@@ -71,5 +71,10 @@ export default function sliderFormComponent({
                 this.slider.set(Alpine.raw(this.state))
             })
         },
+
+        destroy: function () {
+            this.slider.destroy()
+            this.slider = null
+        },
     }
 }

@@ -4,7 +4,7 @@ export default Image.extend({
     addAttributes() {
         return {
             ...this.parent?.(),
-            id: {
+            'data-id': {
                 default: null,
             },
         }

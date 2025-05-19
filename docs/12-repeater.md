@@ -569,6 +569,82 @@ You can use `../` to go up a level in the data structure, so `$get('../client_id
 
 The special case of `$get()` with no arguments, or `$get('')` or `$get('./')`, will always return the full data array for the current repeater item.
 
+## Table repeaters
+
+You can present repeater items in a table format using the `table()` method, which accepts an array of `TableColumn` objects. These objects represent the columns of the table, which correspond to any components in the schema of the repeater:
+
+```php
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+
+Repeater::make('members')
+    ->table([
+        TableColumn::make('Name'),
+        TableColumn::make('Role'),
+    ])
+    ->schema([
+        TextInput::make('name')
+            ->required(),
+        Select::make('role')
+            ->options([
+                'member' => 'Member',
+                'administrator' => 'Administrator',
+                'owner' => 'Owner',
+            ])
+            ->required(),
+    ])
+```
+
+<AutoScreenshot name="forms/fields/repeater/table" alt="Repeater with a table layout" version="4.x" />
+
+The labels displayed in the header of the table are passed to the `TableColumn::make()` method. If you want to provide an accessible label for a column but do not wish to display it, you can use the `hiddenHeaderLabel()` method:
+
+```php
+use Filament\Forms\Components\Repeater\TableColumn;
+
+TableColumn::make('Name')
+    ->hiddenHeaderLabel()
+```
+
+If you would like to mark a column as "required" with a red asterisk, you can use the `markAsRequired()` method:
+
+```php
+use Filament\Forms\Components\Repeater\TableColumn;
+
+TableColumn::make('Name')
+    ->markAsRequired()
+```
+
+You can enable wrapping of the column header using the `wrapHeader()` method:
+
+```php
+use Filament\Forms\Components\Repeater\TableColumn;
+
+TableColumn::make('Name')
+    ->wrapHeader()
+```
+
+You can also adjust the alignment of the column header using the `alignment()` method, passing an `Alignment` option of `Alignment::Start`, `Alignment::Center`, or `Alignment::End`:
+
+```php
+use Filament\Forms\Components\Repeater\TableColumn;
+use Filament\Support\Enums\Alignment;
+
+TableColumn::make('Name')
+    ->alignment(Alignment::Start)
+```
+
+You can set a fixed column width using the `width()` method, passing a string value that represents the width of the column. This value is passed directly to the `style` attribute of the column header:
+
+```php
+use Filament\Forms\Components\Repeater\TableColumn;
+
+TableColumn::make('Name')
+    ->width('200px')
+```
+
 ## Repeater validation
 
 As well as all rules listed on the [validation](validation) page, there are additional rules that are specific to repeaters.

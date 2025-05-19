@@ -23,13 +23,13 @@ FileUpload::make('attachment')
 
 ## Configuring the storage disk and directory
 
-By default, files will be uploaded publicly to your storage disk defined in the [configuration file](../introduction/installation#publishing-configuration). You can also set the `FILESYSTEM_DISK` environment variable to change this.
+By default, files will be uploaded to the storage disk defined in the [configuration file](../introduction/installation#publishing-configuration). You can also set the `FILESYSTEM_DISK` environment variable to change this.
 
 <Aside variant="tip">
     To correctly preview images and other files, FilePond requires files to be served from the same domain as the app, or the appropriate CORS headers need to be present. Ensure that the `APP_URL` environment variable is correct, or modify the [filesystem](https://laravel.com/docs/filesystem) driver to set the correct URL. If you're hosting files on a separate domain like S3, ensure that CORS headers are set up.
 </Aside>
 
-To change the disk and directory for a specific field, and the visibility of files, use the `disk()`, `directory()` and `visibility()` methods:
+To change the disk and directory for a specific field, and the visibility of files, use the `disk()`, `directory()` and `visibility()` methods. By default, files are uploaded with `private` visibility to your storage disk, unless the disk is set to `public`:
 
 ```php
 use Filament\Forms\Components\FileUpload;
@@ -37,7 +37,7 @@ use Filament\Forms\Components\FileUpload;
 FileUpload::make('attachment')
     ->disk('s3')
     ->directory('form-attachments')
-    ->visibility('private')
+    ->visibility('public')
 ```
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing static values, the `disk()`, `directory()` and `visibility()` methods accept functions to dynamically calculate them. You can inject various utilities into the functions as parameters. </UtilityInjection>

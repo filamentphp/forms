@@ -5,6 +5,7 @@ namespace Filament\Forms\Components;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Filament\Schemas\Components\Concerns\HasContainerGridLayout;
@@ -107,6 +108,11 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
     protected bool | Closure $isItemLabelTruncated = true;
 
     protected ?Field $cachedSimpleField = null;
+
+    /**
+     * @var array<TableColumn> | Closure | null
+     */
+    protected array | Closure | null $tableColumns = null;
 
     protected function setUp(): void
     {
@@ -1178,6 +1184,29 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
         return $this->simpleField !== null;
     }
 
+    /**
+     * @param  array<TableColumn> | Closure | null  $columns
+     */
+    public function table(array | Closure | null $columns): static
+    {
+        $this->tableColumns = $columns;
+
+        return $this;
+    }
+
+    /**
+     * @return ?array<TableColumn>
+     */
+    public function getTableColumns(): ?array
+    {
+        return $this->evaluate($this->tableColumns);
+    }
+
+    public function isTable(): bool
+    {
+        return filled($this->getTableColumns());
+    }
+
     public function getSimpleField(): ?Field
     {
         return ($this->cachedSimpleField ??= $this->evaluate($this->simpleField))?->hiddenLabel();
@@ -1285,6 +1314,10 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
      */
     public function getDefaultView(): string
     {
+        if ($this->isTable()) {
+            return 'filament-forms::components.repeater.table';
+        }
+
         if ($this->isSimple()) {
             return 'filament-forms::components.repeater.simple';
         }

@@ -17,11 +17,11 @@ trait HasFileAttachments
 
     protected string | Closure | null $fileAttachmentsDiskName = null;
 
-    protected ?Closure $getUploadedAttachmentUrlUsing = null;
+    protected ?Closure $getFileAttachmentUrlUsing = null;
 
-    protected ?Closure $saveUploadedFileAttachmentsUsing = null;
+    protected ?Closure $saveUploadedFileAttachmentUsing = null;
 
-    protected string | Closure $fileAttachmentsVisibility = 'public';
+    protected string | Closure | null $fileAttachmentsVisibility = null;
 
     public function fileAttachmentsDirectory(string | Closure | null $directory): static
     {
@@ -38,7 +38,12 @@ trait HasFileAttachments
     }
 
     #[ExposedLivewireMethod]
-    public function saveUploadedFileAttachment(TemporaryUploadedFile | string | null $attachment = null): ?string
+    public function getUploadedFileAttachmentTemporaryUrl(TemporaryUploadedFile | string | null $attachment = null): ?string
+    {
+        return $this->getUploadedFileAttachment($attachment)?->temporaryUrl();
+    }
+
+    public function getUploadedFileAttachment(TemporaryUploadedFile | string | null $attachment = null): ?TemporaryUploadedFile
     {
         if (is_string($attachment)) {
             $attachment = data_get($this->getLivewire(), "componentFileAttachments.{$this->getStatePath()}.{$attachment}");
@@ -46,44 +51,82 @@ trait HasFileAttachments
             $attachment = data_get($this->getLivewire(), "componentFileAttachments.{$this->getStatePath()}");
         }
 
-        if (! $attachment) {
-            return null;
-        }
+        return $attachment;
+    }
 
-        if ($callback = $this->saveUploadedFileAttachmentsUsing) {
-            $file = $this->evaluate($callback, [
-                'file' => $attachment,
-            ]);
-        } else {
-            $file = $this->handleFileAttachmentUpload($attachment);
-        }
-
-        if ($callback = $this->getUploadedAttachmentUrlUsing) {
+    public function saveUploadedFileAttachment(TemporaryUploadedFile $file): mixed
+    {
+        if ($callback = $this->saveUploadedFileAttachmentUsing) {
             return $this->evaluate($callback, [
                 'file' => $file,
             ]);
         }
 
-        return $this->handleUploadedAttachmentUrlRetrieval($file);
+        if (filled($savedFile = $this->defaultSaveUploadedFileAttachment($file))) {
+            return $savedFile;
+        }
+
+        $storeMethod = $this->getFileAttachmentsVisibility() === 'public' ? 'storePublicly' : 'store';
+
+        return $file->{$storeMethod}($this->getFileAttachmentsDirectory(), $this->getFileAttachmentsDiskName());
     }
 
-    public function fileAttachmentsVisibility(string | Closure $visibility): static
+    public function defaultSaveUploadedFileAttachment(TemporaryUploadedFile $file): mixed
+    {
+        return null;
+    }
+
+    #[ExposedLivewireMethod]
+    public function saveUploadedFileAttachmentAndGetUrl(): ?string
+    {
+        $attachment = $this->getUploadedFileAttachment();
+
+        if (! $attachment) {
+            return null;
+        }
+
+        $file = $this->saveUploadedFileAttachment($attachment);
+
+        return $this->getFileAttachmentUrl($file);
+    }
+
+    public function fileAttachmentsVisibility(string | Closure | null $visibility): static
     {
         $this->fileAttachmentsVisibility = $visibility;
 
         return $this;
     }
 
-    public function getUploadedAttachmentUrlUsing(?Closure $callback): static
+    public function getFileAttachmentUrlUsing(?Closure $callback): static
     {
-        $this->getUploadedAttachmentUrlUsing = $callback;
+        $this->getFileAttachmentUrlUsing = $callback;
 
         return $this;
     }
 
+    /**
+     * @deprecated Use `getFileAttachmentUrlUsing()` instead.
+     */
+    public function getUploadedAttachmentUrlUsing(?Closure $callback): static
+    {
+        $this->getFileAttachmentUrlUsing($callback);
+
+        return $this;
+    }
+
+    public function saveUploadedFileAttachmentUsing(?Closure $callback): static
+    {
+        $this->saveUploadedFileAttachmentUsing = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `saveUploadedFileAttachmentUsing()` instead.
+     */
     public function saveUploadedFileAttachmentsUsing(?Closure $callback): static
     {
-        $this->saveUploadedFileAttachmentsUsing = $callback;
+        $this->saveUploadedFileAttachmentUsing($callback);
 
         return $this;
     }
@@ -100,23 +143,52 @@ trait HasFileAttachments
 
     public function getFileAttachmentsDiskName(): string
     {
-        return $this->evaluate($this->fileAttachmentsDiskName) ?? config('filament.default_filesystem_disk');
+        $name = $this->evaluate($this->fileAttachmentsDiskName);
+
+        if (filled($name)) {
+            return $name;
+        }
+
+        $name = $this->getDefaultFileAttachmentsDiskName() ?? config('filament.default_filesystem_disk');
+
+        if ($name !== 'local') {
+            return $name;
+        }
+
+        if ($this->getFileAttachmentsVisibility() !== 'public') {
+            return $name;
+        }
+
+        return 'public';
+    }
+
+    public function getDefaultFileAttachmentsDiskName(): ?string
+    {
+        return null;
     }
 
     public function getFileAttachmentsVisibility(): string
     {
-        return $this->evaluate($this->fileAttachmentsVisibility);
+        return $this->evaluate($this->fileAttachmentsVisibility) ?? $this->getDefaultFileAttachmentsVisibility() ?? 'public';
     }
 
-    protected function handleFileAttachmentUpload(TemporaryUploadedFile $file): mixed
+    public function getDefaultFileAttachmentsVisibility(): ?string
     {
-        $storeMethod = $this->getFileAttachmentsVisibility() === 'public' ? 'storePublicly' : 'store';
-
-        return $file->{$storeMethod}($this->getFileAttachmentsDirectory(), $this->getFileAttachmentsDiskName());
+        return null;
     }
 
-    protected function handleUploadedAttachmentUrlRetrieval(mixed $file): ?string
+    public function getFileAttachmentUrl(mixed $file): ?string
     {
+        if ($this->getFileAttachmentUrlUsing) {
+            return $this->evaluate($this->getFileAttachmentUrlUsing, [
+                'file' => $file,
+            ]);
+        }
+
+        if (filled($url = $this->getDefaultFileAttachmentUrl($file))) {
+            return $url;
+        }
+
         /** @var FilesystemAdapter $storage */
         $storage = $this->getFileAttachmentsDisk();
 
@@ -128,17 +200,22 @@ trait HasFileAttachments
             return null;
         }
 
-        try {
-            if ($storage->getVisibility($file) === 'private') {
+        if ($this->getFileAttachmentsVisibility() === 'private') {
+            try {
                 return $storage->temporaryUrl(
                     $file,
-                    now()->addMinutes(5),
+                    now()->addMinutes(30)->endOfHour(),
                 );
+            } catch (Throwable $exception) {
+                // This driver does not support creating temporary URLs.
             }
-        } catch (Throwable $exception) {
-            // This driver does not support creating temporary URLs.
         }
 
         return $storage->url($file);
+    }
+
+    public function getDefaultFileAttachmentUrl(mixed $file): ?string
+    {
+        return null;
     }
 }

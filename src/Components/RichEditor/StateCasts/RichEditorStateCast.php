@@ -4,7 +4,6 @@ namespace Filament\Forms\Components\RichEditor\StateCasts;
 
 use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
-use Tiptap\Editor;
 
 class RichEditorStateCast implements StateCast
 {
@@ -17,12 +16,31 @@ class RichEditorStateCast implements StateCast
      */
     public function get(mixed $state): string | array
     {
-        return (new Editor($this->richEditor->getTipTapPhpConfiguration()))
+        $editor = $this->richEditor->getTipTapEditor()
             ->setContent($state ?? [
                 'type' => 'doc',
                 'content' => [],
-            ])
-            ->{$this->richEditor->isJson() ? 'getDocument' : 'getHtml'}();
+            ]);
+
+        if ($this->richEditor->getFileAttachmentsVisibility() === 'private') {
+            $editor->descendants(function (object &$node): void {
+                if ($node->type !== 'image') {
+                    return;
+                }
+
+                if (blank($node->attrs->{'data-id'} ?? null)) {
+                    return;
+                }
+
+                if (blank($node->attrs->src ?? null)) {
+                    return;
+                }
+
+                $node->attrs->src = null;
+            });
+        }
+
+        return $editor->{$this->richEditor->isJson() ? 'getDocument' : 'getHtml'}();
     }
 
     /**
@@ -30,7 +48,7 @@ class RichEditorStateCast implements StateCast
      */
     public function set(mixed $state): array
     {
-        return (new Editor($this->richEditor->getTipTapPhpConfiguration()))
+        return $this->richEditor->getTipTapEditor()
             ->setContent($state ?? [
                 'type' => 'doc',
                 'content' => [
@@ -40,6 +58,17 @@ class RichEditorStateCast implements StateCast
                     ],
                 ],
             ])
+            ->descendants(function (object &$node): void {
+                if ($node->type !== 'image') {
+                    return;
+                }
+
+                if (blank($node->attrs->{'data-id'} ?? null)) {
+                    return;
+                }
+
+                $node->attrs->src = $this->richEditor->getFileAttachmentUrl($node->attrs->{'data-id'}) ?? $this->richEditor->getFileAttachmentUrlFromAnotherRecord($node->attrs->{'data-id'}) ?? $node->attrs->src ?? null;
+            })
             ->getDocument();
     }
 }

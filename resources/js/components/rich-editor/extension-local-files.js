@@ -21,9 +21,13 @@ const LocalFilesPlugin = ({
     $wire,
 }) => {
     const getFileAttachmentUrl = (fileKey) =>
-        $wire().callSchemaComponentMethod(key, 'saveUploadedFileAttachment', {
-            attachment: fileKey,
-        })
+        $wire().callSchemaComponentMethod(
+            key,
+            'getUploadedFileAttachmentTemporaryUrl',
+            {
+                attachment: fileKey,
+            },
+        )
 
     return new Plugin({
         key: new PluginKey('localFiles'),
@@ -104,7 +108,7 @@ const LocalFilesPlugin = ({
                                     .chain()
                                     .updateAttributes('image', {
                                         class: null,
-                                        id: fileKey,
+                                        'data-id': fileKey,
                                         src: url,
                                     })
                                     .run()
@@ -207,7 +211,7 @@ const LocalFilesPlugin = ({
                                     .chain()
                                     .updateAttributes('image', {
                                         class: null,
-                                        id: fileKey,
+                                        'data-id': fileKey,
                                         src: url,
                                     })
                                     .run()

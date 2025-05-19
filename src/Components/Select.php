@@ -1280,9 +1280,9 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @return Model|class-string<Model>|null
+     * @return Model | array<string, mixed> | class-string<Model> | null
      */
-    public function getActionSchemaModel(): Model | string | null
+    public function getActionSchemaModel(): Model | array | string | null
     {
         if ($this->hasRelationship()) {
             return $this->getRelationship()->getModel()::class;

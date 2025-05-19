@@ -10,7 +10,7 @@
             @apply flex gap-x-1;
         }
 
-        & .fi-fo-rich-editor-toolbar-btn {
+        & .fi-fo-rich-editor-tool {
             @apply flex h-8 min-w-8 items-center justify-center rounded-lg text-sm font-semibold text-gray-700 transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
 
             &.fi-active {
@@ -20,7 +20,7 @@
     }
 
     & .fi-fo-rich-editor-content {
-        @apply min-h-full w-full px-3 py-3;
+        @apply min-h-full w-full px-5 py-3;
     }
 
     & .tiptap:focus {

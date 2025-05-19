@@ -8,15 +8,14 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\EditorCommand;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Enums\Width;
-use Illuminate\Support\Js;
 
 class LinkAction
 {
     public static function make(): Action
     {
         return Action::make('link')
-            ->alpineClickHandler(fn (RichEditor $component): string => '$wire.mountAction(\'link\', { url: getEditor().getAttributes(\'link\')?.href, shouldOpenInNewTab: getEditor().getAttributes(\'link\')?.target === \'_blank\', editorSelection }, ' . Js::from(['schemaComponent' => $component->getKey()]) . ')')
-            ->modalHeading('Link')
+            ->label(__('filament-forms::components.rich_editor.actions.link.label'))
+            ->modalHeading(__('filament-forms::components.rich_editor.actions.link.modal.heading'))
             ->modalWidth(Width::Large)
             ->fillForm(fn (array $arguments): array => [
                 'url' => $arguments['url'] ?? null,
@@ -24,10 +23,10 @@ class LinkAction
             ])
             ->schema([
                 TextInput::make('url')
-                    ->label('URL')
+                    ->label(__('filament-forms::components.rich_editor.actions.link.modal.form.url.label'))
                     ->url(),
                 Checkbox::make('shouldOpenInNewTab')
-                    ->label('Open in new tab'),
+                    ->label(__('filament-forms::components.rich_editor.actions.link.modal.form.should_open_in_new_tab.label')),
             ])
             ->action(function (array $arguments, array $data, RichEditor $component): void {
                 $isSingleCharacterSelection = ($arguments['editorSelection']['head'] ?? null) === ($arguments['editorSelection']['anchor'] ?? null);
@@ -35,11 +34,11 @@ class LinkAction
                 if (blank($data['url'])) {
                     $component->runCommands(
                         [
-                            ...($isSingleCharacterSelection ? [new EditorCommand(
-                                name: 'extendMarkRange',
+                            ...($isSingleCharacterSelection ? [EditorCommand::make(
+                                'extendMarkRange',
                                 arguments: ['link'],
                             )] : []),
-                            new EditorCommand(name: 'unsetLink'),
+                            EditorCommand::make('unsetLink'),
                         ],
                         editorSelection: $arguments['editorSelection'],
                     );
@@ -49,12 +48,12 @@ class LinkAction
 
                 $component->runCommands(
                     [
-                        ...($isSingleCharacterSelection ? [new EditorCommand(
-                            name: 'extendMarkRange',
+                        ...($isSingleCharacterSelection ? [EditorCommand::make(
+                            'extendMarkRange',
                             arguments: ['link'],
                         )] : []),
-                        new EditorCommand(
-                            name: 'setLink',
+                        EditorCommand::make(
+                            'setLink',
                             arguments: [[
                                 'href' => $data['url'],
                                 'target' => $data['shouldOpenInNewTab'] ? '_blank' : null,
