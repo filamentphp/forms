@@ -170,7 +170,17 @@ trait HasState
     {
         if (! ($isDehydrated && $this->isDehydrated())) {
             if ($this->hasStatePath()) {
-                Arr::forget($state, $this->getStatePath());
+                $rootContainer = $this->getContainer();
+
+                while (! $rootContainer->isRoot()) {
+                    $rootContainer = $rootContainer->getParentComponent()->getContainer();
+                }
+
+                $statePath = $this->getStatePath();
+
+                if (! $rootContainer->hasDehydratedComponent($statePath)) {
+                    Arr::forget($state, $statePath);
+                }
 
                 return;
             }

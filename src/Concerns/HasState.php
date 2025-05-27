@@ -78,6 +78,27 @@ trait HasState
         return $state;
     }
 
+    public function hasDehydratedComponent(string $statePath): bool
+    {
+        foreach ($this->getComponents(withHidden: true) as $component) {
+            if (! $component->isDehydrated()) {
+                continue;
+            }
+
+            if ($component->hasStatePath() && ($component->getStatePath() === $statePath)) {
+                return true;
+            }
+
+            foreach ($component->getChildComponentContainers(withHidden: true) as $container) {
+                if ($container->hasDehydratedComponent($statePath)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param  array<string, mixed>  $state
      * @return array<string, mixed>
