@@ -9,6 +9,7 @@ use Closure;
 use DateTime;
 use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
+use Filament\Support\Facades\FilamentTimezone;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Carbon;
 use Illuminate\View\ComponentAttributeBag;
@@ -493,7 +494,7 @@ class DateTimePicker extends Field implements HasAffixActions
 
     public function getTimezone(): string
     {
-        return $this->evaluate($this->timezone) ?? config('app.timezone');
+        return $this->evaluate($this->timezone) ?? ($this->hasTime() ? FilamentTimezone::get() : config('app.timezone'));
     }
 
     public function getLocale(): string

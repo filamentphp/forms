@@ -284,7 +284,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Dołącz pliki',
             'blockquote' => 'Cytat blokowy',
             'bold' => 'Pogrubienie',
@@ -382,7 +382,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Dołącz pliki',
             'blockquote' => 'Cytat',
             'bold' => 'Pogrubienie',

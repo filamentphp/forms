@@ -279,7 +279,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => '파일 첨부',
             'blockquote' => '인용구',
             'bold' => '굵게',
@@ -377,7 +377,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => '파일 첨부',
             'blockquote' => '인용구',
             'bold' => '굵게',

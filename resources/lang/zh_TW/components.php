@@ -72,7 +72,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => '附加檔案',
             'bold' => '粗體',
             'bullet_list' => '無序清單',
@@ -146,7 +146,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => '附加檔案',
             'blockquote' => '引用區塊',
             'bold' => '粗體',

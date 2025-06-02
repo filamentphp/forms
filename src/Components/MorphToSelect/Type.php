@@ -184,7 +184,13 @@ class Type
                 return $this->getOptionLabelFromRecord($record);
             }
 
-            return $record->getAttributeValue($this->getTitleAttribute());
+            $titleAttribute = $this->getTitleAttribute();
+
+            if (str_contains($titleAttribute, '->')) {
+                $titleAttribute = str_replace('->', '.', $titleAttribute);
+            }
+
+            return data_get($record, $titleAttribute);
         });
     }
 

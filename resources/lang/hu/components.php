@@ -260,7 +260,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Fájlok csatolása',
             'blockquote' => 'Idézet',
             'bold' => 'Félkövér',
@@ -358,7 +358,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Fájlok csatolása',
             'blockquote' => 'Idézet',
             'bold' => 'Félkövér',

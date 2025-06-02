@@ -301,7 +301,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'bold',
                 action: EasyMDE.toggleBold,
-                title: translations.toolbar_buttons?.bold,
+                title: translations.tools?.bold,
             }
         },
 
@@ -309,7 +309,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'italic',
                 action: EasyMDE.toggleItalic,
-                title: translations.toolbar_buttons?.italic,
+                title: translations.tools?.italic,
             }
         },
 
@@ -317,7 +317,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'strikethrough',
                 action: EasyMDE.toggleStrikethrough,
-                title: translations.toolbar_buttons?.strike,
+                title: translations.tools?.strike,
             }
         },
 
@@ -325,7 +325,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'link',
                 action: EasyMDE.drawLink,
-                title: translations.toolbar_buttons?.link,
+                title: translations.tools?.link,
             }
         },
 
@@ -333,7 +333,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'heading',
                 action: EasyMDE.toggleHeadingSmaller,
-                title: translations.toolbar_buttons?.heading,
+                title: translations.tools?.heading,
             }
         },
 
@@ -341,7 +341,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'quote',
                 action: EasyMDE.toggleBlockquote,
-                title: translations.toolbar_buttons?.blockquote,
+                title: translations.tools?.blockquote,
             }
         },
 
@@ -349,7 +349,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'code',
                 action: EasyMDE.toggleCodeBlock,
-                title: translations.toolbar_buttons?.code_block,
+                title: translations.tools?.code_block,
             }
         },
 
@@ -357,7 +357,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'unordered-list',
                 action: EasyMDE.toggleUnorderedList,
-                title: translations.toolbar_buttons?.bullet_list,
+                title: translations.tools?.bullet_list,
             }
         },
 
@@ -365,7 +365,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'ordered-list',
                 action: EasyMDE.toggleOrderedList,
-                title: translations.toolbar_buttons?.ordered_list,
+                title: translations.tools?.ordered_list,
             }
         },
 
@@ -373,7 +373,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'table',
                 action: EasyMDE.drawTable,
-                title: translations.toolbar_buttons?.table,
+                title: translations.tools?.table,
             }
         },
 
@@ -381,7 +381,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'upload-image',
                 action: EasyMDE.drawUploadedImage,
-                title: translations.toolbar_buttons?.attach_files,
+                title: translations.tools?.attach_files,
             }
         },
 
@@ -389,7 +389,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'undo',
                 action: EasyMDE.undo,
-                title: translations.toolbar_buttons?.undo,
+                title: translations.tools?.undo,
             }
         },
 
@@ -397,7 +397,7 @@ export default function markdownEditorFormComponent({
             return {
                 name: 'redo',
                 action: EasyMDE.redo,
-                title: translations.toolbar_buttons?.redo,
+                title: translations.tools?.redo,
             }
         },
     }

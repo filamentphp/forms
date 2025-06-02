@@ -241,7 +241,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Pridėti failus',
             'blockquote' => 'Citatos blokas',
             'bold' => 'Paryškinta',
@@ -330,7 +330,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Pridėti failus',
             'blockquote' => 'Citatos blokas',
             'bold' => 'Paryškinta',

@@ -280,7 +280,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Прикріпити файли',
             'blockquote' => 'Цитата',
             'bold' => 'Жирний',
@@ -378,7 +378,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Прикріпити файли',
             'blockquote' => 'Цитата',
             'bold' => 'Жирний',

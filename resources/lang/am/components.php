@@ -255,7 +255,7 @@ return [
     ],
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
 
             'attach_files' => 'ፋይል ለማጣመር',
             'blockquote' => 'ጥቅስ',
@@ -345,7 +345,7 @@ return [
                 'placeholder' => 'URL አስገባ',
             ],
         ],
-        'toolbar_buttons' => [
+        'tools' => [
 
             'attach_files' => 'ፋይሎችን ያያይዙ',
             'blockquote' => 'Blockquote',

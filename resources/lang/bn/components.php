@@ -104,7 +104,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'নথি যোগ করুন',
             'bold' => 'বোল্ড',
             'bullet_list' => 'বুলেট তালিকা',
@@ -186,7 +186,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'নথি যোগ করুন',
             'blockquote' => 'ব্লককোট',
             'bold' => 'বোল্ড',

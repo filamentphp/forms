@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components\RichEditor;
 
+use Closure;
 use Filament\Forms\Components\RichEditor\FileAttachmentProviders\Contracts\FileAttachmentProvider;
 use Filament\Forms\Components\RichEditor\Plugins\Contracts\RichContentPlugin;
 use Illuminate\Contracts\Support\Htmlable;
@@ -19,6 +20,18 @@ class RichContentAttribute implements Htmlable
     protected array $plugins = [];
 
     protected ?FileAttachmentProvider $fileAttachmentProvider = null;
+
+    /**
+     * @var ?array<string, mixed>
+     */
+    protected ?array $mergeTags = null;
+
+    /**
+     * @var ?array<class-string<RichContentCustomBlock> | array<string, mixed> | Closure>
+     */
+    protected ?array $customBlocks = null;
+
+    protected bool $isJson = false;
 
     public function __construct(protected Model $model, protected string $name) {}
 
@@ -98,9 +111,73 @@ class RichContentAttribute implements Htmlable
     {
         return RichContentRenderer::make($this->model->getAttribute($this->name))
             ->plugins($this->getPlugins())
+            ->customBlocks($this->customBlocks)
+            ->mergeTags($this->mergeTags)
             ->fileAttachmentsDisk($this->getFileAttachmentsDiskName())
             ->fileAttachmentsVisibility($this->getFileAttachmentsVisibility())
             ->fileAttachmentProvider($this->getFileAttachmentProvider())
             ->toHtml();
+    }
+
+    /**
+     * @param  ?array<string, mixed>  $tags
+     */
+    public function mergeTags(?array $tags): static
+    {
+        $this->mergeTags = $tags;
+
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getMergeTags(): ?array
+    {
+        if (blank($this->mergeTags)) {
+            return null;
+        }
+
+        return array_keys($this->mergeTags);
+    }
+
+    /**
+     * @param  ?array<class-string<RichContentCustomBlock> | array<string, mixed> | Closure>  $blocks
+     */
+    public function customBlocks(?array $blocks): static
+    {
+        $this->customBlocks = $blocks;
+
+        return $this;
+    }
+
+    /**
+     * @return ?array<class-string<RichContentCustomBlock>>
+     */
+    public function getCustomBlocks(): ?array
+    {
+        if (blank($this->customBlocks)) {
+            return null;
+        }
+
+        $blocks = [];
+
+        foreach ($this->customBlocks as $key => $block) {
+            $blocks[] = is_string($key) ? $key : $block;
+        }
+
+        return $blocks;
+    }
+
+    public function json(bool $condition = true): static
+    {
+        $this->isJson = $condition;
+
+        return $this;
+    }
+
+    public function isJson(): bool
+    {
+        return $this->isJson;
     }
 }

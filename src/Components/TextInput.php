@@ -273,6 +273,7 @@ class TextInput extends Field implements CanHaveNumericState, Contracts\CanBeLen
     public function getDefaultStateCasts(): array
     {
         return [
+            ...parent::getDefaultStateCasts(),
             ...($this->isNumeric() ? [app(NumberStateCast::class, ['isNullable' => true])] : []),
         ];
     }

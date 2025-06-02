@@ -511,6 +511,7 @@ class Slider extends Field implements Contracts\HasNestedRecursiveValidationRule
     public function getDefaultStateCasts(): array
     {
         return [
+            ...parent::getDefaultStateCasts(),
             app(SliderStateCast::class, ['decimalPlaces' => $this->getDecimalPlaces()]),
         ];
     }

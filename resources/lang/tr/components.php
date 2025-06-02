@@ -232,7 +232,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Dosya ekle',
             'blockquote' => 'Alıntı',
             'bold' => 'Kalın',
@@ -330,7 +330,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Dosya ekle',
             'blockquote' => 'Alıntı',
             'bold' => 'Kalın',

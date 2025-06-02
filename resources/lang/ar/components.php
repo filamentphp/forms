@@ -280,7 +280,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'إرفاق ملفات',
             'blockquote' => 'اقتباس',
             'bold' => 'عريض',
@@ -378,7 +378,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'إرفاق ملفات',
             'blockquote' => 'إقتباس',
             'bold' => 'عريض',

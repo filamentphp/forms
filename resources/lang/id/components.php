@@ -284,7 +284,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Lampirkan berkas',
             'blockquote' => 'Kutipan',
             'bold' => 'Tebal',
@@ -382,7 +382,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Lampirkan berkas',
             'blockquote' => 'Kutipan',
             'bold' => 'Tebal',

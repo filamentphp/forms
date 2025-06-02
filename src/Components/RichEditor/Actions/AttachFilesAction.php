@@ -46,6 +46,15 @@ class AttachFilesAction
                 }
 
                 if (filled($arguments['src'] ?? null)) {
+                    // Fixes an issue where the editor selection is sent as text instead of a node,
+                    // which causes the image update to fail when though the image is selected.
+                    if ($arguments['editorSelection']['type'] !== 'node') {
+                        $arguments['editorSelection']['type'] = 'node';
+                        $arguments['editorSelection']['anchor']--;
+
+                        unset($arguments['editorSelection']['head']);
+                    }
+
                     $id ??= $arguments['id'] ?? null;
                     $src ??= $arguments['src'];
 
@@ -55,7 +64,7 @@ class AttachFilesAction
                                 'image',
                                 [
                                     'alt' => $data['alt'] ?? null,
-                                    'data-id' => $id,
+                                    'id' => $id,
                                     'src' => $src,
                                 ],
                             ]),
@@ -80,7 +89,7 @@ class AttachFilesAction
                             'type' => 'image',
                             'attrs' => [
                                 'alt' => $data['alt'] ?? null,
-                                'data-id' => $id,
+                                'id' => $id,
                                 'src' => $src,
                             ],
                         ]]),

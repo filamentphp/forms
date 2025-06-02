@@ -2,12 +2,14 @@
 
 namespace Filament\Forms;
 
+use Filament\Forms\Components\TableSelect\Livewire\TableSelectLivewireComponent;
 use Filament\Forms\Testing\TestsFormComponentActions;
 use Filament\Forms\Testing\TestsForms;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -50,6 +52,8 @@ class FormsServiceProvider extends PackageServiceProvider
                 ], 'filament-stubs');
             }
         }
+
+        Livewire::component('table-select', TableSelectLivewireComponent::class);
 
         Testable::mixin(new TestsForms);
         Testable::mixin(new TestsFormComponentActions);

@@ -232,7 +232,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Legg til filer',
             'blockquote' => 'Sitat',
             'bold' => 'Fet',
@@ -330,7 +330,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Legg til filer',
             'blockquote' => 'Sitat',
             'bold' => 'Fet',

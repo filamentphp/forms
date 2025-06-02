@@ -33,6 +33,8 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     protected bool | Closure $isOpenable = false;
 
+    protected bool | Closure $isPasteable = true;
+
     protected bool | Closure $isPreviewable = true;
 
     protected bool | Closure $isReorderable = false;
@@ -103,7 +105,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
         $this->beforeStateDehydrated(static function (BaseFileUpload $component): void {
             $component->saveUploadedFiles();
-        });
+        }, shouldUpdateValidatedStateAfter: true);
 
         $this->getUploadedFileUsing(static function (BaseFileUpload $component, string $file, string | array | null $storedFileNames): ?array {
             /** @var FilesystemAdapter $storage */
@@ -232,6 +234,13 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     public function reorderable(bool | Closure $condition = true): static
     {
         $this->isReorderable = $condition;
+
+        return $this;
+    }
+
+    public function pasteable(bool | Closure $condition = true): static
+    {
+        $this->isPasteable = $condition;
 
         return $this;
     }
@@ -440,6 +449,11 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     public function isOpenable(): bool
     {
         return (bool) $this->evaluate($this->isOpenable);
+    }
+
+    public function isPasteable(): bool
+    {
+        return (bool) $this->evaluate($this->isPasteable);
     }
 
     public function isPreviewable(): bool
@@ -852,9 +866,9 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     /**
      * @return array<string, string>
      */
-    public function getStateToDehydrate(): array
+    public function getStateToDehydrate(mixed $state): array
     {
-        $state = parent::getStateToDehydrate();
+        $state = parent::getStateToDehydrate($state);
 
         if ($fileNamesStatePath = $this->getFileNamesStatePath()) {
             $state = [

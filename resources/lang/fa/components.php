@@ -232,7 +232,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'پیوستن فایل ها',
             'blockquote' => 'نقل قول',
             'bold' => 'پررنگ',
@@ -330,7 +330,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'پیوستن فایل ها',
             'blockquote' => 'نقل قول',
             'bold' => 'پررنگ',

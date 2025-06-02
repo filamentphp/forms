@@ -284,7 +284,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Файл хавсаргах',
             'blockquote' => 'Ишлэл',
             'bold' => 'Өргөн',
@@ -382,7 +382,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Файл хавсаргах',
             'blockquote' => 'Ишлэл',
             'bold' => 'Өргөн',

@@ -284,7 +284,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Attach files',
             'blockquote' => 'Blockquote',
             'bold' => 'Bold',
@@ -298,6 +298,28 @@ return [
             'strike' => 'Strikethrough',
             'table' => 'Table',
             'undo' => 'Undo',
+        ],
+
+    ],
+
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'Select',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'Select',
+                    ],
+
+                ],
+
+            ],
+
         ],
 
     ],
@@ -401,6 +423,26 @@ return [
 
             ],
 
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Insert',
+                        ],
+
+                        'save' => [
+                            'label' => 'Save',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
             'link' => [
 
                 'label' => 'Edit',
@@ -427,17 +469,21 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'no_merge_tag_search_results_message' => 'No merge tag results.',
+
+        'tools' => [
             'attach_files' => 'Attach files',
             'blockquote' => 'Blockquote',
             'bold' => 'Bold',
             'bullet_list' => 'Bullet list',
             'code_block' => 'Code block',
+            'custom_blocks' => 'Blocks',
             'h1' => 'Title',
             'h2' => 'Heading',
             'h3' => 'Subheading',
             'italic' => 'Italic',
             'link' => 'Link',
+            'merge_tags' => 'Merge tags',
             'ordered_list' => 'Numbered list',
             'redo' => 'Redo',
             'strike' => 'Strikethrough',

@@ -29,8 +29,8 @@
         $statePath ??= $field->getStatePath();
     }
 
-    $aboveLabelSchema = $field?->getChildSchema($field::ABOVE_LABEL_SCHEMA_KEY);
-    $belowLabelSchema = $field?->getChildSchema($field::BELOW_LABEL_SCHEMA_KEY);
+    $aboveLabelSchema = $field?->getChildSchema($field::ABOVE_LABEL_SCHEMA_KEY)?->toHtmlString();
+    $belowLabelSchema = $field?->getChildSchema($field::BELOW_LABEL_SCHEMA_KEY)?->toHtmlString();
     $beforeLabelSchema = $field?->getChildSchema($field::BEFORE_LABEL_SCHEMA_KEY)?->toHtmlString();
     $afterLabelSchema = $field?->getChildSchema($field::AFTER_LABEL_SCHEMA_KEY)?->toHtmlString();
     $aboveContentSchema = $field?->getChildSchema($field::ABOVE_CONTENT_SCHEMA_KEY)?->toHtmlString();
@@ -83,14 +83,7 @@
 
                         @if (filled($label) && (! $labelSrOnly))
                             <span class="fi-fo-field-label-content">
-                                {{ $label }}
-
-                                @if ($required && (! $isDisabled))
-                                    <sup
-                                        class="fi-fo-field-label-required-mark"
-                                    >
-                                        *
-                                    </sup>
+                                {{ $label }}@if ($required && (! $isDisabled))<sup class="fi-fo-field-label-required-mark">*</sup>
                                 @endif
                             </span>
                         @endif
@@ -127,11 +120,27 @@
             {{ $belowContentSchema }}
 
             @if ($hasError)
+                @php
+                    $errorMessage = $errors->has($statePath) ? $errors->first($statePath) : ($hasNestedRecursiveValidationRules ? $errors->first("{$statePath}.*") : null);
+                @endphp
+
                 {{ $aboveErrorMessageSchema }}
 
-                <p data-validation-error class="fi-fo-field-wrp-error-message">
-                    {{ $errors->has($statePath) ? $errors->first($statePath) : ($hasNestedRecursiveValidationRules ? $errors->first("{$statePath}.*") : null) }}
-                </p>
+                @if ($field?->areHtmlValidationMessagesAllowed())
+                    <div
+                        data-validation-error
+                        class="fi-fo-field-wrp-error-message"
+                    >
+                        {!! $errorMessage !!}
+                    </div>
+                @else
+                    <p
+                        data-validation-error
+                        class="fi-fo-field-wrp-error-message"
+                    >
+                        {{ $errorMessage }}
+                    </p>
+                @endif
 
                 {{ $belowErrorMessageSchema }}
             @endif

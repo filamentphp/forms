@@ -57,7 +57,7 @@ RichEditor::make('content')
         ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
         ['h2', 'h3'],
         ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
-        ['attachFiles'],
+        ['attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
         ['undo', 'redo'],
     ])
 ```
@@ -90,6 +90,34 @@ use Filament\Forms\Components\RichEditor\RichContentRenderer;
 RichContentRenderer::make($record->content)
     ->fileAttachmentsDisk('s3')
     ->fileAttachmentsVisibility('private')
+    ->toHtml()
+```
+
+If you are using [custom blocks](#using-custom-blocks) in the rich editor, you can pass an array of custom blocks to the renderer to ensure that they are rendered correctly:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+RichContentRenderer::make($record->content)
+    ->customBlocks([
+        HeroBlock::class => [
+            'categoryUrl' => $record->category->getUrl(),
+        ],
+        CallToActionBlock::class,
+    ])
+    ->toHtml()
+```
+
+If you are using [merge tags](#using-merge-tags), you can pass an array of values to replace the merge tags with:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+RichContentRenderer::make($record->content)
+    ->mergeTags([
+        'name' => $record->user->name,
+        'today' => now()->toFormattedDateString(),
+    ])
     ->toHtml()
 ```
 
@@ -139,9 +167,243 @@ RichContentRenderer::make($record->content)
     ->toHtml()
 ```
 
+## Using custom blocks
+
+Custom blocks are elements that users can drag and drop into the rich editor. You can define custom blocks that user can insert into the rich editor using the `customBlocks()` method:
+
+```php
+use Filament\Forms\Components\RichEditor;
+
+RichEditor::make('content')
+    ->customBlocks([
+        HeroBlock::class,
+        CallToActionBlock::class,
+    ])
+```
+
+Each block needs a corresponding class that extends the `Filament\Forms\Components\RichEditor\RichContentCustomBlock` class. The `getId()` method should return a unique identifier for the block, and the `getLabel()` method should return the label that will be displayed in the editor's side panel:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
+
+class HeroBlock extends RichContentCustomBlock
+{
+    public static function getId(): string
+    {
+        return 'hero';
+    }
+
+    public static function getLabel(): string
+    {
+        return 'Hero section';
+    }
+}
+```
+
+When a user drags a custom block into the editor, you can choose to open a modal to collect additional information from the user before inserting the block. To do this, you can use the `configureEditorAction()` method to configure the [modal](../actions/modals) that will be opened when the block is inserted:
+
+```php
+use Filament\Actions\Action;
+use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
+
+class HeroBlock extends RichContentCustomBlock
+{
+    // ...
+
+    public static function configureEditorAction(Action $action): Action
+    {
+        return $action
+            ->modalDescription('Configure the hero section')
+            ->schema([
+                TextInput::make('heading')
+                    ->required(),
+                TextInput::make('subheading'),
+            ]);
+    }
+}
+```
+
+The `schema()` method on the action can define form fields that will be displayed in the modal. When the user submits the form, the form data will be saved as "configuration" for that block.
+
+### Rendering a preview for a custom block
+
+Once a block is inserted into the editor, you may define a "preview" for it using the `toPreviewHtml()` method. This method should return a string of HTML that will be displayed in the editor when the block is inserted, allowing users to see what the block will look like before they save it. You can access the `$config` for the block in this method, which contains the data that was submitted in the modal when the block was inserted:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
+
+class HeroBlock extends RichContentCustomBlock
+{
+    // ...
+
+    /**
+     * @param  array<string, mixed>  $config
+     */
+    public static function toPreviewHtml(array $config): string
+    {
+        return view('blocks.previews.hero', [
+            'heading' => $config['heading'],
+            'subheading' => $config['subheading'] ?? 'Default subheading',
+        ])->render();
+    }
+}
+```
+
+The `getPreviewLabel()` can be defined if you would like to customize the label that is displayed above the preview in the editor. By default, it will use the label defined in the `getLabel()` method, but the `getPreviewLabel()` is able to access the `$config` for the block, allowing you to display dynamic information in the label:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
+
+class HeroBlock extends RichContentCustomBlock
+{
+    // ...
+
+    /**
+     * @param  array<string, mixed>  $config
+     */
+    public static function getPreviewLabel(array $config): string
+    {
+        return "Hero section: {$config['heading']}";
+    }
+}
+```
+
+### Rendering content with custom blocks
+
+When rendering the rich content, you can pass the array of custom blocks to the `RichContentRenderer` to ensure that the blocks are rendered correctly:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+RichContentRenderer::make($record->content)
+    ->customBlocks([
+        HeroBlock::class,
+        CallToActionBlock::class,
+    ])
+    ->toHtml()
+```
+
+Each block class may have a `toHtml()` method that returns the HTML that should be rendered for that block:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
+
+class HeroBlock extends RichContentCustomBlock
+{
+    // ...
+
+    /**
+     * @param  array<string, mixed>  $config
+     * @param  array<string, mixed>  $data
+     */
+    public function toHtml(array $config, array $data): string
+    {
+        return view('blocks.hero', [
+            'heading' => $config['heading'],
+            'subheading' => $config['subheading'],
+            'buttonLabel' => 'View category',
+            'buttonUrl' => $data['categoryUrl'],
+        ])->render();
+    }
+}
+```
+
+As seen above, the `toHtml()` method receives two parameters: `$config`, which contains the configuration data submitted in the modal when the block was inserted, and `$data`, which contains any additional data that may be needed to render the block. This allows you to access the configuration data and render the block accordingly. The data can be passed in the `customBlocks()` method:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+RichContentRenderer::make($record->content)
+    ->customBlocks([
+        HeroBlock::class => [
+            'categoryUrl' => $record->category->getUrl(),
+        ],
+        CallToActionBlock::class,
+    ])
+    ->toHtml()
+```
+
+### Opening the custom blocks panel by default
+
+If you want the custom blocks panel to be open by default when the rich editor is loaded, you can use the `activePanel('customBlocks')` method:
+
+```php
+use Filament\Forms\Components\RichEditor;
+
+RichEditor::make('content')
+    ->customBlocks([
+        HeroBlock::class,
+        CallToActionBlock::class,
+    ])
+    ->activePanel('customBlocks')
+```
+
+## Using merge tags
+
+Merge tags allow the user to insert "placeholders" into their rich content, which can be replaced with dynamic values when the content is rendered. This is useful for inserting things like the current user's name, or the current date.
+
+To register merge tags on an editor, use the `mergeTags()` method:
+
+```php
+use Filament\Forms\Components\RichEditor;
+
+RichEditor::make('content')
+    ->mergeTags([
+        'name',
+        'today',
+    ])
+```
+
+Merge tags are surrounded by double curly braces, like `{{ name }}`. When the content is rendered, these tags will be replaced with the corresponding values.
+
+To insert a merge tag into the content, users can start typing `{{` to search for a tag to insert. Alternatively, they can click on the "merge tags" tool in the editor's toolbar, which opens a panel containing all the merge tags. They can then drag a merge tag from the editor's side panel into the content or click to insert it.
+
+### Rendering content with merge tags
+
+When rendering the rich content, you can pass an array of values to replace the merge tags with:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+RichContentRenderer::make($record->content)
+    ->mergeTags([
+        'name' => $record->user->name,
+        'today' => now()->toFormattedDateString(),
+    ])
+    ->toHtml()
+```
+
+If you have many merge tags or you need to run some logic to determine the values, you can use a function as the value of each merge tag. This function will be called when a merge tag is first encountered in the content, and its result is cached for subsequent tags of the same name:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+RichContentRenderer::make($record->content)
+    ->mergeTags([
+        'name' => fn (): string => $record->user->name,
+        'today' => now()->toFormattedDateString(),
+    ])
+    ->toHtml()
+```
+
+### Opening the merge tags panel by default
+
+If you want the merge tags panel to be open by default when the rich editor is loaded, you can use the `activePanel('mergeTags')` method:
+
+```php
+use Filament\Forms\Components\RichEditor;
+
+RichEditor::make('content')
+    ->mergeTags([
+        'name',
+        'today',
+    ])
+    ->activePanel('mergeTags')
+```
+
 ## Registering rich content attributes
 
-There are elements of the rich editor configuration that apply to both the editor and the renderer. For example, if you are using [private images](#using-private-images-in-the-editor) or [plugins](#extending-the-rich-editor), you need to ensure that the same configuration is used in both places. To do this, Filament provides you with a way to register rich content attributes that can be used in both the editor and the renderer.
+There are elements of the rich editor configuration that apply to both the editor and the renderer. For example, if you are using [private images](#using-private-images-in-the-editor), [custom blocks](#using-custom-blocks), [merge tags](#using-merge-tags), or [plugins](#extending-the-rich-editor), you need to ensure that the same configuration is used in both places. To do this, Filament provides you with a way to register rich content attributes that can be used in both the editor and the renderer.
 
 To register rich content attributes on an Eloquent model, you should use the `InteractsWithRichContent` trait and implement the `HasRichContent` interface. This allows you to register the attributes in the `setUpRichContent()` method:
 
@@ -159,6 +421,16 @@ class Post extends Model implements HasRichContent
         $this->registerRichContent('content')
             ->fileAttachmentsDisk('s3')
             ->fileAttachmentsVisibility('private')
+            ->customBlocks([
+                HeroBlock::class => [
+                    'categoryUrl' => fn (): string => $this->category->getUrl(),
+                ],
+                CallToActionBlock::class,
+            ])
+            ->mergeTags([
+                'name' => fn (): string => $this->user->name,
+                'today' => now()->toFormattedDateString(),
+            ])
             ->plugins([
                 HighlightRichContentPlugin::make(),
             ]);
@@ -258,7 +530,7 @@ class HighlightRichContentPlugin implements RichContentPlugin
         // This method should return an array of `RichEditorTool` objects, which can then be
         // used in the `toolbarButtons()` of the editor.
         
-        // The `javaScriptHandler()` method allows you to access the TipTap editor instance
+        // The `jsHandler()` method allows you to access the TipTap editor instance
         // through `$getEditor()`, and `chain()` any TipTap commands to it.
         // See: https://tiptap.dev/docs/editor/api/commands
         
@@ -268,7 +540,7 @@ class HighlightRichContentPlugin implements RichContentPlugin
     
         return [
             RichEditorTool::make('highlight')
-                ->javaScriptHandler('$getEditor()?.chain().focus().toggleHighlight().run()')
+                ->jsHandler('$getEditor()?.chain().focus().toggleHighlight().run()')
                 ->icon(Heroicon::CursorArrowRays),
             RichEditorTool::make('highlightWithCustomColor')
                 ->action(arguments: '{ color: $getEditor().getAttributes(\'mark\')?.data-color }')

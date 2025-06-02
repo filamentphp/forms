@@ -488,6 +488,85 @@ TextInput::make('name')
 
 <AutoScreenshot name="forms/fields/placeholder" alt="Form field with placeholder" version="4.x" />
 
+## Fusing fields together into a group
+
+A `FusedGroup` component can be used to "fuse" multiple fields together. The following fields can be fused together the best:
+
+- [Text input](text-input)
+- [Select](select)
+- [Date-time picker](date-time-picker)
+- [Color picker](color-picker)
+
+The fields that should be fused are passed to the `make()` method of the `FusedGroup` component:
+
+```php
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\FusedGroup;
+
+FusedGroup::make([
+    TextInput::make('city')
+        ->placeholder('City'),
+    Select::make('country')
+        ->placeholder('Country')
+        ->options([
+            // ...
+        ]),
+])
+```
+
+<AutoScreenshot name="forms/fields/fused" alt="Fused group of form fields" version="4.x" />
+
+You can add a label above the group of fields using the `label()` method:
+
+```php
+use Filament\Schemas\Components\FusedGroup;
+
+FusedGroup::make([
+    // ...
+])
+    ->label('Location')
+```
+
+<AutoScreenshot name="forms/fields/fused-label" alt="Fused group of form fields with label" version="4.x" />
+
+By default, each field will have its own row. On mobile devices, this is often the most optimal experience, but on desktop you can use the `columns()` method, the same as for [layout components](../schemas/layouts#grid-system) to display the fields horizontally:
+
+```php
+use Filament\Schemas\Components\FusedGroup;
+
+FusedGroup::make([
+    // ...
+])
+    ->label('Location')
+    ->columns(2)
+```
+
+<AutoScreenshot name="forms/fields/fused-columns" alt="Fused group of form fields in columns" version="4.x" />
+
+You can adjust the width of the fields in the grid by passing `columnSpan()` to each field:
+
+```php
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\FusedGroup;
+
+FusedGroup::make([
+    TextInput::make('city')
+        ->placeholder('City')
+        ->columnSpan(2),
+    Select::make('country')
+        ->placeholder('Country')
+        ->options([
+            // ...
+        ]),
+])
+    ->label('Location')
+    ->columns(3)
+```
+
+<AutoScreenshot name="forms/fields/fused-columns-span" alt="Fused group of form fields in columns with customized span" version="4.x" />
+
 ## Adding extra content to a field
 
 Fields contain many "slots" where content can be inserted in a child schema. Slots can accept text, [any schema component](../schemas), [actions](../actions) and [action groups](../actions/grouping-actions). Usually, [prime components](../schemas/primes) are used for content.

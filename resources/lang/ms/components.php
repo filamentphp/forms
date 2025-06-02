@@ -284,7 +284,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Lampirkan fail',
             'blockquote' => 'Blok petikan',
             'bold' => 'Bold',
@@ -382,7 +382,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Lampirkan fail',
             'blockquote' => 'Blockquote',
             'bold' => 'Bold',

@@ -281,7 +281,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Allega file',
             'blockquote' => 'Citazione',
             'bold' => 'Grassetto',
@@ -379,7 +379,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Allega file',
             'blockquote' => 'Citazione',
             'bold' => 'Grassetto',

@@ -58,19 +58,12 @@
                                 ])
                             >
                                 @if (! $column->isHeaderLabelHidden())
-                                    {{ $column->getLabel() }}
+                                    {{ $column->getLabel() }}@if ($column->isMarkedAsRequired())<sup class="fi-fo-table-repeater-header-required-mark">*</sup>
+                                    @endif
                                 @else
                                     <span class="fi-sr-only">
                                         {{ $column->getLabel() }}
                                     </span>
-                                @endif
-
-                                @if ($column->isMarkedAsRequired())
-                                    <sup
-                                        class="fi-fo-table-repeater-header-required-mark"
-                                    >
-                                        *
-                                    </sup>
                                 @endif
                             </th>
                         @endforeach

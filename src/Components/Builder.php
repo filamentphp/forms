@@ -5,9 +5,11 @@ namespace Filament\Forms\Components;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Builder\Block;
+use Filament\Forms\Components\Builder\StateCasts\BuilderStateCast;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Filament\Schemas\Components\Contracts\CanConcealComponents;
 use Filament\Schemas\Components\Contracts\HasExtraItemActions;
+use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
 use Filament\Schemas\Schema;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\Alignment;
@@ -102,20 +104,6 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
 
         $this->default([]);
 
-        $this->afterStateHydrated(static function (Builder $component, ?array $state): void {
-            $items = [];
-
-            foreach ($state ?? [] as $itemData) {
-                if ($key = $component->generateUuid()) {
-                    $items[$key] = $itemData;
-                } else {
-                    $items[] = $itemData;
-                }
-            }
-
-            $component->state($items);
-        });
-
         $this->registerActions([
             fn (Builder $component): Action => $component->getAddAction(),
             fn (Builder $component): Action => $component->getAddBetweenAction(),
@@ -130,10 +118,6 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             fn (Builder $component): Action => $component->getMoveUpAction(),
             fn (Builder $component): Action => $component->getReorderAction(),
         ]);
-
-        $this->mutateDehydratedStateUsing(static function (?array $state): array {
-            return array_values($state ?? []);
-        });
     }
 
     /**
@@ -154,7 +138,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             ->action(function (array $arguments, Builder $component, array $data = []): void {
                 $newUuid = $component->generateUuid();
 
-                $items = $component->getState();
+                $items = $component->getRawState();
 
                 if ($newUuid) {
                     $items[$newUuid] = [
@@ -168,7 +152,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                     ];
                 }
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->getChildSchema($newUuid ?? array_key_last($items))->fill(filled($data) ? $data : null);
 
@@ -241,7 +225,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
 
                 $items = [];
 
-                foreach ($component->getState() ?? [] as $key => $item) {
+                foreach ($component->getRawState() ?? [] as $key => $item) {
                     $items[$key] = $item;
 
                     if ($key === $arguments['afterItem']) {
@@ -261,7 +245,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                     }
                 }
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->getChildSchema($newKey)->fill(filled($data) ? $data : null);
 
@@ -317,7 +301,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             ->action(function (array $arguments, Builder $component): void {
                 $newUuid = $component->generateUuid();
 
-                $items = $component->getState();
+                $items = $component->getRawState();
 
                 if ($newUuid) {
                     $items[$newUuid] = $items[$arguments['item']];
@@ -325,7 +309,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                     $items[] = $items[$arguments['item']];
                 }
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->collapsed(false, shouldMakeComponentCollapsible: false);
 
@@ -365,10 +349,10 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             ->icon(FilamentIcon::resolve('forms::components.builder.actions.delete') ?? Heroicon::Trash)
             ->color('danger')
             ->action(function (array $arguments, Builder $component): void {
-                $items = $component->getState();
+                $items = $component->getRawState();
                 unset($items[$arguments['item']]);
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->callAfterStateUpdated();
 
@@ -406,9 +390,9 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             ->icon(FilamentIcon::resolve('forms::components.builder.actions.move-down') ?? Heroicon::ArrowDown)
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
-                $items = array_move_after($component->getState(), $arguments['item']);
+                $items = array_move_after($component->getRawState(), $arguments['item']);
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->callAfterStateUpdated();
 
@@ -446,9 +430,9 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             ->icon(FilamentIcon::resolve('forms::components.builder.actions.move-up') ?? Heroicon::ArrowUp)
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
-                $items = array_move_before($component->getState(), $arguments['item']);
+                $items = array_move_before($component->getRawState(), $arguments['item']);
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->callAfterStateUpdated();
 
@@ -495,10 +479,10 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
             ->action(function (array $arguments, Builder $component): void {
                 $items = [
                     ...array_flip($arguments['items']),
-                    ...$component->getState(),
+                    ...$component->getRawState(),
                 ];
 
-                $component->state($items);
+                $component->rawState($items);
 
                 $component->callAfterStateUpdated();
 
@@ -669,11 +653,11 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                     ->getComponents();
             })
             ->action(function (array $arguments, Builder $component, $data): void {
-                $state = $component->getState();
+                $state = $component->getRawState();
 
                 $state[$arguments['item']]['data'] = $data;
 
-                $component->state($state);
+                $component->rawState($state);
 
                 $component->getChildSchema($arguments['item'])->fill($data);
 
@@ -904,7 +888,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
      */
     public function getItems(): array
     {
-        return collect($this->getState())
+        return collect($this->getRawState())
             ->filter(fn (array $itemData): bool => filled($itemData['type'] ?? null) && $this->hasBlock($itemData['type']))
             ->map(
                 fn (array $itemData, $itemIndex): Schema => $this
@@ -1028,7 +1012,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
      */
     public function getBlockPickerBlocks(): array
     {
-        $state = $this->getState();
+        $state = $this->getRawState();
 
         /** @var array<Block> $blocks */
         $blocks = array_filter($this->getBlocks(), function (Block $block) use ($state): bool {
@@ -1143,5 +1127,16 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
         }
 
         return 1;
+    }
+
+    /**
+     * @return array<StateCast>
+     */
+    public function getDefaultStateCasts(): array
+    {
+        return [
+            ...parent::getDefaultStateCasts(),
+            app(BuilderStateCast::class, ['builder' => $this]),
+        ];
     }
 }

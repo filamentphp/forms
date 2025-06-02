@@ -284,7 +284,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'ファイルを添付',
             'blockquote' => 'ブロック引用',
             'bold' => '太字',
@@ -382,7 +382,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'ファイルを添付',
             'blockquote' => 'ブロック引用',
             'bold' => '太字',

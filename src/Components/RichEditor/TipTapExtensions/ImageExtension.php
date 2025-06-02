@@ -4,7 +4,7 @@ namespace Filament\Forms\Components\RichEditor\TipTapExtensions;
 
 use Tiptap\Nodes\Image as BaseImage;
 
-class Image extends BaseImage
+class ImageExtension extends BaseImage
 {
     /**
      * @return array<array<string, mixed>>
@@ -28,7 +28,10 @@ class Image extends BaseImage
     {
         return [
             ...parent::addAttributes(),
-            'data-id' => [],
+            'id' => [
+                'parseHTML' => fn ($DOMNode) => $DOMNode->getAttribute('data-id') ?: null,
+                'renderHTML' => fn ($attributes) => ['data-id' => $attributes->id ?? null],
+            ],
         ];
     }
 }

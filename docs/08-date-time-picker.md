@@ -64,6 +64,23 @@ While dates will still be stored using the app's configured timezone, the date w
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `timezone()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
+If you do not pass a `timezone()` to the component, it will use Filament's default timezone. You can set Filament's default timezone using the `FilamentTimezone::set()` method in the `boot()` method of a service provider such as `AppServiceProvider`:
+
+```php
+use Filament\Support\Facades\FilamentTimezone;
+
+public function boot(): void
+{
+    FilamentTimezone::set('America/New_York');
+}
+```
+
+This is useful if you want to set a default timezone for all date-time pickers in your application. It is also used in other places where timezones are used in Filament.
+
+<Aside variant="warning">
+    Filament's default timezone will only apply when the field stores a time. If the field stores a date only (`DatePicker` instead of `DateTimePicker` or `TimePicker`), the timezone will not be applied. This is to prevent timezone shifts when storing dates without times.
+</Aside>
+
 ## Enabling the JavaScript date picker
 
 By default, Filament uses the native HTML5 date picker. You may enable a more customizable JavaScript date picker using the `native(false)` method:

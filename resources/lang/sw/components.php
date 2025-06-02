@@ -88,7 +88,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Ambatisha faili',
             'bold' => 'Nzito',
             'bullet_list' => 'Orodha ya vitone',
@@ -170,7 +170,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Ambatisha faili',
             'blockquote' => 'Nukuu ya kuzuia',
             'bold' => 'Nzito',

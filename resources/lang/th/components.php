@@ -232,7 +232,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'แนบไฟล์',
             'blockquote' => 'บล็อกคำพูด',
             'bold' => 'ตัวหนา',
@@ -320,7 +320,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'แนบไฟล์',
             'blockquote' => 'บล็อกคำพูด',
             'bold' => 'ตัวหนา',

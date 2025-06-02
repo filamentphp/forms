@@ -104,7 +104,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Erantsi agiriak',
             'blockquote' => 'Aipuak',
             'bold' => 'Lodia',
@@ -191,7 +191,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Erantsi agiriak',
             'blockquote' => 'Aipuak',
             'bold' => 'Lodia',

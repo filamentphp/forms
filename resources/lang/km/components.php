@@ -232,7 +232,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'ភ្ជាប់ឯកសារ',
             'blockquote' => 'ប្លុកសម្រង់',
             'bold' => 'ដិត',
@@ -330,7 +330,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'ភ្ជាប់ឯកសារ',
             'blockquote' => 'ប្លុកសម្រង់',
             'bold' => 'ដិត',

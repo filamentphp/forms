@@ -824,6 +824,14 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
                 ]) ?? $relationshipQuery;
             }
 
+            $baseRelationshipQuery = $relationshipQuery->getQuery();
+
+            if (isset($baseRelationshipQuery->limit)) {
+                $component->optionsLimit($baseRelationshipQuery->limit);
+            } elseif ($component->isSearchable()) {
+                $relationshipQuery->limit($component->getOptionsLimit());
+            }
+
             $qualifiedRelatedKeyName = $component->getQualifiedRelatedKeyNameForRelationship($relationship);
 
             if ($component->hasOptionLabelFromRecordUsingCallback()) {
@@ -948,7 +956,13 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
                 return $component->getOptionLabelFromRecord($record);
             }
 
-            return $record->getAttributeValue($component->getRelationshipTitleAttribute());
+            $relationshipTitleAttribute = $component->getRelationshipTitleAttribute();
+
+            if (str_contains($relationshipTitleAttribute, '->')) {
+                $relationshipTitleAttribute = str_replace('->', '.', $relationshipTitleAttribute);
+            }
+
+            return data_get($record, $relationshipTitleAttribute);
         });
 
         $this->getSelectedRecordUsing(static function (Select $component, $state) use ($modifyQueryUsing): ?Model {
@@ -1130,7 +1144,10 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
         return $this;
     }
 
-    protected function applySearchConstraint(Builder $query, string $search): Builder
+    /**
+     * @internal Do not use this method outside the internals of Filament. It is subject to breaking changes in minor and patch releases.
+     */
+    public function applySearchConstraint(Builder $query, string $search): Builder
     {
         /** @var Connection $databaseConnection */
         $databaseConnection = $query->getConnection();
@@ -1332,7 +1349,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
         }
     }
 
-    protected function getQualifiedRelatedKeyNameForRelationship(Relation $relationship): string
+    public function getQualifiedRelatedKeyNameForRelationship(Relation $relationship): string
     {
         if ($relationship instanceof BelongsToMany) {
             return $relationship->getQualifiedRelatedKeyName();

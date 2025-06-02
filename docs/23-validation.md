@@ -200,6 +200,32 @@ Field::make('invitation')
     })
 ```
 
+Laravel's `exists` validation rule does not use the Eloquent model to query the database by default, so it will not use any global scopes defined on the model, including for soft-deletes. As such, even if there is a soft-deleted record with the same value, the validation will pass.
+
+Since global scopes are not applied, Filament's multi-tenancy feature also does not scope the query to the current tenant by default.
+
+To do this, you should use the `scopedExists()` method instead, which replaces Laravel's `exists` implementation with one that uses the model to query the database, applying any global scopes defined on the model, including for soft-deletes and multi-tenancy:
+
+```php
+use Filament\Forms\Components\TextInput;
+
+TextInput::make('email')
+    ->scopedExists()
+```
+
+If you would like to modify the Eloquent query used to check for presence, including to remove a global scope, you can pass a function to the `modifyQueryUsing` parameter:
+
+```php
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+TextInput::make('email')
+    ->scopedExists(modifyQueryUsing: function (Builder $query) {
+        return $query->withoutGlobalScope(SoftDeletingScope::class);
+    })
+```
+
 ### Filled
 
 The field must not be empty when it is present. [See the Laravel documentation.](https://laravel.com/docs/validation#rule-filled)
@@ -510,6 +536,31 @@ Field::make('email')
     })
 ```
 
+Laravel's `unique` validation rule does not use the Eloquent model to query the database by default, so it will not use any global scopes defined on the model, including for soft-deletes. As such, even if there is a soft-deleted record with the same value, the validation will fail.
+
+Since global scopes are not applied, Filament's multi-tenancy feature also does not scope the query to the current tenant by default.
+
+To do this, you should use the `scopedUnique()` method instead, which replaces Laravel's `unique` implementation with one that uses the model to query the database, applying any global scopes defined on the model, including for soft-deletes and multi-tenancy:
+
+```php
+use Filament\Forms\Components\TextInput;
+
+TextInput::make('email')
+    ->scopedUnique()
+```
+
+If you would like to modify the Eloquent query used to check for uniqueness, including to remove a global scope, you can pass a function to the `modifyQueryUsing` parameter:
+
+```php
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+TextInput::make('email')
+    ->scopedUnique(modifyQueryUsing: function (Builder $query) {
+        return $query->withoutGlobalScope(SoftDeletingScope::class);
+    })
+```
 
 ### ULID
 
@@ -601,6 +652,23 @@ TextInput::make('email')
 ```
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing an array of static value, the `validationMessages()` method also accepts a function for each message. You can inject various utilities into the functions as parameters.</UtilityInjection>
+
+### Allowing HTML in validation messages
+
+By default, validation messages are rendered as plain text to prevent XSS attacks. However, you may need to render HTML in your validation messages, such as when displaying lists or links. To enable HTML rendering for validation messages, use the `allowHtmlValidationMessages()` method:
+
+```php
+use Filament\Forms\Components\TextInput;
+
+TextInput::make('password')
+    ->required()
+    ->rules([
+        new CustomRule(), // Custom rule that returns a validation message that contains HTML
+    ])
+    ->allowHtmlValidationMessages()
+```
+
+Be aware that you will need to ensure that the HTML in all validation messages is safe to render, otherwise your application will be vulnerable to XSS attacks.
 
 ## Disabling validation when fields are not dehydrated
 

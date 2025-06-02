@@ -282,7 +282,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Adjuntar fitxers',
             'blockquote' => 'Cita de bloc',
             'bold' => 'Negreta',
@@ -380,7 +380,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Adjuntar fitxers',
             'blockquote' => 'Bloc de cita',
             'bold' => 'Negreta',

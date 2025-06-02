@@ -32,6 +32,7 @@ class Checkbox extends Field
     public function getDefaultStateCasts(): array
     {
         return [
+            ...parent::getDefaultStateCasts(),
             app(BooleanStateCast::class, ['isNullable' => false]),
         ];
     }

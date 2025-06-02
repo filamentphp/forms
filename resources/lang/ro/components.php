@@ -231,7 +231,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Atașare fișiere',
             'blockquote' => 'Citat',
             'bold' => 'Îngroșat',
@@ -329,7 +329,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Atașare fișiere',
             'blockquote' => 'Citat',
             'bold' => 'Îngroșat',

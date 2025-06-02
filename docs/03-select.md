@@ -774,6 +774,91 @@ Select::make('feedback')
     ->boolean(placeholder: 'Make your mind up...')
 ```
 
+## Selecting options from a table in a modal
+
+You can use the `ModalTableSelect` component to open a Filament [table](../tables) in a modal, allowing users to select records from it. This is useful when you have a [relationship](#integrating-with-an-eloquent-relationship) that has a lot of records, and you want users to be able to perform advanced filtering and searching through them.
+
+To use the `ModalTableSelect`, you must have a table configuration class for the model. You can generate one of these classes using the `make:filament-table` command:
+
+```php
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+
+class CategoriesTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('slug')
+                    ->searchable(),
+            ])
+            ->filters([
+                SelectFilter::make('parent')
+                    ->relationship('parent', 'name')
+                    ->searchable()
+                    ->preload(),
+            ]);
+    }
+}
+```
+
+The class must have a `configure()` method that accepts the `Table` object and returns it. The class name needs to be passed to the `tableConfiguration()` method of the `ModalTableSelect` component:
+
+```php
+use Filament\Forms\Components\ModalTableSelect;
+
+ModalTableSelect::make('category_id')
+    ->relationship('category', 'name')
+    ->tableConfiguration(CategoriesTable::class)
+```
+
+You can also use the `multiple()` method with a multiple relationship such as `BelongsToMany`:
+
+```php
+use Filament\Forms\Components\ModalTableSelect;
+
+ModalTableSelect::make('categories')
+    ->relationship('categories', 'name')
+    ->multiple()
+    ->tableConfiguration(CategoriesTable::class)
+```
+
+<UtilityInjection set="formFields" version="4.x">The `tableConfiguration()` method can inject various utilities into the function as parameters.</UtilityInjection>
+
+You can customize the "Select" button and modal using the [action](../actions) object configuration methods. Passing a function to the `selectAction()` method allows you to modify the `$action` object, for example, to change the button label and the modal heading:
+
+```php
+use Filament\Actions\Action;
+use Filament\Forms\Components\ModalTableSelect;
+
+ModalTableSelect::make('category_id')
+    ->relationship('category', 'name')
+    ->tableConfiguration(CategoriesTable::class)
+    ->selectAction(
+        fn (Action $action) => $action
+            ->label('Select a category')
+            ->modalHeading('Search categories')
+            ->modalSubmitActionLabel('Confirm selection'),
+    )
+```
+
+<UtilityInjection set="formFields" version="4.x" extras="Action;;Filament\Actions\Action;;$action;;The action object to customize.">The `selectAction()` method can inject various utilities into the function as parameters.</UtilityInjection>
+
+The `getOptionLabelFromRecordUsing()` method can be used to customize the label of each selected option. This is useful if you want to display a more descriptive label or concatenate two columns together:
+
+```php
+use Filament\Forms\Components\ModalTableSelect;
+
+ModalTableSelect::make('category_id')
+    ->relationship('category', 'name')
+    ->tableConfiguration(CategoriesTable::class)
+    ->getOptionLabelFromRecordUsing(fn (Category $record): string => "{$record->name} ({$record->slug})")
+```
+
 ## Select validation
 
 As well as all rules listed on the [validation](validation) page, there are additional rules that are specific to selects.

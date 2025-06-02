@@ -281,7 +281,7 @@ return [
 
     'markdown_editor' => [
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Dateien beifügen',
             'blockquote' => 'Zitat',
             'bold' => 'Fett',
@@ -379,7 +379,7 @@ return [
 
         ],
 
-        'toolbar_buttons' => [
+        'tools' => [
             'attach_files' => 'Dateien anhängen',
             'blockquote' => 'Zitat',
             'bold' => 'Fett',
