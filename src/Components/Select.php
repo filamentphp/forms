@@ -778,6 +778,14 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
                 ]) ?? $relationshipQuery;
             }
 
+            $baseRelationshipQuery = $relationshipQuery->getQuery();
+
+            if (isset($baseRelationshipQuery->limit)) {
+                $component->optionsLimit($baseRelationshipQuery->limit);
+            } elseif ($component->isSearchable()) {
+                $relationshipQuery->limit($component->getOptionsLimit());
+            }
+
             $qualifiedRelatedKeyName = $component->getQualifiedRelatedKeyNameForRelationship($relationship);
 
             if ($component->hasOptionLabelFromRecordUsingCallback()) {
