@@ -1215,10 +1215,6 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
     public function hasDynamicSearchResults(): bool
     {
-        if ($this->hasRelationship() && empty($this->searchColumns)) {
-            return ! $this->isPreloaded();
-        }
-
         return $this->getSearchResultsUsing instanceof Closure;
     }
 
