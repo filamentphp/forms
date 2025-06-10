@@ -10,7 +10,6 @@ use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Filament\Schemas\Components\Concerns\HasContainerGridLayout;
-use Filament\Schemas\Components\Contracts\CanConcealComponents;
 use Filament\Schemas\Components\Contracts\HasExtraItemActions;
 use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
 use Filament\Schemas\Contracts\HasSchemas;
@@ -30,7 +29,7 @@ use Illuminate\Support\Str;
 use function Filament\Forms\array_move_after;
 use function Filament\Forms\array_move_before;
 
-class Repeater extends Field implements CanConcealComponents, HasExtraItemActions
+class Repeater extends Field implements HasExtraItemActions
 {
     use CanBeCollapsed;
     use Concerns\CanBeCloned;
@@ -1238,11 +1237,6 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
         }
 
         return $data;
-    }
-
-    public function canConcealComponents(): bool
-    {
-        return $this->isCollapsible();
     }
 
     /**

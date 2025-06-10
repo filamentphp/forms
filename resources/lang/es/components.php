@@ -365,18 +365,83 @@ return [
 
     'rich_editor' => [
 
-        'dialogs' => [
+        'actions' => [
+
+            'attach_files' => [
+
+                'label' => 'Subir archivo',
+
+                'modal' => [
+
+                    'heading' => 'Subir archivo',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'Archivo',
+                                'existing' => 'Reemplazar archivo',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'Texto alternativo',
+                                'existing' => 'Cambiar texto alternativo',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Insertar',
+                        ],
+
+                        'save' => [
+                            'label' => 'Guardar',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'Enlace',
-                    'unlink' => 'Quitar enlace',
+                'label' => 'Editar',
+
+                'modal' => [
+
+                    'heading' => 'Enlace',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'URL',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'Abrir en una nueva pestaña',
+                        ],
+
+                    ],
+
                 ],
-
-                'label' => 'URL',
-
-                'placeholder' => 'Teclee un enlace URL',
 
             ],
 
@@ -390,6 +455,7 @@ return [
             'bold' => 'Negrita',
             'bullet_list' => 'Viñetas',
             'code_block' => 'Bloque de código',
+            'custom_blocks' => 'Bloques',
             'h1' => 'Título',
             'h2' => 'Encabezado',
             'h3' => 'Subencabezado',
@@ -399,6 +465,8 @@ return [
             'ordered_list' => 'Lista numerada',
             'redo' => 'Rehacer',
             'strike' => 'Tachar',
+            'subscript' => 'Subíndice',
+            'superscript' => 'Superíndice',
             'underline' => 'Subrayar',
             'undo' => 'Deshacer',
         ],

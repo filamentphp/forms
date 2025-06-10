@@ -5,16 +5,23 @@ import { html } from '@codemirror/lang-html'
 import { javascript } from '@codemirror/lang-javascript'
 import { json } from '@codemirror/lang-json'
 import { php } from '@codemirror/lang-php'
-import { EditorState } from '@codemirror/state'
+import { EditorState, Compartment } from '@codemirror/state'
 import { keymap } from '@codemirror/view'
+import { oneDark } from '@codemirror/theme-one-dark'
 
-export default function codeEditorFormComponent({ isDisabled, state }) {
+export default function codeEditorFormComponent({
+    isDisabled,
+    language,
+    state,
+}) {
     return {
         editor: null,
-
+        themeCompartment: new Compartment(),
         state,
 
-        init: function () {
+        init() {
+            const languageExtension = this.getLanguageExtension()
+
             this.editor = new EditorView({
                 parent: this.$refs.editor,
                 state: EditorState.create({
@@ -31,11 +38,8 @@ export default function codeEditorFormComponent({ isDisabled, state }) {
 
                             this.state = viewUpdate.state.doc.toString()
                         }),
-                        css(),
-                        html(),
-                        javascript(),
-                        json(),
-                        php(),
+                        ...(languageExtension ? [languageExtension] : []),
+                        this.themeCompartment.of(this.getThemeExtensions()),
                     ],
                 }),
             })
@@ -53,6 +57,55 @@ export default function codeEditorFormComponent({ isDisabled, state }) {
                     },
                 })
             })
+
+            this.themeObserver = new MutationObserver(() => {
+                this.editor.dispatch({
+                    effects: this.themeCompartment.reconfigure(
+                        this.getThemeExtensions(),
+                    ),
+                })
+            })
+
+            this.themeObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class'],
+            })
+        },
+
+        isDarkMode() {
+            return document.documentElement.classList.contains('dark')
+        },
+
+        getThemeExtensions() {
+            return this.isDarkMode() ? [oneDark] : []
+        },
+
+        getLanguageExtension() {
+            if (!language) {
+                return null
+            }
+
+            const extensions = {
+                css,
+                html,
+                javascript,
+                json,
+                php,
+            }
+
+            return extensions[language]?.() || null
+        },
+
+        destroy() {
+            if (this.themeObserver) {
+                this.themeObserver.disconnect()
+                this.themeObserver = null
+            }
+
+            if (this.editor) {
+                this.editor.destroy()
+                this.editor = null
+            }
         },
     }
 }

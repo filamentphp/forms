@@ -26,7 +26,6 @@
     $placeholder = $getPlaceholder();
     $isReadOnly = $isReadOnly();
     $isRequired = $isRequired();
-    $isConcealed = $isConcealed();
     $step = $getStep();
     $type = $getType();
     $livewireKey = $getLivewireKey();
@@ -66,7 +65,7 @@
                             'min' => $hasTime ? $minDate : ($minDate ? \Carbon\Carbon::parse($minDate)->toDateString() : null),
                             'placeholder' => $placeholder,
                             'readonly' => $isReadOnly,
-                            'required' => $isRequired && (! $isConcealed),
+                            'required' => $isRequired,
                             'step' => $step,
                             'type' => $type,
                             $applyStateBindingModifiers('wire:model') => $statePath,

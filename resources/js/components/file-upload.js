@@ -98,7 +98,7 @@ export default function fileUploadFormComponent({
 
         editor: {},
 
-        init: async function () {
+        async init() {
             FilePond.setOptions(locales[locale] ?? locales['en'])
 
             this.pond = FilePond.create(this.$refs.input, {
@@ -346,14 +346,14 @@ export default function fileUploadFormComponent({
             }
         },
 
-        destroy: function () {
+        destroy() {
             this.destroyEditor()
 
             FilePond.destroy(this.$refs.input)
             this.pond = null
         },
 
-        dispatchFormEvent: function (name, detail = {}) {
+        dispatchFormEvent(name, detail = {}) {
             this.$el.closest('form')?.dispatchEvent(
                 new CustomEvent(name, {
                     composed: true,
@@ -363,7 +363,7 @@ export default function fileUploadFormComponent({
             )
         },
 
-        getUploadedFiles: async function () {
+        async getUploadedFiles() {
             const uploadedFiles = await getUploadedFilesUsing()
 
             this.fileKeyIndex = uploadedFiles ?? {}
@@ -377,7 +377,7 @@ export default function fileUploadFormComponent({
                 }, {})
         },
 
-        getFiles: async function () {
+        async getFiles() {
             await this.getUploadedFiles()
 
             let files = []
@@ -411,7 +411,7 @@ export default function fileUploadFormComponent({
             return shouldAppendFiles ? files : files.reverse()
         },
 
-        insertDownloadLink: function (file) {
+        insertDownloadLink(file) {
             if (file.origin !== FilePond.FileOrigin.LOCAL) {
                 return
             }
@@ -428,7 +428,7 @@ export default function fileUploadFormComponent({
                 .prepend(anchor)
         },
 
-        insertOpenLink: function (file) {
+        insertOpenLink(file) {
             if (file.origin !== FilePond.FileOrigin.LOCAL) {
                 return
             }
@@ -445,7 +445,7 @@ export default function fileUploadFormComponent({
                 .prepend(anchor)
         },
 
-        getDownloadLink: function (file) {
+        getDownloadLink(file) {
             let fileSource = file.source
 
             if (!fileSource) {
@@ -460,7 +460,7 @@ export default function fileUploadFormComponent({
             return anchor
         },
 
-        getOpenLink: function (file) {
+        getOpenLink(file) {
             let fileSource = file.source
 
             if (!fileSource) {
@@ -475,7 +475,7 @@ export default function fileUploadFormComponent({
             return anchor
         },
 
-        initEditor: function () {
+        initEditor() {
             if (isDisabled) {
                 return
             }
@@ -508,7 +508,7 @@ export default function fileUploadFormComponent({
             })
         },
 
-        closeEditor: function () {
+        closeEditor() {
             this.editingFile = {}
 
             this.isEditorOpen = false
@@ -516,7 +516,7 @@ export default function fileUploadFormComponent({
             this.destroyEditor()
         },
 
-        fixImageDimensions: function (file, callback) {
+        fixImageDimensions(file, callback) {
             if (file.type !== 'image/svg+xml') {
                 return callback(file)
             }
@@ -575,7 +575,7 @@ export default function fileUploadFormComponent({
             svgReader.readAsText(file)
         },
 
-        loadEditor: function (file) {
+        loadEditor(file) {
             if (isDisabled) {
                 return
             }
@@ -624,7 +624,7 @@ export default function fileUploadFormComponent({
             })
         },
 
-        getRoundedCanvas: function (sourceCanvas) {
+        getRoundedCanvas(sourceCanvas) {
             let width = sourceCanvas.width
             let height = sourceCanvas.height
 
@@ -651,7 +651,7 @@ export default function fileUploadFormComponent({
             return canvas
         },
 
-        saveEditor: function () {
+        saveEditor() {
             if (isDisabled) {
                 return
             }
@@ -745,7 +745,7 @@ export default function fileUploadFormComponent({
             )
         },
 
-        destroyEditor: function () {
+        destroyEditor() {
             if (this.editor && typeof this.editor.destroy === 'function') {
                 this.editor.destroy()
             }

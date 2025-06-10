@@ -386,6 +386,11 @@ trait CanBeValidated
         return $this->fieldComparisonRule('required_if_accepted', $statePath, $isStatePathAbsolute);
     }
 
+    public function requiredIfDeclined(string | Closure $statePath, bool $isStatePathAbsolute = false): static
+    {
+        return $this->fieldComparisonRule('required_if_declined', $statePath, $isStatePathAbsolute);
+    }
+
     public function requiredUnless(string | Closure $statePath, mixed $stateValues, bool $isStatePathAbsolute = false): static
     {
         return $this->multiFieldValueComparisonRule('required_unless', $statePath, $stateValues, $isStatePathAbsolute);

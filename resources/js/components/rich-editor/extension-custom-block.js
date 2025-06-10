@@ -105,7 +105,7 @@ export default Node.create({
         }
     },
 
-    addOptions: function () {
+    addOptions() {
         return {
             deleteCustomBlockButtonIconHtml: null,
             editCustomBlockButtonIconHtml: null,
@@ -114,7 +114,7 @@ export default Node.create({
         }
     },
 
-    addAttributes: function () {
+    addAttributes() {
         return {
             config: {
                 default: null,
@@ -150,7 +150,7 @@ export default Node.create({
         }
     },
 
-    parseHTML: function () {
+    parseHTML() {
         return [
             {
                 tag: `div[data-type="${this.name}"]`,
@@ -162,7 +162,7 @@ export default Node.create({
         return ['div', mergeAttributes(HTMLAttributes)]
     },
 
-    addKeyboardShortcuts: function () {
+    addKeyboardShortcuts() {
         return {
             Backspace: () =>
                 this.editor.commands.command(({ tr, state }) => {
@@ -192,7 +192,7 @@ export default Node.create({
         }
     },
 
-    addProseMirrorPlugins: function () {
+    addProseMirrorPlugins() {
         const { insertCustomBlockUsing } = this.options
 
         return [

@@ -1,9 +1,5 @@
 .fi-fo-rich-editor {
-    &.fi-disabled {
-        @apply block w-full rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-xs ring-1 ring-gray-950/10 sm:text-sm dark:bg-transparent dark:text-gray-400 dark:ring-white/10;
-    }
-
-    &.fi-fo-rich-editor-uploading-file {
+    & .fi-fo-rich-editor-uploading-file {
         @apply pointer-events-none cursor-wait opacity-50;
     }
 

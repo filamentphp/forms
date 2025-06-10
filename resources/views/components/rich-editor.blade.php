@@ -2,6 +2,7 @@
     use Filament\Support\Facades\FilamentView;
 
     $customBlocks = $getCustomBlocks();
+    $extraInputAttributeBag = $getExtraAttributeBag();
     $fieldWrapperView = $getFieldWrapperView();
     $id = $getId();
     $isDisabled = $isDisabled();
@@ -14,38 +15,45 @@
 @endphp
 
 <x-dynamic-component :component="$fieldWrapperView" :field="$field">
-    <div
-        @if (FilamentView::hasSpaMode())
-            {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
-        @else
-            x-load
-        @endif
-        x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('rich-editor', 'filament/forms') }}"
-        x-data="richEditorFormComponent({
-                    activePanel: @js($getActivePanel()),
-                    deleteCustomBlockButtonIconHtml: @js(\Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::Trash, alias: 'forms:components.rich-editor.panels.custom-block.delete-button')->toHtml()),
-                    editCustomBlockButtonIconHtml: @js(\Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::PencilSquare, alias: 'forms:components.rich-editor.panels.custom-block.edit-button')->toHtml()),
-                    extensions: @js($getTipTapJsExtensions()),
-                    key: @js($key),
-                    isDisabled: @js($isDisabled),
-                    isLiveDebounced: @js($isLiveDebounced()),
-                    isLiveOnBlur: @js($isLiveOnBlur()),
-                    liveDebounce: @js($getNormalizedLiveDebounce()),
-                    livewireId: @js($this->getId()),
-                    mergeTags: @js($mergeTags),
-                    noMergeTagSearchResultsMessage: @js($getNoMergeTagSearchResultsMessage()),
-                    placeholder: @js($getPlaceholder()),
-                    state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')", isOptimisticallyLive: false) }},
-                    statePath: @js($statePath),
-                    uploadingFileMessage: @js($getUploadingFileMessage()),
-                })"
-        x-bind:class="{
-            'fi-fo-rich-editor-uploading-file': isUploadingFile,
-        }"
-        wire:key="{{ $livewireKey }}{{ $isDisabled ? '.disabled' : '' }}"
-        {{ $getExtraAttributeBag()->class(['fi-fo-rich-editor']) }}
+    <x-filament::input.wrapper
+        :valid="! $errors->has($statePath)"
+        x-cloak
+        :attributes="
+            \Filament\Support\prepare_inherited_attributes($extraInputAttributeBag)
+                ->class(['fi-fo-rich-editor'])
+        "
     >
-        <x-filament::input.wrapper :valid="! $errors->has($statePath)" x-cloak>
+        <div
+            @if (FilamentView::hasSpaMode())
+                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
+            @else
+                x-load
+            @endif
+            x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('rich-editor', 'filament/forms') }}"
+            x-data="richEditorFormComponent({
+                        activePanel: @js($getActivePanel()),
+                        deleteCustomBlockButtonIconHtml: @js(\Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::Trash, alias: 'forms:components.rich-editor.panels.custom-block.delete-button')->toHtml()),
+                        editCustomBlockButtonIconHtml: @js(\Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::PencilSquare, alias: 'forms:components.rich-editor.panels.custom-block.edit-button')->toHtml()),
+                        extensions: @js($getTipTapJsExtensions()),
+                        key: @js($key),
+                        isDisabled: @js($isDisabled),
+                        isLiveDebounced: @js($isLiveDebounced()),
+                        isLiveOnBlur: @js($isLiveOnBlur()),
+                        liveDebounce: @js($getNormalizedLiveDebounce()),
+                        livewireId: @js($this->getId()),
+                        mergeTags: @js($mergeTags),
+                        noMergeTagSearchResultsMessage: @js($getNoMergeTagSearchResultsMessage()),
+                        placeholder: @js($getPlaceholder()),
+                        state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')", isOptimisticallyLive: false) }},
+                        statePath: @js($statePath),
+                        uploadingFileMessage: @js($getUploadingFileMessage()),
+                    })"
+            x-bind:class="{
+                'fi-fo-rich-editor-uploading-file': isUploadingFile,
+            }"
+            wire:ignore
+            wire:key="{{ $livewireKey }}.editor{{ $isDisabled ? '.disabled' : '' }}"
+        >
             @if ((! $isDisabled) && filled($toolbarButtons))
                 <div class="fi-fo-rich-editor-toolbar">
                     @foreach ($toolbarButtons as $buttonGroup)
@@ -62,7 +70,6 @@
                 <div
                     class="fi-fo-rich-editor-content fi-prose"
                     x-ref="editor"
-                    wire:ignore
                 ></div>
 
                 @if (! $isDisabled)
@@ -172,6 +179,6 @@
                     </div>
                 @endif
             </div>
-        </x-filament::input.wrapper>
-    </div>
+        </div>
+    </x-filament::input.wrapper>
 </x-dynamic-component>

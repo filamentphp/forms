@@ -9,7 +9,6 @@
     $isMultiple = $isMultiple();
     $isSearchable = $isSearchable();
     $isRequired = $isRequired();
-    $isConcealed = $isConcealed();
     $isHtmlAllowed = $isHtmlAllowed();
     $isNative = (! ($isSearchable || $isMultiple) && $isNative());
     $isPrefixInline = $isPrefixInline();
@@ -62,7 +61,7 @@
                             'autofocus' => $isAutofocused,
                             'disabled' => $isDisabled,
                             'id' => $id,
-                            'required' => $isRequired && (! $isConcealed),
+                            'required' => $isRequired,
                             $applyStateBindingModifiers('wire:model') => $statePath,
                         ], escape: false)
                         ->class([
@@ -114,7 +113,7 @@
                 class="fi-hidden"
                 x-data="{
                     isDisabled: @js($isDisabled),
-                    init: function () {
+                    init() {
                         const container = $el.nextElementSibling
                         container.dispatchEvent(
                             new CustomEvent('set-select-property', {

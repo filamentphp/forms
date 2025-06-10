@@ -8,7 +8,6 @@
     $extraAttributeBag = $getExtraAttributeBag();
     $hasInlineLabel = $hasInlineLabel();
     $id = $getId();
-    $isConcealed = $isConcealed();
     $isDisabled = $isDisabled();
     $isPasswordRevealable = $isPasswordRevealable();
     $isPrefixInline = $isPrefixInline();
@@ -52,13 +51,13 @@
             'inlineSuffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
             'inputmode' => $getInputMode(),
             'list' => $datalistOptions ? $id . '-list' : null,
-            'max' => (! $isConcealed) ? $getMaxValue() : null,
-            'maxlength' => (! $isConcealed) ? $getMaxLength() : null,
-            'min' => (! $isConcealed) ? $getMinValue() : null,
-            'minlength' => (! $isConcealed) ? $getMinLength() : null,
+            'max' => $getMaxValue(),
+            'maxlength' => $getMaxLength(),
+            'min' => $getMinValue(),
+            'minlength' => $getMinLength(),
             'placeholder' => $getPlaceholder(),
             'readonly' => $isReadOnly(),
-            'required' => $isRequired() && (! $isConcealed),
+            'required' => $isRequired(),
             'step' => $getStep(),
             'type' => $type,
             $applyStateBindingModifiers('wire:model') => $statePath,

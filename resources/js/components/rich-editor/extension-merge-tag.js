@@ -60,14 +60,14 @@ export default Node.create({
 
     priority: 101,
 
-    addStorage: function () {
+    addStorage() {
         return {
             suggestions: [],
             getSuggestionFromChar: () => null,
         }
     },
 
-    addOptions: function () {
+    addOptions() {
         return {
             HTMLAttributes: {},
             renderText({ node }) {
@@ -97,7 +97,7 @@ export default Node.create({
 
     atom: true,
 
-    addAttributes: function () {
+    addAttributes() {
         return {
             id: {
                 default: null,
@@ -129,7 +129,7 @@ export default Node.create({
         }
     },
 
-    parseHTML: function () {
+    parseHTML() {
         return [
             {
                 tag: `span[data-type="${this.name}"]`,
@@ -137,7 +137,7 @@ export default Node.create({
         ]
     },
 
-    renderHTML: function ({ node, HTMLAttributes }) {
+    renderHTML({ node, HTMLAttributes }) {
         // We cannot use the `this.storage` property here because, when accessed this method,
         // it returns the initial value of the extension storage
         const suggestion =
@@ -173,7 +173,7 @@ export default Node.create({
         return html
     },
 
-    renderText: function ({ node }) {
+    renderText({ node }) {
         const args = {
             options: this.options,
             node,
@@ -186,7 +186,7 @@ export default Node.create({
         return this.options.renderText(args)
     },
 
-    addKeyboardShortcuts: function () {
+    addKeyboardShortcuts() {
         return {
             Backspace: () =>
                 this.editor.commands.command(({ tr, state }) => {
@@ -224,7 +224,7 @@ export default Node.create({
         }
     },
 
-    addProseMirrorPlugins: function () {
+    addProseMirrorPlugins() {
         return [
             ...this.storage.suggestions.map(Suggestion), // Create a plugin for each suggestion configuration
             new Plugin({
@@ -262,7 +262,7 @@ export default Node.create({
         ]
     },
 
-    onBeforeCreate: function () {
+    onBeforeCreate() {
         this.storage.suggestions = (
             this.options.suggestions.length
                 ? this.options.suggestions

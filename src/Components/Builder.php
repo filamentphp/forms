@@ -7,7 +7,6 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Builder\StateCasts\BuilderStateCast;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
-use Filament\Schemas\Components\Contracts\CanConcealComponents;
 use Filament\Schemas\Components\Contracts\HasExtraItemActions;
 use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
 use Filament\Schemas\Schema;
@@ -23,7 +22,7 @@ use Illuminate\Support\Str;
 use function Filament\Forms\array_move_after;
 use function Filament\Forms\array_move_before;
 
-class Builder extends Field implements CanConcealComponents, HasExtraItemActions
+class Builder extends Field implements HasExtraItemActions
 {
     use CanBeCollapsed;
     use Concerns\CanBeCloned;
@@ -990,11 +989,6 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     public function hasInteractiveBlockPreviews(): bool
     {
         return (bool) $this->evaluate($this->hasInteractiveBlockPreviews);
-    }
-
-    public function canConcealComponents(): bool
-    {
-        return $this->isCollapsible();
     }
 
     public function getLabelBetweenItems(): ?string

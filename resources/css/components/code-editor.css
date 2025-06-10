@@ -1,11 +1,13 @@
 .fi-fo-code-editor {
+    @apply overflow-hidden;
+
     & .cm-editor {
         &.cm-focused {
             @apply outline-none!;
         }
 
         & .cm-gutters {
-            @apply min-h-48! rounded-s-lg border-e-gray-300! bg-gray-100! dark:border-e-gray-800! dark:bg-gray-950!;
+            @apply min-h-48! border-e-gray-300! bg-gray-100! dark:border-e-gray-800! dark:bg-gray-950!;
 
             & .cm-gutter {
                 &.cm-lineNumbers {

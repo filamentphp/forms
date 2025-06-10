@@ -1330,7 +1330,7 @@ TextInput::make('name')
 // New name input that uses `afterStateUpdatedJs()` to set the state of the email field and doesn't make a network request.
 TextInput::make('name')
     ->afterStateUpdatedJs(<<<'JS'
-        $set('email', ($state ?? '').replace(' ', '.').toLowerCase() + '@example.com')
+        $set('email', ($state ?? '').replaceAll(' ', '.').toLowerCase() + '@example.com')
         JS)
     
 TextInput::make('email')

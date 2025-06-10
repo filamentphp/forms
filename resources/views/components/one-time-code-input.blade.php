@@ -10,7 +10,7 @@
             'length' => $getLength(),
             'placeholder' => $getPlaceholder(),
             'readonly' => $isReadOnly(),
-            'required' => $isRequired() && (! $isConcealed()),
+            'required' => $isRequired(),
             $applyStateBindingModifiers('wire:model') => $getStatePath(),
         ], escape: false);
 @endphp

@@ -4,7 +4,6 @@
     $fieldWrapperView = $getFieldWrapperView();
     $extraAttributeBag = $getExtraAttributeBag();
     $hasInlineLabel = $hasInlineLabel();
-    $isConcealed = $isConcealed();
     $isDisabled = $isDisabled();
     $rows = $getRows();
     $shouldAutosize = $shouldAutosize();
@@ -57,11 +56,11 @@
                             'cols' => $getCols(),
                             'disabled' => $isDisabled,
                             'id' => $getId(),
-                            'maxlength' => (! $isConcealed) ? $getMaxLength() : null,
-                            'minlength' => (! $isConcealed) ? $getMinLength() : null,
+                            'maxlength' => $getMaxLength(),
+                            'minlength' => $getMinLength(),
                             'placeholder' => $getPlaceholder(),
                             'readonly' => $isReadOnly(),
-                            'required' => $isRequired() && (! $isConcealed),
+                            'required' => $isRequired(),
                             'rows' => $rows,
                             $applyStateBindingModifiers('wire:model') => $statePath,
                         ], escape: false)

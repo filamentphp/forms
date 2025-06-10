@@ -27,7 +27,7 @@ export default function sliderFormComponent({
 
         slider: null,
 
-        init: function () {
+        init() {
             this.slider = noUiSlider.create(this.$el, {
                 behaviour: behavior,
                 direction: isRtl ? 'rtl' : 'ltr',
@@ -72,7 +72,7 @@ export default function sliderFormComponent({
             })
         },
 
-        destroy: function () {
+        destroy() {
             this.slider.destroy()
             this.slider = null
         },

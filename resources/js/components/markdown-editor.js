@@ -101,7 +101,7 @@ export default function markdownEditorFormComponent({
 
         state,
 
-        init: async function () {
+        async init() {
             if (this.$root._editor) {
                 this.$root._editor.toTextArea()
                 this.$root._editor = null
@@ -216,12 +216,12 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        destroy: function () {
+        destroy() {
             this.editor.cleanup()
             this.editor = null
         },
 
-        getToolbar: function () {
+        getToolbar() {
             let toolbar = []
 
             toolbarButtons.forEach((buttonGroup) => {
@@ -241,7 +241,7 @@ export default function markdownEditorFormComponent({
             return toolbar
         },
 
-        getToolbarButton: function (name) {
+        getToolbarButton(name) {
             if (name === 'bold') {
                 return this.getBoldToolbarButton()
             }
@@ -297,7 +297,7 @@ export default function markdownEditorFormComponent({
             console.error(`Markdown editor toolbar button "${name}" not found.`)
         },
 
-        getBoldToolbarButton: function () {
+        getBoldToolbarButton() {
             return {
                 name: 'bold',
                 action: EasyMDE.toggleBold,
@@ -305,7 +305,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getItalicToolbarButton: function () {
+        getItalicToolbarButton() {
             return {
                 name: 'italic',
                 action: EasyMDE.toggleItalic,
@@ -313,7 +313,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getStrikeToolbarButton: function () {
+        getStrikeToolbarButton() {
             return {
                 name: 'strikethrough',
                 action: EasyMDE.toggleStrikethrough,
@@ -321,7 +321,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getLinkToolbarButton: function () {
+        getLinkToolbarButton() {
             return {
                 name: 'link',
                 action: EasyMDE.drawLink,
@@ -329,7 +329,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getHeadingToolbarButton: function () {
+        getHeadingToolbarButton() {
             return {
                 name: 'heading',
                 action: EasyMDE.toggleHeadingSmaller,
@@ -337,7 +337,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getBlockquoteToolbarButton: function () {
+        getBlockquoteToolbarButton() {
             return {
                 name: 'quote',
                 action: EasyMDE.toggleBlockquote,
@@ -345,7 +345,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getCodeBlockToolbarButton: function () {
+        getCodeBlockToolbarButton() {
             return {
                 name: 'code',
                 action: EasyMDE.toggleCodeBlock,
@@ -353,7 +353,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getBulletListToolbarButton: function () {
+        getBulletListToolbarButton() {
             return {
                 name: 'unordered-list',
                 action: EasyMDE.toggleUnorderedList,
@@ -361,7 +361,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getOrderedListToolbarButton: function () {
+        getOrderedListToolbarButton() {
             return {
                 name: 'ordered-list',
                 action: EasyMDE.toggleOrderedList,
@@ -369,7 +369,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getTableToolbarButton: function () {
+        getTableToolbarButton() {
             return {
                 name: 'table',
                 action: EasyMDE.drawTable,
@@ -377,7 +377,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getAttachFilesToolbarButton: function () {
+        getAttachFilesToolbarButton() {
             return {
                 name: 'upload-image',
                 action: EasyMDE.drawUploadedImage,
@@ -385,7 +385,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getUndoToolbarButton: function () {
+        getUndoToolbarButton() {
             return {
                 name: 'undo',
                 action: EasyMDE.undo,
@@ -393,7 +393,7 @@ export default function markdownEditorFormComponent({
             }
         },
 
-        getRedoToolbarButton: function () {
+        getRedoToolbarButton() {
             return {
                 name: 'redo',
                 action: EasyMDE.redo,

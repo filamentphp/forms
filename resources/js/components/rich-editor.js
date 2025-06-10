@@ -35,7 +35,7 @@ export default function richEditorFormComponent({
 
         editorUpdatedAt: Date.now(),
 
-        init: async function () {
+        async init() {
             editor = new Editor({
                 editable: !isDisabled,
                 element: this.$refs.editor,
@@ -154,15 +154,15 @@ export default function richEditorFormComponent({
             )
         },
 
-        getEditor: function () {
+        getEditor() {
             return editor
         },
 
-        $getEditor: function () {
+        $getEditor() {
             return this.getEditor()
         },
 
-        setEditorSelection: function (selection) {
+        setEditorSelection(selection) {
             if (!selection) {
                 return
             }
@@ -184,7 +184,7 @@ export default function richEditorFormComponent({
                 .run()
         },
 
-        runEditorCommands: function ({ commands, editorSelection }) {
+        runEditorCommands({ commands, editorSelection }) {
             this.setEditorSelection(editorSelection)
 
             let commandChain = editor.chain()
@@ -199,7 +199,7 @@ export default function richEditorFormComponent({
             commandChain.run()
         },
 
-        togglePanel: function (id = null) {
+        togglePanel(id = null) {
             if (this.isPanelActive(id)) {
                 this.activePanel = null
 
@@ -209,7 +209,7 @@ export default function richEditorFormComponent({
             this.activePanel = id
         },
 
-        isPanelActive: function (id = null) {
+        isPanelActive(id = null) {
             if (id === null) {
                 return this.activePanel !== null
             }
@@ -217,7 +217,7 @@ export default function richEditorFormComponent({
             return this.activePanel === id
         },
 
-        insertMergeTag: function (id) {
+        insertMergeTag(id) {
             editor
                 .chain()
                 .focus()

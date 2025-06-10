@@ -8,7 +8,7 @@ export default function checkboxListFormComponent({ livewireId }) {
 
         visibleCheckboxListOptions: [],
 
-        init: function () {
+        init() {
             this.checkboxListOptions = Array.from(
                 this.$root.querySelectorAll('.fi-fo-checkbox-list-option'),
             )
@@ -48,7 +48,7 @@ export default function checkboxListFormComponent({ livewireId }) {
             })
         },
 
-        checkIfAllCheckboxesAreChecked: function () {
+        checkIfAllCheckboxesAreChecked() {
             this.areAllCheckboxesChecked =
                 this.visibleCheckboxListOptions.length ===
                 this.visibleCheckboxListOptions.filter((checkboxLabel) =>
@@ -56,7 +56,7 @@ export default function checkboxListFormComponent({ livewireId }) {
                 ).length
         },
 
-        toggleAllCheckboxes: function () {
+        toggleAllCheckboxes() {
             this.checkIfAllCheckboxesAreChecked()
 
             const inverseAreAllCheckboxesChecked = !this.areAllCheckboxesChecked
@@ -77,7 +77,7 @@ export default function checkboxListFormComponent({ livewireId }) {
             this.areAllCheckboxesChecked = inverseAreAllCheckboxesChecked
         },
 
-        updateVisibleCheckboxListOptions: function () {
+        updateVisibleCheckboxListOptions() {
             this.visibleCheckboxListOptions = this.checkboxListOptions.filter(
                 (checkboxListItem) => {
                     if (['', null, undefined].includes(this.search)) {
