@@ -10,11 +10,13 @@ use Filament\Schemas\Components\Concerns\HasLabel;
 use Filament\Schemas\Components\Concerns\HasName;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Support\Concerns\CanBeContained;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class MorphToSelect extends Component
 {
+    use CanBeContained;
     use Concerns\CanAllowHtml;
     use Concerns\CanBeMarkedAsRequired;
     use Concerns\CanBeNative;

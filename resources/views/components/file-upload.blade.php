@@ -227,7 +227,7 @@
                                             </x-slot>
 
                                             <input
-                                                x-on:keyup.enter.stop.prevent="{!! $input['alpineSaveHandler'] !!}"
+                                                x-on:keyup.enter.prevent.stop="{!! $input['alpineSaveHandler'] !!}"
                                                 x-on:blur="{!! $input['alpineSaveHandler'] !!}"
                                                 x-ref="{{ $input['ref'] }}"
                                                 x-on:keydown.enter.prevent
@@ -252,7 +252,7 @@
                                             <button
                                                 aria-label="{{ $action['label'] }}"
                                                 type="button"
-                                                x-on:click.stop.prevent="{{ $action['alpineClickHandler'] }}"
+                                                x-on:click.prevent.stop="{{ $action['alpineClickHandler'] }}"
                                                 x-tooltip="{ content: @js($action['label']), theme: $store.theme }"
                                                 class="fi-btn"
                                             >
@@ -278,7 +278,7 @@
                                             @foreach ($ratiosChunk as $label => $ratio)
                                                 <button
                                                     type="button"
-                                                    x-on:click.stop.prevent="
+                                                    x-on:click.prevent.stop="
                                                         currentRatio = @js($label) {!! ';' !!}
                                                         editor.setAspectRatio(@js($ratio))
                                                     "
@@ -308,7 +308,7 @@
 
                             <button
                                 type="button"
-                                x-on:click.stop.prevent="editor.reset()"
+                                x-on:click.prevent.stop="editor.reset()"
                                 {{
                                     (new \Illuminate\View\ComponentAttributeBag)
                                         ->color(\Filament\Support\View\Components\ButtonComponent::class, 'danger')

@@ -65,7 +65,7 @@
         >
             <input
                 x-on:focus="$refs.panel.open($refs.input)"
-                x-on:keydown.enter.stop.prevent="togglePanelVisibility()"
+                x-on:keydown.enter.prevent.stop="togglePanelVisibility()"
                 x-ref="input"
                 {{
                     $getExtraInputAttributeBag()

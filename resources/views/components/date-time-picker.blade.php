@@ -111,18 +111,18 @@
                 <button
                     x-ref="button"
                     x-on:click="togglePanelVisibility()"
-                    x-on:keydown.enter.stop.prevent="
+                    x-on:keydown.enter.prevent.stop="
                         if (! $el.disabled) {
                             isOpen() ? selectDate() : togglePanelVisibility()
                         }
                     "
-                    x-on:keydown.arrow-left.stop.prevent="if (! $el.disabled) focusPreviousDay()"
-                    x-on:keydown.arrow-right.stop.prevent="if (! $el.disabled) focusNextDay()"
-                    x-on:keydown.arrow-up.stop.prevent="if (! $el.disabled) focusPreviousWeek()"
-                    x-on:keydown.arrow-down.stop.prevent="if (! $el.disabled) focusNextWeek()"
-                    x-on:keydown.backspace.stop.prevent="if (! $el.disabled) clearState()"
-                    x-on:keydown.clear.stop.prevent="if (! $el.disabled) clearState()"
-                    x-on:keydown.delete.stop.prevent="if (! $el.disabled) clearState()"
+                    x-on:keydown.arrow-left.prevent.stop="if (! $el.disabled) focusPreviousDay()"
+                    x-on:keydown.arrow-right.prevent.stop="if (! $el.disabled) focusNextDay()"
+                    x-on:keydown.arrow-up.prevent.stop="if (! $el.disabled) focusPreviousWeek()"
+                    x-on:keydown.arrow-down.prevent.stop="if (! $el.disabled) focusNextWeek()"
+                    x-on:keydown.backspace.prevent.stop="if (! $el.disabled) clearState()"
+                    x-on:keydown.clear.prevent.stop="if (! $el.disabled) clearState()"
+                    x-on:keydown.delete.prevent.stop="if (! $el.disabled) clearState()"
                     aria-label="{{ $placeholder }}"
                     type="button"
                     tabindex="-1"
