@@ -20,7 +20,7 @@ trait CanDisableOptionsWhenSelectedInSiblingRepeaterItems
                 return false;
             }
 
-            return collect($repeater->getState())
+            return collect($repeater->getRawState())
                 ->pluck(
                     (string) str($component->getStatePath())
                         ->after("{$repeater->getStatePath()}.")

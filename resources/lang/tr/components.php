@@ -11,15 +11,67 @@ return [
             ],
 
             'add' => [
-                'label' => ':label\'e ekle',
+
+                'label' => ':label\'e Ekle',
+
+                'modal' => [
+
+                    'heading' => ':label\'e Ekle',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Ekle',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'add_between' => [
+
                 'label' => 'Bloklar arasına ekle',
+
+                'modal' => [
+
+                    'heading' => ':label\'e  Ekle',
+
+                    'actions' => [
+
+                        'add' => [
+                            'label' => 'Ekle',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'delete' => [
                 'label' => 'Sil',
+            ],
+
+            'edit' => [
+
+                'label' => 'Düzenle',
+
+                'modal' => [
+
+                    'heading' => 'Bloğu Düzenle',
+
+                    'actions' => [
+
+                        'save' => [
+                            'label' => 'Değişiklikleri Kaydet',
+                        ],
+
+                    ],
+
+                ],
+
             ],
 
             'reorder' => [
@@ -35,7 +87,7 @@ return [
             ],
 
             'collapse' => [
-                'label' => 'Küçült',
+                'label' => 'Daralt',
             ],
 
             'expand' => [
@@ -43,7 +95,7 @@ return [
             ],
 
             'collapse_all' => [
-                'label' => 'Tümünü küçült',
+                'label' => 'Tümünü daralt',
             ],
 
             'expand_all' => [
@@ -59,7 +111,7 @@ return [
         'actions' => [
 
             'deselect_all' => [
-                'label' => 'Tümünü seçmeyi kaldır',
+                'label' => 'Tüm seçimi kaldır',
             ],
 
             'select_all' => [
@@ -81,19 +133,19 @@ return [
                 ],
 
                 'drag_crop' => [
-                    'label' => 'Kırpma moduna sürükleyin',
+                    'label' => 'Sürükleme modu "kırpma"',
                 ],
 
                 'drag_move' => [
-                    'label' => 'Taşıma moduna sürükleyin',
+                    'label' => 'Sürükleme modu "taşıma"',
                 ],
 
                 'flip_horizontal' => [
-                    'label' => 'Görüntüyü yatay çevir',
+                    'label' => 'Görüntüyü yatay olarak çevir',
                 ],
 
                 'flip_vertical' => [
-                    'label' => 'Görüntüyü dikey çevir',
+                    'label' => 'Görüntüyü dikey olarak çevir',
                 ],
 
                 'move_down' => [
@@ -177,7 +229,7 @@ return [
 
             'aspect_ratios' => [
 
-                'label' => 'En boy oranları',
+                'label' => 'En boy oranı',
 
                 'no_fixed' => [
                     'label' => 'Serbest',
@@ -188,8 +240,8 @@ return [
             'svg' => [
 
                 'messages' => [
-                    'confirmation' => 'SVG dosyalarını düzenlemek ölçeklendirme yaptığınızda kalite kaybına neden olabileceği için tavsiye edilmez.\n Devam etmek istediğinize emin misiniz?',
-                    'disabled' => 'SVG dosyalarını düzenlemek ölçeklendirme yaptığınızda kalite kaybına neden olduğu için engellendi.',
+                    'confirmation' => 'SVG dosyalarını düzenleme, ölçeklendirme yaptığınızda kalite kaybına neden olabileceği için tavsiye edilmez.\n Devam etmek istediğinize emin misiniz?',
+                    'disabled' => 'SVG dosyalarını düzenleme, ölçeklendirme yaptığınızda kalite kaybına neden olduğu için engellendi.',
                 ],
 
             ],
@@ -250,6 +302,28 @@ return [
 
     ],
 
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'Seç',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'Seç',
+                    ],
+
+                ],
+
+            ],
+
+        ],
+
+    ],
+
     'radio' => [
 
         'boolean' => [
@@ -292,7 +366,7 @@ return [
             ],
 
             'collapse' => [
-                'label' => 'Küçült',
+                'label' => 'Daralt',
             ],
 
             'expand' => [
@@ -300,7 +374,7 @@ return [
             ],
 
             'collapse_all' => [
-                'label' => 'Tümünü küçült',
+                'label' => 'Tümünü daralt',
             ],
 
             'expand_all' => [
@@ -313,22 +387,89 @@ return [
 
     'rich_editor' => [
 
-        'dialogs' => [
+        'actions' => [
+
+            'attach_files' => [
+
+                'label' => 'Dosya yükle',
+
+                'modal' => [
+
+                    'heading' => 'Dosya yükle',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'Dosya',
+                                'existing' => 'Dosyayı değiştir',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'Açıklama metni',
+                                'existing' => 'Açıklama metnini değiştir',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Ekle',
+                        ],
+
+                        'save' => [
+                            'label' => 'Kaydet',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'Bağlantı',
-                    'unlink' => 'Bağlantıyı kaldır',
+                'label' => 'Düzenle',
+
+                'modal' => [
+
+                    'heading' => 'Bağlantı',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'URL',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'Yeni sekmede aç',
+                        ],
+
+                    ],
+
                 ],
-
-                'label' => 'URL',
-
-                'placeholder' => 'Bir URL girin',
 
             ],
 
         ],
+
+        'no_merge_tag_search_results_message' => 'Uygun birleşme etiketi bulunamadı.',
 
         'tools' => [
             'attach_files' => 'Dosya ekle',
@@ -336,15 +477,19 @@ return [
             'bold' => 'Kalın',
             'bullet_list' => 'Sırasız liste',
             'code_block' => 'Kod bloğu',
+            'custom_blocks' => 'Bloklar',
             'h1' => 'Başlık',
             'h2' => 'Başlık 2',
             'h3' => 'Alt başlık',
             'italic' => 'Eğik',
             'link' => 'Bağlantı',
+            'merge_tags' => 'Birleşme etiketleri',
             'ordered_list' => 'Sıralı liste',
             'redo' => 'Yinele',
             'strike' => 'Üstü çizili',
             'underline' => 'Altı çizili',
+            'subscript' => 'Alt simge',
+            'superscript' => 'Üst simge',
             'undo' => 'Geri al',
         ],
 
@@ -355,6 +500,8 @@ return [
         'actions' => [
 
             'create_option' => [
+
+                'label' => 'Oluştur',
 
                 'modal' => [
 
@@ -377,6 +524,8 @@ return [
             ],
 
             'edit_option' => [
+
+                'label' => 'Düzenle',
 
                 'modal' => [
 

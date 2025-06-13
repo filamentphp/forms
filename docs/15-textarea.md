@@ -80,6 +80,28 @@ Textarea::make('description')
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `readOnly()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
+## Disabling Grammarly checks
+
+If the user has Grammarly installed and you would like to prevent it from analyzing the contents of the textarea, you can use the `disableGrammarly()` method:
+
+```php
+use Filament\Forms\Components\Textarea;
+
+Textarea::make('description')
+    ->disableGrammarly()
+```
+
+Optionally, you may pass a boolean value to control if the field should disable Grammarly checks or not:
+
+```php
+use Filament\Forms\Components\Textarea;
+
+Textarea::make('description')
+    ->disableGrammarly(FeatureFlag::active())
+```
+
+<UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `disableGrammarly()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+
 ## Textarea validation
 
 As well as all rules listed on the [validation](validation) page, there are additional rules that are specific to textareas.

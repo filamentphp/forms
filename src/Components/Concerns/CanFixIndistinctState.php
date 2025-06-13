@@ -39,7 +39,7 @@ trait CanFixIndistinctState
                 ->after("{$repeaterStatePath}.")
                 ->beforeLast(".{$componentItemStatePath}");
 
-            $repeaterSiblingState = Arr::except($repeater->getState(), [$repeaterItemKey]);
+            $repeaterSiblingState = Arr::except($repeater->getRawState(), [$repeaterItemKey]);
 
             if (empty($repeaterSiblingState)) {
                 return;
