@@ -108,11 +108,11 @@
     }
 
     & div[data-type='customBlock'] {
-        @apply grid divide-y divide-gray-200 rounded-lg shadow-sm ring-1 ring-gray-950/10 dark:divide-white/10 dark:ring-white/20;
+        @apply grid divide-y divide-gray-200 overflow-hidden rounded-lg shadow-sm ring-1 ring-gray-950/10 dark:divide-white/10 dark:ring-white/20;
     }
 
     & .fi-fo-rich-editor-custom-block-header {
-        @apply flex items-start gap-3 rounded-t-lg bg-gray-50 px-4 py-3 dark:bg-gray-900/30;
+        @apply flex items-start gap-3 bg-gray-50 px-4 py-3 dark:bg-gray-900/30;
     }
 
     & .fi-fo-rich-editor-custom-block-heading {

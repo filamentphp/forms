@@ -4,6 +4,7 @@
         ->merge($getExtraInputAttributes(), escape: false)
         ->merge($getExtraAlpineAttributes(), escape: false)
         ->merge([
+            'autocomplete' => false,
             'autofocus' => $isAutofocused(),
             'disabled' => $isDisabled(),
             'id' => $getId(),
