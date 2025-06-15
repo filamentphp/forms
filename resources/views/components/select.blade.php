@@ -9,6 +9,7 @@
     $isMultiple = $isMultiple();
     $isSearchable = $isSearchable();
     $isRequired = $isRequired();
+    $isConcealed = $isConcealed();
     $isHtmlAllowed = $isHtmlAllowed();
     $isNative = (! ($isSearchable || $isMultiple) && $isNative());
     $isPrefixInline = $isPrefixInline();
@@ -61,7 +62,7 @@
                             'autofocus' => $isAutofocused,
                             'disabled' => $isDisabled,
                             'id' => $id,
-                            'required' => $isRequired,
+                            'required' => $isRequired && (! $isConcealed),
                             $applyStateBindingModifiers('wire:model') => $statePath,
                         ], escape: false)
                         ->class([

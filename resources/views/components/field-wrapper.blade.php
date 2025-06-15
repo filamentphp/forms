@@ -3,6 +3,8 @@
 @endphp
 
 @props([
+    'htmlErrorMessage' => null,
+    'errorMessage' => null,
     'field' => null,
     'hasErrors' => true,
     'hasInlineLabel' => null,
@@ -41,7 +43,7 @@
     $aboveErrorMessageSchema = $field?->getChildSchema($field::ABOVE_ERROR_MESSAGE_SCHEMA_KEY)?->toHtmlString();
     $belowErrorMessageSchema = $field?->getChildSchema($field::BELOW_ERROR_MESSAGE_SCHEMA_KEY)?->toHtmlString();
 
-    $hasError = $hasErrors && filled($statePath) && ($errors->has($statePath) || ($hasNestedRecursiveValidationRules && $errors->has("{$statePath}.*")));
+    $hasError = $hasErrors && (filled($errorMessage) || (filled($statePath) && ($errors->has($statePath) || ($hasNestedRecursiveValidationRules && $errors->has("{$statePath}.*")))));
 @endphp
 
 <div
@@ -122,12 +124,12 @@
 
             @if ($hasError)
                 @php
-                    $errorMessage = $errors->has($statePath) ? $errors->first($statePath) : ($hasNestedRecursiveValidationRules ? $errors->first("{$statePath}.*") : null);
+                    $errorMessage ??= $errors->has($statePath) ? $errors->first($statePath) : ($hasNestedRecursiveValidationRules ? $errors->first("{$statePath}.*") : null);
                 @endphp
 
                 {{ $aboveErrorMessageSchema }}
 
-                @if ($field?->areHtmlValidationMessagesAllowed())
+                @if ($htmlErrorMessage ?? $field?->areHtmlValidationMessagesAllowed())
                     <div
                         data-validation-error
                         class="fi-fo-field-wrp-error-message"

@@ -303,7 +303,7 @@ export default function selectFormComponent({
             }
 
             if (existingOptionValues.has(state)) {
-                return existingOptionValues
+                return []
             }
 
             return [

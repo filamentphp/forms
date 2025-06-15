@@ -74,7 +74,7 @@
                             'disabled' => $isDisabled,
                             'id' => $getId(),
                             'placeholder' => $getPlaceholder(),
-                            'required' => $isRequired(),
+                            'required' => $isRequired() && (! $isConcealed()),
                             'type' => 'text',
                             'x-model' . ($isLiveDebounced ? '.debounce.' . $liveDebounce : null) => 'state',
                             'x-on:blur' => $isLiveOnBlur ? 'isOpen() ? null : commitState()' : null,

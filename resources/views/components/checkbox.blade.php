@@ -6,7 +6,7 @@
             'autofocus' => $isAutofocused(),
             'disabled' => $isDisabled(),
             'id' => $getId(),
-            'required' => $isRequired(),
+            'required' => $isRequired() && (! $isConcealed()),
             'wire:loading.attr' => 'disabled',
             $applyStateBindingModifiers('wire:model') => $statePath,
         ], escape: false)

@@ -228,6 +228,7 @@
                         @endif
 
                         <div
+                            x-show="! isCollapsed"
                             @class([
                                 'fi-fo-builder-item-content',
                                 'fi-fo-builder-item-content-has-preview' => $hasBlockPreviews && $item->getParentComponent()->hasPreview(),

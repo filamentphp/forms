@@ -204,7 +204,10 @@
                             </div>
                         @endif
 
-                        <div class="fi-fo-repeater-item-content">
+                        <div
+                            x-show="! isCollapsed"
+                            class="fi-fo-repeater-item-content"
+                        >
                             {{ $item }}
                         </div>
                     </li>

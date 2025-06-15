@@ -5,10 +5,9 @@ namespace Filament\Forms\Components;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\Builder\StateCasts\BuilderStateCast;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
+use Filament\Schemas\Components\Contracts\CanConcealComponents;
 use Filament\Schemas\Components\Contracts\HasExtraItemActions;
-use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
 use Filament\Schemas\Schema;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\Alignment;
@@ -22,7 +21,7 @@ use Illuminate\Support\Str;
 use function Filament\Forms\array_move_after;
 use function Filament\Forms\array_move_before;
 
-class Builder extends Field implements HasExtraItemActions
+class Builder extends Field implements CanConcealComponents, HasExtraItemActions
 {
     use CanBeCollapsed;
     use Concerns\CanBeCloned;
@@ -103,6 +102,20 @@ class Builder extends Field implements HasExtraItemActions
 
         $this->default([]);
 
+        $this->afterStateHydrated(static function (Builder $component, ?array $rawState): void {
+            $items = [];
+
+            foreach ($rawState ?? [] as $itemData) {
+                if ($uuid = $component->generateUuid()) {
+                    $items[$uuid] = $itemData;
+                } else {
+                    $items[] = $itemData;
+                }
+            }
+
+            $component->rawState($items);
+        });
+
         $this->registerActions([
             fn (Builder $component): Action => $component->getAddAction(),
             fn (Builder $component): Action => $component->getAddBetweenAction(),
@@ -117,6 +130,10 @@ class Builder extends Field implements HasExtraItemActions
             fn (Builder $component): Action => $component->getMoveUpAction(),
             fn (Builder $component): Action => $component->getReorderAction(),
         ]);
+
+        $this->mutateDehydratedStateUsing(static function (?array $state): array {
+            return array_values($state ?? []);
+        });
     }
 
     /**
@@ -991,6 +1008,11 @@ class Builder extends Field implements HasExtraItemActions
         return (bool) $this->evaluate($this->hasInteractiveBlockPreviews);
     }
 
+    public function canConcealComponents(): bool
+    {
+        return $this->isCollapsible();
+    }
+
     public function getLabelBetweenItems(): ?string
     {
         return $this->evaluate($this->labelBetweenItems);
@@ -1121,16 +1143,5 @@ class Builder extends Field implements HasExtraItemActions
         }
 
         return 1;
-    }
-
-    /**
-     * @return array<StateCast>
-     */
-    public function getDefaultStateCasts(): array
-    {
-        return [
-            ...parent::getDefaultStateCasts(),
-            app(BuilderStateCast::class, ['builder' => $this]),
-        ];
     }
 }
