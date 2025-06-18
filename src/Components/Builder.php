@@ -1144,4 +1144,14 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
 
         return 1;
     }
+
+    /**
+     * @param  array<string, array<mixed>>  $rules
+     */
+    public function dehydrateValidationRules(array &$rules): void
+    {
+        parent::dehydrateValidationRules($rules);
+
+        $rules["{$this->getStatePath()}.*.type"] = ['required'];
+    }
 }

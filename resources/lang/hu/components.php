@@ -278,6 +278,28 @@ return [
 
     ],
 
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'Kiválasztás',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'Kiválasztás',
+                    ],
+
+                ],
+
+            ],
+
+        ],
+
+    ],
+
     'radio' => [
 
         'boolean' => [
@@ -341,22 +363,89 @@ return [
 
     'rich_editor' => [
 
-        'dialogs' => [
+        'actions' => [
+
+            'attach_files' => [
+
+                'label' => 'Fájl feltöltése',
+
+                'modal' => [
+
+                    'heading' => 'Fájl feltöltése',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'Fájl',
+                                'existing' => 'Fájl cseréje',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'Alt szöveg',
+                                'existing' => 'Alt szöveg módosítása',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Beszúrás',
+                        ],
+
+                        'save' => [
+                            'label' => 'Mentés',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'Hivatkozás',
-                    'unlink' => 'Hivatkozás törlése',
+                'label' => 'Szerkesztés',
+
+                'modal' => [
+
+                    'heading' => 'Hivatkozás',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'URL',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'Megnyitás új lapon',
+                        ],
+
+                    ],
+
                 ],
-
-                'label' => 'URL',
-
-                'placeholder' => 'URL cím',
 
             ],
 
         ],
+
+        'no_merge_tag_search_results_message' => 'Nincs találat az egyesítési címkék között.',
 
         'tools' => [
             'attach_files' => 'Fájlok csatolása',
@@ -364,15 +453,19 @@ return [
             'bold' => 'Félkövér',
             'bullet_list' => 'Felsorolás',
             'code_block' => 'Kódblokk',
-            'h1' => 'Címsor 1',
-            'h2' => 'Címsor 2',
-            'h3' => 'Címsor 3',
+            'custom_blocks' => 'Blokkok',
+            'h1' => 'Cím',
+            'h2' => 'Címsor',
+            'h3' => 'Alcím',
             'italic' => 'Dőlt',
             'link' => 'Hivatkozás',
+            'merge_tags' => 'Egyesítési címkék',
             'ordered_list' => 'Számozott lista',
             'redo' => 'Visszaállítás',
             'strike' => 'Áthúzott',
-            'underline' => 'Alázhúzott',
+            'subscript' => 'Alsó index',
+            'superscript' => 'Felső index',
+            'underline' => 'Aláhúzott',
             'undo' => 'Visszavonás',
         ],
 
@@ -383,6 +476,8 @@ return [
         'actions' => [
 
             'create_option' => [
+
+                'label' => 'Létrehozás',
 
                 'modal' => [
 
@@ -405,6 +500,8 @@ return [
             ],
 
             'edit_option' => [
+
+                'label' => 'Szerkesztés',
 
                 'modal' => [
 

@@ -230,11 +230,19 @@
                             @apply @xl:table-cell;
                         }
 
-                        & .fi-fo-field-label-col {
+                        & .fi-fo-field {
+                            @apply @xl:gap-y-0;
+                        }
+
+                        & .fi-in-entry {
+                            @apply @xl:gap-y-0;
+                        }
+
+                        & .fi-fo-field-label-content {
                             @apply @xl:hidden;
                         }
 
-                        & .fi-in-entry-label-col {
+                        & .fi-in-entry-label-content {
                             @apply @xl:hidden;
                         }
                     }
@@ -268,11 +276,19 @@
                             @apply lg:table-cell;
                         }
 
-                        & .fi-fo-field-label-col {
+                        & .fi-fo-field {
+                            @apply lg:gap-y-0;
+                        }
+
+                        & .fi-in-entry {
+                            @apply lg:gap-y-0;
+                        }
+
+                        & .fi-fo-field-label-content {
                             @apply lg:hidden;
                         }
 
-                        & .fi-in-entry-label-col {
+                        & .fi-in-entry-label-content {
                             @apply lg:hidden;
                         }
                     }
