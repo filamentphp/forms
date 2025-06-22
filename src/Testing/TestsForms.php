@@ -50,6 +50,8 @@ class TestsForms
                     $state = Arr::undot([$schemaStatePath => $state]);
                 }
 
+                $this->call('disableSchemaStateUpdateHooksForTesting');
+
                 foreach (Arr::dot($state) as $key => $value) {
                     if ($value instanceof UploadedFile ||
                         (is_array($value) && isset($value[0]) && $value[0] instanceof UploadedFile)
@@ -58,6 +60,8 @@ class TestsForms
                         Arr::set($state, $key, $this->get($key));
                     }
                 }
+
+                $this->call('enableSchemaStateUpdateHooksForTesting');
 
                 $this->call('fillFormDataForTesting', $state, $schemaStatePath);
             }

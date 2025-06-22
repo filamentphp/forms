@@ -11,6 +11,7 @@ return [
             ],
 
             'add' => [
+
                 'label' => 'إضافة إلى :label',
 
                 'modal' => [
@@ -26,9 +27,11 @@ return [
                     ],
 
                 ],
+
             ],
 
             'add_between' => [
+
                 'label' => 'إدراج بين الوحدات',
 
                 'modal' => [
@@ -44,6 +47,7 @@ return [
                     ],
 
                 ],
+
             ],
 
             'delete' => [
@@ -298,6 +302,28 @@ return [
 
     ],
 
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'تحديد',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'تحديد',
+                    ],
+
+                ],
+
+            ],
+
+        ],
+
+    ],
+
     'radio' => [
 
         'boolean' => [
@@ -361,22 +387,89 @@ return [
 
     'rich_editor' => [
 
-        'dialogs' => [
+        'actions' => [
+
+            'attach_files' => [
+
+                'label' => 'رفع ملف',
+
+                'modal' => [
+
+                    'heading' => 'رفع ملف',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'الملف',
+                                'existing' => 'استبدال الملف',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'النص البديل',
+                                'existing' => 'تعديل النص البديل',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'إدراج',
+                        ],
+
+                        'save' => [
+                            'label' => 'حفظ',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'ربط',
-                    'unlink' => 'فصل',
+                'label' => 'تعديل',
+
+                'modal' => [
+
+                    'heading' => 'رابط',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'الرابط',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'فتح في تبويب جديد',
+                        ],
+
+                    ],
+
                 ],
-
-                'label' => 'عنوان url',
-
-                'placeholder' => 'أدخل عنوان url',
 
             ],
 
         ],
+
+        'no_merge_tag_search_results_message' => 'لا توجد نتائج لوسوم الدمج.',
 
         'tools' => [
             'attach_files' => 'إرفاق ملفات',
@@ -384,14 +477,18 @@ return [
             'bold' => 'عريض',
             'bullet_list' => 'قائمة نقطية',
             'code_block' => 'نص برمجي',
+            'custom_blocks' => 'الكتل المخصصة',
             'h1' => 'عنوان',
             'h2' => 'عنوان رئيسي',
             'h3' => 'عنوان فرعي',
             'italic' => 'مائل',
             'link' => 'رابط تشعبي',
+            'merge_tags' => 'دمج الوسوم',
             'ordered_list' => 'قائمة رقمية',
             'redo' => 'إعادة',
             'strike' => 'خط في المنتصف',
+            'subscript' => 'نص سفلي',
+            'superscript' => 'نص علوي',
             'underline' => 'خط اسفل النص',
             'undo' => 'تراجع',
         ],

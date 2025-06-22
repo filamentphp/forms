@@ -105,6 +105,7 @@
                     @endphp
 
                     <li
+                        wire:ignore.self
                         wire:key="{{ $item->getLivewireKey() }}.item"
                         x-data="{
                             isCollapsed: @js($isCollapsed($item)),

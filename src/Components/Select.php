@@ -174,6 +174,10 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             $labels = [];
 
             foreach ($values as $value) {
+                if ($value instanceof BackedEnum) {
+                    $value = $value->value;
+                }
+
                 foreach ($options as $groupedOptions) {
                     if (! is_array($groupedOptions)) {
                         continue;
@@ -197,8 +201,8 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
         $this->transformOptionsForJsUsing(static function (Select $component, array $options): array {
             return collect($options)
                 ->map(fn ($label, $value): array => is_array($label)
-                    ? ['label' => $value, 'choices' => $component->transformOptionsForJs($label)]
-                    : ['label' => $label, 'value' => strval($value), 'disabled' => $component->isOptionDisabled($value, $label)])
+                    ? ['label' => $value, 'options' => $component->transformOptionsForJs($label)]
+                    : ['label' => $label, 'value' => strval($value), 'isDisabled' => $component->isOptionDisabled($value, $label)])
                 ->values()
                 ->all();
         });
@@ -737,7 +741,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
     public function isSearchable(): bool
     {
-        return $this->evaluate($this->isSearchable) || $this->isMultiple();
+        return $this->evaluate($this->isSearchable) ?? $this->isMultiple();
     }
 
     public function relationship(string | Closure | null $name = null, string | Closure | null $titleAttribute = null, ?Closure $modifyQueryUsing = null, bool $ignoreRecord = false): static

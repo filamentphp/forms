@@ -3,7 +3,6 @@
 namespace Filament\Forms\Components\RichEditor;
 
 use Filament\Actions\Action;
-use Illuminate\Support\Str;
 
 abstract class RichContentCustomBlock
 {
@@ -11,7 +10,10 @@ abstract class RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return Str::headline(static::getId());
+        return (string) str(static::getId())
+            ->kebab()
+            ->replace('-', ' ')
+            ->ucwords();
     }
 
     /**

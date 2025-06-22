@@ -156,7 +156,11 @@
                                     { search },
                                 )
                             },
+                            initialOptionLabel: @js($isMultiple ? null : $getOptionLabel()),
+                            initialOptionLabels: @js($isMultiple ? $getOptionLabelsForJs() : []),
+                            initialState: @js($getState()),
                             isAutofocused: @js($isAutofocused),
+                            isDisabled: @js($isDisabled),
                             isMultiple: @js($isMultiple),
                             isSearchable: @js($isSearchable),
                             livewireId: @js($this->getId()),
@@ -185,17 +189,7 @@
                         ->merge($getExtraAlpineAttributes(), escape: false)
                 }}
             >
-                <select
-                    x-ref="input"
-                    {{
-                        $extraInputAttributeBag
-                            ->merge([
-                                'disabled' => $isDisabled,
-                                'id' => $id,
-                                'multiple' => $isMultiple,
-                            ], escape: false)
-                    }}
-                ></select>
+                <div x-ref="select"></div>
             </div>
         @endif
     </x-filament::input.wrapper>

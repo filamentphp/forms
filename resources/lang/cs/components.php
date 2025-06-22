@@ -302,6 +302,28 @@ return [
 
     ],
 
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'Vybrat',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'Vybrat',
+                    ],
+
+                ],
+
+            ],
+
+        ],
+
+    ],
+
     'radio' => [
 
         'boolean' => [
@@ -364,23 +386,89 @@ return [
     ],
 
     'rich_editor' => [
+        'actions' => [
 
-        'dialogs' => [
+            'attach_files' => [
+
+                'label' => 'Nahrát soubor',
+
+                'modal' => [
+
+                    'heading' => 'Nahrát soubor',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'Soubor',
+                                'existing' => 'Nahradit soubor',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'Alternativní text',
+                                'existing' => 'Změnit alternativní text',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Vložit',
+                        ],
+
+                        'save' => [
+                            'label' => 'Uložit',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'Přidat odkaz',
-                    'unlink' => 'Odebrat odkaz',
+                'label' => 'Upravit',
+
+                'modal' => [
+
+                    'heading' => 'Odkaz',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'URL',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'Otevřít v nové záložce',
+                        ],
+
+                    ],
+
                 ],
-
-                'label' => 'URL',
-
-                'placeholder' => 'Vložte URL',
 
             ],
 
         ],
+
+        'no_merge_tag_search_results_message' => 'Žádné výsledky pro značky slučování.',
 
         'tools' => [
             'attach_files' => 'Přidat soubory',
@@ -388,14 +476,18 @@ return [
             'bold' => 'Tučně',
             'bullet_list' => 'Seznam s odrážkami',
             'code_block' => 'Blok kódu',
+            'custom_blocks' => 'Bloky',
             'h1' => 'Nadpis 1',
             'h2' => 'Nadpis 2',
             'h3' => 'Nadpis 3',
             'italic' => 'Kurzíva',
             'link' => 'Odkaz',
+            'merge_tags' => 'Sloučit značky',
             'ordered_list' => 'Číslovaný seznam',
             'redo' => 'Vpřed',
             'strike' => 'Přeškrtnutí',
+            'subscript' => 'Dolní index',
+            'superscript' => 'Horní index',
             'underline' => 'Podtržení',
             'undo' => 'Zpět',
         ],
@@ -407,6 +499,8 @@ return [
         'actions' => [
 
             'create_option' => [
+
+                'label' => 'Vytvořit',
 
                 'modal' => [
 
@@ -429,6 +523,8 @@ return [
             ],
 
             'edit_option' => [
+
+                'label' => 'Upravit',
 
                 'modal' => [
 

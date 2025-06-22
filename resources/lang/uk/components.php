@@ -298,6 +298,28 @@ return [
 
     ],
 
+    'modal_table_select' => [
+
+        'actions' => [
+
+            'select' => [
+
+                'label' => 'Вибрати',
+
+                'actions' => [
+
+                    'select' => [
+                        'label' => 'Вибрати',
+                    ],
+
+                ],
+
+            ],
+
+        ],
+
+    ],
+
     'radio' => [
 
         'boolean' => [
@@ -361,22 +383,89 @@ return [
 
     'rich_editor' => [
 
-        'dialogs' => [
+        'actions' => [
+
+            'attach_files' => [
+
+                'label' => 'Завантажити файл',
+
+                'modal' => [
+
+                    'heading' => 'Завантаження файлу',
+
+                    'form' => [
+
+                        'file' => [
+
+                            'label' => [
+                                'new' => 'Файл',
+                                'existing' => 'Замінити файл',
+                            ],
+
+                        ],
+
+                        'alt' => [
+
+                            'label' => [
+                                'new' => 'Альтернативний текст',
+                                'existing' => 'Змінити альтернативний текст',
+                            ],
+
+                        ],
+
+                    ],
+
+                ],
+
+            ],
+
+            'custom_block' => [
+
+                'modal' => [
+
+                    'actions' => [
+
+                        'insert' => [
+                            'label' => 'Вставити',
+                        ],
+
+                        'save' => [
+                            'label' => 'Зберегти',
+                        ],
+
+                    ],
+
+                ],
+
+            ],
 
             'link' => [
 
-                'actions' => [
-                    'link' => 'Посилання',
-                    'unlink' => 'Прибрати посилання',
+                'label' => 'Редагування',
+
+                'modal' => [
+
+                    'heading' => 'Посилання',
+
+                    'form' => [
+
+                        'url' => [
+                            'label' => 'Введіть URL',
+                        ],
+
+                        'should_open_in_new_tab' => [
+                            'label' => 'Відкрити в новій вкладці',
+                        ],
+
+                    ],
+
                 ],
-
-                'label' => 'URL',
-
-                'placeholder' => 'Введіть URL',
 
             ],
 
         ],
+
+        'no_merge_tag_search_results_message' => 'Нічого не знайдено за тегами злиття.',
 
         'tools' => [
             'attach_files' => 'Прикріпити файли',
@@ -384,14 +473,18 @@ return [
             'bold' => 'Жирний',
             'bullet_list' => 'Маркований список',
             'code_block' => 'Код',
+            'custom_blocks' => 'Блоки',
             'h1' => 'Назва',
             'h2' => 'Заголовок',
             'h3' => 'Підзаголовок',
             'italic' => 'Курсив',
             'link' => 'Посилання',
+            'merge_tags' => 'Теги злиття',
             'ordered_list' => 'Нумерований список',
             'redo' => 'Повторити',
             'strike' => 'Закреслений',
+            'subscript' => 'Нижній індекс',
+            'superscript' => 'Верхній індекс',
             'underline' => 'Підкреслений',
             'undo' => 'Скасувати',
         ],
