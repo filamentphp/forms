@@ -386,6 +386,7 @@ export default function dateTimePickerFormComponent({
             if (!this.isOpen()) {
                 this.focusedDate =
                     this.getSelectedDate() ??
+                    this.focusedDate ??
                     this.getMinDate() ??
                     dayjs().tz(timezone)
 

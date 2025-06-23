@@ -40,7 +40,7 @@
         {{
             $attributes
                 ->merge($getExtraAttributes(), escape: false)
-                ->class(['fi-fo-builder grid gap-y-4'])
+                ->class(['fi-fo-builder grid grid-cols-1 gap-y-4'])
         }}
     >
         @if ($collapseAllActionIsVisible || $expandAllActionIsVisible)
