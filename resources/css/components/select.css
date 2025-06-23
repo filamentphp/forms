@@ -41,7 +41,7 @@
     }
 
     & .fi-dropdown-panel {
-        @apply mt-1 max-h-60 max-w-full!;
+        @apply max-h-60 max-w-full!;
     }
 
     & .fi-fo-select-options-ctn {

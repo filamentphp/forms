@@ -1274,20 +1274,35 @@ class CustomSelect {
     }
 
     async openDropdown() {
-        // Make dropdown visible but with position absolute and opacity 0 for measurement
+        // Make dropdown visible but with position fixed (or absolute in modals) and opacity 0 for measurement
         this.dropdown.style.display = 'block'
         this.dropdown.style.opacity = '0'
-        this.dropdown.style.position = 'absolute'
+
+        // Check if the select is inside a modal
+        const isInModal = this.selectButton.closest('.fi-modal') !== null
+        this.dropdown.style.position = isInModal ? 'absolute' : 'fixed'
+        // Set width immediately to match the select button
+        this.dropdown.style.width = `${this.selectButton.offsetWidth}px`
         this.selectButton.setAttribute('aria-expanded', 'true')
         this.isOpen = true
 
         // Position the dropdown using Floating UI
         this.positionDropdown()
 
-        // Add resize listener to update position when window is resized
+        // Add resize listener to update width and position when window is resized
         if (!this.resizeListener) {
-            this.resizeListener = () => this.positionDropdown()
+            this.resizeListener = () => {
+                // Update width to match the select button
+                this.dropdown.style.width = `${this.selectButton.offsetWidth}px`
+                this.positionDropdown()
+            }
             window.addEventListener('resize', this.resizeListener)
+        }
+
+        // Add scroll listener to update position when page is scrolled
+        if (!this.scrollListener) {
+            this.scrollListener = () => this.positionDropdown()
+            window.addEventListener('scroll', this.scrollListener, true)
         }
 
         // Make dropdown visible
@@ -1386,14 +1401,17 @@ class CustomSelect {
             middleware.push(flip()) // Flip to top if not enough space at bottom
         }
 
+        // Check if the select is inside a modal
+        const isInModal = this.selectButton.closest('.fi-modal') !== null
+
         computePosition(this.selectButton, this.dropdown, {
             placement: placement,
             middleware: middleware,
+            strategy: isInModal ? 'absolute' : 'fixed',
         }).then(({ x, y }) => {
             Object.assign(this.dropdown.style, {
                 left: `${x}px`,
                 top: `${y}px`,
-                width: `${this.selectButton.offsetWidth}px`,
             })
         })
     }
@@ -1407,6 +1425,12 @@ class CustomSelect {
         if (this.resizeListener) {
             window.removeEventListener('resize', this.resizeListener)
             this.resizeListener = null
+        }
+
+        // Remove scroll listener
+        if (this.scrollListener) {
+            window.removeEventListener('scroll', this.scrollListener, true)
+            this.scrollListener = null
         }
 
         // Remove focus from all options
@@ -2047,6 +2071,12 @@ class CustomSelect {
         if (this.resizeListener) {
             window.removeEventListener('resize', this.resizeListener)
             this.resizeListener = null
+        }
+
+        // Remove scroll event listener if it exists
+        if (this.scrollListener) {
+            window.removeEventListener('scroll', this.scrollListener, true)
+            this.scrollListener = null
         }
 
         // Remove the event listener for refreshing selected option labels if it was added

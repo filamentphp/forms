@@ -1,5 +1,5 @@
 .fi-fo-builder {
-    @apply grid gap-y-4;
+    @apply grid grid-cols-1 gap-y-4;
 
     & .fi-fo-builder-actions {
         @apply flex gap-x-3;

@@ -670,6 +670,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         unset($files[$fileKey]);
 
         $this->rawState($files);
+        $this->callAfterStateUpdated();
 
         return $file;
     }
@@ -719,6 +720,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             ->all();
 
         $this->rawState($rawState);
+        $this->callAfterStateUpdated();
     }
 
     /**
@@ -799,6 +801,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         }
 
         $this->rawState($rawState);
+        $this->callAfterStateUpdated();
     }
 
     public function storeFileName(string $file, string $fileName): void
