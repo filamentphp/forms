@@ -25,6 +25,7 @@
     $suffixIconColor = $getSuffixIconColor();
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
+    $state = $getState();
 @endphp
 
 <x-dynamic-component
@@ -156,9 +157,9 @@
                                     { search },
                                 )
                             },
-                            initialOptionLabel: @js($isMultiple ? null : $getOptionLabel()),
-                            initialOptionLabels: @js($isMultiple ? $getOptionLabelsForJs() : []),
-                            initialState: @js($getState()),
+                            initialOptionLabel: @js((blank($state) || $isMultiple) ? null : $getOptionLabel()),
+                            initialOptionLabels: @js((filled($state) && $isMultiple) ? $getOptionLabelsForJs() : []),
+                            initialState: @js($state),
                             isAutofocused: @js($isAutofocused),
                             isDisabled: @js($isDisabled),
                             isMultiple: @js($isMultiple),
