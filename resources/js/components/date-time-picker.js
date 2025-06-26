@@ -53,7 +53,11 @@ export default function dateTimePickerFormComponent({
         init: function () {
             dayjs.locale(locales[locale] ?? locales['en'])
 
-            this.focusedDate = dayjs().tz(timezone)
+            this.$nextTick(() => {
+                this.focusedDate ??= dayjs().tz(timezone)
+                this.focusedMonth ??= this.focusedDate.month()
+                this.focusedYear ??= this.focusedDate.year()
+            })
 
             let date =
                 this.getSelectedDate() ??
