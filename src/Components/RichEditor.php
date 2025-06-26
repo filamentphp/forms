@@ -172,6 +172,26 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
                 ->activeJsExpression('isPanelActive(\'mergeTags\')')
                 ->icon('fi-s-merge-tag')
                 ->iconAlias('forms:components.rich-editor.toolbar.merge-tags'),
+            RichEditorTool::make('horizontalRule')
+                ->label(__('filament-forms::components.rich_editor.tools.horizontal_rule'))
+                ->jsHandler('$getEditor()?.chain().focus().setHorizontalRule().run()')
+                ->icon(Heroicon::Minus)
+                ->iconAlias('forms:components.rich-editor.toolbar.horizontal-rule'),
+            RichEditorTool::make('highlight')
+                ->label(__('filament-forms::components.rich_editor.tools.highlight'))
+                ->jsHandler('$getEditor()?.chain().focus().toggleHighlight().run()')
+                ->icon('fi-s-highlight')
+                ->iconAlias('forms:components.rich-editor.toolbar.highlight'),
+            RichEditorTool::make('small')
+                ->label(__('filament-forms::components.rich_editor.tools.small'))
+                ->jsHandler('$getEditor()?.chain().focus().toggleSmall().run()')
+                ->icon('fi-s-small')
+                ->iconAlias('forms:components.rich-editor.toolbar.small'),
+            RichEditorTool::make('lead')
+                ->label(__('filament-forms::components.rich_editor.tools.lead'))
+                ->jsHandler('$getEditor()?.chain().focus().toggleLead().run()')
+                ->icon('fi-s-lead')
+                ->iconAlias('forms:components.rich-editor.toolbar.lead'),
             RichEditorTool::make('undo')
                 ->label(__('filament-forms::components.rich_editor.tools.undo'))
                 ->jsHandler('$getEditor()?.chain().focus().undo().run()')
@@ -182,6 +202,26 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
                 ->jsHandler('$getEditor()?.chain().focus().redo().run()')
                 ->icon(Heroicon::ArrowUturnRight)
                 ->iconAlias('forms:components.rich-editor.toolbar.redo'),
+            RichEditorTool::make('alignStart')
+                ->label(__('filament-forms::components.rich_editor.tools.align_start'))
+                ->jsHandler('$getEditor()?.chain().focus().setTextAlign(\'start\').run()')
+                ->icon('fi-s-align-start')
+                ->iconAlias('forms:components.rich-editor.toolbar.align-start'),
+            RichEditorTool::make('alignCenter')
+                ->label(__('filament-forms::components.rich_editor.tools.align_center'))
+                ->jsHandler('$getEditor()?.chain().focus().setTextAlign(\'center\').run()')
+                ->icon('fi-s-align-center')
+                ->iconAlias('forms:components.rich-editor.toolbar.align-center'),
+            RichEditorTool::make('alignEnd')
+                ->label(__('filament-forms::components.rich_editor.tools.align_end'))
+                ->jsHandler('$getEditor()?.chain().focus().setTextAlign(\'end\').run()')
+                ->icon('fi-s-align-end')
+                ->iconAlias('forms:components.rich-editor.toolbar.align-end'),
+            RichEditorTool::make('alignJustify')
+                ->label(__('filament-forms::components.rich_editor.tools.align_justify'))
+                ->jsHandler('$getEditor()?.chain().focus().setTextAlign(\'justify\').run()')
+                ->icon('fi-s-align-justify')
+                ->iconAlias('forms:components.rich-editor.toolbar.align-justify'),
         ]);
 
         $this->beforeStateDehydrated(function (RichEditor $component, ?array $rawState, ?Model $record): void {
@@ -528,7 +568,7 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
     {
         return [
             ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
-            ['h2', 'h3'],
+            ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
             ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
             [
                 'attachFiles',

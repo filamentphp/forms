@@ -95,7 +95,11 @@ export default Node.create({
                 const preview = document.createElement('div')
                 preview.className =
                     'fi-fo-rich-editor-custom-block-preview fi-not-prose'
-                preview.innerHTML = atob(node.attrs.preview)
+                preview.innerHTML = new TextDecoder().decode(
+                    Uint8Array.from(atob(node.attrs.preview), (char) =>
+                        char.charCodeAt(0),
+                    ),
+                )
                 dom.appendChild(preview)
             }
 

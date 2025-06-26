@@ -7,8 +7,10 @@ use Filament\Forms\Components\RichEditor\FileAttachmentProviders\Contracts\FileA
 use Filament\Forms\Components\RichEditor\Plugins\Contracts\RichContentPlugin;
 use Filament\Forms\Components\RichEditor\TipTapExtensions\CustomBlockExtension;
 use Filament\Forms\Components\RichEditor\TipTapExtensions\ImageExtension;
+use Filament\Forms\Components\RichEditor\TipTapExtensions\LeadExtension;
 use Filament\Forms\Components\RichEditor\TipTapExtensions\MergeTagExtension;
 use Filament\Forms\Components\RichEditor\TipTapExtensions\RenderedCustomBlockExtension;
+use Filament\Forms\Components\RichEditor\TipTapExtensions\SmallExtension;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -16,8 +18,10 @@ use League\Flysystem\UnableToCheckFileExistence;
 use Throwable;
 use Tiptap\Core\Extension;
 use Tiptap\Editor;
+use Tiptap\Extensions\TextAlign;
 use Tiptap\Marks\Bold;
 use Tiptap\Marks\Code;
+use Tiptap\Marks\Highlight;
 use Tiptap\Marks\Italic;
 use Tiptap\Marks\Link;
 use Tiptap\Marks\Strike;
@@ -28,7 +32,9 @@ use Tiptap\Nodes\Blockquote;
 use Tiptap\Nodes\BulletList;
 use Tiptap\Nodes\CodeBlock;
 use Tiptap\Nodes\Document;
+use Tiptap\Nodes\HardBreak;
 use Tiptap\Nodes\Heading;
+use Tiptap\Nodes\HorizontalRule;
 use Tiptap\Nodes\ListItem;
 use Tiptap\Nodes\OrderedList;
 use Tiptap\Nodes\Paragraph;
@@ -235,19 +241,31 @@ class RichContentRenderer implements Htmlable
             app(CodeBlock::class),
             app(CustomBlockExtension::class),
             app(Document::class),
+            app(HardBreak::class),
             app(Heading::class),
+            app(Highlight::class),
+            app(HorizontalRule::class),
             app(Italic::class),
             app(ImageExtension::class),
+            app(LeadExtension::class),
             app(Link::class),
             app(ListItem::class),
             app(MergeTagExtension::class),
             app(OrderedList::class),
             app(Paragraph::class),
             app(RenderedCustomBlockExtension::class),
+            app(SmallExtension::class),
             app(Strike::class),
             app(Subscript::class),
             app(Superscript::class),
             app(Text::class),
+            app(TextAlign::class, [
+                'options' => [
+                    'types' => ['heading', 'paragraph'],
+                    'alignments' => ['start', 'center', 'end', 'justify'],
+                    'defaultAlignment' => 'start',
+                ],
+            ]),
             app(Underline::class),
             ...array_reduce(
                 $this->getPlugins(),

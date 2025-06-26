@@ -3,6 +3,7 @@
 
     $fieldWrapperView = $getFieldWrapperView();
     $datalistOptions = $getDatalistOptions();
+    $disabledDates = $getDisabledDates();
     $extraAlpineAttributes = $getExtraAlpineAttributes();
     $extraAttributeBag = $getExtraAttributeBag();
     $extraInputAttributeBag = $getExtraInputAttributeBag();
@@ -96,6 +97,14 @@
                             shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
                             state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                         })"
+                wire:ignore
+                wire:key="{{ $livewireKey }}.{{
+                    substr(md5(serialize([
+                        'disabledDates' => $disabledDates,
+                        'maxDate' => $maxDate,
+                        'minDate' => $minDate,
+                    ])), 0, 64)
+                }}"
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"
                 {{ $getExtraAlpineAttributeBag() }}
             >
@@ -106,7 +115,7 @@
                 <input
                     x-ref="disabledDates"
                     type="hidden"
-                    value="{{ json_encode($getDisabledDates()) }}"
+                    value="{{ json_encode($disabledDates) }}"
                 />
 
                 <button
