@@ -5,17 +5,21 @@
 
     & .fi-fo-rich-editor-toolbar {
         @apply relative flex flex-wrap gap-x-3 gap-y-1 border-b border-gray-200 px-2.5 py-2 dark:border-white/10;
+    }
 
-        & .fi-fo-rich-editor-toolbar-group {
-            @apply flex gap-x-1;
-        }
+    & .fi-fo-rich-editor-floating-toolbar {
+        @apply invisible absolute z-[20] -mt-1 flex flex-wrap gap-x-3 gap-y-1 rounded-lg border border-gray-300 bg-white p-1 shadow dark:border-gray-600 dark:bg-gray-800;
+    }
 
-        & .fi-fo-rich-editor-tool {
-            @apply flex h-8 min-w-8 items-center justify-center rounded-lg text-sm font-semibold text-gray-700 transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+    & .fi-fo-rich-editor-toolbar-group {
+        @apply flex gap-x-1;
+    }
 
-            &.fi-active {
-                @apply text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-white/5;
-            }
+    & .fi-fo-rich-editor-tool {
+        @apply flex h-8 min-w-8 items-center justify-center rounded-lg text-sm font-semibold text-gray-700 transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+
+        &.fi-active {
+            @apply text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-white/5;
         }
     }
 
@@ -100,6 +104,39 @@
                     @apply text-gray-500;
                 }
             }
+        }
+
+        table {
+            @apply m-0 w-full table-fixed border-collapse overflow-hidden first:mt-0;
+
+            td,
+            th {
+                @apply relative min-w-[1em] border border-gray-300 !px-2 py-2 align-top dark:border-gray-600;
+
+                > * {
+                    @apply mb-0;
+                }
+            }
+
+            th {
+                @apply bg-gray-100 text-start font-bold dark:bg-gray-800 dark:text-white;
+            }
+
+            .selectedCell {
+                @apply after:pointer-events-none after:absolute after:start-0 after:end-0 after:top-0 after:bottom-0 after:z-2 after:bg-gray-200/80 after:content-[''] after:dark:bg-gray-800/80;
+            }
+
+            .column-resize-handle {
+                @apply bg-primary-600 pointer-events-none absolute end-0 top-0 bottom-0 !m-0 w-1;
+            }
+        }
+
+        .tableWrapper {
+            @apply overflow-x-auto;
+        }
+
+        &.resize-cursor {
+            @apply cursor-col-resize cursor-ew-resize;
         }
     }
 

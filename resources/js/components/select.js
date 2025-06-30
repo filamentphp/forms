@@ -2097,5 +2097,10 @@ class CustomSelect {
             clearTimeout(this.searchTimeout)
             this.searchTimeout = null
         }
+
+        // Remove the container element from the DOM
+        if (this.container) {
+            this.container.remove()
+        }
     }
 }

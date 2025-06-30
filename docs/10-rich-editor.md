@@ -57,7 +57,7 @@ RichEditor::make('content')
         ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
         ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
         ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
-        ['attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
+        ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
         ['undo', 'redo'],
     ])
 ```
@@ -72,8 +72,48 @@ Additional tools available in the toolbar include:
 - `horizontalRule` - Inserts a horizontal rule.
 - `lead` - Applies a `lead` class around the text, which is typically used for the first paragraph of an article.
 - `small` - Applies the `<small>` tag to the text, which is typically used for small print or disclaimers.
+- `table` - Creates a table in the editor with a default layout of 3 columns and 2 rows, with the first row configured as a header row.
+- `tableAddColumnBefore` - Adds a new column before the current column.
+- `tableAddColumnAfter` - Adds a new column after the current column.
+- `tableDeleteColumn` - Deletes the current column.
+- `tableAddRowBefore` - Adds a new row above the current row.
+- `tableAddRowAfter` - Adds a new row below the current row.
+- `tableDeleteRow` - Deletes the current row.
+- `tableMergeCells` - Merges the selected cells into one cell.
+- `tableSplitCell` - Splits the selected cell into multiple cells.
+- `tableToggleHeaderRow` - Toggles the header row of the table.
+- `tableDelete` - Deletes the table.
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `toolbarButtons()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+
+### Customizing floating toolbars
+
+If your toolbar is too full, you can use a floating toolbar to show certain tools in a toolbar below the cursor, only when the user is inside a specific node type. This allows you to keep the main toolbar clean while still providing access to additional tools when needed.
+
+You can customize the floating toolbars that appear when your cursor is placed inside a specific node by using the `floatingToolbars()` method.
+
+In the example below, a floating toolbar appears when the cursor is inside a paragraph node. It shows bold, italic, and similar buttons. When the cursor is in a heading node, it displays heading-related buttons, and when inside a table, it shows table-specific controls.
+
+```php
+use Filament\Forms\Components\RichEditor;
+
+RichEditor::make('content')
+    ->floatingToolbars([
+        'paragraph' => [
+            'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript',
+        ],
+        'heading' => [
+            'h1', 'h2', 'h3',
+        ],
+        'table' => [
+            'tableAddColumnBefore', 'tableAddColumnAfter', 'tableDeleteColumn',
+            'tableAddRowBefore', 'tableAddRowAfter', 'tableDeleteRow',
+            'tableMergeCells', 'tableSplitCell',
+            'tableToggleHeaderRow',
+            'tableDelete',
+        ],
+    ])
+```
 
 ## Rendering rich content
 

@@ -12,6 +12,7 @@
     $statePath = $getStatePath();
     $tools = $getTools();
     $toolbarButtons = $getToolbarButtons();
+    $floatingToolbars = $getFloatingToolbars();
 @endphp
 
 <x-dynamic-component :component="$fieldWrapperView" :field="$field">
@@ -25,7 +26,7 @@
     >
         <div
             @if (FilamentView::hasSpaMode())
-                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
+                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)" {{-- format-ignore-end --}}
             @else
                 x-load
             @endif
@@ -47,6 +48,7 @@
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')", isOptimisticallyLive: false) }},
                         statePath: @js($statePath),
                         uploadingFileMessage: @js($getUploadingFileMessage()),
+                        floatingToolbars: @js($floatingToolbars),
                     })"
             x-bind:class="{
                 'fi-fo-rich-editor-uploading-file': isUploadingFile,
@@ -56,7 +58,7 @@
         >
             @if ((! $isDisabled) && filled($toolbarButtons))
                 <div class="fi-fo-rich-editor-toolbar">
-                    @foreach ($toolbarButtons as $buttonGroup)
+                    @foreach ($toolbarButtons as $button => $buttonGroup)
                         <div class="fi-fo-rich-editor-toolbar-group">
                             @foreach ($buttonGroup as $button)
                                 {{ $tools[$button] ?? throw new Exception("Toolbar button [{$button}] cannot be found.") }}
@@ -67,10 +69,18 @@
             @endif
 
             <div class="fi-fo-rich-editor-main">
-                <div
-                    class="fi-fo-rich-editor-content fi-prose"
-                    x-ref="editor"
-                ></div>
+                <div class="fi-fo-rich-editor-content fi-prose" x-ref="editor">
+                    @foreach ($floatingToolbars as $nodeName => $buttons)
+                        <div
+                            x-ref="floatingToolbar::{{ $nodeName }}"
+                            class="fi-fo-rich-editor-floating-toolbar fi-not-prose"
+                        >
+                            @foreach ($buttons as $button)
+                                {{ $tools[$button] }}
+                            @endforeach
+                        </div>
+                    @endforeach
+                </div>
 
                 @if (! $isDisabled)
                     <div

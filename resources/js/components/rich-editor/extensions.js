@@ -22,6 +22,7 @@ import Small from './extension-small.js'
 import Strike from '@tiptap/extension-strike'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
+import { TableKit } from '@tiptap/extension-table'
 import Text from '@tiptap/extension-text'
 import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
@@ -94,6 +95,11 @@ export default async ({
     Strike,
     Subscript,
     Superscript,
+    TableKit.configure({
+        table: {
+            resizable: true,
+        },
+    }),
     Text,
     TextAlign.configure({
         types: ['heading', 'paragraph'],
