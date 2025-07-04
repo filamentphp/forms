@@ -282,6 +282,11 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
                 ->jsHandler('$getEditor()?.chain().focus().setTextAlign(\'justify\').run()')
                 ->icon('fi-o-align-justify')
                 ->iconAlias('forms:components.rich-editor.toolbar.align-justify'),
+            RichEditorTool::make('details')
+                ->label(__('filament-forms::components.rich_editor.tools.details'))
+                ->jsHandler('$getEditor()?.chain().focus().setDetails().run()')
+                ->icon('fi-o-details')
+                ->iconAlias('forms:components.rich-editor.toolbar.details'),
             RichEditorTool::make('clearFormatting')
                 ->label(__('filament-forms::components.rich_editor.tools.clear_formatting'))
                 ->jsHandler('$getEditor()?.chain().focus().clearNodes().unsetAllMarks().run()')

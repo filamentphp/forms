@@ -2,7 +2,7 @@
     use Filament\Support\Facades\FilamentView;
 
     $fieldWrapperView = $getFieldWrapperView();
-    $extraInputAttributeBag = $getExtraAttributeBag();
+    $extraAttributeBag = $getExtraAttributeBag();
     $key = $getKey();
     $statePath = $getStatePath();
 @endphp
@@ -16,7 +16,7 @@
         <x-filament::input.wrapper
             :valid="! $errors->has($statePath)"
             :attributes="
-                \Filament\Support\prepare_inherited_attributes($extraInputAttributeBag)
+                \Filament\Support\prepare_inherited_attributes($extraAttributeBag)
                     ->class(['fi-fo-markdown-editor'])
             "
         >

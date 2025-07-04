@@ -2,7 +2,7 @@
     use Filament\Support\Facades\FilamentView;
 
     $customBlocks = $getCustomBlocks();
-    $extraInputAttributeBag = $getExtraAttributeBag();
+    $extraAttributeBag = $getExtraAttributeBag();
     $fieldWrapperView = $getFieldWrapperView();
     $id = $getId();
     $isDisabled = $isDisabled();
@@ -20,7 +20,7 @@
         :valid="! $errors->has($statePath)"
         x-cloak
         :attributes="
-            \Filament\Support\prepare_inherited_attributes($extraInputAttributeBag)
+            \Filament\Support\prepare_inherited_attributes($extraAttributeBag)
                 ->class(['fi-fo-rich-editor'])
         "
     >
