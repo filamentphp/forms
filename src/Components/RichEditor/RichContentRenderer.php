@@ -17,6 +17,7 @@ use Filament\Forms\Components\RichEditor\TipTapExtensions\SmallExtension;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use League\Flysystem\UnableToCheckFileExistence;
 use Throwable;
 use Tiptap\Core\Extension;
@@ -49,6 +50,8 @@ use Tiptap\Nodes\Text;
 
 class RichContentRenderer implements Htmlable
 {
+    use Macroable;
+
     /**
      * @var string | array<string, mixed>
      */

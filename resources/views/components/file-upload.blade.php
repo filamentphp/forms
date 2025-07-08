@@ -1,8 +1,8 @@
 @php
     use Filament\Support\Enums\Alignment;
-    use Filament\Support\Facades\FilamentView;
 
     $fieldWrapperView = $getFieldWrapperView();
+    $id = $getId();
     $imageCropAspectRatio = $getImageCropAspectRatio();
     $imageResizeTargetHeight = $getImageResizeTargetHeight();
     $imageResizeTargetWidth = $getImageResizeTargetWidth();
@@ -24,14 +24,10 @@
 <x-dynamic-component
     :component="$fieldWrapperView"
     :field="$field"
-    :label-sr-only="$isLabelHidden()"
+    label-tag="div"
 >
     <div
-        @if (FilamentView::hasSpaMode())
-            {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
-        @else
-            x-load
-        @endif
+        x-load
         x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
         x-data="fileUploadFormComponent({
                     acceptedFileTypes: @js($getAcceptedFileTypes()),
@@ -124,7 +120,9 @@
         {{
             $attributes
                 ->merge([
-                    'id' => $getId(),
+                    'aria-labelledby' => "{$id}-label",
+                    'id' => $id,
+                    'role' => 'group',
                 ], escape: false)
                 ->merge($getExtraAttributes(), escape: false)
                 ->merge($getExtraAlpineAttributes(), escape: false)
@@ -141,6 +139,7 @@
                 {{
                     $getExtraInputAttributeBag()
                         ->merge([
+                            'aria-labelledby' => "{$id}-label",
                             'disabled' => $isDisabled,
                             'multiple' => $isMultiple,
                             'type' => 'file',

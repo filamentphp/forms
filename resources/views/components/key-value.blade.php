@@ -1,6 +1,4 @@
 @php
-    use Filament\Support\Facades\FilamentView;
-
     $fieldWrapperView = $getFieldWrapperView();
     $extraAttributeBag = $getExtraAttributeBag();
     $canEditKeys = $canEditKeys();
@@ -31,11 +29,7 @@
         "
     >
         <div
-            @if (FilamentView::hasSpaMode())
-                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
-            @else
-                x-load
-            @endif
+            x-load
             x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
             wire:ignore
             x-data="keyValueFormComponent({

@@ -159,7 +159,15 @@
             }
 
             & .selectedCell {
-                @apply after:pointer-events-none after:absolute after:start-0 after:end-0 after:top-0 after:bottom-0 after:z-2 after:bg-gray-200/80 after:content-[''] after:dark:bg-gray-800/80;
+                &::after {
+                    @apply pointer-events-none absolute start-0 end-0 top-0 bottom-0 z-2 bg-gray-200/80 content-[''];
+                }
+
+                @variant dark {
+                    &::after {
+                        @apply bg-gray-800/80;
+                    }
+                }
             }
 
             & .column-resize-handle {

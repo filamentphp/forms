@@ -120,7 +120,7 @@
                         x-on:expand="isCollapsed = false"
                         x-sortable-item="{{ $itemKey }}"
                         {{
-                            $item->getParentComponent()->getExtraAttributes()
+                            $item->getParentComponent()->getExtraAttributeBag()
                                 ->class(['fi-fo-builder-item'])
                         }}
                         x-bind:class="{ 'fi-collapsed': isCollapsed }"

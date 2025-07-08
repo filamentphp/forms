@@ -297,7 +297,6 @@ return [
             'redo' => 'Redo',
             'strike' => 'Strikethrough',
             'table' => 'Table',
-
             'undo' => 'Undo',
         ],
 

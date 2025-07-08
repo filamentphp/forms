@@ -483,6 +483,7 @@ return [
             'clear_formatting' => 'Limpiar formato',
             'code_block' => 'Bloque de código',
             'custom_blocks' => 'Bloques',
+            'details' => 'Detalles',
             'h1' => 'Título',
             'h2' => 'Encabezado',
             'h3' => 'Subencabezado',

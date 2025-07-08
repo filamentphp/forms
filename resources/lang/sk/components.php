@@ -482,6 +482,7 @@ return [
             'clear_formatting' => 'Vymazať formátovanie',
             'code_block' => 'Blok kódu',
             'custom_blocks' => 'Bloky',
+            'details' => 'Detaily',
             'h1' => 'Názov',
             'h2' => 'Nadpis',
             'h3' => 'Podnadpis',
