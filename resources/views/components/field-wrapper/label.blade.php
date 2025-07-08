@@ -3,9 +3,10 @@
     'prefix' => null,
     'required' => false,
     'suffix' => null,
+    'tag' => 'label',
 ])
 
-<label
+<{{ $tag }}
     {{ $attributes->class(['fi-fo-field-wrp-label inline-flex items-center gap-x-3']) }}
 >
     {{ $prefix }}
@@ -17,4 +18,4 @@
     </span>
 
     {{ $suffix }}
-</label>
+</{{ $tag }}>

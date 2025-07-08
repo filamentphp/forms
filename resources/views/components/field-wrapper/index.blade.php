@@ -19,6 +19,7 @@
     'labelPrefix' => null,
     'labelSrOnly' => null,
     'labelSuffix' => null,
+    'labelTag' => 'label',
     'required' => null,
     'statePath' => null,
 ])
@@ -58,9 +59,16 @@
     }}
 >
     @if ($label && $labelSrOnly)
-        <label for="{{ $id }}" class="sr-only">
+        <{{ $labelTag }}
+            @if ($labelTag === 'label')
+                for="{{ $id }}"
+            @else
+                id="{{ $id }}-label"
+            @endif
+            class="sr-only"
+        >
             {{ $label }}
-        </label>
+        </{{ $labelTag }}>
     @endif
 
     <div
@@ -85,7 +93,9 @@
             >
                 @if ($label && (! $labelSrOnly))
                     <x-filament-forms::field-wrapper.label
-                        :for="$id"
+                        :for="($labelTag === 'label') ? $id : null"
+                        :id="($labelTag === 'label') ? null : ($id . '-label')"
+                        :tag="$labelTag"
                         :disabled="$isDisabled"
                         :prefix="$labelPrefix"
                         :required="$required"
