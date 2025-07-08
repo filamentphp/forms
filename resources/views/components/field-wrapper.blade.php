@@ -19,13 +19,12 @@
     'labelSuffix' => null,
     'labelTag' => 'label',
     'required' => null,
+    'shouldShowAllValidationMessages' => null,
     'statePath' => null,
 ])
 
 @php
     use Illuminate\Support\Arr;
-
-    $shouldShowAllValidationMessages = false;
 
     if ($field) {
         $hasInlineLabel ??= $field->hasInlineLabel();
@@ -37,7 +36,7 @@
         $required ??= $field->isMarkedAsRequired();
         $statePath ??= $field->getStatePath();
         $areHtmlErrorMessagesAllowed ??= $field->areHtmlValidationMessagesAllowed();
-        $shouldShowAllValidationMessages = $field->shouldShowAllValidationMessages();
+        $shouldShowAllValidationMessages ??= $field->shouldShowAllValidationMessages();
     }
 
     $aboveLabelSchema = $field?->getChildSchema($field::ABOVE_LABEL_SCHEMA_KEY)?->toHtmlString();
