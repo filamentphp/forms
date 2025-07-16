@@ -131,7 +131,7 @@ The field value must be different to another. [See the Laravel documentation.](h
 Field::make('backup_email')->different('email')
 ```
 
-### Doesnt Start With
+### Doesn't Start With
 
 The field must not start with one of the given values. [See the Laravel documentation.](https://laravel.com/docs/validation#rule-doesnt-start-with)
 
@@ -139,7 +139,7 @@ The field must not start with one of the given values. [See the Laravel document
 Field::make('name')->doesntStartWith(['admin'])
 ```
 
-### Doesnt End With
+### Doesn't End With
 
 The field must not end with one of the given values. [See the Laravel documentation.](https://laravel.com/docs/validation#rule-doesnt-end-with)
 

@@ -85,6 +85,7 @@
                 wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.{{
                     substr(md5(serialize([
                         'disabledDates' => $disabledDates,
+                        'isDisabled' => $isDisabled,
                         'maxDate' => $maxDate,
                         'minDate' => $minDate,
                     ])), 0, 64)

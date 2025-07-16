@@ -422,10 +422,6 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             return null;
         }
 
-        if (blank($this->getState())) {
-            return null;
-        }
-
         if (! $this->hasEditOptionActionFormSchema()) {
             return null;
         }
@@ -454,7 +450,8 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             ->icon(FilamentIcon::resolve('forms::components.select.actions.edit-option') ?? 'heroicon-m-pencil-square')
             ->iconButton()
             ->modalHeading($this->getEditOptionModalHeading() ?? __('filament-forms::components.select.actions.edit_option.modal.heading'))
-            ->modalSubmitActionLabel(__('filament-forms::components.select.actions.edit_option.modal.actions.save.label'));
+            ->modalSubmitActionLabel(__('filament-forms::components.select.actions.edit_option.modal.actions.save.label'))
+            ->visible(fn (): bool => filled($this->getState()));
 
         if ($this->modifyManageOptionActionsUsing) {
             $action = $this->evaluate($this->modifyManageOptionActionsUsing, [
@@ -472,9 +469,9 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @return array<string, mixed>
+     * @return ?array<string, mixed>
      */
-    public function getEditOptionActionFormData(): array
+    public function getEditOptionActionFormData(): ?array
     {
         return $this->evaluate($this->fillEditOptionActionFormUsing);
     }
