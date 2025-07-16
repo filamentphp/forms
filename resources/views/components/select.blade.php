@@ -24,6 +24,7 @@
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
     $state = $getState();
+    $livewireKey = $getLivewireKey();
 @endphp
 
 <x-dynamic-component
@@ -177,6 +178,11 @@
                             statePath: @js($statePath),
                         })"
                 wire:ignore
+                wire:key="{{ $livewireKey }}.{{
+                    substr(md5(serialize([
+                        $isDisabled,
+                    ])), 0, 64)
+                }}"
                 x-on:keydown.esc="select.dropdown.isActive && $event.stopPropagation()"
                 x-on:set-select-property="$event.detail.isDisabled ? select.disable() : select.enable()"
                 {{

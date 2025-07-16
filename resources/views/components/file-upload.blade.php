@@ -13,6 +13,7 @@
     $isDisabled = $isDisabled();
     $hasImageEditor = $hasImageEditor();
     $hasCircleCropper = $hasCircleCropper();
+    $livewireKey = $getLivewireKey();
 
     $alignment = $getAlignment() ?? Alignment::Start;
 
@@ -117,6 +118,11 @@
                     },
                 })"
         wire:ignore
+        wire:key="{{ $livewireKey }}.{{
+            substr(md5(serialize([
+                $isDisabled,
+            ])), 0, 64)
+        }}"
         {{
             $attributes
                 ->merge([

@@ -94,9 +94,11 @@
                 wire:ignore
                 wire:key="{{ $livewireKey }}.{{
                     substr(md5(serialize([
-                        'disabledDates' => $disabledDates,
-                        'maxDate' => $maxDate,
-                        'minDate' => $minDate,
+                        $disabledDates,
+                        $isDisabled,
+                        $isReadOnly,
+                        $maxDate,
+                        $minDate,
                     ])), 0, 64)
                 }}"
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"

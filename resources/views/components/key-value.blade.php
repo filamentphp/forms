@@ -12,6 +12,7 @@
     $isDisabled = $isDisabled();
     $isReorderable = $isReorderable();
     $statePath = $getStatePath();
+    $livewireKey = $getLivewireKey();
 @endphp
 
 <x-dynamic-component
@@ -31,10 +32,15 @@
         <div
             x-load
             x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
-            wire:ignore
             x-data="keyValueFormComponent({
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                     })"
+            wire:ignore
+            wire:key="{{ $livewireKey }}.{{
+                substr(md5(serialize([
+                    $isDisabled,
+                ])), 0, 64)
+            }}"
             {{
                 $attributes
                     ->merge($getExtraAlpineAttributes(), escape: false)

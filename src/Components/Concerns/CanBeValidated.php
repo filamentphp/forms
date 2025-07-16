@@ -319,7 +319,7 @@ trait CanBeValidated
             }
 
             if (is_string($values)) {
-                $values = array_map('trim', explode(',', $values));
+                $values = array_map(trim(...), explode(',', $values));
             }
 
             return Rule::notIn($values);
@@ -822,7 +822,7 @@ trait CanBeValidated
         }
 
         if (is_string($values)) {
-            $values = array_map('trim', explode(',', $values));
+            $values = array_map(trim(...), explode(',', $values));
         }
 
         return $values;

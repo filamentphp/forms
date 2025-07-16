@@ -5,6 +5,7 @@
     $key = $getKey();
     $language = $getLanguage();
     $statePath = $getStatePath();
+    $livewireKey = $getLivewireKey();
 @endphp
 
 <x-dynamic-component :component="$fieldWrapperView" :field="$field">
@@ -25,6 +26,12 @@
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                     })"
             wire:ignore
+            wire:key="{{ $livewireKey }}.{{
+                substr(md5(serialize([
+                    $isDisabled,
+                    $language?->value,
+                ])), 0, 64)
+            }}"
             {{ $getExtraAlpineAttributeBag() }}
         >
             <div x-ref="editor" x-cloak></div>

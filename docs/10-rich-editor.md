@@ -74,6 +74,7 @@ Additional tools available in the toolbar include:
 - `horizontalRule` - Inserts a horizontal rule.
 - `lead` - Applies a `lead` class around the text, which is typically used for the first paragraph of an article.
 - `small` - Applies the `<small>` tag to the text, which is typically used for small print or disclaimers.
+- `code` - Format the selected text as inline code.
 - `table` - Creates a table in the editor with a default layout of 3 columns and 2 rows, with the first row configured as a header row.
 - `tableAddColumnBefore` - Adds a new column before the current column.
 - `tableAddColumnAfter` - Adds a new column after the current column.
@@ -232,6 +233,12 @@ RichEditor::make('content')
     ])
 ```
 
+To create a custom block, you can use the following command:
+
+```bash
+php artisan make:filament-rich-content-custom-block HeroBlock
+```
+
 Each block needs a corresponding class that extends the `Filament\Forms\Components\RichEditor\RichContentCustomBlock` class. The `getId()` method should return a unique identifier for the block, and the `getLabel()` method should return the label that will be displayed in the editor's side panel:
 
 ```php
@@ -292,7 +299,7 @@ class HeroBlock extends RichContentCustomBlock
      */
     public static function toPreviewHtml(array $config): string
     {
-        return view('blocks.previews.hero', [
+        return view('filament.forms.components.rich-editor.rich-content-custom-blocks.hero.preview', [
             'heading' => $config['heading'],
             'subheading' => $config['subheading'] ?? 'Default subheading',
         ])->render();
@@ -349,7 +356,7 @@ class HeroBlock extends RichContentCustomBlock
      */
     public static function toHtml(array $config, array $data): string
     {
-        return view('blocks.hero', [
+        return view('filament.forms.components.rich-editor.rich-content-custom-blocks.hero.index', [
             'heading' => $config['heading'],
             'subheading' => $config['subheading'],
             'buttonLabel' => 'View category',
