@@ -28,7 +28,7 @@
     }
 
     & .fi-fo-rich-editor-content {
-        @apply min-h-full w-full flex-1 px-5 py-3;
+        @apply min-h-12 w-full flex-1 px-5 py-3;
     }
 
     & span[data-type='mergeTag'] {

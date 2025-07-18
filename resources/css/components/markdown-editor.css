@@ -202,7 +202,7 @@
     }
 
     & .EasyMDEContainer .editor-toolbar button {
-        @apply grid h-8 w-8 place-content-center rounded-lg border-none p-0 transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+        @apply grid size-8 place-content-center rounded-lg border-none p-0 transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
     }
 
     & .EasyMDEContainer .editor-toolbar button.active {
@@ -210,7 +210,7 @@
     }
 
     & .EasyMDEContainer .editor-toolbar button::before {
-        @apply block h-5 w-5 bg-gray-700;
+        @apply block size-5 bg-gray-700;
         content: '';
         mask-position: center;
         mask-repeat: no-repeat;

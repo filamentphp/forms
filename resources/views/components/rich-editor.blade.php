@@ -83,10 +83,12 @@
                 @if (! $isDisabled)
                     <div
                         x-show="isPanelActive()"
+                        x-cloak
                         class="fi-fo-rich-editor-panels"
                     >
                         <div
                             x-show="isPanelActive('customBlocks')"
+                            x-cloak
                             class="fi-fo-rich-editor-panel"
                         >
                             <div class="fi-fo-rich-editor-panel-header">
@@ -145,6 +147,7 @@
 
                         <div
                             x-show="isPanelActive('mergeTags')"
+                            x-cloak
                             class="fi-fo-rich-editor-panel"
                         >
                             <div class="fi-fo-rich-editor-panel-header">
