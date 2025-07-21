@@ -18,6 +18,7 @@ use Znck\Eloquent\Relations\BelongsToThrough;
 
 class TableSelect extends Field
 {
+    use Concerns\CanLimitItemsLength;
     use Concerns\HasPivotData;
 
     /**

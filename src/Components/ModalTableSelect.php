@@ -25,6 +25,7 @@ use Znck\Eloquent\Relations\BelongsToThrough;
 
 class ModalTableSelect extends Field
 {
+    use Concerns\CanLimitItemsLength;
     use Concerns\HasPivotData;
     use Concerns\HasPlaceholder;
 
@@ -127,7 +128,8 @@ class ModalTableSelect extends Field
             ->hiddenLabel()
             ->tableConfiguration($this->getTableConfiguration())
             ->relationshipName($this->getRelationshipName())
-            ->multiple();
+            ->multiple()
+            ->maxItems($this->getMaxItems());
 
         if ($this->modifyTableSelectUsing) {
             $select = $this->evaluate(

@@ -18,6 +18,7 @@
     >
         @livewire(TableSelectLivewireComponent::class, [
             'isDisabled' => $isDisabled(),
+            'maxSelectableRecords' => $getMaxItems(),
             'model' => $getModel(),
             'record' => $getRecord(),
             'relationshipName' => $getRelationshipName(),

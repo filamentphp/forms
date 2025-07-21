@@ -31,6 +31,9 @@ class TableSelectLivewireComponent extends Component implements HasActions, HasF
     public bool $isDisabled = false;
 
     #[Locked]
+    public ?int $maxSelectableRecords = null;
+
+    #[Locked]
     public ?string $model = null;
 
     #[Locked]
@@ -70,7 +73,7 @@ class TableSelectLivewireComponent extends Component implements HasActions, HasF
             ->selectable()
             ->trackDeselectedRecords(false)
             ->currentSelectionLivewireProperty('state')
-            ->multipleRecordsSelectable(is_array($this->state))
+            ->maxSelectableRecords(is_array($this->state) ? $this->maxSelectableRecords : 1)
             ->deselectAllRecordsWhenFiltered(false)
             ->disabledSelection($this->isDisabled);
 

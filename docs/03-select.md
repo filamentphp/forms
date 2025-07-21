@@ -616,6 +616,19 @@ Select::make('technology')
 
 <UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `allowHtml()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
+## Wrap or truncate option labels
+
+When using the JavaScript select, labels that exceed the width of the select element will wrap onto multiple lines by default. Alternatively, you may choose to truncate overflowing labels.
+
+```php
+use Filament\Forms\Components\Select;
+
+Select::make('truncate')
+    ->wrapOptionLabels(false)
+```
+
+<UtilityInjection set="formFields" version="4.x">As well as allowing a static value, the `wrapOptionLabels()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+
 ## Disable placeholder selection
 
 You can prevent the placeholder (null option) from being selected using the `selectablePlaceholder(false)` method:

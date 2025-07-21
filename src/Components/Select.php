@@ -125,6 +125,8 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
     protected bool | Closure | null $isSearchForcedCaseInsensitive = null;
 
+    protected bool | Closure $canOptionLabelsWrap = true;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -1351,6 +1353,18 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     public function isSearchForcedCaseInsensitive(): ?bool
     {
         return $this->evaluate($this->isSearchForcedCaseInsensitive);
+    }
+
+    public function wrapOptionLabels(bool | Closure $condition = true): static
+    {
+        $this->canOptionLabelsWrap = $condition;
+
+        return $this;
+    }
+
+    public function canOptionLabelsWrap(): bool
+    {
+        return (bool) $this->evaluate($this->canOptionLabelsWrap);
     }
 
     public function hydrateDefaultState(?array &$hydratedDefaultState): void
