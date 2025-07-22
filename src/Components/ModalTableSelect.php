@@ -75,7 +75,7 @@ class ModalTableSelect extends Field
         });
 
         $this->registerActions([
-            fn (ModalTableSelect $component): Action => $this->getSelectAction(),
+            fn (ModalTableSelect $component): Action => $component->getSelectAction(),
         ]);
     }
 
