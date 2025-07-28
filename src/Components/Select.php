@@ -277,7 +277,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
         $action = Action::make($this->getCreateOptionActionName())
             ->label(__('filament-forms::components.select.actions.create_option.label'))
-            ->form(function (Select $component, Form $form): array | Form | null {
+            ->form(static function (Select $component, Form $form): array | Form | null {
                 return $component->getCreateOptionActionForm($form->model(
                     $component->getRelationship() ? $component->getRelationship()->getModel()::class : null,
                 ));
@@ -428,12 +428,12 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
         $action = Action::make($this->getEditOptionActionName())
             ->label(__('filament-forms::components.select.actions.edit_option.label'))
-            ->form(function (Select $component, Form $form): array | Form | null {
+            ->form(static function (Select $component, Form $form): array | Form | null {
                 return $component->getEditOptionActionForm(
                     $form->model($component->getSelectedRecord()),
                 );
             })
-            ->fillForm($this->getEditOptionActionFormData())
+            ->fillForm(static fn (Select $component) => $component->getEditOptionActionFormData())
             ->action(static function (Action $action, array $arguments, Select $component, array $data, ComponentContainer $form) {
                 if (! $component->getUpdateOptionUsing()) {
                     throw new Exception("Select field [{$component->getStatePath()}] must have a [updateOptionUsing()] closure set.");

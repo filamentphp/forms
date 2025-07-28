@@ -49,6 +49,8 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
 
     protected CarbonInterface | string | Closure | null $minDate = null;
 
+    protected CarbonInterface | string | Closure | null $defaultFocusedDate = null;
+
     protected string | Closure | null $timezone = null;
 
     protected string | Closure | null $locale = null;
@@ -212,6 +214,13 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
         $this->rule(static function (DateTimePicker $component) {
             return "after_or_equal:{$component->getMinDate()}";
         }, static fn (DateTimePicker $component): bool => (bool) $component->getMinDate());
+
+        return $this;
+    }
+
+    public function defaultFocusedDate(CarbonInterface | string | Closure | null $date): static
+    {
+        $this->defaultFocusedDate = $date;
 
         return $this;
     }
@@ -418,6 +427,11 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
     public function getMinDate(): ?string
     {
         return $this->evaluate($this->minDate);
+    }
+
+    public function getDefaultFocusedDate(): ?string
+    {
+        return $this->evaluate($this->defaultFocusedDate);
     }
 
     /**
