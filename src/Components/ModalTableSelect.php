@@ -56,6 +56,11 @@ class ModalTableSelect extends Field
 
     protected ?Closure $modifySelectActionUsing = null;
 
+    /**
+     * @var array<mixed> | Closure
+     */
+    protected array | Closure $tableArguments = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -89,6 +94,16 @@ class ModalTableSelect extends Field
     public function selectAction(?Closure $callback): static
     {
         $this->modifySelectActionUsing = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  array<mixed> | Closure  $arguments
+     */
+    public function tableArguments(array | Closure $arguments): static
+    {
+        $this->tableArguments = $arguments;
 
         return $this;
     }
@@ -129,7 +144,8 @@ class ModalTableSelect extends Field
             ->tableConfiguration($this->getTableConfiguration())
             ->relationshipName($this->getRelationshipName())
             ->multiple()
-            ->maxItems($this->getMaxItems());
+            ->maxItems($this->getMaxItems())
+            ->tableArguments($this->getTableArguments());
 
         if ($this->modifyTableSelectUsing) {
             $select = $this->evaluate(
@@ -649,5 +665,13 @@ class ModalTableSelect extends Field
     public function getTableConfiguration(): string
     {
         return $this->evaluate($this->tableConfiguration) ?? throw new Exception('The [tableConfiguration()] method must be set when using a [TableSelect] component.');
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getTableArguments(): array
+    {
+        return $this->evaluate($this->tableArguments) ?? [];
     }
 }

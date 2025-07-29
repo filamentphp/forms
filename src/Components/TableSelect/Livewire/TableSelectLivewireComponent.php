@@ -46,6 +46,12 @@ class TableSelectLivewireComponent extends Component implements HasActions, HasF
     public string $tableConfiguration;
 
     /**
+     * @var array<mixed>
+     */
+    #[Locked]
+    public array $tableArguments = [];
+
+    /**
      * @var string | array<string> | null
      */
     #[Modelable]
@@ -75,7 +81,8 @@ class TableSelectLivewireComponent extends Component implements HasActions, HasF
             ->currentSelectionLivewireProperty('state')
             ->maxSelectableRecords(is_array($this->state) ? $this->maxSelectableRecords : 1)
             ->deselectAllRecordsWhenFiltered(false)
-            ->disabledSelection($this->isDisabled);
+            ->disabledSelection($this->isDisabled)
+            ->arguments($this->getTableArguments());
 
         if (filled($this->relationshipName)) {
             $table->query(function (): Builder {
@@ -100,6 +107,14 @@ class TableSelectLivewireComponent extends Component implements HasActions, HasF
         }
 
         return $table;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getTableArguments(): array
+    {
+        return $this->tableArguments;
     }
 
     public function render(): string
