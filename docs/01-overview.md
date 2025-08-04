@@ -299,6 +299,10 @@ Toggle::make('is_admin')
 
 Although the code passed to `hiddenJs()` looks very similar to PHP, it is actually JavaScript. Filament provides the `$get()` utility function to JavaScript that behaves very similar to its PHP equivalent, but without requiring the depended-on field to be `live()`.
 
+<Aside variant="danger">
+    Any JS string passed to the `hiddenJs()` method will be executed in the browser, so you should never add user input directly into the string, as it could lead to cross-site scripting (XSS) vulnerabilities. User input from `$state` or `$get()` should never be evaluated as JavaScript code, but is safe to use as a string value, like in the example above.
+</Aside>
+
 The `visibleJs()` method is also available, which works in the same way as `hiddenJs()`, but controls if the field should be visible or not:
 
 ```php
@@ -316,6 +320,10 @@ Toggle::make('is_admin')
         $get('role') === 'staff'
         JS)
 ```
+
+<Aside variant="danger">
+    Any JS string passed to the `visibleJs()` method will be executed in the browser, so you should never add user input directly into the string, as it could lead to cross-site scripting (XSS) vulnerabilities. User input from `$state` or `$get()` should never be evaluated as JavaScript code, but is safe to use as a string value, like in the example above.
+</Aside>
 
 <Aside variant="info">
     If both `hiddenJs()` and `visibleJs()` are used, they both need to indicate that the field should be visible for it to be shown.
@@ -1336,6 +1344,10 @@ TextInput::make('name')
 TextInput::make('email')
     ->label('Email address')
 ```
+
+<Aside variant="danger">
+    Any JS string passed to the `afterStateUpdatedJs()` method will be executed in the browser, so you should never add user input directly into the string, as it could lead to cross-site scripting (XSS) vulnerabilities. User input from `$state` or `$get()` should never be evaluated as JavaScript code, but is safe to use as a string value, like in the example above.
+</Aside>
 
 ## Reactive forms cookbook
 

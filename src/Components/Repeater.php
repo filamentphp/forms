@@ -1019,14 +1019,10 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
         $state = $this->getRawState();
         $items = $this->hydratedDefaultState;
 
-        $simpleFieldName = $this->getSimpleField()?->getName();
-
         foreach ($items as $itemKey => $itemData) {
-            $items[$itemKey] = blank($simpleFieldName) ? [
+            $items[$itemKey] = [
                 ...$state[$itemKey] ?? [],
                 ...$itemData,
-            ] : [
-                $simpleFieldName => $itemData,
             ];
         }
 

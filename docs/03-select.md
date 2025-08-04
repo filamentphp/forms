@@ -582,6 +582,64 @@ MorphToSelect::make('commentable')
     Many of the same options in the select field are available for `MorphToSelect`, including `searchable()`, `preload()`, `native()`, `allowHtml()`, and `optionsLimit()`.
 </Aside>
 
+#### Customizing the morph select fields
+
+You may further customize the "key" select field for a specific morph type using the `modifyKeySelectUsing()` method:
+
+```php
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+
+MorphToSelect::make('commentable')
+    ->types([
+        MorphToSelect\Type::make(Product::class)
+            ->titleAttribute('name')
+            ->modifyKeySelectUsing(fn (Select $select): Select => $select
+                ->createOptionForm([
+                    TextInput::make('title')
+                        ->required(),
+                ])
+                ->createOptionUsing(function (array $data): int {
+                    return Product::create($data)->getKey();
+                })),
+        MorphToSelect\Type::make(Post::class)
+            ->titleAttribute('title'),
+    ])
+```
+
+This is useful if you want to customize the "key" select field for each morphed type individually. If you want to customize the key select for all types, you can use the `modifyKeySelectUsing()` method on the `MorphToSelect` component itself:
+
+```php
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\Select;
+
+MorphToSelect::make('commentable')
+    ->types([
+        MorphToSelect\Type::make(Product::class)
+            ->titleAttribute('name'),
+        MorphToSelect\Type::make(Post::class)
+            ->titleAttribute('title'),
+    ])
+    ->modifyKeySelectUsing(fn (Select $select): Select => $select->native())
+```
+
+You can also modify the "type" select field using the `modifyTypeSelectUsing()` method:
+
+```php
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\Select;
+
+MorphToSelect::make('commentable')
+    ->types([
+        MorphToSelect\Type::make(Product::class)
+            ->titleAttribute('name'),
+        MorphToSelect\Type::make(Post::class)
+            ->titleAttribute('title'),
+    ])
+    ->modifyTypeSelectUsing(fn (Select $select): Select => $select->native())
+```
+
 ## Allowing HTML in the option labels
 
 By default, Filament will escape any HTML in the option labels. If you'd like to allow HTML, you can use the `allowHtml()` method:
