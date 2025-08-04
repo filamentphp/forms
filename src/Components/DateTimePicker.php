@@ -431,7 +431,25 @@ class DateTimePicker extends Field implements Contracts\HasAffixActions
 
     public function getDefaultFocusedDate(): ?string
     {
-        return $this->evaluate($this->defaultFocusedDate);
+        $defaultFocusedDate = $this->evaluate($this->defaultFocusedDate);
+
+        if (filled($defaultFocusedDate)) {
+            if (! $defaultFocusedDate instanceof CarbonInterface) {
+                try {
+                    $defaultFocusedDate = Carbon::createFromFormat($this->getFormat(), (string) $defaultFocusedDate, config('app.timezone'));
+                } catch (InvalidFormatException $exception) {
+                    try {
+                        $defaultFocusedDate = Carbon::parse($defaultFocusedDate, config('app.timezone'));
+                    } catch (InvalidFormatException $exception) {
+                        return null;
+                    }
+                }
+            }
+
+            $defaultFocusedDate = $defaultFocusedDate->setTimezone($this->getTimezone());
+        }
+
+        return $defaultFocusedDate;
     }
 
     /**
