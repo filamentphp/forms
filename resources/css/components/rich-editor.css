@@ -86,8 +86,8 @@
             @apply outline-none;
 
             & .ProseMirror-selectednode {
-                &div[data-type='customBlock'],
-                &img {
+                div&[data-type='customBlock'],
+                img& {
                     @apply ring-primary-600 dark:ring-primary-500 ring-2;
                 }
             }
