@@ -594,6 +594,11 @@ return [
 
         'actions' => [
 
+            'copy' => [
+                'label' => 'Kopírovat',
+                'message' => 'Zkopírováno',
+            ],
+
             'hide_password' => [
                 'label' => 'Skrýt heslo',
             ],
