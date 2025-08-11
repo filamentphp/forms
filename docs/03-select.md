@@ -957,7 +957,7 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Table;
 
-class EmployeesTable
+class ProductsTable
 {
     public static function configure(Table $table): Table
     {
