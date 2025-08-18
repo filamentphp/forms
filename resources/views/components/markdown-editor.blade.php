@@ -23,8 +23,7 @@
                 aria-labelledby="{{ $id }}-label"
                 id="{{ $id }}"
                 role="group"
-                {{-- prettier-ignore-start --}}x-load="visible || event (x-modal-opened)"
-                {{-- prettier-ignore-end --}}
+                x-load
                 x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('markdown-editor', 'filament/forms') }}"
                 x-data="markdownEditorFormComponent({
                             canAttachFiles: @js($hasToolbarButton('attachFiles')),
