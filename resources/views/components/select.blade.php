@@ -153,6 +153,11 @@
                             statePath: @js($statePath),
                         })"
                 wire:ignore
+                wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.{{
+                    substr(md5(serialize([
+                        $isDisabled,
+                    ])), 0, 64)
+                }}"
                 x-on:keydown.esc="select.dropdown.isActive && $event.stopPropagation()"
                 x-on:set-select-property="$event.detail.isDisabled ? select.disable() : select.enable()"
                 {{

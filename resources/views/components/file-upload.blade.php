@@ -104,6 +104,11 @@
                     },
                 })"
         wire:ignore
+        wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.{{
+            substr(md5(serialize([
+                $isDisabled,
+            ])), 0, 64)
+        }}"
         {{
             $attributes
                 ->merge([

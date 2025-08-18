@@ -39,7 +39,6 @@
                 x-load
             @endif
             x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
-            wire:ignore
             x-data="keyValueFormComponent({
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                     })"
@@ -48,6 +47,12 @@
                     ->merge($getExtraAlpineAttributes(), escape: false)
                     ->class(['divide-y divide-gray-200 dark:divide-white/10'])
             }}
+            wire:ignore
+            wire:key="{{ $this->getId() }}.{{ $statePath }}.{{ $field::class }}.{{
+                substr(md5(serialize([
+                    $isDisabled,
+                ])), 0, 64)
+            }}"
         >
             <table
                 class="w-full table-auto divide-y divide-gray-200 dark:divide-white/5"
