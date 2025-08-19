@@ -523,20 +523,20 @@ return [
 
             'create_option' => [
 
-                'label' => 'Create',
+                'label' => 'Siamna',
 
                 'modal' => [
 
-                    'heading' => 'Create',
+                    'heading' => 'Siamna',
 
                     'actions' => [
 
                         'create' => [
-                            'label' => 'Create',
+                            'label' => 'Siamna',
                         ],
 
                         'create_another' => [
-                            'label' => 'Create & create another',
+                            'label' => 'Pakhat siama adang siam lehna',
                         ],
 
                     ],
@@ -578,7 +578,7 @@ return [
 
         'no_search_results_message' => 'I thilzawn hi a awmlo.',
 
-        'placeholder' => 'Select an option',
+        'placeholder' => 'Option thlang rawh',
 
         'searching_message' => 'Searching...',
 
