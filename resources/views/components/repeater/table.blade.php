@@ -1,6 +1,8 @@
 @php
     use Filament\Actions\Action;
+    use Filament\Actions\ActionGroup;
     use Filament\Support\Enums\Alignment;
+    use Illuminate\Support\Js;
     use Illuminate\View\ComponentAttributeBag;
 
     $fieldWrapperView = $getFieldWrapperView();
@@ -98,6 +100,7 @@
                                 $moveUpAction = $moveUpAction(['item' => $itemKey])->disabled($loop->first);
                                 $moveUpActionIsVisible = $isReorderableWithButtons && $moveUpAction->isVisible();
                                 $reorderActionIsVisible = $isReorderableWithDragAndDrop && $reorderAction->isVisible();
+                                $itemStatePath = $item->getStatePath();
                             @endphp
 
                             <tr
@@ -137,25 +140,44 @@
                                     $counter = 0
                                 @endphp
 
-                                @foreach ($item->getComponents(withHidden: true) as $component)
+                                @foreach ($item->getComponents(withHidden: true) as $schemaComponent)
                                     @php
                                         throw_unless(
-                                            $component instanceof \Filament\Forms\Components\Field || $component instanceof \Filament\Infolists\Components\Entry,
-                                            new \Exception('Table repeaters must only contain form fields and infolist entries, but [' . $component::class . '] was used.'),
+                                            $schemaComponent instanceof \Filament\Schemas\Components\Component,
+                                            new \Exception('Table repeaters must only contain schema components, but [' . $schemaComponent::class . '] was used.'),
                                         );
                                     @endphp
 
                                     @if (count($tableColumns) > $counter)
-                                        @if ($component instanceof \Filament\Forms\Components\Hidden)
-                                            {{ $component }}
+                                        @if ($schemaComponent instanceof \Filament\Forms\Components\Hidden)
+                                            {{ $schemaComponent }}
                                         @else
                                             @php
                                                 $counter++
                                             @endphp
 
-                                            @if ($component->isVisible())
-                                                <td>
-                                                    {{ $component }}
+                                            @if ($schemaComponent->isVisible())
+                                                <td
+                                                    @if (! (($schemaComponent instanceof Action) || ($schemaComponent instanceof ActionGroup)))
+                                                        @php
+                                                            $schemaComponentStatePath = $schemaComponent->getStatePath();
+                                                        @endphp
+
+                                                        x-data="filamentSchemaComponent({
+                                                            path: @js($schemaComponentStatePath),
+                                                            containerPath: @js($itemStatePath),
+                                                            isLive: @js($schemaComponent->isLive()),
+                                                            $wire,
+                                                        })"
+                                                        @if ($afterStateUpdatedJs = $schemaComponent->getAfterStateUpdatedJs())
+                                                            x-init="{{ implode(';', array_map(
+                                                                fn (string $js): string => '$wire.watch(' . Js::from($schemaComponentStatePath) . ', ($state, $old) => ($state !== undefined) && eval(' . Js::from($js) . '))',
+                                                                $afterStateUpdatedJs,
+                                                            )) }}"
+                                                        @endif
+                                                    @endif
+                                                >
+                                                    {{ $schemaComponent }}
                                                 </td>
                                             @else
                                                 <td class="fi-hidden"></td>

@@ -300,8 +300,13 @@ class ModalTableSelect extends Field
                 $relatedRecords = $relationship->getResults();
 
                 $component->state(
+                    // Cast the related keys to a string, otherwise JavaScript does not
+                    // know how to handle deselection.
+                    //
+                    // https://github.com/filamentphp/filament/issues/1111
                     $relatedRecords
                         ->pluck($relationship->getLocalKeyName())
+                        ->map(static fn ($key): string => strval($key))
                         ->all(),
                 );
 
