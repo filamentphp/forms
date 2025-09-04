@@ -67,6 +67,18 @@
             @endif
 
             <div
+                x-show="isUploadingFile"
+                x-cloak
+                class="fi-fo-rich-editor-uploading-file-message"
+            >
+                {{ \Filament\Support\generate_loading_indicator_html() }}
+
+                <span>
+                    {{ __('filament-forms::components.rich_editor.messages.uploading_file') }}
+                </span>
+            </div>
+
+            <div
                 {{ $getExtraInputAttributeBag()->class(['fi-fo-rich-editor-main']) }}
             >
                 <div class="fi-fo-rich-editor-content fi-prose" x-ref="editor">

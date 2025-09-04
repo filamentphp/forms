@@ -81,7 +81,7 @@
                         ->grid($getGridColumns())
                         ->merge([
                             'data-sortable-animation-duration' => $getReorderAnimationDuration(),
-                            'x-on:end.stop' => '$event.oldIndex !== $event.newIndex && $wire.mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })',
+                            'x-on:end.stop' => '$event.oldDraggableIndex !== $event.newDraggableIndex && $wire.mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })',
                         ], escape: false)
                         ->class(['fi-fo-repeater-items'])
                 }}
@@ -129,11 +129,8 @@
                                         class="fi-fo-repeater-item-header-start-actions"
                                     >
                                         @if ($reorderActionIsVisible)
-                                            <li
-                                                x-sortable-handle
-                                                x-on:click.stop
-                                            >
-                                                {{ $reorderAction }}
+                                            <li x-on:click.stop>
+                                                {{ $reorderAction->extraAttributes(['x-sortable-handle' => true], merge: true) }}
                                             </li>
                                         @endif
 

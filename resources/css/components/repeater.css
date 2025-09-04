@@ -92,7 +92,7 @@
     }
 
     & .fi-fo-repeater-label-between-items {
-        @apply absolute -top-3 left-3 px-1 text-sm font-medium;
+        @apply absolute start-3 -top-2.5 px-1 text-sm font-medium;
     }
 
     & .fi-fo-repeater-add {
