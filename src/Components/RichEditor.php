@@ -502,7 +502,7 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
 
     public function getUploadingFileMessage(): string
     {
-        return $this->evaluate($this->uploadingFileMessage) ?? __('filament::components/button.messages.uploading_file');
+        return $this->evaluate($this->uploadingFileMessage) ?? __('filament-forms::components.rich_editor.uploading_file_message');
     }
 
     public function json(bool | Closure | null $condition = true): static

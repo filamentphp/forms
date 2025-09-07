@@ -360,6 +360,21 @@ class RichContentRenderer implements Htmlable
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        if (empty($this->content)) {
+            return [];
+        }
+
+        $editor = $this->getEditor();
+        $this->processMergeTags($editor);
+
+        return json_decode($editor->getJSON(), true);
+    }
+
+    /**
      * @param  ?array<string, mixed>  $tags
      */
     public function mergeTags(?array $tags): static
