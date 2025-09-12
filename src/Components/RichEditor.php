@@ -905,4 +905,20 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
             }
         };
     }
+
+    public function callAfterStateUpdated(bool $shouldBubbleToParents = true): static
+    {
+        $rawState = $this->getRawState();
+
+        // https://github.com/filamentphp/filament/issues/17472
+        if (! is_array($rawState)) {
+            foreach ($this->getStateCasts() as $stateCast) {
+                $rawState = $stateCast->set($rawState);
+            }
+
+            $this->rawState($rawState);
+        }
+
+        return parent::callAfterStateUpdated($shouldBubbleToParents);
+    }
 }
