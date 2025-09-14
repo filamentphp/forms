@@ -603,6 +603,13 @@ class RichEditor extends Field implements Contracts\CanBeLengthConstrained
 
     public function getContentAttribute(): ?RichContentAttribute
     {
+        // Do not read content attributes from the model when the rich editor is nested
+        // inside a custom block action modal, since the content attribute should only
+        // be used to configure the parent rich editor.
+        if ($this->getRootContainer()->getOperation() === CustomBlockAction::NAME) {
+            return null;
+        }
+
         $model = $this->getModelInstance();
 
         if (! ($model instanceof HasRichContent)) {

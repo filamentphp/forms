@@ -1163,7 +1163,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
             'item' => $container,
             'key' => $key,
             'schema' => $container,
-            'state' => $container->getRawState(),
+            'state' => $container->getStateSnapshot(),
             'uuid' => $key,
         ]);
     }
@@ -1350,7 +1350,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
      */
     public function getRawItemState(string $key): array
     {
-        return $this->getChildSchema($key)->getRawState();
+        return $this->getChildSchema($key)->getStateSnapshot();
     }
 
     public function getHeadingsCount(): int

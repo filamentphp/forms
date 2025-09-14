@@ -1135,7 +1135,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
      */
     public function getRawItemState(string $key): array
     {
-        return $this->getChildSchema($key)->getRawState();
+        return $this->getChildSchema($key)->getStateSnapshot();
     }
 
     public function getHeadingsCount(): int

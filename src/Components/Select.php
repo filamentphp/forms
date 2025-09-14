@@ -1367,21 +1367,6 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
         return (bool) $this->evaluate($this->canOptionLabelsWrap);
     }
 
-    public function hydrateDefaultState(?array &$hydratedDefaultState): void
-    {
-        parent::hydrateDefaultState($hydratedDefaultState);
-
-        if (is_bool($state = $this->getState())) {
-            $state = $state ? 1 : 0;
-
-            $this->state($state);
-
-            if (is_array($hydratedDefaultState)) {
-                Arr::set($hydratedDefaultState, $this->getStatePath(), $state); /** @phpstan-ignore parameterByRef.type */
-            }
-        }
-    }
-
     public function getQualifiedRelatedKeyNameForRelationship(Relation $relationship): string
     {
         if ($relationship instanceof BelongsToMany) {
