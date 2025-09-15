@@ -132,7 +132,7 @@ class ModalTableSelect extends Field
             ->hiddenLabel()
             ->tableConfiguration($this->getTableConfiguration())
             ->relationshipName($this->getRelationshipName())
-            ->multiple()
+            ->multiple($this->isMultiple())
             ->maxItems($this->getMaxItems())
             ->tableArguments($this->getTableArguments());
 
@@ -675,7 +675,7 @@ class ModalTableSelect extends Field
     public function getDefaultStateCasts(): array
     {
         if ($this->hasCustomStateCasts()) {
-            return [];
+            return parent::getDefaultStateCasts();
         }
 
         if ($this->isMultiple()) {

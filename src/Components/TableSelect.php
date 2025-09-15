@@ -313,7 +313,7 @@ class TableSelect extends Field
     public function getDefaultStateCasts(): array
     {
         if ($this->hasCustomStateCasts()) {
-            return [];
+            return parent::getDefaultStateCasts();
         }
 
         if ($this->isMultiple()) {

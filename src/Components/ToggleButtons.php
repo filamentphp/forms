@@ -132,7 +132,7 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     public function getDefaultStateCasts(): array
     {
         if ($this->hasCustomStateCasts() || filled($this->getEnum())) {
-            return [];
+            return parent::getDefaultStateCasts();
         }
 
         if ($this->isMultiple()) {

@@ -65,7 +65,7 @@ class Radio extends Field implements Contracts\CanDisableOptions
     public function getDefaultStateCasts(): array
     {
         if ($this->hasCustomStateCasts() || filled($this->getEnum())) {
-            return [];
+            return parent::getDefaultStateCasts();
         }
 
         return [app(StringStateCast::class, ['isNullable' => true])];

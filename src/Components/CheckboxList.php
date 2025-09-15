@@ -329,7 +329,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     public function getDefaultStateCasts(): array
     {
         if ($this->hasCustomStateCasts() || filled($this->getEnum())) {
-            return [];
+            return parent::getDefaultStateCasts();
         }
 
         return [app(StringArrayStateCast::class)];
