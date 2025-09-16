@@ -435,6 +435,20 @@ Any fields that you use from `$state` should be `live()` if you wish to see the 
 
 <AutoScreenshot name="forms/fields/repeater/labelled" alt="Repeater with item labels" version="3.x" />
 
+## Numbering repeater items
+
+You can add the repeater item's number next to its label using the `itemNumbers()` method:
+
+```php
+use Filament\Forms\Components\Repeater;
+
+Repeater::make('members')
+    ->schema([
+        // ...
+    ])
+    ->itemNumbers()
+```
+
 ## Simple repeaters with one field
 
 You can use the `simple()` method to create a repeater with a single field, using a minimal design

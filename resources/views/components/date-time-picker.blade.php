@@ -18,6 +18,7 @@
     $suffixIcon = $getSuffixIcon();
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
+    $placeholder = $getPlaceholder();
     $disabledDates = $getDisabledDates();
 @endphp
 
@@ -55,7 +56,7 @@
                             'list' => $datalistOptions ? $id . '-list' : null,
                             'max' => $hasTime ? $maxDate : ($maxDate ? \Carbon\Carbon::parse($maxDate)->toDateString() : null),
                             'min' => $hasTime ? $minDate : ($minDate ? \Carbon\Carbon::parse($minDate)->toDateString() : null),
-                            'placeholder' => $getPlaceholder(),
+                            'placeholder' => filled($placeholder) ? e($placeholder) : null,
                             'readonly' => $isReadOnly(),
                             'required' => $isRequired() && (! $isConcealed()),
                             'step' => $getStep(),

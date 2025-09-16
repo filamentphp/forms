@@ -5,6 +5,7 @@
     $isConcealed = $isConcealed();
     $isDisabled = $isDisabled();
     $rows = $getRows();
+    $placeholder = $getPlaceholder();
     $shouldAutosize = $shouldAutosize();
     $statePath = $getStatePath();
 
@@ -67,7 +68,7 @@
                             'id' => $getId(),
                             'maxlength' => (! $isConcealed) ? $getMaxLength() : null,
                             'minlength' => (! $isConcealed) ? $getMinLength() : null,
-                            'placeholder' => $getPlaceholder(),
+                            'placeholder' => filled($placeholder) ? e($placeholder) : null,
                             'readonly' => $isReadOnly(),
                             'required' => $isRequired() && (! $isConcealed),
                             'rows' => $rows,

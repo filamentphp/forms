@@ -15,6 +15,7 @@
     $reorderAction = $getAction($getReorderActionName());
     $extraItemActions = $getExtraItemActions();
 
+    $hasItemNumbers = $hasItemNumbers();
     $isAddable = $isAddable();
     $isCloneable = $isCloneable();
     $isCollapsible = $isCollapsible();
@@ -154,6 +155,10 @@
                                             ])
                                         >
                                             {{ $itemLabel }}
+
+                                            @if ($hasItemNumbers)
+                                                {{ $loop->iteration }}
+                                            @endif
                                         </h4>
                                     @endif
 
