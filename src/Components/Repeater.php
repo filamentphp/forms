@@ -115,6 +115,8 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
     protected bool $shouldMergeHydratedDefaultStateWithItemsStateAfterStateHydrated = true;
 
+    protected bool | Closure $shouldPartiallyRenderAfterActionsCalled = true;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -202,7 +204,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->button()
             ->size(Size::Small)
@@ -279,7 +281,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->button()
             ->size(Size::Small)
@@ -341,7 +343,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->iconButton()
             ->size(Size::Small)
@@ -382,7 +384,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->iconButton()
             ->size(Size::Small)
@@ -422,7 +424,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->iconButton()
             ->size(Size::Small)
@@ -462,7 +464,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->iconButton()
             ->size(Size::Small)
@@ -505,7 +507,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
 
                 $component->callAfterStateUpdated();
 
-                $component->partiallyRender();
+                $component->shouldPartiallyRenderAfterActionsCalled() ? $component->partiallyRender() : null;
             })
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
@@ -1374,5 +1376,17 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
         }
 
         return 1;
+    }
+
+    public function partiallyRenderAfterActionsCalled(bool | Closure $condition = true): static
+    {
+        $this->shouldPartiallyRenderAfterActionsCalled = $condition;
+
+        return $this;
+    }
+
+    public function shouldPartiallyRenderAfterActionsCalled(): bool
+    {
+        return (bool) $this->evaluate($this->shouldPartiallyRenderAfterActionsCalled);
     }
 }
