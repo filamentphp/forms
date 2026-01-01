@@ -7,7 +7,7 @@ import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 Field classes can be found in the `Filament\Form\Components` namespace.
 
-Fields reside within the schema of your form, alongside any [layout components](layout/getting-started).
+Fields reside within the schema of your form, alongside any [layout components](../layout/getting-started).
 
 Fields may be created using the static `make()` method, passing its unique name. The name of the field should correspond to a property on your Livewire component. You may use "dot notation" to bind fields to keys in arrays.
 
@@ -296,7 +296,7 @@ TextInput::make('name')
 
 ## Marking a field as required
 
-By default, [required fields](validation#required) will show an asterisk `*` next to their label. You may want to hide the asterisk on forms where all fields are required, or where it makes sense to add a [hint](#adding-a-hint-next-to-the-label) to optional fields instead:
+By default, [required fields](../validation#required) will show an asterisk `*` next to their label. You may want to hide the asterisk on forms where all fields are required, or where it makes sense to add a [hint](#adding-a-hint-next-to-the-label) to optional fields instead:
 
 ```php
 use Filament\Forms\Components\TextInput;

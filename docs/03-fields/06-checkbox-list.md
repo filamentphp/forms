@@ -108,7 +108,7 @@ CheckboxList::make('technologies')
 
 <AutoScreenshot name="forms/fields/checkbox-list/columns" alt="Checkbox list with 2 columns" version="3.x" />
 
-This method accepts the same options as the `columns()` method of the [grid](layout/grid). This allows you to responsively customize the number of columns at various breakpoints.
+This method accepts the same options as the `columns()` method of the [grid](../layout/grid). This allows you to responsively customize the number of columns at various breakpoints.
 
 ### Setting the grid direction
 

@@ -23,7 +23,7 @@ FileUpload::make('attachment')
 
 <AutoScreenshot name="forms/fields/file-upload/simple" alt="File upload" version="3.x" />
 
-> Filament also supports [`spatie/laravel-medialibrary`](https://github.com/spatie/laravel-medialibrary). See our [plugin documentation](/plugins/filament-spatie-media-library) for more information.
+> Filament also supports [`spatie/laravel-medialibrary`](https://github.com/spatie/laravel-medialibrary). See our [plugin documentation](https://filamentphp.com/plugins/filament-spatie-media-library) for more information.
 
 ## Configuring the storage disk and directory
 
@@ -518,7 +518,7 @@ Livewire also validates file size before uploading. To publish the Livewire conf
 php artisan livewire:publish --config
 ```
 
-The [max upload size can be adjusted in the `rules` key of `temporary_file_upload`]((https://livewire.laravel.com/docs/uploads#global-validation)). In this instance, KB are used in the rule, and 120MB is 122880KB:
+The [max upload size can be adjusted in the `rules` key of `temporary_file_upload`](https://livewire.laravel.com/docs/uploads#global-validation). In this instance, KB are used in the rule, and 120MB is 122880KB:
 
 ```php
 'temporary_file_upload' => [
