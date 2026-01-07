@@ -12,6 +12,7 @@ export default function richEditorFormComponent({
     editCustomBlockButtonIconHtml,
     extensions,
     floatingToolbars,
+    hasResizableImages,
     isDisabled,
     isLiveDebounced,
     isLiveOnBlur,
@@ -22,6 +23,9 @@ export default function richEditorFormComponent({
     maxFileSize,
     maxFileSizeValidationMessage,
     mergeTags,
+    mentions,
+    getMentionSearchResultsUsing,
+    getMentionLabelsUsing,
     noMergeTagSearchResultsMessage,
     placeholder,
     state,
@@ -71,6 +75,7 @@ export default function richEditorFormComponent({
                             { schemaComponent: key },
                         ),
                     floatingToolbars,
+                    hasResizableImages,
                     insertCustomBlockUsing: (id, dragPosition = null) =>
                         this.$wire.mountAction(
                             'customBlock',
@@ -82,6 +87,9 @@ export default function richEditorFormComponent({
                     maxFileSize,
                     maxFileSizeValidationMessage,
                     mergeTags,
+                    mentions,
+                    getMentionSearchResultsUsing,
+                    getMentionLabelsUsing,
                     noMergeTagSearchResultsMessage,
                     placeholder,
                     statePath,
@@ -168,6 +176,12 @@ export default function richEditorFormComponent({
 
                 this.editorUpdatedAt = Date.now()
                 this.editorSelection = transaction.selection.toJSON()
+            })
+
+            editor.on('transaction', () => {
+                if (isDestroyed) return
+
+                this.editorUpdatedAt = Date.now()
             })
 
             if (isLiveOnBlur) {
