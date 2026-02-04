@@ -106,20 +106,43 @@ export default function fileUploadFormComponent({
 
         visibilityObserver: null,
 
+        isInitializing: false,
+
         async init() {
-            if (this.pond) {
+            if (this.pond || this.isInitializing) {
                 return
             }
 
-            if (this.$el.offsetParent === null) {
-                this.visibilityObserver?.disconnect()
+            this.isInitializing = true
+
+            // https://github.com/filamentphp/filament/issues/15394
+            // https://github.com/filamentphp/filament/issues/16253
+            if (!this.visibilityObserver) {
                 this.visibilityObserver = new ResizeObserver(() => {
-                    if (this.$el.offsetWidth > 0) {
-                        this.visibilityObserver.disconnect()
+                    const isHidden =
+                        this.$el.offsetParent === null ||
+                        getComputedStyle(this.$el).visibility === 'hidden'
+
+                    if (isHidden) {
+                        return
+                    }
+
+                    if (!this.pond) {
                         this.init()
+                    } else {
+                        document.dispatchEvent(new Event('visibilitychange'))
                     }
                 })
+
                 this.visibilityObserver.observe(this.$el)
+            }
+
+            const isHidden =
+                this.$el.offsetParent === null ||
+                getComputedStyle(this.$el).visibility === 'hidden'
+
+            if (isHidden) {
+                this.isInitializing = false
 
                 return
             }
@@ -149,7 +172,7 @@ export default function fileUploadFormComponent({
                 itemInsertLocation: shouldAppendFiles ? 'after' : 'before',
                 ...(placeholder && { labelIdle: placeholder }),
                 maxFiles,
-                fileAttachmentsMaxFileSize: maxSize,
+                maxFileSize: maxSize,
                 minFileSize: minSize,
                 ...(maxParallelUploads && { maxParallelUploads }),
                 styleButtonProcessItemPosition: uploadButtonPosition,
@@ -406,6 +429,8 @@ export default function fileUploadFormComponent({
                     this.checkImageAspectRatio(fileItem.file)
                 })
             }
+
+            this.isInitializing = false
         },
 
         destroy() {
