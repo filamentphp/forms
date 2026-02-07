@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components\Concerns;
 
+use BackedEnum;
 use Closure;
 use Filament\Support\Contracts\HasColor as ColorInterface;
 use Illuminate\Contracts\Support\Arrayable;
@@ -49,7 +50,7 @@ trait HasColors
             is_a($enum, ColorInterface::class, allow_string: true)
         ) {
             return array_reduce($enum::cases(), function (array $carry, ColorInterface & UnitEnum $case): array {
-                $carry[$case?->value ?? $case->name] = $case->getColor();
+                $carry[$case instanceof BackedEnum ? $case->value : $case->name] = $case->getColor();
 
                 return $carry;
             }, []);

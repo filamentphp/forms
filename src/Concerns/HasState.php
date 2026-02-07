@@ -10,7 +10,7 @@ trait HasState
 {
     protected ?string $statePath = null;
 
-    protected string $cachedAbsoluteStatePath;
+    protected ?string $cachedAbsoluteStatePath = null;
 
     public function callAfterStateHydrated(): void
     {
@@ -294,7 +294,7 @@ trait HasState
             return $this->statePath ?? '';
         }
 
-        if (isset($this->cachedAbsoluteStatePath)) {
+        if ($this->cachedAbsoluteStatePath !== null) {
             return $this->cachedAbsoluteStatePath;
         }
 
@@ -313,6 +313,6 @@ trait HasState
 
     protected function flushCachedAbsoluteStatePath(): void
     {
-        unset($this->cachedAbsoluteStatePath);
+        $this->cachedAbsoluteStatePath = null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components\Concerns;
 
+use BackedEnum;
 use Closure;
 use Filament\Support\Contracts\HasDescription;
 use Illuminate\Contracts\Support\Arrayable;
@@ -60,7 +61,7 @@ trait HasDescriptions
         ) {
             $descriptions = array_reduce($this->options::cases(), function (array $carry, HasDescription & UnitEnum $case): array {
                 if (filled($description = $case->getDescription())) {
-                    $carry[$case?->value ?? $case->name] = $description;
+                    $carry[$case instanceof BackedEnum ? $case->value : $case->name] = $description;
                 }
 
                 return $carry;

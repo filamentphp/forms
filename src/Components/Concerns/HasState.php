@@ -40,7 +40,7 @@ trait HasState
 
     protected ?string $statePath = null;
 
-    protected string $cachedAbsoluteStatePath;
+    protected ?string $cachedAbsoluteStatePath = null;
 
     /**
      * @var string | array<string> | Closure | null
@@ -419,7 +419,7 @@ trait HasState
             return $this->statePath ?? '';
         }
 
-        if (isset($this->cachedAbsoluteStatePath)) {
+        if ($this->cachedAbsoluteStatePath !== null) {
             return $this->cachedAbsoluteStatePath;
         }
 
@@ -508,7 +508,7 @@ trait HasState
 
     protected function flushCachedAbsoluteStatePath(): void
     {
-        unset($this->cachedAbsoluteStatePath);
+        $this->cachedAbsoluteStatePath = null;
     }
 
     /**
