@@ -54,6 +54,7 @@
                 ])
             >
                 <input
+                    @if ($loop->first && $isAutofocused()) autofocus @endif
                     @disabled($shouldOptionBeDisabled)
                     id="{{ $inputId }}"
                     @if (! $isMultiple)
