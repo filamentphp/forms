@@ -71,6 +71,8 @@ RichEditor::make('content')
 
 Each nested array in the main array represents a group of buttons in the toolbar.
 
+<AutoScreenshot name="forms/fields/rich-editor/custom-toolbar" alt="Rich editor with customized toolbar buttons" version="5.x" />
+
 Additional tools available in the toolbar include:
 
 - `h1` - Applies the "h1" tag to the text.
@@ -132,6 +134,8 @@ RichEditor::make('content')
         ],
     ])
 ```
+
+<AutoScreenshot name="forms/fields/rich-editor/floating-toolbar" alt="Rich editor with floating toolbar below selected text" version="5.x" />
 
 ### Grouping toolbar buttons into dropdowns
 
@@ -209,6 +213,8 @@ RichEditor::make('content')
         '#0ea5e9' => 'Sky',
     ])
 ```
+
+<AutoScreenshot name="forms/fields/rich-editor/text-colors" alt="Rich editor text color picker modal" version="5.x" />
 
 If you would like to define different colors for light and dark mode, you can use the a `TextColor` object to define the color:
 
@@ -355,6 +361,10 @@ When Filament outputs raw HTML from the database in components such as `TextColu
 
 If you're [storing content as JSON](#storing-content-as-json) instead of HTML, or your content requires processing to inject [private image URLs](#using-private-images-in-the-editor) or similar, you can use the [content renderer](#rendering-rich-content) to output HTML. This will automatically sanitize the HTML for you, so you don't need to worry about it.
 
+<Aside variant="danger">
+    Filament's built-in HTML sanitizer permits inline `style` attributes in order to support rich text formatting features such as font colors, text highlighting, and image sizing. This means that CSS properties like `background: url(...)` or `position: fixed` will not be stripped from sanitized HTML. If your content comes from untrusted users, you should consider implementing a more restrictive custom sanitizer. See the [security documentation](../advanced/security#html-sanitization) for details on how to customize the sanitizer.
+</Aside>
+
 ## Uploading images to the editor
 
 By default, uploaded images are stored publicly on your storage disk, so that the rich content stored in the database can be output easily anywhere. You may customize how images are uploaded using configuration methods:
@@ -437,6 +447,8 @@ RichEditor::make('content')
         CallToActionBlock::class,
     ])
 ```
+
+<AutoScreenshot name="forms/fields/rich-editor/custom-blocks" alt="Rich editor with custom blocks panel open" version="5.x" />
 
 To create a custom block, you can use the following command:
 
@@ -617,6 +629,8 @@ RichEditor::make('content')
     ])
 ```
 
+<AutoScreenshot name="forms/fields/rich-editor/merge-tags" alt="Rich editor with merge tags panel" version="5.x" />
+
 Merge tags are surrounded by double curly braces, like `{{ name }}`. When the content is rendered, these tags will be replaced with the corresponding values.
 
 To insert a merge tag into the content, users can start typing `{{` to search for a tag to insert. Alternatively, they can click on the "merge tags" tool in the editor's toolbar, which opens a panel containing all the merge tags. They can then drag a merge tag from the editor's side panel into the content or click to insert it.
@@ -717,6 +731,8 @@ RichEditor::make('content')
             ]),
     ])
 ```
+
+<AutoScreenshot name="forms/fields/rich-editor/mentions" alt="Rich editor with mention suggestions" version="5.x" />
 
 Each provider is configured with a trigger character (passed to `make()`) that activates the mention search. You can have multiple providers with different triggers:
 
