@@ -484,6 +484,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
     public function toEmbeddedHtml(): string
     {
         $extraInputAttributeBag = $this->getExtraInputAttributeBag();
+        $id = $this->getId();
         $isHtmlAllowed = $this->isHtmlAllowed();
         $gridDirection = $this->getGridDirection() ?? GridDirection::Column;
         $isBulkToggleable = $this->isBulkToggleable();
@@ -505,6 +506,8 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
         ob_start(); ?>
 
         <div
+            aria-labelledby="<?= e($id) ?>-label"
+            role="group"
             x-load
             x-load-src="<?= e(FilamentAsset::getAlpineComponentSrc('checkbox-list', 'filament/forms')) ?>"
             x-data="checkboxListFormComponent({
@@ -525,6 +528,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
 
                         <div class="fi-input-wrp-content-ctn">
                             <input
+                                aria-label="<?= e($this->getSearchPrompt()) ?>"
                                 placeholder="<?= e($this->getSearchPrompt()) ?>"
                                 type="search"
                                 x-model.debounce.<?= $this->getSearchDebounce() ?>="search"
@@ -624,6 +628,8 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
                 <div
                     x-cloak
                     x-show="search && ! visibleCheckboxListOptions.length"
+                    role="status"
+                    aria-live="polite"
                     class="fi-fo-checkbox-list-no-search-results-message"
                 >
                     <?= e($this->getNoSearchResultsMessage()) ?>
@@ -631,6 +637,6 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
             <?php } ?>
         </div>
 
-        <?php return $this->wrapEmbeddedHtml(ob_get_clean());
+        <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
     }
 }

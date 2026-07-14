@@ -962,6 +962,8 @@ class FileUpload extends BaseFileUpload implements HasEmbeddedView
                         state: $wire.<?= $this->applyStateBindingModifiers("\$entangle('{$statePath}')") ?>,
                         uploadButtonPosition: <?= Js::from($this->getUploadButtonPosition()) ?>,
                         uploadingMessage: <?= Js::from($this->getUploadingMessage()) ?>,
+                        downloadActionLabel: <?= Js::from(__('filament-forms::components.file_upload.actions.download.label')) ?>,
+                        openActionLabel: <?= Js::from(__('filament-forms::components.file_upload.actions.open.label')) ?>,
                         uploadProgressIndicatorPosition: <?= Js::from($this->getUploadProgressIndicatorPosition()) ?>,
                         uploadUsing: (fileKey, file, success, error, progress) => {
                             $wire.upload(
@@ -992,11 +994,15 @@ class FileUpload extends BaseFileUpload implements HasEmbeddedView
                 x-show="error"
                 x-text="error"
                 x-cloak
+                role="alert"
                 class="fi-fo-file-upload-error-message"
             ></div>
 
             <?php if ($hasImageEditor && ! $isDisabled) { ?>
                 <div
+                    aria-label="<?= e(__('filament-forms::components.file_upload.editor.label')) ?>"
+                    aria-modal="true"
+                    role="dialog"
                     x-show="isEditorOpen"
                     x-cloak
                     x-on:click.stop=""
@@ -1015,7 +1021,9 @@ class FileUpload extends BaseFileUpload implements HasEmbeddedView
 
                     <div class="fi-fo-file-upload-editor-window">
                         <div class="fi-fo-file-upload-editor-image-ctn">
+                            <?php // Decorative: Cropper.js drives this image and the editor dialog is labelled elsewhere. ?>
                             <img
+                                alt=""
                                 x-ref="editor"
                                 class="fi-fo-file-upload-editor-image"
                             />
