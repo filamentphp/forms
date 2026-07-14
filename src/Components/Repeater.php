@@ -1224,11 +1224,16 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
 
         $relationshipQuery = $relationship->getQuery();
 
+        // Explicitly select the related table's columns so the query is not ambiguous if it is
+        // later modified to include a join (for example, through `modifyRelationshipQueryUsing()`).
+        // Without this, `select *` across a join can hydrate the key from the wrong table.
         if ($relationship instanceof BelongsToMany) {
             $relationshipQuery->select([
                 $relationship->getTable() . '.*',
                 $relationshipQuery->getModel()->getTable() . '.*',
             ]);
+        } else {
+            $relationshipQuery->select($relationshipQuery->getModel()->getTable() . '.*');
         }
 
         if ($this->modifyRelationshipQueryUsing) {
@@ -1238,7 +1243,8 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
         }
 
         if (filled($orderColumn)) {
-            $relationshipQuery->orderBy($orderColumn);
+            // Qualify the order column so it is not ambiguous when the query includes a join.
+            $relationshipQuery->orderBy($relationshipQuery->qualifyColumn($orderColumn));
         }
 
         return $this->cachedExistingRecords = $this->modifyRelationshipRecords($relationshipQuery->get()->mapWithKeys(
@@ -1556,8 +1562,15 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
         $isItemLabelTruncated = $this->isItemLabelTruncated();
         $labelBetweenItems = $this->getLabelBetweenItems();
 
+        $id = $this->getId();
+
         $outerAttributes = (new FilamentComponentAttributeBag)
             ->merge($this->getExtraAttributes(), escape: false)
+            ->merge([
+                'aria-labelledby' => "{$id}-label",
+                'id' => $id,
+                'role' => 'group',
+            ], escape: false)
             ->class([
                 'fi-fo-repeater',
                 'fi-collapsible' => $isCollapsible,
@@ -1740,7 +1753,7 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
             <?php } ?>
         </div>
 
-        <?php return $this->wrapEmbeddedHtml(ob_get_clean());
+        <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
     }
 
     protected function toSimpleEmbeddedHtml(): string
@@ -1765,8 +1778,15 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
         $key = $this->getKey();
         $statePath = $this->getStatePath();
 
+        $id = $this->getId();
+
         $outerAttributes = (new FilamentComponentAttributeBag)
             ->merge($this->getExtraAttributes(), escape: false)
+            ->merge([
+                'aria-labelledby' => "{$id}-label",
+                'id' => $id,
+                'role' => 'group',
+            ], escape: false)
             ->class(['fi-fo-simple-repeater']);
 
         $itemsAttributes = (new FilamentComponentAttributeBag)
@@ -1869,7 +1889,7 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
             <?php } ?>
         </div>
 
-        <?php return $this->wrapEmbeddedHtml(ob_get_clean());
+        <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
     }
 
     protected function toTableEmbeddedHtml(): string
@@ -1898,8 +1918,15 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
 
         $isCompact = $this->isCompact();
 
+        $id = $this->getId();
+
         $outerAttributes = (new FilamentComponentAttributeBag)
             ->merge($this->getExtraAttributes(), escape: false)
+            ->merge([
+                'aria-labelledby' => "{$id}-label",
+                'id' => $id,
+                'role' => 'group',
+            ], escape: false)
             ->class([
                 'fi-fo-table-repeater',
                 'fi-compact' => $isCompact,
@@ -1924,7 +1951,9 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
                     <thead>
                         <tr>
                             <?php if ($hasReorderColumn) { ?>
-                                <th class="fi-fo-table-repeater-empty-header-cell"></th>
+                                <th scope="col" class="fi-fo-table-repeater-empty-header-cell">
+                                    <span class="fi-sr-only"><?= e(__('filament-forms::components.repeater.columns.reorder.label')) ?></span>
+                                </th>
                             <?php } ?>
 
                             <?php foreach ($tableColumns as $column) { ?>
@@ -1941,7 +1970,7 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
                                     $thAttributes = $thAttributes->style(['width: ' . e($columnWidth)]);
                                 }
                                 ?>
-                                <th <?= $thAttributes->toHtml() ?>>
+                                <th scope="col" <?= $thAttributes->toHtml() ?>>
                                     <?php if (! $column->isHeaderLabelHidden()) { ?>
                                         <?= e($column->getLabel()) ?><?php if ($column->isMarkedAsRequired()) { ?><sup class="fi-fo-table-repeater-header-required-mark">*</sup><?php } ?>
                                     <?php } else { ?>
@@ -1953,7 +1982,9 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
                             <?php } ?>
 
                             <?php if ($hasActionsColumn) { ?>
-                                <th class="fi-fo-table-repeater-empty-header-cell"></th>
+                                <th scope="col" class="fi-fo-table-repeater-empty-header-cell">
+                                    <span class="fi-sr-only"><?= e(__('filament-forms::components.repeater.columns.actions.label')) ?></span>
+                                </th>
                             <?php } ?>
                         </tr>
                     </thead>
@@ -2090,7 +2121,7 @@ class Repeater extends Field implements CanConcealComponents, HasEmbeddedView, H
             <?php } ?>
         </div>
 
-        <?php return $this->wrapEmbeddedHtml(ob_get_clean());
+        <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
     }
 
     public function getLabelBetweenItems(): ?string

@@ -122,9 +122,29 @@ return [
 
     ],
 
+    'color_picker' => [
+
+        'panel_label' => 'Color picker',
+
+    ],
+
     'file_upload' => [
 
+        'actions' => [
+
+            'download' => [
+                'label' => 'Download',
+            ],
+
+            'open' => [
+                'label' => 'Open in new tab',
+            ],
+
+        ],
+
         'editor' => [
+
+            'label' => 'Image editor',
 
             'actions' => [
 
@@ -268,6 +288,18 @@ return [
 
         ],
 
+        'columns' => [
+
+            'actions' => [
+                'label' => 'Actions',
+            ],
+
+            'reorder' => [
+                'label' => 'Reorder',
+            ],
+
+        ],
+
         'fields' => [
 
             'key' => [
@@ -338,6 +370,18 @@ return [
     ],
 
     'repeater' => [
+
+        'columns' => [
+
+            'actions' => [
+                'label' => 'Actions',
+            ],
+
+            'reorder' => [
+                'label' => 'Reorder',
+            ],
+
+        ],
 
         'actions' => [
 
@@ -604,6 +648,10 @@ return [
             'searching_message' => 'Searching...',
         ],
 
+        'toolbar' => [
+            'aria_label' => 'Editor toolbar',
+        ],
+
         'tools' => [
             'align_center' => 'Align center',
             'align_end' => 'Align end',
@@ -742,6 +790,10 @@ return [
         ],
 
         'placeholder' => 'New tag',
+
+        'tag_added' => 'Added: :tag',
+
+        'tag_removed' => 'Removed: :tag',
 
     ],
 
