@@ -1,351 +1,234 @@
 <?php
 
 return [
-
     'builder' => [
-
         'actions' => [
-
             'clone' => [
-                'label' => 'Clone',
+                'label' => 'I-clone',
             ],
-
             'add' => [
-
-                'label' => 'Add to :label',
-
+                'label' => 'Idagdag sa :label',
                 'modal' => [
-
-                    'heading' => 'Add to :label',
-
+                    'heading' => 'Idagdag sa :label',
                     'actions' => [
-
                         'add' => [
-                            'label' => 'Add',
+                            'label' => 'Idagdag',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'add_between' => [
-
-                'label' => 'Insert between blocks',
-
+                'label' => 'Ipasok sa pagitan ng mga block',
                 'modal' => [
-
-                    'heading' => 'Add to :label',
-
+                    'heading' => 'Idagdag sa :label',
                     'actions' => [
-
                         'add' => [
-                            'label' => 'Add',
+                            'label' => 'Idagdag',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'I-delete',
             ],
-
             'edit' => [
-
-                'label' => 'Edit',
-
+                'label' => 'I-edit',
                 'modal' => [
-
-                    'heading' => 'Edit block',
-
+                    'heading' => 'I-edit ang block',
                     'actions' => [
-
                         'save' => [
-                            'label' => 'Save changes',
+                            'label' => 'I-save ang mga pagbabago',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'reorder' => [
-                'label' => 'Move',
+                'label' => 'Ilipat',
             ],
-
             'move_down' => [
-                'label' => 'Move down',
+                'label' => 'Ilipat pababa',
             ],
-
             'move_up' => [
-                'label' => 'Move up',
+                'label' => 'Ilipat pataas',
             ],
-
             'collapse' => [
-                'label' => 'Collapse',
+                'label' => 'I-collapse',
             ],
-
             'expand' => [
-                'label' => 'Expand',
+                'label' => 'I-expand',
             ],
-
             'collapse_all' => [
-                'label' => 'Collapse all',
+                'label' => 'I-collapse lahat',
             ],
-
             'expand_all' => [
-                'label' => 'Expand all',
+                'label' => 'I-expand lahat',
             ],
-
         ],
-
     ],
-
     'checkbox_list' => [
-
         'actions' => [
-
             'deselect_all' => [
-                'label' => 'Deselect all',
+                'label' => 'Alisin lahat ng napili',
             ],
-
             'select_all' => [
-                'label' => 'Select all',
+                'label' => 'Piliin lahat',
             ],
-
         ],
-
     ],
-
     'color_picker' => [
-
-        'panel_label' => 'Color picker',
-
+        'panel_label' => 'Pampili ng kulay',
     ],
-
     'date_time_picker' => [
-
         'month_select' => [
-            'label' => 'Month',
+            'label' => 'Buwan',
         ],
-
         'year_input' => [
-            'label' => 'Year',
+            'label' => 'Taon',
         ],
-
         'hour_input' => [
-            'label' => 'Hour',
+            'label' => 'Oras',
         ],
-
         'minute_input' => [
-            'label' => 'Minute',
+            'label' => 'Minuto',
         ],
-
         'second_input' => [
-            'label' => 'Second',
+            'label' => 'Segundo',
         ],
-
     ],
-
     'file_upload' => [
-
         'actions' => [
-
             'download' => [
-                'label' => 'Download',
+                'label' => 'I-download',
             ],
-
             'open' => [
-                'label' => 'Open in new tab',
+                'label' => 'Buksan sa bagong tab',
             ],
-
         ],
-
         'editor' => [
-
             'label' => 'Image editor',
-
             'actions' => [
-
                 'cancel' => [
-                    'label' => 'Cancel',
+                    'label' => 'Kanselahin',
                 ],
-
                 'drag_crop' => [
-                    'label' => 'Drag mode "crop"',
+                    'label' => 'Drag mode na "crop"',
                 ],
-
                 'drag_move' => [
-                    'label' => 'Drag mode "move"',
+                    'label' => 'Drag mode na "move"',
                 ],
-
                 'flip_horizontal' => [
-                    'label' => 'Flip image horizontally',
+                    'label' => 'I-flip nang pahalang ang larawan',
                 ],
-
                 'flip_vertical' => [
-                    'label' => 'Flip image vertically',
+                    'label' => 'I-flip nang patayo ang larawan',
                 ],
-
                 'move_down' => [
-                    'label' => 'Move image down',
+                    'label' => 'Ilipat pababa ang larawan',
                 ],
-
                 'move_left' => [
-                    'label' => 'Move image to left',
+                    'label' => 'Ilipat pakaliwa ang larawan',
                 ],
-
                 'move_right' => [
-                    'label' => 'Move image to right',
+                    'label' => 'Ilipat pakanan ang larawan',
                 ],
-
                 'move_up' => [
-                    'label' => 'Move image up',
+                    'label' => 'Ilipat pataas ang larawan',
                 ],
-
                 'reset' => [
-                    'label' => 'Reset',
+                    'label' => 'I-reset',
                 ],
-
                 'rotate_left' => [
-                    'label' => 'Rotate image to left',
+                    'label' => 'I-rotate pakaliwa ang larawan',
                 ],
-
                 'rotate_right' => [
-                    'label' => 'Rotate image to right',
+                    'label' => 'I-rotate pakanan ang larawan',
                 ],
-
                 'set_aspect_ratio' => [
-                    'label' => 'Set aspect ratio to :ratio',
+                    'label' => 'Itakda ang aspect ratio sa :ratio',
                 ],
-
                 'save' => [
-                    'label' => 'Save',
+                    'label' => 'I-save',
                 ],
-
                 'zoom_100' => [
-                    'label' => 'Zoom image to 100%',
+                    'label' => 'I-zoom ang larawan sa 100%',
                 ],
-
                 'zoom_in' => [
-                    'label' => 'Zoom in',
+                    'label' => 'I-zoom in',
                 ],
-
                 'zoom_out' => [
-                    'label' => 'Zoom out',
+                    'label' => 'I-zoom out',
                 ],
-
             ],
-
             'fields' => [
-
                 'height' => [
-                    'label' => 'Height',
+                    'label' => 'Taas',
                     'unit' => 'px',
                 ],
-
                 'rotation' => [
-                    'label' => 'Rotation',
+                    'label' => 'Pag-ikot',
                     'unit' => 'deg',
                 ],
-
                 'width' => [
-                    'label' => 'Width',
+                    'label' => 'Lapad',
                     'unit' => 'px',
                 ],
-
                 'x_position' => [
                     'label' => 'X',
                     'unit' => 'px',
                 ],
-
                 'y_position' => [
                     'label' => 'Y',
                     'unit' => 'px',
                 ],
-
             ],
-
             'aspect_ratios' => [
-
-                'label' => 'Aspect ratios',
-
+                'label' => 'Mga aspect ratio',
                 'no_fixed' => [
-                    'label' => 'Free',
+                    'label' => 'Malaya',
                 ],
-
             ],
-
             'svg' => [
-
                 'messages' => [
-                    'confirmation' => 'Editing SVG files is not recommended as it can result in quality loss when scaling.\n Are you sure you want to continue?',
-                    'disabled' => 'Editing SVG files is disabled as it can result in quality loss when scaling.',
+                    'confirmation' => 'Hindi inirerekomenda ang pag-edit ng mga SVG file dahil puwedeng bumaba ang kalidad kapag binabago ang laki.\\n Sigurado ka bang gusto mong magpatuloy?',
+                    'disabled' => 'Naka-disable ang pag-edit ng mga SVG file dahil puwedeng bumaba ang kalidad kapag binabago ang laki.',
                 ],
-
             ],
-
         ],
-
     ],
-
     'key_value' => [
-
         'actions' => [
-
             'add' => [
-                'label' => 'Add row',
+                'label' => 'Magdagdag ng row',
             ],
-
             'delete' => [
-                'label' => 'Delete row',
+                'label' => 'I-delete ang row',
             ],
-
             'reorder' => [
-                'label' => 'Reorder row',
+                'label' => 'Ayusin ang row',
             ],
-
         ],
-
         'columns' => [
-
             'actions' => [
-                'label' => 'Actions',
+                'label' => 'Mga action',
             ],
-
             'reorder' => [
-                'label' => 'Reorder',
+                'label' => 'Ayusin',
             ],
-
         ],
-
         'fields' => [
-
             'key' => [
                 'label' => 'Key',
             ],
-
             'value' => [
                 'label' => 'Value',
             ],
-
         ],
-
     ],
-
     'markdown_editor' => [
-
-        'file_attachments_accepted_file_types_message' => 'Uploaded files must be of type: :values.',
-
-        'file_attachments_max_size_message' => 'Uploaded files must not be greater than :max kilobytes.',
-
+        'file_attachments_accepted_file_types_message' => 'Dapat ganito ang uri ng mga in-upload na file: :values.',
+        'file_attachments_max_size_message' => 'Hindi dapat lumampas sa :max kilobytes ang mga in-upload na file.',
         'tools' => [
-            'attach_files' => 'Attach files',
+            'attach_files' => 'Mag-attach ng mga file',
             'blockquote' => 'Blockquote',
             'bold' => 'Bold',
             'bullet_list' => 'Bullet list',
@@ -354,269 +237,175 @@ return [
             'italic' => 'Italic',
             'link' => 'Link',
             'ordered_list' => 'Numbered list',
-            'redo' => 'Redo',
+            'redo' => 'Ulitin',
             'strike' => 'Strikethrough',
             'table' => 'Table',
-            'undo' => 'Undo',
+            'undo' => 'I-undo',
         ],
-
     ],
-
     'modal_table_select' => [
-
         'actions' => [
-
             'select' => [
-
-                'label' => 'Select',
-
+                'label' => 'Piliin',
                 'actions' => [
-
                     'select' => [
-                        'label' => 'Select',
+                        'label' => 'Piliin',
                     ],
-
                 ],
-
             ],
-
         ],
-
     ],
-
     'radio' => [
-
         'boolean' => [
-            'true' => 'Yes',
-            'false' => 'No',
+            'true' => 'Oo',
+            'false' => 'Hindi',
         ],
-
     ],
-
     'repeater' => [
-
         'columns' => [
-
             'actions' => [
-                'label' => 'Actions',
+                'label' => 'Mga action',
             ],
-
             'reorder' => [
-                'label' => 'Reorder',
+                'label' => 'Ayusin',
             ],
-
         ],
-
         'actions' => [
-
             'add' => [
-                'label' => 'Add to :label',
+                'label' => 'Idagdag sa :label',
             ],
-
             'add_between' => [
-                'label' => 'Insert between',
+                'label' => 'Ipasok sa pagitan',
             ],
-
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'I-delete',
             ],
-
             'clone' => [
-                'label' => 'Clone',
+                'label' => 'I-clone',
             ],
-
             'reorder' => [
-                'label' => 'Move',
+                'label' => 'Ilipat',
             ],
-
             'move_down' => [
-                'label' => 'Move down',
+                'label' => 'Ilipat pababa',
             ],
-
             'move_up' => [
-                'label' => 'Move up',
+                'label' => 'Ilipat pataas',
             ],
-
             'collapse' => [
-                'label' => 'Collapse',
+                'label' => 'I-collapse',
             ],
-
             'expand' => [
-                'label' => 'Expand',
+                'label' => 'I-expand',
             ],
-
             'collapse_all' => [
-                'label' => 'Collapse all',
+                'label' => 'I-collapse lahat',
             ],
-
             'expand_all' => [
-                'label' => 'Expand all',
+                'label' => 'I-expand lahat',
             ],
-
         ],
-
     ],
-
     'rich_editor' => [
-
         'actions' => [
-
             'attach_files' => [
-
-                'label' => 'Upload file',
-
+                'label' => 'Mag-upload ng file',
                 'modal' => [
-
-                    'heading' => 'Upload file',
-
+                    'heading' => 'Mag-upload ng file',
                     'form' => [
-
                         'file' => [
-
                             'label' => [
                                 'new' => 'File',
-                                'existing' => 'Replace file',
+                                'existing' => 'Palitan ang file',
                             ],
-
                         ],
-
                         'alt' => [
-
                             'label' => [
                                 'new' => 'Alt text',
-                                'existing' => 'Change alt text',
+                                'existing' => 'Baguhin ang alt text',
                             ],
-
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'custom_block' => [
-
                 'modal' => [
-
                     'actions' => [
-
                         'insert' => [
-                            'label' => 'Insert',
+                            'label' => 'Ipasok',
                         ],
-
                         'save' => [
-                            'label' => 'Save',
+                            'label' => 'I-save',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'grid' => [
-
                 'label' => 'Grid',
-
                 'modal' => [
-
                     'heading' => 'Grid',
-
                     'form' => [
-
                         'preset' => [
-
                             'label' => 'Preset',
-
-                            'placeholder' => 'None',
-
+                            'placeholder' => 'Wala',
                             'options' => [
-                                'two' => 'Two',
-                                'three' => 'Three',
-                                'four' => 'Four',
-                                'five' => 'Five',
-                                'two_start_third' => 'Two (Start Third)',
-                                'two_end_third' => 'Two (End Third)',
-                                'two_start_fourth' => 'Two (Start Fourth)',
-                                'two_end_fourth' => 'Two (End Fourth)',
+                                'two' => 'Dalawa',
+                                'three' => 'Tatlo',
+                                'four' => 'Apat',
+                                'five' => 'Lima',
+                                'two_start_third' => 'Dalawa (Ikatlo sa simula)',
+                                'two_end_third' => 'Dalawa (Ikatlo sa dulo)',
+                                'two_start_fourth' => 'Dalawa (Ikaapat sa simula)',
+                                'two_end_fourth' => 'Dalawa (Ikaapat sa dulo)',
                             ],
                         ],
-
                         'columns' => [
-                            'label' => 'Columns',
+                            'label' => 'Mga column',
                         ],
-
                         'from_breakpoint' => [
-
-                            'label' => 'From breakpoint',
-
+                            'label' => 'Mula sa breakpoint',
                             'options' => [
-                                'default' => 'All',
-                                'sm' => 'Small',
-                                'md' => 'Medium',
-                                'lg' => 'Large',
-                                'xl' => 'Extra large',
-                                '2xl' => 'Two extra large',
+                                'default' => 'Lahat',
+                                'sm' => 'Maliit',
+                                'md' => 'Katamtaman',
+                                'lg' => 'Malaki',
+                                'xl' => 'Napakalaki',
+                                '2xl' => 'Dalawang beses na napakalaki',
                             ],
-
                         ],
-
                         'is_asymmetric' => [
-                            'label' => 'Two asymmetric columns',
+                            'label' => 'Dalawang hindi pantay na column',
                         ],
-
                         'start_span' => [
-                            'label' => 'Start span',
+                            'label' => 'Panimulang span',
                         ],
-
                         'end_span' => [
-                            'label' => 'End span',
+                            'label' => 'Panghuling span',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'link' => [
-
                 'label' => 'Link',
-
                 'modal' => [
-
                     'heading' => 'Link',
-
                     'form' => [
-
                         'url' => [
                             'label' => 'URL',
                         ],
-
                         'should_open_in_new_tab' => [
-                            'label' => 'Open in new tab',
+                            'label' => 'Buksan sa bagong tab',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'text_color' => [
-
-                'label' => 'Text color',
-
+                'label' => 'Kulay ng text',
                 'modal' => [
-
-                    'heading' => 'Text color',
-
+                    'heading' => 'Kulay ng text',
                     'form' => [
-
                         'color' => [
-                            'label' => 'Color',
-
+                            'label' => 'Kulay',
                             'options' => [
                                 'slate' => 'Slate',
                                 'gray' => 'Gray',
@@ -627,238 +416,172 @@ return [
                                 'olive' => 'Olive',
                                 'mist' => 'Mist',
                                 'taupe' => 'Taupe',
-                                'red' => 'Red',
+                                'red' => 'Pula',
                                 'orange' => 'Orange',
                                 'amber' => 'Amber',
-                                'yellow' => 'Yellow',
+                                'yellow' => 'Dilaw',
                                 'lime' => 'Lime',
-                                'green' => 'Green',
+                                'green' => 'Berde',
                                 'emerald' => 'Emerald',
                                 'teal' => 'Teal',
                                 'cyan' => 'Cyan',
                                 'sky' => 'Sky',
-                                'blue' => 'Blue',
+                                'blue' => 'Asul',
                                 'indigo' => 'Indigo',
                                 'violet' => 'Violet',
-                                'purple' => 'Purple',
+                                'purple' => 'Lila',
                                 'fuchsia' => 'Fuchsia',
                                 'pink' => 'Pink',
                                 'rose' => 'Rose',
                             ],
                         ],
-
                         'custom_color' => [
-                            'label' => 'Custom color',
+                            'label' => 'Custom na kulay',
                         ],
-
                     ],
-
                 ],
-
             ],
-
         ],
-
-        'file_attachments_accepted_file_types_message' => 'Uploaded files must be of type: :values.',
-
-        'file_attachments_max_size_message' => 'Uploaded files must not be greater than :max kilobytes.',
-
-        'no_merge_tag_search_results_message' => 'No merge tag results.',
-
+        'file_attachments_accepted_file_types_message' => 'Dapat ganito ang uri ng mga in-upload na file: :values.',
+        'file_attachments_max_size_message' => 'Hindi dapat lumampas sa :max kilobytes ang mga in-upload na file.',
+        'no_merge_tag_search_results_message' => 'Walang nahanap na merge tag.',
         'mentions' => [
-            'no_options_message' => 'No options available.',
-            'no_search_results_message' => 'No results match your search.',
-            'search_prompt' => 'Start typing to search...',
-            'searching_message' => 'Searching...',
+            'no_options_message' => 'Walang available na option.',
+            'no_search_results_message' => 'Walang resultang tugma sa search mo.',
+            'search_prompt' => 'Mag-type para mag-search...',
+            'searching_message' => 'Naghahanap...',
         ],
-
         'toolbar' => [
             'label' => 'Editor toolbar',
         ],
-
         'tools' => [
-            'align_center' => 'Align center',
-            'align_end' => 'Align end',
-            'align_justify' => 'Align justify',
-            'align_start' => 'Align start',
-            'attach_files' => 'Attach files',
+            'align_center' => 'I-align sa gitna',
+            'align_end' => 'I-align sa dulo',
+            'align_justify' => 'I-justify',
+            'align_start' => 'I-align sa simula',
+            'attach_files' => 'Mag-attach ng mga file',
             'blockquote' => 'Blockquote',
             'bold' => 'Bold',
             'bullet_list' => 'Bullet list',
-            'clear_formatting' => 'Clear formatting',
+            'clear_formatting' => 'Alisin ang formatting',
             'code' => 'Code',
             'code_block' => 'Code block',
-            'custom_blocks' => 'Blocks',
-            'details' => 'Details',
-            'h1' => 'Title',
+            'custom_blocks' => 'Mga block',
+            'details' => 'Mga detalye',
+            'h1' => 'Pamagat',
             'h2' => 'Heading 2',
             'h3' => 'Heading 3',
             'h4' => 'Heading 4',
             'h5' => 'Heading 5',
             'h6' => 'Heading 6',
             'grid' => 'Grid',
-            'grid_delete' => 'Delete grid',
-            'highlight' => 'Highlight',
-            'horizontal_rule' => 'Horizontal rule',
+            'grid_delete' => 'I-delete ang grid',
+            'highlight' => 'I-highlight',
+            'horizontal_rule' => 'Pahalang na linya',
             'italic' => 'Italic',
             'lead' => 'Lead text',
             'link' => 'Link',
-            'merge_tags' => 'Merge tags',
+            'merge_tags' => 'Mga merge tag',
             'ordered_list' => 'Numbered list',
-            'paragraph' => 'Paragraph',
-            'redo' => 'Redo',
-            'small' => 'Small text',
+            'paragraph' => 'Talata',
+            'redo' => 'Ulitin',
+            'small' => 'Maliit na text',
             'strike' => 'Strikethrough',
             'subscript' => 'Subscript',
             'superscript' => 'Superscript',
             'table' => 'Table',
-            'table_delete' => 'Delete table',
-            'table_add_column_before' => 'Add column before',
-            'table_add_column_after' => 'Add column after',
-            'table_delete_column' => 'Delete column',
-            'table_add_row_before' => 'Add row above',
-            'table_add_row_after' => 'Add row below',
-            'table_delete_row' => 'Delete row',
-            'table_merge_cells' => 'Merge cells',
-            'table_split_cell' => 'Split cell',
-            'table_toggle_header_row' => 'Toggle header row',
-            'table_toggle_header_cell' => 'Toggle header cell',
-            'text_color' => 'Text color',
-            'underline' => 'Underline',
-            'undo' => 'Undo',
+            'table_delete' => 'I-delete ang table',
+            'table_add_column_before' => 'Magdagdag ng column bago nito',
+            'table_add_column_after' => 'Magdagdag ng column pagkatapos nito',
+            'table_delete_column' => 'I-delete ang column',
+            'table_add_row_before' => 'Magdagdag ng row sa itaas',
+            'table_add_row_after' => 'Magdagdag ng row sa ibaba',
+            'table_delete_row' => 'I-delete ang row',
+            'table_merge_cells' => 'Pagsamahin ang mga cell',
+            'table_split_cell' => 'Hatiin ang cell',
+            'table_toggle_header_row' => 'I-toggle ang header row',
+            'table_toggle_header_cell' => 'I-toggle ang header cell',
+            'text_color' => 'Kulay ng text',
+            'underline' => 'Salungguhitan',
+            'undo' => 'I-undo',
         ],
-
-        'uploading_file_message' => 'Uploading file...',
-
+        'uploading_file_message' => 'Ina-upload ang file...',
     ],
-
     'select' => [
-
         'actions' => [
-
             'clear' => [
-                'label' => 'Clear selection',
+                'label' => 'I-clear',
             ],
-
             'create_option' => [
-
-                'label' => 'Create',
-
+                'label' => 'Gumawa',
                 'modal' => [
-
-                    'heading' => 'Create',
-
+                    'heading' => 'Gumawa',
                     'actions' => [
-
                         'create' => [
-                            'label' => 'Create',
+                            'label' => 'Gumawa',
                         ],
-
                         'create_another' => [
-                            'label' => 'Create & create another',
+                            'label' => 'Gumawa at gumawa pa ng isa',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'edit_option' => [
-
-                'label' => 'Edit',
-
+                'label' => 'I-edit',
                 'modal' => [
-
-                    'heading' => 'Edit',
-
+                    'heading' => 'I-edit',
                     'actions' => [
-
                         'save' => [
-                            'label' => 'Save',
+                            'label' => 'I-save',
                         ],
-
                     ],
-
                 ],
-
             ],
-
             'remove_option' => [
-                'label' => 'Remove :label',
+                'label' => 'Alisin ang :label',
             ],
-
         ],
-
         'boolean' => [
-            'true' => 'Yes',
-            'false' => 'No',
+            'true' => 'Oo',
+            'false' => 'Hindi',
         ],
-
-        'loading_message' => 'Loading...',
-
-        'max_items_message' => 'Only :count can be selected.',
-
-        'no_options_message' => 'No options available.',
-
-        'no_search_results_message' => 'No options match your search.',
-
-        'placeholder' => 'Select an option',
-
-        'searching_message' => 'Searching...',
-
-        'search_label' => 'Search',
-
-        'search_prompt' => 'Start typing to search...',
-
+        'loading_message' => 'Naglo-load...',
+        'max_items_message' => ':count lang ang puwedeng piliin.',
+        'no_options_message' => 'Walang available na option.',
+        'no_search_results_message' => 'Walang option na tugma sa search mo.',
+        'placeholder' => 'Pumili ng option',
+        'searching_message' => 'Naghahanap...',
+        'search_label' => 'Maghanap',
+        'search_prompt' => 'Mag-type para mag-search...',
     ],
-
     'tags_input' => [
-
         'actions' => [
-
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'I-delete',
             ],
-
         ],
-
-        'placeholder' => 'New tag',
-
-        'tag_added' => 'Added: :tag',
-
-        'tag_removed' => 'Removed: :tag',
-
+        'placeholder' => 'Bagong tag',
+        'tag_added' => 'Idinagdag: :tag',
+        'tag_removed' => 'Inalis: :tag',
     ],
-
     'text_input' => [
-
         'actions' => [
-
             'copy' => [
-                'label' => 'Copy',
-                'message' => 'Copied',
+                'label' => 'Kopyahin',
+                'message' => 'Nakopya',
             ],
-
             'hide_password' => [
-                'label' => 'Hide password',
+                'label' => 'Itago ang password',
             ],
-
             'show_password' => [
-                'label' => 'Show password',
+                'label' => 'Ipakita ang password',
             ],
-
         ],
-
     ],
-
     'toggle_buttons' => [
-
         'boolean' => [
-            'true' => 'Yes',
-            'false' => 'No',
+            'true' => 'Oo',
+            'false' => 'Hindi',
         ],
-
     ],
-
 ];
