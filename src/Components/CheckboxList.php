@@ -536,7 +536,7 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
 
     public function toEmbeddedHtml(): string
     {
-        $extraInputAttributeBag = $this->getExtraInputAttributeBag();
+        $extraInputAttributeBag = $this->getExtraInputAttributeBag()->merge($this->getAccessibilityAttributes(), escape: false);
         $id = $this->getId();
         $isHtmlAllowed = $this->isHtmlAllowed();
         $gridDirection = $this->getGridDirection() ?? GridDirection::Column;
@@ -559,14 +559,18 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
         ob_start(); ?>
 
         <div
-            aria-labelledby="<?= e($id) ?>-label"
             role="group"
             x-load
             x-load-src="<?= e(FilamentAsset::getAlpineComponentSrc('checkbox-list', 'filament/forms')) ?>"
             x-data="checkboxListFormComponent({
                         livewireId: <?= Js::from($this->getLivewire()->getId()) ?>,
                     })"
-            <?= $this->getExtraAlpineAttributeBag()->class(['fi-fo-checkbox-list'])->toHtml() ?>
+            <?= $this->getExtraAlpineAttributeBag()
+                ->merge([
+                    ...$this->getAccessibilityAttributes(),
+                    'aria-labelledby' => filled($this->getLabel()) ? e("{$id}-label") : null,
+                ], escape: false)
+                ->class(['fi-fo-checkbox-list'])->toHtml() ?>
         >
             <?php if (! $isDisabled) { ?>
                 <?php if ($isSearchable) { ?>
@@ -642,7 +646,6 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
                                         ->merge([
                                             'disabled' => $isDisabled || $this->isOptionDisabled($value, $label),
                                             'value' => e($value),
-                                            'wire:loading.attr' => 'disabled',
                                             $wireModelAttribute => $statePath,
                                             'x-on:change' => $isBulkToggleable ? 'checkIfAllCheckboxesAreChecked()' : null,
                                         ], escape: false)
@@ -691,5 +694,12 @@ class CheckboxList extends Field implements Contracts\CanDisableOptions, Contrac
         </div>
 
         <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
+    }
+
+    public function getRequiredDescription(): ?string
+    {
+        return ($this->isRequired() && (! $this->isDisabled()))
+            ? __('filament-forms::components.checkbox_list.required_description')
+            : null;
     }
 }
