@@ -430,7 +430,7 @@ Builder::make('content')
 
 <UtilityInjection set="formFields">As well as allowing static values, the `collapsible()` and `collapsed()` methods also accept functions to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
-If collapsed items contain components that are expensive to render, you can [defer the loading of their block schemas](#deferring-the-loading-of-block-schemas) until they are expanded.
+If collapsed items contain components that are expensive to render, you can [lazy load their block schemas](#lazy-loading-block-schemas) when they are expanded.
 
 ## Cloning items
 
@@ -641,9 +641,36 @@ Builder::make('content')
 
 <UtilityInjection set="formFields">As well as allowing static values, the `minItems()` and `maxItems()` methods also accept a function to dynamically calculate them. You can inject various utilities into the function as parameters.</UtilityInjection>
 
-## Deferring the loading of block schemas
+<Aside variant="info">
+    `maxItems()` is a validation rule. Filament can build and render item schemas before validation rejects excessive item counts. To avoid long processing times if your application accidentally creates too many items, you can [limit item processing](#limiting-item-processing) separately.
+</Aside>
 
-If a block's schema is expensive to render, you can pass a `Schema` object to `schema()` and use `deferLoading()`. This is particularly useful when items are [collapsed](#collapsing-items) by default. Each block item schema will be loaded independently when its item is expanded and enters the viewport:
+## Limiting item processing
+
+If your application's JavaScript accidentally creates a large state array, building and rendering a schema for every block can cause a long wait. You can opt in to a processing limit using `maxItemsForProcessing()`. If the raw state exceeds this limit, Filament aborts with an HTTP 413 response before building the builder's item schemas, without truncating the data. All raw items count towards the limit, including items with unrecognized block types:
+
+```php
+use Filament\Forms\Components\Builder;
+
+Builder::make('content')
+    ->blocks([
+        // ...
+    ])
+    ->maxItems(5)
+    ->maxItemsForProcessing(100)
+```
+
+The processing limit is independent of `maxItems()` validation and is disabled by default. It accepts an integer, or `null` to disable it. It limits the number of items in each builder, not the total number of nested items or fields in a request.
+
+<Aside variant="danger">
+    The processing limit also applies to existing data loaded from your database. A record above the limit cannot be opened through that form until you raise the limit or correct its data elsewhere. Choose a limit that accommodates existing records you need to edit, including records above your validation limit.
+</Aside>
+
+This is an opt-in performance safeguard, not a security boundary or a guarantee of request duration. See the shared [guidance on configuring processing limits globally](repeater#applying-processing-limits-globally) for repeaters, builders, and repeatable entries, including increasing, decreasing, or disabling the limit on individual components and the scope of the processing limit.
+
+## Lazy loading block schemas
+
+If a block's schema is expensive to render, you can pass a `Schema` object to `schema()` and use `lazyLoaded()`. This is particularly useful when items are [collapsed](#collapsing-items) by default. Each block item schema will be loaded independently when its item is expanded and enters the viewport:
 
 ```php
 use Filament\Forms\Components\Builder;
@@ -661,14 +688,14 @@ Builder::make('content')
                             ->label('Heading')
                             ->required(),
                     ])
-                    ->deferLoading(),
+                    ->lazyLoaded(),
             ),
         // ...
     ])
     ->collapsed()
 ```
 
-Builder block item schemas automatically receive unique keys from their item state paths. You can learn more about deferred schemas in the [schema overview](../schemas/overview#deferring-the-loading-of-a-child-schema).
+Builder block item schemas automatically receive unique keys from their item state paths. You can learn more about lazy schemas in the [schema overview](../schemas/overview#lazy-loading-a-child-schema).
 
 ## Customizing the builder item actions
 
