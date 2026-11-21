@@ -211,6 +211,8 @@ Toggle::make('is_admin')
 
 <UtilityInjection set="formFields">As well as allowing a static value, the `saved()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
 
+The `saved()` option does not override a disabled top-level schema. Calling `getState()` on that schema still validates it, but returns an empty array.
+
 ### Disabling a field based on the current operation
 
 The "operation" of a schema is the current action being performed on it. Usually, this is either `create`, `edit` or `view`, if you are using the [panel resource](../resources).
@@ -936,6 +938,8 @@ TextInput::make('name')
 > [!TIP]
 > By default, calling `extraAttributes()` multiple times will overwrite the previous attributes. If you wish to merge the attributes instead, you can pass `merge: true` to the method.
 
+When merging attributes, each callback registration is evaluated separately, even if the same callback is registered more than once.
+
 ### Adding extra HTML attributes to the input element of a field
 
 Some fields use an underlying `<input>` or `<select>` DOM element, but this is often not the outer element in the field, so the `extraAttributes()` method may not work as you wish. In this case, you may use the `extraInputAttributes()` method, which will merge the attributes onto the `<input>` or `<select>` element in the field's HTML:
@@ -988,7 +992,7 @@ Attributes you provide override Filament's accessibility defaults; an explicit `
 
 Keep a label for each field, using `hiddenLabel()` if it should be visually hidden. Use `required()` for validation and required-state semantics; `markAsRequired()` only controls the visual marker.
 
-If you replace a field wrapper, preserve the label, helper text, and error IDs in your custom markup. JavaScript-created controls synchronize independently of the wrapper. If you publish a control view, merge the field's `getAccessibilityAttributes()` array as defaults into the control's existing attribute bag. Preserve its hidden `data-field-accessibility` element immediately before the JavaScript component and outside `wire:ignore`, with the resolved description and invalid-state attributes. The plain wrapper used by `FusedGroup` suppresses child instructions and leaves error descriptions on the group.
+If you replace a field wrapper, preserve the label, helper text, and error IDs in your custom markup. JavaScript-created controls synchronize independently of the wrapper. The plain wrapper used by `FusedGroup` suppresses child instructions and leaves error descriptions on the group.
 
 Helper text, error, and required-description IDs append `-helper-text`, `-error`, or `-required` to the existing field ID; field and option IDs are unchanged. Keep explicit IDs unique on the page. Rendering multiple fields with the same state path in the same form at the same time is not supported. Fields with the same name in separate repeater items or nested groups should have distinct full state paths.
 
