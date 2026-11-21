@@ -1,7 +1,6 @@
 ---
 title: Color picker
 ---
-import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
@@ -15,7 +14,7 @@ use Filament\Forms\Components\ColorPicker;
 ColorPicker::make('color')
 ```
 
-<AutoScreenshot name="forms/fields/color-picker/simple" alt="Color picker" version="3.x" />
+<AutoScreenshot name="forms/fields/color-picker/simple" alt="Color picker" />
 
 ## Setting the color format
 

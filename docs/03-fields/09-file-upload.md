@@ -1,17 +1,8 @@
 ---
 title: File upload
 ---
-import AutoScreenshot from "@components/AutoScreenshot.astro"
-import LaracastsBanner from "@components/LaracastsBanner.astro"
 
 ## Overview
-
-<LaracastsBanner
-    title="File Uploads"
-    description="Watch the Rapid Laravel Development with Filament series on Laracasts - it will teach you the basics of adding file upload fields to Filament forms."
-    url="https://laracasts.com/series/rapid-laravel-development-with-filament/episodes/8"
-    series="rapid-laravel-development"
-/>
 
 The file upload field is based on [Filepond](https://pqina.nl/filepond).
 
@@ -21,7 +12,7 @@ use Filament\Forms\Components\FileUpload;
 FileUpload::make('attachment')
 ```
 
-<AutoScreenshot name="forms/fields/file-upload/simple" alt="File upload" version="3.x" />
+<AutoScreenshot name="forms/fields/file-upload/simple" alt="File upload" />
 
 > Filament also supports [`spatie/laravel-medialibrary`](https://github.com/spatie/laravel-medialibrary). See our [plugin documentation](https://filamentphp.com/plugins/filament-spatie-media-library) for more information.
 

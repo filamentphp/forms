@@ -1,7 +1,6 @@
 ---
 title: Getting started
 ---
-import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
@@ -17,7 +16,7 @@ use Filament\Forms\Components\TextInput;
 TextInput::make('name')
 ```
 
-<AutoScreenshot name="forms/fields/simple" alt="Form field" version="3.x" />
+<AutoScreenshot name="forms/fields/simple" alt="Form field" />
 
 ## Available fields
 
@@ -77,7 +76,7 @@ TextInput::make('name')
 
 ## Setting a default value
 
-Fields may have a default value. This will be filled if the [form's `fill()` method](getting-started#default-data) is called without any arguments. To define a default value, use the `default()` method:
+Fields may have a default value. This will be filled if the [form's `fill()` method](../adding-a-form-to-a-livewire-component#resetting-a-forms-data) is called without any arguments. To define a default value, use the `default()` method:
 
 ```php
 use Filament\Forms\Components\TextInput;
@@ -117,7 +116,7 @@ TextInput::make('name')
     ->helperText(view('name-helper-text'))
 ```
 
-<AutoScreenshot name="forms/fields/helper-text" alt="Form field with helper text" version="3.x" />
+<AutoScreenshot name="forms/fields/helper-text" alt="Form field with helper text" />
 
 ## Adding a hint next to the label
 
@@ -148,7 +147,7 @@ TextInput::make('password')
     ->hint(view('forgotten-password-hint'))
 ```
 
-<AutoScreenshot name="forms/fields/hint" alt="Form field with hint" version="3.x" />
+<AutoScreenshot name="forms/fields/hint" alt="Form field with hint" />
 
 ### Changing the text color of the hint
 
@@ -162,7 +161,7 @@ RichEditor::make('content')
     ->hintColor('primary')
 ```
 
-<AutoScreenshot name="forms/fields/hint-color" alt="Form field with hint color" version="3.x" />
+<AutoScreenshot name="forms/fields/hint-color" alt="Form field with hint color" />
 
 ### Adding an icon aside the hint
 
@@ -176,7 +175,7 @@ RichEditor::make('content')
     ->hintIcon('heroicon-m-language')
 ```
 
-<AutoScreenshot name="forms/fields/hint-icon" alt="Form field with hint icon" version="3.x" />
+<AutoScreenshot name="forms/fields/hint-icon" alt="Form field with hint icon" />
 
 #### Adding a tooltip to a hint icon
 
@@ -229,7 +228,7 @@ TextInput::make('name')
     ->disabled()
 ```
 
-<AutoScreenshot name="forms/fields/disabled" alt="Disabled form field" version="3.x" />
+<AutoScreenshot name="forms/fields/disabled" alt="Disabled form field" />
 
 Optionally, you may pass a boolean value to control if the field should be disabled or not:
 
@@ -249,6 +248,8 @@ Toggle::make('is_admin')
 ```
 
 > If you choose to dehydrate the field, a skilled user could still edit the field's value by manipulating Livewire's JavaScript.
+
+The `dehydrated()` option does not override a disabled top-level form. Calling `getState()` on that form still validates it, but returns an empty array.
 
 ### Hiding a field
 
@@ -292,7 +293,7 @@ TextInput::make('name')
     ->placeholder('John Doe')
 ```
 
-<AutoScreenshot name="forms/fields/placeholder" alt="Form field with placeholder" version="3.x" />
+<AutoScreenshot name="forms/fields/placeholder" alt="Form field with placeholder" />
 
 ## Marking a field as required
 

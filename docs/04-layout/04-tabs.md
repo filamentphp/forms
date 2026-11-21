@@ -1,7 +1,6 @@
 ---
 title: Tabs
 ---
-import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
@@ -27,7 +26,7 @@ Tabs::make('Tabs')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/tabs/simple" alt="Tabs" version="3.x" />
+<AutoScreenshot name="forms/layout/tabs/simple" alt="Tabs" />
 
 ## Setting the default active tab
 
@@ -72,7 +71,7 @@ Tabs::make('Tabs')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/tabs/icons" alt="Tabs with icons" version="3.x" />
+<AutoScreenshot name="forms/layout/tabs/icons" alt="Tabs with icons" />
 
 ### Setting the tab icon position
 
@@ -94,7 +93,7 @@ Tabs::make('Tabs')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/tabs/icons-after" alt="Tabs with icons after their labels" version="3.x" />
+<AutoScreenshot name="forms/layout/tabs/icons-after" alt="Tabs with icons after their labels" />
 
 ## Setting a tab badge
 
@@ -114,7 +113,7 @@ Tabs::make('Tabs')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/tabs/badges" alt="Tabs with badges" version="3.x" />
+<AutoScreenshot name="forms/layout/tabs/badges" alt="Tabs with badges" />
 
 If you'd like to change the color for a badge, you can use the `badgeColor()` method:
 
@@ -238,4 +237,3 @@ Tabs::make('Tabs')
     ])
     ->persistTabInQueryString('settings-tab')
 ```
-

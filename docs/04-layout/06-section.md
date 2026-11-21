@@ -1,7 +1,6 @@
 ---
 title: Section
 ---
-import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
@@ -17,7 +16,7 @@ Section::make('Rate limiting')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/section/simple" alt="Section" version="3.x" />
+<AutoScreenshot name="forms/layout/section/simple" alt="Section" />
 
 You can also use a section without a header, which just wraps the components in a simple card:
 
@@ -30,7 +29,7 @@ Section::make()
     ])
 ```
 
-<AutoScreenshot name="forms/layout/section/without-header" alt="Section without header" version="3.x" />
+<AutoScreenshot name="forms/layout/section/without-header" alt="Section without header" />
 
 ## Adding actions to the section's header or footer
 
@@ -56,7 +55,7 @@ Section::make('Rate limiting')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/section/header/actions" alt="Section with header actions" version="3.x" />
+<AutoScreenshot name="forms/layout/section/header/actions" alt="Section with header actions" />
 
 > [Make sure the section has a heading or ID](#adding-actions-to-a-section-without-heading)
 
@@ -80,7 +79,7 @@ Section::make('Rate limiting')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/section/footer/actions" alt="Section with footer actions" version="3.x" />
+<AutoScreenshot name="forms/layout/section/footer/actions" alt="Section with footer actions" />
 
 > [Make sure the section has a heading or ID](#adding-actions-to-a-section-without-heading)
 
@@ -138,7 +137,7 @@ Section::make('Cart')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/section/icons" alt="Section with icon" version="3.x" />
+<AutoScreenshot name="forms/layout/section/icons" alt="Section with icon" />
 
 ## Positioning the heading and description aside
 
@@ -155,7 +154,7 @@ Section::make('Rate limiting')
     ])
 ```
 
-<AutoScreenshot name="forms/layout/section/aside" alt="Section with heading and description aside" version="3.x" />
+<AutoScreenshot name="forms/layout/section/aside" alt="Section with heading and description aside" />
 
 ## Collapsing sections
 
@@ -185,7 +184,7 @@ Section::make('Cart')
     ->collapsed()
 ```
 
-<AutoScreenshot name="forms/layout/section/collapsed" alt="Collapsed section" version="3.x" />
+<AutoScreenshot name="forms/layout/section/collapsed" alt="Collapsed section" />
 
 ### Persisting collapsed sections
 
@@ -233,7 +232,7 @@ Section::make('Rate limiting')
     ->compact()
 ```
 
-<AutoScreenshot name="forms/layout/section/compact" alt="Compact section" version="3.x" />
+<AutoScreenshot name="forms/layout/section/compact" alt="Compact section" />
 
 ## Using grid columns within a section
 

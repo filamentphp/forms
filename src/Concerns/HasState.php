@@ -238,11 +238,19 @@ trait HasState
     {
         $state = $this->validate();
 
+        if ($this->isRoot() && $this->isDisabled()) {
+            value($afterValidate, []);
+
+            return [];
+        }
+
         if ($shouldCallHooksBefore) {
             $this->callBeforeStateDehydrated();
 
-            $afterValidate || $this->saveRelationships();
-            $afterValidate || $this->loadStateFromRelationships(andHydrate: true);
+            if ((! $afterValidate) && (! $this->isDisabled())) {
+                $this->saveRelationships();
+                $this->loadStateFromRelationships(andHydrate: true);
+            }
         }
 
         $this->dehydrateState($state);
@@ -255,8 +263,10 @@ trait HasState
         if ($afterValidate) {
             value($afterValidate, $state);
 
-            $shouldCallHooksBefore && $this->saveRelationships();
-            $shouldCallHooksBefore && $this->loadStateFromRelationships(andHydrate: true);
+            if ($shouldCallHooksBefore && (! $this->isDisabled())) {
+                $this->saveRelationships();
+                $this->loadStateFromRelationships(andHydrate: true);
+            }
         }
 
         return $state;
