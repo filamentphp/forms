@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Concerns\CanLimitItemsForProcessing;
 use Filament\Schemas\Components\Concerns\HasContainerGridLayout;
 use Filament\Schemas\Components\Contracts\HasExtraItemActions;
 use Filament\Schemas\Schema;
+use Filament\Schemas\StatePathSegment;
 use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\Alignment;
@@ -891,13 +892,24 @@ class Repeater extends Field implements HasEmbeddedView, HasExtraItemActions
     {
         $this->ensureItemsCanBeProcessed($this->getItemsCount());
 
+        $relationship = $this->getRelationship();
+        $records = $relationship ? $this->getCachedExistingRecords() : null;
+
         $rawState = ($this->getRawState() ?? []);
+        $rawStateWithSafeKeys = $this->rekeyItemsWithUnsafeKeys($rawState);
+
+        if ($rawStateWithSafeKeys !== $rawState) {
+            foreach (array_keys($rawState) as $itemKey) {
+                if (($records?->has($itemKey)) && (! StatePathSegment::isSafe($itemKey))) {
+                    throw new LogicException('Repeater relationship records must have primary keys that can be used as state path segments.');
+                }
+            }
+
+            $this->rawState($rawStateWithSafeKeys);
+            $rawState = $rawStateWithSafeKeys;
+        }
 
         $this->cachedItemsRawStateStructure = array_map(is_array(...), $rawState);
-
-        $relationship = $this->getRelationship();
-
-        $records = $relationship ? $this->getCachedExistingRecords() : null;
 
         $items = [];
 
@@ -1809,12 +1821,15 @@ class Repeater extends Field implements HasEmbeddedView, HasExtraItemActions
                 </div>
             <?php } ?>
 
-            <?= $this->getReorderingDescriptionHtml($items) ?>
+            <?= $this->generateReorderingDescriptionHtml($items) ?>
         </div>
 
         <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
     }
 
+    /**
+     * @internal Never call or override this method. It is not part of the public API and may change in minor and patch releases.
+     */
     protected function toSimpleEmbeddedHtml(): string
     {
         $items = $this->getItems();
@@ -1952,12 +1967,15 @@ class Repeater extends Field implements HasEmbeddedView, HasExtraItemActions
                 </div>
             <?php } ?>
 
-            <?= $this->getReorderingDescriptionHtml($items) ?>
+            <?= $this->generateReorderingDescriptionHtml($items) ?>
         </div>
 
         <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
     }
 
+    /**
+     * @internal Never call or override this method. It is not part of the public API and may change in minor and patch releases.
+     */
     protected function toTableEmbeddedHtml(): string
     {
         $items = $this->getItems();
@@ -2191,7 +2209,7 @@ class Repeater extends Field implements HasEmbeddedView, HasExtraItemActions
                 </div>
             <?php } ?>
 
-            <?= $this->getReorderingDescriptionHtml($items) ?>
+            <?= $this->generateReorderingDescriptionHtml($items) ?>
         </div>
 
         <?php return $this->wrapEmbeddedHtml(ob_get_clean(), labelTag: 'div');
@@ -2294,8 +2312,12 @@ class Repeater extends Field implements HasEmbeddedView, HasExtraItemActions
         ];
     }
 
-    /** @param array<Schema> $items */
-    protected function getReorderingDescriptionHtml(array $items): string
+    /**
+     * @internal Never call or override this method. It is not part of the public API and may change in minor and patch releases.
+     *
+     * @param  array<Schema>  $items
+     */
+    protected function generateReorderingDescriptionHtml(array $items): string
     {
         $html = '';
         $position = 0;

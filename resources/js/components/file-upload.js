@@ -317,6 +317,8 @@ export default function fileUploadFormComponent({
                         this.activeUploads++
                         this.shouldUpdateState = false
 
+                        const cancelUpload = this.$wire.cancelUpload
+
                         let fileKey = (
                             [1e7] +
                             -1e3 +
@@ -364,9 +366,7 @@ export default function fileUploadFormComponent({
                             abort: () => {
                                 finishUpload()
 
-                                this.$wire.cancelUpload(
-                                    `${statePath}.${fileKey}`,
-                                )
+                                cancelUpload(`${statePath}.${fileKey}`)
 
                                 abort()
                             },
@@ -544,7 +544,18 @@ export default function fileUploadFormComponent({
 
                 this.error = null
 
-                if (file.status !== FilePond.FileStatus.PROCESSING_QUEUED) {
+                handleFileProcessingStart(file)
+            })
+
+            const handleFileProcessingStart = (file) => {
+                if (isDestroyed) {
+                    return
+                }
+
+                if (
+                    file.status !== FilePond.FileStatus.PROCESSING_QUEUED &&
+                    file.status !== FilePond.FileStatus.PROCESSING
+                ) {
                     return
                 }
 
@@ -557,7 +568,9 @@ export default function fileUploadFormComponent({
                 this.dispatchFormEvent('form-processing-started', {
                     message: uploadingMessage,
                 })
-            })
+            }
+
+            this.pond.on('processfilestart', handleFileProcessingStart)
 
             const handleFileProcessing = async () => {
                 if (isDestroyed || !this.pond) {
@@ -620,6 +633,8 @@ export default function fileUploadFormComponent({
             this.pond.on('removefile', () => (this.error = null))
 
             this.isInitializing = false
+
+            this.$dispatch('async-component-ready')
         },
 
         dispatchFormEvent(name, detail = {}) {
@@ -1128,6 +1143,9 @@ export default function fileUploadFormComponent({
 
             if (this.pond) {
                 this.pond.destroy()
+                // `pond.destroy()` only restores the original input after a timeout,
+                // too late for the page snapshot Livewire stores for the back button.
+                FilePond.destroy(this.pond.element)
                 this.pond = null
             }
         },

@@ -41,6 +41,40 @@ Select::make('status')
 
 <AutoScreenshot name="forms/fields/select/javascript" alt="JavaScript select" />
 
+### Customizing the loading placeholder
+
+The JavaScript select displays a loading placeholder while its JavaScript is loaded and initialized. Native selects do not display this placeholder. You may customize it using `loadingPlaceholder()`, passing a Blade view or an `Htmlable` instance, such as an `HtmlString` containing trusted HTML:
+
+```php
+use Filament\Forms\Components\Select;
+
+Select::make('status')
+    ->options([
+        'draft' => 'Draft',
+        'published' => 'Published',
+    ])
+    ->native(false)
+    ->loadingPlaceholder(fn () => view('forms.select-loading-placeholder'))
+```
+
+<UtilityInjection set="formFields">As well as allowing a static value, the `loadingPlaceholder()` method also accepts a function to dynamically calculate it. You can inject various utilities into the function as parameters.</UtilityInjection>
+
+This placeholder is separate from the [`loadingMessage()`](#setting-a-custom-loading-message) shown while the select's options are loading.
+
+Keep your placeholder HTML decorative and noninteractive. Filament hides it from assistive technologies and supplies an accessible loading status in the surrounding wrapper. If the JavaScript fails to load or initialize, the placeholder remains visible.
+
+To customize the placeholder for all JavaScript selects, use [`Select::configureUsing()`](overview#global-settings) in a service provider's `boot()` method:
+
+```php
+use Filament\Forms\Components\Select;
+
+Select::configureUsing(function (Select $select): void {
+    $select->loadingPlaceholder(fn () => view('forms.select-loading-placeholder'));
+});
+```
+
+You may call `loadingPlaceholder(null)` on an individual select to restore the default loading placeholder.
+
 ## Searching options
 
 You may enable a search input to allow easier access to many options, using the `searchable()` method:
@@ -624,7 +658,7 @@ When customizing persistence with `createOptionUsing()` or `updateOptionUsing()`
 
 The selected ID is client-controlled form state. Use the [`relationship()` query's `modifyQueryUsing` argument](#customizing-the-relationship-query) to apply tenant or ownership restrictions when resolving the record for editing. A parent resource's query restrictions do not automatically scope the related model, and allowing a record to be selected does not authorize editing it.
 
-Relationship queries retain the related model's global scopes. However, without `modifyQueryUsing`, an already-loaded selected relationship may be reused without querying its current scopes again. Use `modifyQueryUsing` if these restrictions must be reapplied. See [Eloquent model restoration in Livewire](../advanced/security#understanding-eloquent-model-restoration-in-livewire) for more information.
+Relationship queries retain the related model's global scopes. Filament queries the selected relationship again when validating the field or when a mounted action belonging to the field resolves the selected record, so current global scopes are applied at those boundaries. This includes the edit option action and custom prefix or suffix actions. Other label lookups may reuse an already-loaded relationship for display. See [Eloquent model restoration in Livewire](../advanced/security#understanding-eloquent-model-restoration-in-livewire) for more information.
 
 ### Handling `MorphTo` relationships
 

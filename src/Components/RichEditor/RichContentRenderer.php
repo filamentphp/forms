@@ -366,6 +366,12 @@ class RichContentRenderer implements Htmlable
 
     protected function processMentions(Editor $editor): void
     {
+        $editor->descendants(function (object &$node): void {
+            if ($node->type === 'mention') {
+                unset($node->attrs->href);
+            }
+        });
+
         if (blank($this->mentionProviders)) {
             return;
         }
@@ -579,6 +585,9 @@ class RichContentRenderer implements Htmlable
         return $this->renderHtml(shouldSanitize: true);
     }
 
+    /**
+     * @internal Never call or override this method. It is not part of the public API and may change in minor and patch releases.
+     */
     protected function renderHtml(bool $shouldSanitize): string
     {
         $editor = $this->getEditor();
@@ -686,6 +695,8 @@ class RichContentRenderer implements Htmlable
     }
 
     /**
+     * @internal Never call or override this method. It is not part of the public API and may change in minor and patch releases.
+     *
      * @param  array<string, mixed>  $config
      */
     public function getCustomBlockHtml(string $id, array $config): ?string
